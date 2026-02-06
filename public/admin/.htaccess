@@ -1,0 +1,9 @@
+DirectoryIndex index.php
+
+RewriteEngine On
+RewriteBase /od9/public/admin/
+
+# Route all admin requests through index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L,QSA]
