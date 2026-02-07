@@ -1,6 +1,9 @@
 <?php
 /**
  * OD9 Admin Logout
+ * 
+ * Delegates logout to the unified portal which handles session cleanup
+ * and redirects back to the login page.
  */
 
 // Define site path for bootstrap (SITE_PATH required by shared Bootstrap.php)
@@ -15,6 +18,6 @@ require_once SHARED_PATH . '/admin/AdminAuth.php';
 // Perform logout
 AdminAuth::logout();
 
-// Redirect to login
-header('Location: login.php');
+// Redirect to unified portal login
+header('Location: /shared-platform/admin/login.php');
 exit;
