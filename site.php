@@ -103,11 +103,31 @@ return [
         'og_image' => 'images/og-image.jpg',
     ],
     
-    // Email settings
+    // Email settings (used by shared Email.php)
     'email' => [
         'from_name' => 'OD9',
         'from_email' => 'noreply@offda9.com',
+        'reply_to' => 'support@offda9.com',
+        'smtp_host' => 'sandbox.smtp.mailtrap.io',
+        'smtp_port' => 2525,
+        'smtp_user' => '',
+        'smtp_pass' => '',
+        'smtp_secure' => 'tls',
+        'debug_mode' => false,
     ],
+    
+    // Payment settings (used by shared Payment.php)
+    'payment' => [
+        'gateway' => 'square',
+        'access_token' => '',
+        'application_id' => '',
+        'location_id' => '',
+        'environment' => 'sandbox',
+        'currency' => 'USD',
+    ],
+    
+    // Ticket code prefix (used by shared TicketCodeGenerator.php)
+    'ticket_prefix' => 'OD9',
     
     // Footer configuration
     'footer' => [

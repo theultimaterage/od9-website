@@ -10,6 +10,8 @@
 
 ```
 [2026-01-30] v1.0 - Initial creation with core patterns from admin conversion
+[2026-02-06] v1.1 - CRITICAL FIX: SITE_ROOT changed to SITE_PATH (Bootstrap.php requires SITE_PATH)
+[2026-02-06] v1.2 - Added page-template.php bridge for SITE_ROOT/SITE_PATH compatibility
 ```
 
 ---
@@ -21,8 +23,9 @@
 
 ```php
 <?php
-define('SITE_ROOT', dirname(dirname(__DIR__)));
-require_once SITE_ROOT . '/config/bootstrap.php';
+// CRITICAL: Use SITE_PATH (not SITE_ROOT) - Bootstrap.php requires SITE_PATH
+define('SITE_PATH', dirname(dirname(__DIR__)));
+require_once SITE_PATH . '/config/bootstrap.php';
 require_once SHARED_PATH . '/core/AdminAuth.php';
 require_once SHARED_PATH . '/admin/AdminNavigation.php';
 AdminAuth::require();
@@ -30,7 +33,9 @@ $currentAdmin = AdminAuth::getCurrentAdmin();
 // OD9-specific implementation here
 ```
 
-**Examples:** dashboard.php, login.php
+**Examples:** dashboard.php, login.php, index.php, logout.php
+
+**WARNING:** Never use `SITE_ROOT` - Bootstrap.php line 11-13 checks for `SITE_PATH` and dies if not defined.
 
 ### Pattern 2: Wrapper Pages (Shared-platform delegation)
 **Use when:** Page uses shared-platform implementation with OD9 branding
@@ -67,8 +72,9 @@ $stmt->execute([$userId]);
 
 ## [REQUIRED] Known Issues
 
-- **Issue**: Missing SITE_ROOT causes "failed to open stream" errors  
-  **Solution**: Add `define('SITE_ROOT', dirname(dirname(__DIR__)));` before any require
+- **Issue**: Using SITE_ROOT instead of SITE_PATH causes Bootstrap.php to die  
+  **Solution**: Use `define('SITE_PATH', dirname(dirname(__DIR__)));` - Bootstrap.php requires SITE_PATH (not SITE_ROOT)
+  **Root Cause**: shared-platform/core/Bootstrap.php line 11-13 checks `if (!defined('SITE_PATH'))` and dies
 
 - **Issue**: AdminNavigation not found  
   **Solution**: Ensure `require_once SHARED_PATH . '/admin/AdminNavigation.php';` after bootstrap
@@ -179,6 +185,9 @@ SHARED PLATFORM INTEGRATION:
 Format: [YYYY-MM-DD HH:MM] Error: [description] | Fix: [what was done]
 
 [2026-01-30 12:00] Error: Bulk conversion of 32 admin pages caused inconsistent implementations | Fix: Implementing Generator/Critic pattern with incremental validation
+[2026-02-06 01:15] Error: Admin pages using SITE_ROOT failed to load - Bootstrap.php requires SITE_PATH | Fix: Changed SITE_ROOT to SITE_PATH in dashboard.php, index.php, login.php, logout.php
+[2026-02-06 01:15] Error: page-template.php used SITE_ROOT but didn't bridge to SITE_PATH | Fix: Added SITE_PATH = SITE_ROOT bridge in page-template.php line 43-46
+[2026-02-06 01:04] Error: MySQL crashed - corrupted mysql.global_priv table | Fix: Restored mysql system database from C:/xampp/mysql/backup/mysql
 ```
 
 ---

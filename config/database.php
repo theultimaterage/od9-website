@@ -86,6 +86,7 @@ return [
     'host' => DB_HOST,
     'database' => DB_NAME,
     'username' => DB_USER,
+    'password' => DB_PASS,
     'charset' => DB_CHARSET,
     'port' => DB_PORT
 ];

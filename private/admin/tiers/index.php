@@ -5,11 +5,12 @@
  * Membership tier management using the universal admin page template.
  */
 
-// Define site root before loading template
-define('SITE_ROOT', dirname(dirname(dirname(__DIR__))));
+// Define site path before loading template (SITE_PATH required by shared Bootstrap.php)
+define('SITE_PATH', dirname(dirname(dirname(__DIR__))));
 
-// Load the universal admin page template
-require_once dirname(dirname(dirname(dirname(__DIR__)))) . '/shared-platform/admin/includes/page-template.php';
+// Load bootstrap and page template
+require_once SITE_PATH . '/config/bootstrap.php';
+require_once SHARED_PATH . '/admin/includes/page-template.php';
 
 // Render page - provide config UPFRONT instead of in callback
 $pageConfig = [
@@ -66,7 +67,7 @@ renderAdminPage($pageConfig, function($context) use (&$pageConfig) {
         
         <?php if (empty($tiers)): ?>
             <div class="empty-state">
-                <i class="fas fa-layer-group" style="font-size: 48px; opacity: 0.3; margin-bottom: 1rem;"></i>
+                <i class="fas fa-layer-group empty-state-icon"></i>
                 <p>No tiers found. Create your first tier to get started.</p>
                 <a href="add.php" class="btn btn-primary mt-2">
                     <i class="fas fa-plus"></i> Create First Tier
@@ -95,16 +96,16 @@ renderAdminPage($pageConfig, function($context) use (&$pageConfig) {
                                 <td>
                                     <strong><?php echo htmlspecialchars($tier['tier_name']); ?></strong>
                                 </td>
-                                <td style="color: var(--admin-text-secondary); max-width: 300px;">
+                                <td class="text-muted truncate-text">
                                     <?php echo htmlspecialchars($tier['description'] ?? 'No description'); ?>
                                 </td>
                                 <td>
-                                    <span style="color: var(--admin-primary); font-weight: 600;">
+                                    <span class="text-primary text-bold">
                                         <?php echo number_format($tier['credit_requirement']); ?> credits
                                     </span>
                                 </td>
                                 <td>
-                                    <code style="font-size: 0.875rem;">
+                                    <code class="text-sm">
                                         <?php echo $tier['discord_role_id'] ? 'ID: ' . htmlspecialchars($tier['discord_role_id']) : 'Not set'; ?>
                                     </code>
                                 </td>
