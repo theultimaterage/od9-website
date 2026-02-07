@@ -10,7 +10,7 @@ define('SITE_PATH', dirname(dirname(__DIR__)));
 require_once SITE_PATH . '/config/bootstrap.php';
 
 // Load shared admin auth
-require_once SHARED_PATH . '/core/AdminAuth.php';
+require_once SHARED_PATH . '/admin/AdminAuth.php';
 
 // Perform logout
 AdminAuth::logout();

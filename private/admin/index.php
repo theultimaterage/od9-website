@@ -10,10 +10,10 @@ define('SITE_PATH', dirname(dirname(__DIR__)));
 require_once SITE_PATH . '/config/bootstrap.php';
 
 // Load shared admin auth
-require_once SHARED_PATH . '/core/AdminAuth.php';
+require_once SHARED_PATH . '/admin/AdminAuth.php';
 
 // Initialize auth
-AdminAuth::init();
+AdminAuth::initSession();
 
 // Redirect based on login status
 if (AdminAuth::isLoggedIn()) {
