@@ -70,6 +70,7 @@ h1{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#fff;text-align:cent
 .tier-flow .theorist{background:rgba(65,105,225,0.2);color:#4169E1}
 .tier-flow .architect{background:rgba(153,50,204,0.2);color:#9932CC}
 .tier-flow .pioneer{background:rgba(255,215,0,0.2);color:#FFD700}
+.tier-flow .benefactor{background:rgba(0,255,136,0.2);color:#00FF88}
 .tier-flow .arrow{color:#444;font-size:1.2rem}
 
 .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0}
@@ -168,12 +169,15 @@ document.getElementById("hamburger").addEventListener("click", function() {
 <span class="architect">Architect</span>
 <span class="arrow">&rarr;</span>
 <span class="pioneer">Pioneer</span>
+<span class="arrow">&rarr;</span>
+<span class="benefactor">Benefactor</span>
 </div>
 <ul>
 <li><strong>Observer</strong> &rarr; Recognize coordination failures in current events</li>
 <li><strong>Theorist</strong> &rarr; Understand root causes (not just symptoms)</li>
 <li><strong>Architect</strong> &rarr; Design alternative coordination mechanisms</li>
 <li><strong>Pioneer</strong> &rarr; Implement and test solutions</li>
+<li><strong>Benefactor</strong> &rarr; Sustain and scale the mission long-term</li>
 </ul>
 <p>You learn by doing, not just reading. Credits earned through analysis, not consumption.</p>
 </div>
