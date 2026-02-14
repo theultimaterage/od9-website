@@ -232,7 +232,7 @@ body{background:var(--carbon);background-image:linear-gradient(45deg,#111 25%,tr
 
 .tiers-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 1.5rem;
     max-width: 1200px;
     margin: 0 auto;
@@ -262,6 +262,7 @@ body{background:var(--carbon);background-image:linear-gradient(45deg,#111 25%,tr
 .tier-card.theorist::before { background: #4169E1; }
 .tier-card.architect::before { background: #9932CC; }
 .tier-card.pioneer::before { background: linear-gradient(90deg, #FFD700, #FFA500); }
+.tier-card.benefactor::before { background: linear-gradient(90deg, #E74C3C, #FF6B6B); }
 
 .tier-card:hover {
     transform: translateY(-5px);
@@ -277,6 +278,7 @@ body{background:var(--carbon);background-image:linear-gradient(45deg,#111 25%,tr
 .tier-card.theorist .tier-icon { color: #4169E1; }
 .tier-card.architect .tier-icon { color: #9932CC; }
 .tier-card.pioneer .tier-icon { color: #FFD700; }
+.tier-card.benefactor .tier-icon { color: #E74C3C; }
 
 .tier-card h3 {
     font-family: 'Orbitron', sans-serif;
@@ -320,6 +322,8 @@ body{background:var(--carbon);background-image:linear-gradient(45deg,#111 25%,tr
     .hero h1 { font-size: 2.5rem; letter-spacing: 4px; }
     .hero-tagline { font-size: 1.2rem; }
     .tiers-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media(max-width:600px){
 }
 
 @media (max-width: 600px) {
@@ -419,8 +423,8 @@ document.getElementById("hamburger").addEventListener("click", function() {
 
 <!-- Tiers Preview -->
 <section class="tiers-preview">
-    <h2 class="section-title">Progression System</h2>
-    <p class="section-subtitle">Advance through tiers as you engage, learn, and contribute</p>
+    <h2 class="section-title">The ASCEND Protocol</h2>
+    <p class="section-subtitle">Five tiers of growth. Earn your way up through analysis, not consumption.</p>
 
     <div class="tiers-grid">
         <div class="tier-card observer">
@@ -445,6 +449,12 @@ document.getElementById("hamburger").addEventListener("click", function() {
             <div class="tier-icon"><i class="fas fa-star"></i></div>
             <h3>Pioneer</h3>
             <p>Leading initiatives</p>
+        </div>
+
+        <div class="tier-card benefactor">
+            <div class="tier-icon"><i class="fas fa-heart"></i></div>
+            <h3>Benefactor</h3>
+            <p>Sustaining the mission</p>
         </div>
     </div>
 </section>

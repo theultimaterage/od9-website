@@ -159,8 +159,8 @@ document.getElementById("hamburger").addEventListener("click", function() {
 <p>We're not selling solutions. We're building infrastructure to discover what actually works through three interconnected systems:</p>
 
 <div class="subsystem">
-<h3>1. Education Through Progression <span style="font-size:0.7rem;color:#FFD700;margin-left:0.5rem">(IN DEVELOPMENT)</span></h3>
-<p>Discord community with structured learning tiers (currently being built):</p>
+<h3>1. Education Through Progression <span style="font-size:0.7rem;color:#00FF88;margin-left:0.5rem">(ACTIVE)</span></h3>
+<p>Discord community with a structured five-tier learning system powered by the <strong>ASCEND Protocol</strong>:</p>
 <div class="tier-flow">
 <span class="observer">Observer</span>
 <span class="arrow">&rarr;</span>
@@ -179,7 +179,15 @@ document.getElementById("hamburger").addEventListener("click", function() {
 <li><strong>Pioneer</strong> &rarr; Implement and test solutions</li>
 <li><strong>Benefactor</strong> &rarr; Sustain and scale the mission long-term</li>
 </ul>
-<p>You learn by doing, not just reading. Credits earned through analysis, not consumption.</p>
+<p style="margin-top:1.25rem;color:#00FF88;font-family:'Rajdhani',sans-serif;font-size:1.05rem;font-weight:600;">The ASCEND Protocol</p>
+<p>Advancement isn't passive. You don't just read and click "done." The ASCEND Protocol requires you to <strong>demonstrate understanding</strong> at every step:</p>
+<ul>
+<li><strong>Reflective Comprehension</strong> - After engaging with content, you write a reflection on what you learned and how it connects to the mission. A higher-tier member reviews it before you earn credits.</li>
+<li><strong>Peer Evaluation</strong> - Higher-tier members evaluate lower-tier discussion posts using a structured rubric. Teaching others deepens your own understanding.</li>
+<li><strong>Discussion-Driven Growth</strong> - Submit analysis, synthesis, and original insights for community evaluation. Quality matters more than quantity.</li>
+<li><strong>Multi-Dimensional Value</strong> - The system recognizes different types of contribution: knowledge, community building, teaching, and more. Your path is unique to your strengths.</li>
+</ul>
+<p>This is education that actually changes how you think, not just what you know. And it's only the beginning - the full ASCEND system goes much deeper.</p>
 </div>
 
 <div class="subsystem">
