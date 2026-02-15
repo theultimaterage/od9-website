@@ -140,7 +140,7 @@ body{background:var(--carbon);background-image:linear-gradient(45deg,#111 25%,tr
 }
 
 .hero-logo {
-    width: 200px;
+    width: 250px;
     height: auto;
     margin-bottom: 2rem;
     filter: drop-shadow(0 0 30px rgba(0, 191, 255, 0.7));
@@ -444,7 +444,7 @@ document.getElementById("hamburger").addEventListener("click", function() {
 <!-- Hero Section -->
 <section class="hero">
     <div class="hero-content">
-        <img src="images/logos/od9-logo.png" alt="OD9" class="hero-logo">
+        <video src="images/logos/od9-animated-logo.mp4" class="hero-logo" autoplay loop muted playsinline></video>
         <h1>OFF DA <span>NINE</span></h1>
         <p class="hero-tagline">Advancing Humanity Toward Type I Civilization</p>
         <p class="hero-description">
