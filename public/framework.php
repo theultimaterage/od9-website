@@ -3,9 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Framework - OD9</title>
+<title>The Framework - OD9 | Why Coordination Fails & How We Fix It</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<meta name="description" content="OD9's framework for solving humanity's coordination failures. Learn about the four systems preventing Type I civilization and how education, simulation, and culture shift can fix them.">
+<meta name="keywords" content="OD9 framework, coordination failure, Type I civilization, ASCEND Protocol, Metaworld, STEAM education, human progress">
+<meta name="robots" content="index, follow">
+<meta name="author" content="OD9 LLC">
+<link rel="canonical" href="https://offda9.com/framework.php">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://offda9.com/framework.php">
+<meta property="og:title" content="The OD9 Framework | Why Coordination Fails & How We Fix It">
+<meta property="og:description" content="Understanding the four systems preventing human advancement and OD9's three-part approach: education through progression, simulation through Metaworld, and culture shift through art.">
+<meta property="og:image" content="https://offda9.com/images/logos/od9-logo.png">
+<meta property="og:site_name" content="OD9 - Off Da Nine">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The OD9 Framework | Solving Coordination Failures">
+<meta name="twitter:description" content="Why 8 billion people can't coordinate on planetary problems, and what OD9 is building to fix it.">
+<meta name="twitter:image" content="https://offda9.com/images/logos/od9-logo.png">
+
+<!-- Favicon & Theme -->
+<meta name="theme-color" content="#00BFFF">
+<link rel="icon" type="image/png" href="/images/logos/od9-logo.png">
+<link rel="apple-touch-icon" href="/images/logos/od9-logo.png">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "@id": "https://offda9.com/framework.php",
+  "url": "https://offda9.com/framework.php",
+  "name": "The Framework - OD9 | Why Coordination Fails & How We Fix It",
+  "description": "OD9's framework for solving humanity's coordination failures. Learn about the four systems preventing Type I civilization and how education, simulation, and culture shift can fix them.",
+  "isPartOf": {"@id": "https://offda9.com/#website"},
+  "mainEntityOfPage": "https://offda9.com/framework.php"
+}
+</script>
+
 <style>
 :root{--primary-blue:#00BFFF;--electric-blue:#00A0FF;--neon-blue:#00D4FF;--chrome:#C0C0C0;--carbon:#0D0D0D;--carbon-dark:#1A1A1A;--glow:0 0 20px rgba(0,191,255,0.5);--nav-height:80px}
 *{margin:0;padding:0;box-sizing:border-box}

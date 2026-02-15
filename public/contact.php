@@ -3,9 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact - OD9</title>
+<title>Contact OD9 - Get in Touch | Off Da Nine</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<meta name="description" content="Contact OD9 for collaborations, partnerships, media inquiries, or questions about the ASCEND Protocol and our mission to advance humanity toward Type I civilization.">
+<meta name="keywords" content="contact OD9, OD9 email, OD9 partnerships, OD9 collaborations, Off Da Nine contact">
+<meta name="robots" content="index, follow">
+<meta name="author" content="OD9 LLC">
+<link rel="canonical" href="https://offda9.com/contact.php">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://offda9.com/contact.php">
+<meta property="og:title" content="Contact OD9 | Get in Touch">
+<meta property="og:description" content="Reach out for collaborations, partnerships, media inquiries, or questions about OD9's mission.">
+<meta property="og:image" content="https://offda9.com/images/logos/od9-logo.png">
+<meta property="og:site_name" content="OD9 - Off Da Nine">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Contact OD9 | Get in Touch">
+<meta name="twitter:description" content="Reach out for collaborations, partnerships, or questions about OD9's mission to advance humanity.">
+<meta name="twitter:image" content="https://offda9.com/images/logos/od9-logo.png">
+
+<!-- Favicon & Theme -->
+<meta name="theme-color" content="#00BFFF">
+<link rel="icon" type="image/png" href="/images/logos/od9-logo.png">
+<link rel="apple-touch-icon" href="/images/logos/od9-logo.png">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "@id": "https://offda9.com/contact.php",
+  "url": "https://offda9.com/contact.php",
+  "name": "Contact OD9 - Get in Touch | Off Da Nine",
+  "description": "Contact OD9 for collaborations, partnerships, media inquiries, or questions about the ASCEND Protocol and our mission to advance humanity toward Type I civilization.",
+  "isPartOf": {"@id": "https://offda9.com/#website"},
+  "mainEntityOfPage": "https://offda9.com/contact.php"
+}
+</script>
+
 <style>
 :root{--primary-blue:#00BFFF;--electric-blue:#00A0FF;--neon-blue:#00D4FF;--chrome:#C0C0C0;--carbon:#0D0D0D;--carbon-dark:#1A1A1A;--glow:0 0 20px rgba(0,191,255,0.5);--nav-height:80px}
 *{margin:0;padding:0;box-sizing:border-box}

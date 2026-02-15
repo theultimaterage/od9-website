@@ -3,9 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Music - OD9</title>
+<title>Music - OD9 | Hip-Hop for Human Advancement</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<meta name="description" content="Listen to OD9's music catalog. Hip-hop and conscious music that creates culture shifts, makes coordination theory accessible, and builds identity beyond consumption.">
+<meta name="keywords" content="OD9 music, The Ultimate Rage, hip-hop, conscious rap, music for human advancement, OD9 songs, OD9 albums">
+<meta name="robots" content="index, follow">
+<meta name="author" content="OD9 LLC">
+<link rel="canonical" href="https://offda9.com/music.php">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://offda9.com/music.php">
+<meta property="og:title" content="Music - OD9 | Hip-Hop for Human Advancement">
+<meta property="og:description" content="Music that creates consciousness shifts. Logic alone doesn't change behavior. Culture does.">
+<meta property="og:image" content="https://offda9.com/images/logos/od9-logo.png">
+<meta property="og:site_name" content="OD9 - Off Da Nine">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OD9 Music | Hip-Hop for Human Advancement">
+<meta name="twitter:description" content="Listen to OD9's music catalog. Conscious hip-hop that makes coordination theory accessible.">
+<meta name="twitter:image" content="https://offda9.com/images/logos/od9-logo.png">
+
+<!-- Favicon & Theme -->
+<meta name="theme-color" content="#00BFFF">
+<link rel="icon" type="image/png" href="/images/logos/od9-logo.png">
+<link rel="apple-touch-icon" href="/images/logos/od9-logo.png">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MusicGroup",
+  "@id": "https://offda9.com/music.php",
+  "url": "https://offda9.com/music.php",
+  "name": "Music - OD9 | Hip-Hop for Human Advancement",
+  "description": "Listen to OD9's music catalog. Hip-hop and conscious music that creates culture shifts, makes coordination theory accessible, and builds identity beyond consumption.",
+  "isPartOf": {"@id": "https://offda9.com/#website"},
+  "mainEntityOfPage": "https://offda9.com/music.php"
+}
+</script>
+
 <style>
 :root{--primary-blue:#00BFFF;--electric-blue:#00A0FF;--neon-blue:#00D4FF;--chrome:#C0C0C0;--carbon:#0D0D0D;--carbon-dark:#1A1A1A;--glow:0 0 20px rgba(0,191,255,0.5);--nav-height:80px}
 *{margin:0;padding:0;box-sizing:border-box}

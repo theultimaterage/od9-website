@@ -3,10 +3,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OD9 - Off Da Nine | Advancing Humanity</title>
-<meta name="description" content="OD9 is a framework for advancing humanity toward Type I civilization status through STEAM optimization, community building, and technological progress.">
+<title>OD9 - Off Da Nine | Advancing Humanity Toward Type I Civilization</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<meta name="description" content="OD9 is a framework for accelerating human progress toward Type I civilization through STEAM optimization, the ASCEND Protocol, collaborative innovation, and the Kardashev Scale.">
+<meta name="keywords" content="OD9, Off Da Nine, Kardashev Scale, Type I civilization, STEAM, ASCEND Protocol, transhumanism, human advancement, coordination failure">
+<meta name="robots" content="index, follow">
+<meta name="author" content="OD9 LLC">
+<link rel="canonical" href="https://offda9.com/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://offda9.com/">
+<meta property="og:title" content="OD9 - Off Da Nine | Advancing Humanity Toward Type I Civilization">
+<meta property="og:description" content="A framework for accelerating human progress through STEAM optimization, collaborative innovation, and the systematic advancement of our species on the Kardashev Scale.">
+<meta property="og:image" content="https://offda9.com/images/logos/od9-logo.png">
+<meta property="og:site_name" content="OD9 - Off Da Nine">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OD9 - Off Da Nine | Advancing Humanity">
+<meta name="twitter:description" content="A framework for accelerating human progress through STEAM optimization, collaborative innovation, and the Kardashev Scale.">
+<meta name="twitter:image" content="https://offda9.com/images/logos/od9-logo.png">
+
+<!-- Favicon & Theme -->
+<meta name="theme-color" content="#00BFFF">
+<link rel="icon" type="image/png" href="/images/logos/od9-logo.png">
+<link rel="apple-touch-icon" href="/images/logos/od9-logo.png">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://offda9.com/#organization",
+      "name": "OD9 - Off Da Nine",
+      "url": "https://offda9.com",
+      "logo": "https://offda9.com/images/logos/od9-logo.png",
+      "description": "A framework for accelerating human progress toward Type I civilization through STEAM optimization, collaborative innovation, and the Kardashev Scale.",
+      "sameAs": [
+        "https://discord.gg/spgmrXVMWq",
+        "https://youtube.com/@theultimaterage",
+        "https://tiktok.com/@theultimaterage079",
+        "https://www.patreon.com/c/TheUltimateRage",
+        "https://theultimaterage.substack.com"
+      ],
+      "foundingDate": "2024",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "general",
+        "url": "https://offda9.com/contact.php"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://offda9.com/#website",
+      "url": "https://offda9.com",
+      "name": "OD9 - Off Da Nine",
+      "publisher": {"@id": "https://offda9.com/#organization"}
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://offda9.com/",
+      "url": "https://offda9.com/",
+      "name": "OD9 - Off Da Nine | Advancing Humanity Toward Type I Civilization",
+      "description": "OD9 is a framework for accelerating human progress toward Type I civilization through STEAM optimization, the ASCEND Protocol, collaborative innovation, and the Kardashev Scale.",
+      "isPartOf": {"@id": "https://offda9.com/#website"},
+      "about": {"@id": "https://offda9.com/#organization"}
+    }
+  ]
+}
+</script>
+
 <style>
 :root{--primary-blue:#00BFFF;--electric-blue:#00A0FF;--neon-blue:#00D4FF;--chrome:#C0C0C0;--carbon:#0D0D0D;--carbon-dark:#1A1A1A;--glow:0 0 20px rgba(0,191,255,0.5);--nav-height:80px}
 *{margin:0;padding:0;box-sizing:border-box}

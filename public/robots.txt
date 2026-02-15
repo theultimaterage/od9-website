@@ -1,0 +1,13 @@
+# OD9 - offda9.com
+# Robots.txt
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://offda9.com/sitemap.xml
+
+# Disallow admin and private directories
+Disallow: /admin/
+Disallow: /private/
+Disallow: /subscribe.php

@@ -3,9 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Support OD9 - Help Build the Future</title>
+<title>Support OD9 - Help Build the Future | Donate & Contribute</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<meta name="description" content="Support OD9's mission to advance humanity toward Type I civilization. Donate, contribute, or sponsor projects that build infrastructure for solving coordination failures at civilizational scale.">
+<meta name="keywords" content="support OD9, donate OD9, help build future, Patreon, sponsor, contribute, Type I civilization">
+<meta name="robots" content="index, follow">
+<meta name="author" content="OD9 LLC">
+<link rel="canonical" href="https://offda9.com/support.php">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://offda9.com/support.php">
+<meta property="og:title" content="Support OD9 | Help Build the Future">
+<meta property="og:description" content="Support OD9's mission to advance humanity. Your contribution funds infrastructure for solving coordination failures at civilizational scale.">
+<meta property="og:image" content="https://offda9.com/images/logos/od9-logo.png">
+<meta property="og:site_name" content="OD9 - Off Da Nine">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Support OD9 | Help Build the Future">
+<meta name="twitter:description" content="Fund infrastructure for solving coordination failures and advancing humanity toward Type I civilization.">
+<meta name="twitter:image" content="https://offda9.com/images/logos/od9-logo.png">
+
+<!-- Favicon & Theme -->
+<meta name="theme-color" content="#00BFFF">
+<link rel="icon" type="image/png" href="/images/logos/od9-logo.png">
+<link rel="apple-touch-icon" href="/images/logos/od9-logo.png">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://offda9.com/support.php",
+  "url": "https://offda9.com/support.php",
+  "name": "Support OD9 - Help Build the Future | Donate & Contribute",
+  "description": "Support OD9's mission to advance humanity toward Type I civilization. Donate, contribute, or sponsor projects that build infrastructure for solving coordination failures at civilizational scale.",
+  "isPartOf": {"@id": "https://offda9.com/#website"},
+  "mainEntityOfPage": "https://offda9.com/support.php"
+}
+</script>
+
 <style>
 :root{--primary-blue:#00BFFF;--electric-blue:#00A0FF;--neon-blue:#00D4FF;--chrome:#C0C0C0;--carbon:#0D0D0D;--carbon-dark:#1A1A1A;--glow:0 0 20px rgba(0,191,255,0.5);--nav-height:80px}
 *{margin:0;padding:0;box-sizing:border-box}

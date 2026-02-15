@@ -3,9 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Resources - OD9</title>
+<title>Resources - OD9 | Educational Materials for Human Advancement</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<meta name="description" content="Curated educational resources on the Kardashev Scale, Fermi Paradox, Great Filter, STEAM optimization, transhumanism, and global challenges. Free learning materials for advancing humanity.">
+<meta name="keywords" content="OD9 resources, Kardashev Scale, Fermi Paradox, Great Filter, STEAM education, transhumanism, educational resources, human advancement">
+<meta name="robots" content="index, follow">
+<meta name="author" content="OD9 LLC">
+<link rel="canonical" href="https://offda9.com/resources.php">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://offda9.com/resources.php">
+<meta property="og:title" content="OD9 Resources | Educational Materials for Human Advancement">
+<meta property="og:description" content="Curated resources on the Kardashev Scale, existential risk, STEAM disciplines, and transhumanism. Free materials for understanding humanity's path forward.">
+<meta property="og:image" content="https://offda9.com/images/logos/od9-logo.png">
+<meta property="og:site_name" content="OD9 - Off Da Nine">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OD9 Resources | Learn About Human Advancement">
+<meta name="twitter:description" content="Curated educational materials on the Kardashev Scale, Fermi Paradox, STEAM, and transhumanism.">
+<meta name="twitter:image" content="https://offda9.com/images/logos/od9-logo.png">
+
+<!-- Favicon & Theme -->
+<meta name="theme-color" content="#00BFFF">
+<link rel="icon" type="image/png" href="/images/logos/od9-logo.png">
+<link rel="apple-touch-icon" href="/images/logos/od9-logo.png">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": "https://offda9.com/resources.php",
+  "url": "https://offda9.com/resources.php",
+  "name": "Resources - OD9 | Educational Materials for Human Advancement",
+  "description": "Curated educational resources on the Kardashev Scale, Fermi Paradox, Great Filter, STEAM optimization, transhumanism, and global challenges. Free learning materials for advancing humanity.",
+  "isPartOf": {"@id": "https://offda9.com/#website"},
+  "mainEntityOfPage": "https://offda9.com/resources.php"
+}
+</script>
+
 <style>
 :root{--primary-blue:#00BFFF;--electric-blue:#00A0FF;--neon-blue:#00D4FF;--chrome:#C0C0C0;--carbon:#0D0D0D;--carbon-dark:#1A1A1A;--glow:0 0 20px rgba(0,191,255,0.5);--nav-height:80px}
 *{margin:0;padding:0;box-sizing:border-box}

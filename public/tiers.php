@@ -3,9 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Progression Tiers - OD9</title>
+<title>ASCEND Protocol Progression Tiers - OD9 | Observer to Benefactor</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<meta name="description" content="The ASCEND Protocol: a five-tier credit-based progression system from Observer to Benefactor. Earn advancement through critical analysis, peer evaluation, think tanks, and contribution projects.">
+<meta name="keywords" content="ASCEND Protocol, OD9 tiers, Observer, Theorist, Architect, Pioneer, Benefactor, progression system, credit-based advancement">
+<meta name="robots" content="index, follow">
+<meta name="author" content="OD9 LLC">
+<link rel="canonical" href="https://offda9.com/tiers.php">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://offda9.com/tiers.php">
+<meta property="og:title" content="ASCEND Protocol Tiers | Observer to Benefactor - OD9">
+<meta property="og:description" content="Five tiers of growth through genuine understanding. Earn your way up through analysis, peer evaluation, think tanks, and building real solutions.">
+<meta property="og:image" content="https://offda9.com/images/logos/od9-logo.png">
+<meta property="og:site_name" content="OD9 - Off Da Nine">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ASCEND Protocol Tiers - OD9">
+<meta name="twitter:description" content="Five tiers of growth. Earn your way up through analysis, not consumption. Observer to Benefactor.">
+<meta name="twitter:image" content="https://offda9.com/images/logos/od9-logo.png">
+
+<!-- Favicon & Theme -->
+<meta name="theme-color" content="#00BFFF">
+<link rel="icon" type="image/png" href="/images/logos/od9-logo.png">
+<link rel="apple-touch-icon" href="/images/logos/od9-logo.png">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://offda9.com/tiers.php",
+  "url": "https://offda9.com/tiers.php",
+  "name": "ASCEND Protocol Progression Tiers - OD9 | Observer to Benefactor",
+  "description": "The ASCEND Protocol: a five-tier credit-based progression system from Observer to Benefactor. Earn advancement through critical analysis, peer evaluation, think tanks, and contribution projects.",
+  "isPartOf": {"@id": "https://offda9.com/#website"},
+  "mainEntityOfPage": "https://offda9.com/tiers.php"
+}
+</script>
+
 <style>
 :root{--primary-blue:#00BFFF;--electric-blue:#00A0FF;--neon-blue:#00D4FF;--chrome:#C0C0C0;--carbon:#0D0D0D;--carbon-dark:#1A1A1A;--glow:0 0 20px rgba(0,191,255,0.5);--nav-height:80px}
 *{margin:0;padding:0;box-sizing:border-box}
