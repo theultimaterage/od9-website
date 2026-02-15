@@ -32,6 +32,9 @@
 <link rel="icon" type="image/png" href="/images/logos/od9-logo.png">
 <link rel="apple-touch-icon" href="/images/logos/od9-logo.png">
 
+<!-- Google Search Console Verification -->
+<meta name="google-site-verification" content="G0SUpJPVBFDvyZIemln1Pf4BN9DG4TLnr_X6g99gT-Y">
+
 <!-- Structured Data -->
 <script type="application/ld+json">
 {
