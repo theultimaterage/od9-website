@@ -41,12 +41,14 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "Organization",
+      "@type": ["Organization", "MusicGroup"],
       "@id": "https://offda9.com/#organization",
       "name": "OD9 - Off Da Nine",
+      "alternateName": "Off Da Nine",
       "url": "https://offda9.com",
       "logo": "https://offda9.com/images/logos/od9-logo.png",
-      "description": "A framework for accelerating human progress toward Type I civilization through STEAM optimization, collaborative innovation, and the Kardashev Scale.",
+      "description": "Chicago-based music collective and creative innovation group. OD9 produces original hip-hop, R&B, and funk music while building frameworks for human advancement through STEAM optimization.",
+      "genre": ["Hip-Hop", "R&B", "Funk", "Alternative"],
       "sameAs": [
         "https://discord.gg/spgmrXVMWq",
         "https://youtube.com/@theultimaterage",
@@ -55,10 +57,131 @@
         "https://theultimaterage.substack.com"
       ],
       "foundingDate": "2024",
+      "foundingLocation": {
+        "@type": "Place",
+        "name": "Chicago, Illinois",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Chicago",
+          "addressRegion": "IL",
+          "addressCountry": "US"
+        }
+      },
+      "areaServed": {
+        "@type": "City",
+        "name": "Chicago",
+        "containedInPlace": {
+          "@type": "State",
+          "name": "Illinois"
+        }
+      },
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "general",
         "url": "https://offda9.com/contact.php"
+      },
+      "member": [
+        {
+          "@type": "Person",
+          "@id": "https://offda9.com/#rage",
+          "name": "The Ultimate Rage",
+          "jobTitle": "Co-Founder",
+          "description": "Producer, Vocalist, and Technologist",
+          "url": "https://offda9.com/da-crew.php#rage",
+          "sameAs": [
+            "https://instagram.com/theultimaterage",
+            "https://tiktok.com/@theultimaterage079",
+            "https://youtube.com/@theultimaterage",
+            "https://open.spotify.com/artist/0QvH8H7obaMerk1UkfFGaD",
+            "https://soundcloud.com/theultimaterage",
+            "https://facebook.com/theultimaterage",
+            "https://twitter.com/ultimaterage079",
+            "https://theultimaterage.substack.com"
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://offda9.com/#deezle",
+          "name": "Deezle Deez",
+          "jobTitle": "Co-Founder",
+          "description": "Producer and Vocalist",
+          "url": "https://offda9.com/da-crew.php#deezle",
+          "sameAs": [
+            "https://instagram.com/deezle_deez",
+            "https://facebook.com/deezle.deez"
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://offda9.com/#p-mac",
+          "name": "P-Mac",
+          "jobTitle": "Artist",
+          "url": "https://offda9.com/da-crew.php#p-mac",
+          "sameAs": [
+            "https://instagram.com/perryjay22",
+            "https://facebook.com/perryjayjayr"
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://offda9.com/#lb",
+          "name": "L.B.",
+          "jobTitle": "Artist",
+          "url": "https://offda9.com/da-crew.php#lb",
+          "sameAs": [
+            "https://instagram.com/iambilla",
+            "https://tiktok.com/@iambilla079",
+            "https://facebook.com/lb079"
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://offda9.com/#joey-p",
+          "name": "Joey P.",
+          "jobTitle": "Artist",
+          "url": "https://offda9.com/da-crew.php#joey-p",
+          "sameAs": [
+            "https://instagram.com/jpacius_sm",
+            "https://youtube.com/@joeyp.",
+            "https://open.spotify.com/artist/2a1dff70K0i5OZXBkYQOzZ",
+            "https://facebook.com/young.joseph.307539"
+          ]
+        }
+      ],
+      "album": [
+        {
+          "@type": "MusicAlbum",
+          "@id": "https://offda9.com/#album-missing-in-action",
+          "name": "Missing In Action",
+          "albumReleaseType": "https://schema.org/EPRelease",
+          "datePublished": "2025-11",
+          "image": "https://offda9.com/images/music/joey-p-missing-in-action.jpg",
+          "url": "https://open.spotify.com/album/7jnkBN83bZO0YTsORUrKBZ",
+          "byArtist": {"@type": "Person", "name": "Joey P.", "@id": "https://offda9.com/#joey-p"}
+        },
+        {
+          "@type": "MusicAlbum",
+          "@id": "https://offda9.com/#album-outrageous-ep",
+          "name": "Outrageous EP",
+          "albumReleaseType": "https://schema.org/EPRelease",
+          "image": "https://offda9.com/images/music/outrageous-ep-cover.png",
+          "url": "https://open.spotify.com/album/6V3kmOLMgNgsCLrRJaMiN3",
+          "byArtist": {"@type": "Person", "name": "The Ultimate Rage", "@id": "https://offda9.com/#rage"}
+        },
+        {
+          "@type": "MusicAlbum",
+          "@id": "https://offda9.com/#album-phuryous-stylez",
+          "name": "Phuryous Stylez Vol. 1",
+          "albumReleaseType": "https://schema.org/MixtapeRelease",
+          "image": "https://offda9.com/images/music/phuryous-stylez-cover.png",
+          "description": "Discord exclusive release",
+          "byArtist": {"@type": "Person", "name": "The Ultimate Rage", "@id": "https://offda9.com/#rage"}
+        }
+      ],
+      "memberOf": {
+        "@type": "Organization",
+        "name": "F.R.E.S.H.",
+        "url": "https://freshthaplatform.com"
       }
     },
     {

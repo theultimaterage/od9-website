@@ -36,13 +36,114 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebPage",
-  "@id": "https://offda9.com/da-crew.php",
-  "url": "https://offda9.com/da-crew.php",
-  "name": "Da Crew - OD9 Music Collective | Meet the Artists",
-  "description": "Meet Da Crew behind OD9's music collective. Artists using hip-hop and music as tools for consciousness shifting, culture building, and advancing humanity toward Type I civilization.",
-  "isPartOf": {"@id": "https://offda9.com/#website"},
-  "mainEntityOfPage": "https://offda9.com/da-crew.php"
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://offda9.com/da-crew.php",
+      "url": "https://offda9.com/da-crew.php",
+      "name": "Da Crew - OD9 Music Collective | Meet the Artists",
+      "description": "Meet Da Crew behind OD9's music collective. Artists using hip-hop and music as tools for consciousness shifting, culture building, and advancing humanity.",
+      "isPartOf": {"@id": "https://offda9.com/#website"},
+      "mainEntity": {"@id": "https://offda9.com/da-crew.php#roster"}
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://offda9.com/da-crew.php#roster",
+      "name": "OD9 Music Collective Roster",
+      "numberOfItems": 5,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "Person",
+            "@id": "https://offda9.com/da-crew.php#rage",
+            "name": "The Ultimate Rage",
+            "jobTitle": "Co-Founder / Producer / Vocalist / Technologist",
+            "image": "https://offda9.com/images/crew/rage.png",
+            "memberOf": {"@id": "https://offda9.com/#organization"},
+            "sameAs": [
+              "https://instagram.com/theultimaterage",
+              "https://tiktok.com/@theultimaterage079",
+              "https://youtube.com/@theultimaterage",
+              "https://open.spotify.com/artist/0QvH8H7obaMerk1UkfFGaD",
+              "https://soundcloud.com/theultimaterage",
+              "https://facebook.com/theultimaterage",
+              "https://twitter.com/theultimat63157",
+              "https://theultimaterage.substack.com"
+            ]
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "Person",
+            "@id": "https://offda9.com/da-crew.php#deezle",
+            "name": "Deezle Deez",
+            "jobTitle": "Co-Founder / Producer / Vocalist",
+            "image": "https://offda9.com/images/crew/deez.jpg",
+            "memberOf": {"@id": "https://offda9.com/#organization"},
+            "sameAs": [
+              "https://instagram.com/deezle_deez",
+              "https://facebook.com/deezle.deez"
+            ]
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "Person",
+            "@id": "https://offda9.com/da-crew.php#p-mac",
+            "name": "P-Mac",
+            "jobTitle": "Artist",
+            "image": "https://offda9.com/images/crew/p-mac.png",
+            "memberOf": {"@id": "https://offda9.com/#organization"},
+            "sameAs": [
+              "https://instagram.com/perryjay22",
+              "https://facebook.com/perryjayjayr"
+            ]
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "Person",
+            "@id": "https://offda9.com/da-crew.php#lb",
+            "name": "L.B.",
+            "jobTitle": "Artist",
+            "image": "https://offda9.com/images/crew/lb.jpg",
+            "memberOf": {"@id": "https://offda9.com/#organization"},
+            "sameAs": [
+              "https://instagram.com/iambilla",
+              "https://tiktok.com/@iambilla079",
+              "https://facebook.com/lb079"
+            ]
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "Person",
+            "@id": "https://offda9.com/da-crew.php#joey-p",
+            "name": "Joey P.",
+            "jobTitle": "Artist",
+            "image": "https://offda9.com/images/crew/joey-p.jpg",
+            "memberOf": {"@id": "https://offda9.com/#organization"},
+            "sameAs": [
+              "https://instagram.com/jpacius_sm",
+              "https://youtube.com/@joeyp.",
+              "https://open.spotify.com/artist/2a1dff70K0i5OZXBkYQOzZ",
+              "https://facebook.com/young.joseph.307539"
+            ]
+          }
+        }
+      ]
+    }
+  ]
 }
 </script>
 

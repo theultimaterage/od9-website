@@ -36,13 +36,75 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "MusicGroup",
-  "@id": "https://offda9.com/music.php",
-  "url": "https://offda9.com/music.php",
-  "name": "Music - OD9 | Hip-Hop for Human Advancement",
-  "description": "Listen to OD9's music catalog. Hip-hop and conscious music that creates culture shifts, makes coordination theory accessible, and builds identity beyond consumption.",
-  "isPartOf": {"@id": "https://offda9.com/#website"},
-  "mainEntityOfPage": "https://offda9.com/music.php"
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": "https://offda9.com/music.php",
+      "url": "https://offda9.com/music.php",
+      "name": "Music - OD9 | Hip-Hop for Human Advancement",
+      "description": "Listen to OD9's music catalog. Hip-hop and conscious music that creates culture shifts and builds identity beyond consumption.",
+      "isPartOf": {"@id": "https://offda9.com/#website"},
+      "mainEntity": {"@id": "https://offda9.com/music.php#catalog"}
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://offda9.com/music.php#catalog",
+      "name": "OD9 Music Catalog",
+      "numberOfItems": 3,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "MusicAlbum",
+            "name": "Missing In Action",
+            "byArtist": {
+              "@type": "Person",
+              "name": "Joey P.",
+              "@id": "https://offda9.com/da-crew.php#joey-p"
+            },
+            "albumReleaseType": "https://schema.org/EPRelease",
+            "datePublished": "2025-11-07",
+            "image": "https://offda9.com/images/music/joey-p-missing-in-action.jpg",
+            "url": "https://open.spotify.com/album/7jnkBN83bZO0YTsORUrKBZ"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "MusicAlbum",
+            "name": "Outrageous EP",
+            "byArtist": {
+              "@type": "Person",
+              "name": "The Ultimate Rage",
+              "@id": "https://offda9.com/da-crew.php#rage"
+            },
+            "albumReleaseType": "https://schema.org/EPRelease",
+            "albumProductionType": "https://schema.org/StudioAlbum",
+            "image": "https://offda9.com/images/music/outrageous-ep-cover.png",
+            "url": "https://open.spotify.com/album/6V3kmOLMgNgsCLrRJaMiN3"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "MusicAlbum",
+            "name": "Phuryous Stylez Vol. 1",
+            "byArtist": {
+              "@type": "Person",
+              "name": "The Ultimate Rage",
+              "@id": "https://offda9.com/da-crew.php#rage"
+            },
+            "albumReleaseType": "https://schema.org/MixtapeRelease",
+            "image": "https://offda9.com/images/music/phuryous-stylez-cover.png",
+            "description": "Discord exclusive mixtape - available only to OD9 Discord community members"
+          }
+        }
+      ]
+    }
+  ]
 }
 </script>
 
