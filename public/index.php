@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -52,8 +52,7 @@
       "sameAs": [
         "https://discord.gg/spgmrXVMWq",
         "https://youtube.com/@theultimaterage",
-        "https://tiktok.com/@theultimaterage079",
-        "https://www.patreon.com/c/TheUltimateRage",
+"https://www.patreon.com/c/TheUltimateRage",
         "https://theultimaterage.substack.com"
       ],
       "foundingDate": "2024",
@@ -90,8 +89,7 @@
           "url": "https://offda9.com/da-crew.php#rage",
           "sameAs": [
             "https://instagram.com/theultimaterage",
-            "https://tiktok.com/@theultimaterage079",
-            "https://youtube.com/@theultimaterage",
+"https://youtube.com/@theultimaterage",
             "https://open.spotify.com/artist/0QvH8H7obaMerk1UkfFGaD",
             "https://soundcloud.com/theultimaterage",
             "https://facebook.com/theultimaterage",
@@ -130,8 +128,7 @@
           "url": "https://offda9.com/da-crew.php#lb",
           "sameAs": [
             "https://instagram.com/iambilla",
-            "https://tiktok.com/@iambilla079",
-            "https://facebook.com/lb079"
+"https://facebook.com/lb079"
           ]
         },
         {
@@ -213,7 +210,7 @@ body{background:var(--carbon);background-image:linear-gradient(45deg,#111 25%,tr
 .nav-logo{display:flex;align-items:center;text-decoration:none}
 .nav-logo img{height:50px;margin-right:0.75rem;filter:drop-shadow(var(--glow))}
 .nav-logo-text{font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:700;color:var(--primary-blue);letter-spacing:3px;text-shadow:var(--glow)}
-.nav-menu{display:flex;list-style:none;gap:1.5rem;align-items:center}
+.nav-menu{display:flex;list-style:none;gap:0.8rem;align-items:center}
 .nav-link{color:var(--chrome);text-decoration:none;font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;transition:all 0.3s;padding:0.5rem 0;position:relative}
 .nav-link::after{content:'';position:absolute;bottom:0;left:50%;width:0;height:2px;background:var(--primary-blue);transition:all 0.3s;transform:translateX(-50%)}
 .nav-link:hover,.nav-link.active{color:var(--primary-blue)}
@@ -531,38 +528,7 @@ body{background:var(--carbon);background-image:linear-gradient(45deg,#111 25%,tr
 </style>
 </head>
 <body>
-<nav class="od9-nav"><div class="nav-container">
-<a href="index.php" class="nav-logo"><img src="images/logos/od9-logo.png" alt="OD9"><span class="nav-logo-text">OD9</span></a>
-<ul class="nav-menu">
-<li><a href="index.php" class="nav-link active">Home</a></li>
-<li><a href="framework.php" class="nav-link ">Framework</a></li>
-<li><a href="tiers.php" class="nav-link ">Tiers</a></li>
-<li><a href="da-crew.php" class="nav-link ">Da Crew</a></li>
-<li><a href="music.php" class="nav-link ">Music</a></li>
-<li><a href="resources.php" class="nav-link ">Resources</a></li>
-<li><a href="support.php" class="nav-link ">Support</a></li>
-<li><a href="contact.php" class="nav-link ">Contact</a></li>
-<li><a href="https://discord.gg/spgmrXVMWq" target="_blank" class="nav-btn"><i class="fab fa-discord"></i> Discord</a></li>
-</ul>
-<button class="mobile-toggle" id="hamburger"><span></span><span></span><span></span></button>
-</div></nav>
-<div class="mobile-menu" id="mobileMenu">
-<a href="index.php" class="active">Home</a>
-<a href="framework.php" class="">Framework</a>
-<a href="tiers.php" class="">Tiers</a>
-<a href="da-crew.php" class="">Da Crew</a>
-<a href="music.php" class="">Music</a>
-<a href="resources.php" class="">Resources</a>
-<a href="support.php" class="">Support</a>
-<a href="contact.php" class="">Contact</a>
-<a href="https://discord.gg/spgmrXVMWq" target="_blank" class="mobile-discord"><i class="fab fa-discord"></i> Join Discord</a>
-</div>
-<script>
-document.getElementById("hamburger").addEventListener("click", function() {
-    this.classList.toggle("active");
-    document.getElementById("mobileMenu").classList.toggle("active");
-});
-</script>
+<?php $current_page = 'index'; include('includes/nav.php'); ?>
 
 <!-- Hero Section -->
 <section class="hero">
@@ -665,26 +631,7 @@ document.getElementById("hamburger").addEventListener("click", function() {
     </a>
 </section>
 
-<footer style="text-align:center;margin-top:3rem;padding:2rem;border-top:1px solid #333">
-<div style="margin-bottom:1rem">
-<a href="index.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Home</a>
-<a href="framework.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Framework</a>
-<a href="tiers.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Tiers</a>
-<a href="da-crew.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Da Crew</a>
-<a href="music.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Music</a>
-<a href="resources.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Resources</a>
-<a href="support.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Support</a>
-<a href="contact.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Contact</a>
-</div>
-<div style="margin-bottom:1rem">
-<a href="https://discord.gg/spgmrXVMWq" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-discord"></i></a>
-<a href="https://tiktok.com/@theultimaterage079" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-tiktok"></i></a>
-<a href="https://youtube.com/@theultimaterage" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-youtube"></i></a>
-<a href="https://www.patreon.com/c/TheUltimateRage" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-patreon"></i></a>
-</div>
-<p style="color:#555;font-size:0.85rem">&copy; 2026 OD9 LLC. All rights reserved.</p>
-<p style="color:#444;font-size:0.75rem;margin-top:0.5rem"><a href="terms.php" style="color:#444">Terms</a> | <a href="privacy.php" style="color:#444">Privacy</a></p>
-</footer>
+
 <style>
 /* Email Signup Popup */
 .email-popup-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:99999;justify-content:center;align-items:center}
@@ -738,5 +685,7 @@ document.getElementById('emailPopup').addEventListener('click', function(e) {
     if (e.target === this) closeEmailPopup();
 });
 </script>
+<?php include('includes/footer.php'); ?>
 </body>
 </html>
+

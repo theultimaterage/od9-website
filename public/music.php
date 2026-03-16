@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -6,7 +6,7 @@
 <title>Music - OD9 | Hip-Hop for Human Advancement</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<meta name="description" content="Listen to OD9's music catalog. Hip-hop and conscious music that creates culture shifts, makes coordination theory accessible, and builds identity beyond consumption.">
+<meta name="description" content="OD9 music catalog. Hip-hop engineered for paradigm shifts - encoding coordination theory into culture, building identity beyond consumption. Stream, support, or join the Discord for exclusives.">
 <meta name="keywords" content="OD9 music, The Ultimate Rage, hip-hop, conscious rap, music for human advancement, OD9 songs, OD9 albums">
 <meta name="robots" content="index, follow">
 <meta name="author" content="OD9 LLC">
@@ -16,7 +16,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://offda9.com/music.php">
 <meta property="og:title" content="Music - OD9 | Hip-Hop for Human Advancement">
-<meta property="og:description" content="Music that creates consciousness shifts. Logic alone doesn't change behavior. Culture does.">
+<meta property="og:description" content="Logic doesn't change behavior. Culture does. This is OD9's weapon - music that encodes coordination theory and refuses to let you stay asleep.">
 <meta property="og:image" content="https://offda9.com/images/logos/od9-logo.png">
 <meta property="og:site_name" content="OD9 - Off Da Nine">
 <meta property="og:locale" content="en_US">
@@ -24,7 +24,7 @@
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="OD9 Music | Hip-Hop for Human Advancement">
-<meta name="twitter:description" content="Listen to OD9's music catalog. Conscious hip-hop that makes coordination theory accessible.">
+<meta name="twitter:description" content="Hip-hop engineered for paradigm shifts. Stream OD9 music or join Discord for exclusive drops.">
 <meta name="twitter:image" content="https://offda9.com/images/logos/od9-logo.png">
 
 <!-- Favicon & Theme -->
@@ -185,6 +185,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.6rem;color:#fff;margin:2.5rem 0
 .platform-link.youtube i{color:#FF0000}
 .platform-link.reverbnation i{color:#E43526}
 .platform-link.soundclick i{color:#FF6600}
+.platform-link.twitch i{color:#9146FF}
 .platform-link.ourstage i{color:#00BFFF}
 
 /* Upcoming Section */
@@ -205,41 +206,14 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.6rem;color:#fff;margin:2.5rem 0
 </style>
 </head>
 <body>
-<nav class="od9-nav"><div class="nav-container">
-<a href="index.php" class="nav-logo"><img src="images/logos/od9-logo.png" alt="OD9"><span class="nav-logo-text">OD9</span></a>
-<ul class="nav-menu">
-<li><a href="index.php" class="nav-link ">Home</a></li>
-<li><a href="framework.php" class="nav-link ">Framework</a></li>
-<li><a href="tiers.php" class="nav-link ">Tiers</a></li>
-<li><a href="da-crew.php" class="nav-link ">Da Crew</a></li>
-<li><a href="music.php" class="nav-link active">Music</a></li>
-<li><a href="resources.php" class="nav-link ">Resources</a></li>
-<li><a href="support.php" class="nav-link ">Support</a></li>
-<li><a href="contact.php" class="nav-link ">Contact</a></li>
-<li><a href="https://discord.gg/spgmrXVMWq" target="_blank" class="nav-btn"><i class="fab fa-discord"></i> Discord</a></li>
-</ul>
-<button class="mobile-toggle" id="hamburger"><span></span><span></span><span></span></button>
-</div></nav>
-<div class="mobile-menu" id="mobileMenu">
-<a href="index.php" class="">Home</a>
-<a href="framework.php" class="">Framework</a>
-<a href="tiers.php" class="">Tiers</a>
-<a href="da-crew.php" class="">Da Crew</a>
-<a href="music.php" class="active">Music</a>
-<a href="resources.php" class="">Resources</a>
-<a href="support.php" class="">Support</a>
-<a href="contact.php" class="">Contact</a>
-<a href="https://discord.gg/spgmrXVMWq" target="_blank" class="mobile-discord"><i class="fab fa-discord"></i> Join Discord</a>
-</div>
-<script>
-document.getElementById("hamburger").addEventListener("click", function() {
-    this.classList.toggle("active");
-    document.getElementById("mobileMenu").classList.toggle("active");
-});
-</script>
+<?php $current_page = 'music'; include('includes/nav.php'); ?>
 <div class="container">
 <h1>MUSIC</h1>
-<p class="subtitle">OD9 Music Collective</p>
+<p class="subtitle">Logic Doesn't Change Behavior. Culture Does. This Is the Weapon.</p>
+
+<div style="text-align:center;max-width:700px;margin:0 auto 2.5rem;padding:1.5rem;border-left:3px solid var(--primary-blue);border-right:3px solid var(--primary-blue)">
+<p style="color:#aaa;line-height:1.8;font-size:1.05rem">Every civilization that failed did so with a soundtrack that kept them asleep. OD9 music exists to do the opposite - to create cultural artifacts that encode coordination theory, challenge default thinking, and build identity beyond consumption. These aren't albums. They're deployments.</p>
+</div>
 
 <!-- Joey P. - Missing In Action (Newest Release - Top) -->
 <div class="featured-release">
@@ -249,7 +223,7 @@ document.getElementById("hamburger").addEventListener("click", function() {
 <h3>MISSING IN ACTION</h3>
 <p class="artist">Joey P.</p>
 <p class="release-date">Released November 7, 2025</p>
-<p>The latest project from OD9's own Joey P. Stream now on all platforms.</p>
+<p>Joey P. doesn't make music you vibe to and forget. Missing In Action is a sonic debriefing - bars that hit like evidence, production that refuses to let you scroll past. This is what it sounds like when OD9 stops explaining and starts demonstrating.</p>
 <a href="https://open.spotify.com/album/7jnkBN83bZO0YTsORUrKBZ" target="_blank" class="btn spotify"><i class="fab fa-spotify"></i> Listen on Spotify</a>
 </div>
 </div>
@@ -262,7 +236,7 @@ document.getElementById("hamburger").addEventListener("click", function() {
 <div class="album-info">
 <h3>OUTRAGEOUS EP</h3>
 <p class="artist">The Ultimate Rage</p>
-<p>The official debut project from The Ultimate Rage. Where it all began.</p>
+<p>Where it all started. The Outrageous EP was The Ultimate Rage's opening statement - raw, unfiltered, and deliberately uncomfortable. Before the framework, before the tiers, before the mission had a name, there was this: proof that the energy was always real.</p>
 <a href="https://open.spotify.com/album/6V3kmOLMgNgsCLrRJaMiN3" target="_blank" class="btn spotify"><i class="fab fa-spotify"></i> Listen on Spotify</a>
 </div>
 </div>
@@ -275,7 +249,7 @@ document.getElementById("hamburger").addEventListener("click", function() {
 <div class="album-info">
 <h3>PHURYOUS STYLEZ VOL. 1</h3>
 <p class="artist">The Ultimate Rage</p>
-<p>The second project from The Ultimate Rage is available NOW - but ONLY for members of our Discord community. Join the server to get exclusive access to the full mixtape, plus behind-the-scenes content and direct interaction with the crew.</p>
+<p>You can't stream this. You can't buy this. Phuryous Stylez Vol. 1 is The Ultimate Rage unleashed with zero commercial compromise - a mixtape forged exclusively for the Discord community. This is what happens when an artist stops performing for algorithms and starts creating for their people. Join the server. Earn access. No shortcuts.</p>
 <a href="https://discord.gg/spgmrXVMWq" target="_blank" class="btn"><i class="fab fa-discord"></i> Join Discord to Listen</a>
 </div>
 </div>
@@ -299,6 +273,10 @@ document.getElementById("hamburger").addEventListener("click", function() {
 <a href="https://soundcloud.com/theultimaterage" target="_blank" class="platform-link soundcloud">
 <i class="fab fa-soundcloud"></i>
 <span>SoundCloud</span>
+</a>
+<a href="https://www.twitch.tv/theultimaterage" target="_blank" class="platform-link twitch">
+<i class="fab fa-twitch"></i>
+<span>Twitch</span>
 </a>
 <a href="https://youtube.com/@theultimaterage" target="_blank" class="platform-link youtube">
 <i class="fab fa-youtube"></i>
@@ -350,32 +328,13 @@ document.getElementById("hamburger").addEventListener("click", function() {
 </video>
 <div class="ep-info">
 <h3>SUPREME ELEVATION EP</h3>
-<p style="color:#888;margin-bottom:1rem">The debut EP from Da Crew</p>
+<p style="color:#aaa;margin-bottom:1rem;line-height:1.6">The collective speaks. Supreme Elevation is the first full-crew project from OD9 - every voice, every perspective, one mission. This isn't a compilation. It's a coordinated strike.</p>
 <span class="coming-soon-badge">Coming Soon</span>
 </div>
 </div>
 </div>
 
 </div>
-<footer style="text-align:center;margin-top:3rem;padding:2rem;border-top:1px solid #333">
-<div style="margin-bottom:1rem">
-<a href="index.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Home</a>
-<a href="framework.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Framework</a>
-<a href="tiers.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Tiers</a>
-<a href="da-crew.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Da Crew</a>
-<a href="music.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Music</a>
-<a href="resources.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Resources</a>
-<a href="support.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Support</a>
-<a href="contact.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Contact</a>
-</div>
-<div style="margin-bottom:1rem">
-<a href="https://discord.gg/spgmrXVMWq" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-discord"></i></a>
-<a href="https://tiktok.com/@theultimaterage079" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-tiktok"></i></a>
-<a href="https://youtube.com/@theultimaterage" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-youtube"></i></a>
-<a href="https://www.patreon.com/c/TheUltimateRage" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-patreon"></i></a>
-</div>
-<p style="color:#555;font-size:0.85rem">&copy; 2026 OD9 LLC. All rights reserved.</p>
-<p style="color:#444;font-size:0.75rem;margin-top:0.5rem"><a href="terms.php" style="color:#444">Terms</a> | <a href="privacy.php" style="color:#444">Privacy</a></p>
-</footer>
+<?php include('includes/footer.php'); ?>
 </body>
 </html>

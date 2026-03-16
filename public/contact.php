@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -109,7 +109,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:#fff;margin:2rem 0 1
 .social-card span{color:#fff;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:0.9rem}
 .social-card.discord i{color:#5865F2}
 .social-card.youtube i{color:#FF0000}
-.social-card.tiktok i{color:#fff}
+
 .social-card.instagram i{color:#E4405F}
 .social-card.facebook i{color:#1877F2}
 .social-card.twitter i{color:#fff}
@@ -119,38 +119,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:#fff;margin:2rem 0 1
 </style>
 </head>
 <body>
-<nav class="od9-nav"><div class="nav-container">
-<a href="index.php" class="nav-logo"><img src="images/logos/od9-logo.png" alt="OD9"><span class="nav-logo-text">OD9</span></a>
-<ul class="nav-menu">
-<li><a href="index.php" class="nav-link ">Home</a></li>
-<li><a href="framework.php" class="nav-link ">Framework</a></li>
-<li><a href="tiers.php" class="nav-link ">Tiers</a></li>
-<li><a href="da-crew.php" class="nav-link ">Da Crew</a></li>
-<li><a href="music.php" class="nav-link ">Music</a></li>
-<li><a href="resources.php" class="nav-link ">Resources</a></li>
-<li><a href="support.php" class="nav-link ">Support</a></li>
-<li><a href="contact.php" class="nav-link active">Contact</a></li>
-<li><a href="https://discord.gg/spgmrXVMWq" target="_blank" class="nav-btn"><i class="fab fa-discord"></i> Discord</a></li>
-</ul>
-<button class="mobile-toggle" id="hamburger"><span></span><span></span><span></span></button>
-</div></nav>
-<div class="mobile-menu" id="mobileMenu">
-<a href="index.php" class="">Home</a>
-<a href="framework.php" class="">Framework</a>
-<a href="tiers.php" class="">Tiers</a>
-<a href="da-crew.php" class="">Da Crew</a>
-<a href="music.php" class="">Music</a>
-<a href="resources.php" class="">Resources</a>
-<a href="support.php" class="">Support</a>
-<a href="contact.php" class="active">Contact</a>
-<a href="https://discord.gg/spgmrXVMWq" target="_blank" class="mobile-discord"><i class="fab fa-discord"></i> Join Discord</a>
-</div>
-<script>
-document.getElementById("hamburger").addEventListener("click", function() {
-    this.classList.toggle("active");
-    document.getElementById("mobileMenu").classList.toggle("active");
-});
-</script>
+<?php $current_page = 'contact'; include('includes/nav.php'); ?>
 <div class="container">
 <h1>CONTACT</h1>
 <p class="subtitle">Get in Touch with OD9</p>
@@ -170,12 +139,7 @@ document.getElementById("hamburger").addEventListener("click", function() {
 <a href="mailto:contact@offda9.com">contact@offda9.com</a>
 </div>
 
-<div class="contact-card">
-<i class="fab fa-tiktok"></i>
-<h3>TikTok</h3>
-<p>Catch us LIVE for real-time interaction</p>
-<a href="https://tiktok.com/@theultimaterage079" target="_blank">@theultimaterage079</a>
-</div>
+<a href="https://www.twitch.tv/theultimaterage" target="_blank" class="contact-card"><i class="fab fa-twitch"></i><h3>Twitch</h3><p>Live NCZ streams and community interaction</p></a>
 </div>
 
 <h2>SEND A MESSAGE</h2>
@@ -220,10 +184,6 @@ document.getElementById("hamburger").addEventListener("click", function() {
 <i class="fab fa-youtube"></i>
 <span>YouTube</span>
 </a>
-<a href="https://tiktok.com/@theultimaterage079" target="_blank" class="social-card tiktok">
-<i class="fab fa-tiktok"></i>
-<span>TikTok</span>
-</a>
 <a href="https://theultimaterage.substack.com" target="_blank" class="social-card substack">
 <i class="fas fa-newspaper"></i>
 <span>Substack</span>
@@ -235,6 +195,10 @@ document.getElementById("hamburger").addEventListener("click", function() {
 <a href="https://instagram.com/theultimaterage" target="_blank" class="social-card instagram">
 <i class="fab fa-instagram"></i>
 <span>Instagram</span>
+</a>
+<a href="https://www.twitch.tv/theultimaterage" target="_blank" class="social-card twitch">
+<i class="fab fa-twitch"></i>
+<span>Twitch</span>
 </a>
 <a href="https://youtube.com/@theultimaterage" target="_blank" class="social-card youtube">
 <i class="fab fa-youtube"></i>
@@ -259,25 +223,7 @@ document.getElementById("hamburger").addEventListener("click", function() {
 </div>
 
 </div>
-<footer style="text-align:center;margin-top:3rem;padding:2rem;border-top:1px solid #333">
-<div style="margin-bottom:1rem">
-<a href="index.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Home</a>
-<a href="framework.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Framework</a>
-<a href="tiers.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Tiers</a>
-<a href="da-crew.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Da Crew</a>
-<a href="music.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Music</a>
-<a href="resources.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Resources</a>
-<a href="support.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Support</a>
-<a href="contact.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Contact</a>
-</div>
-<div style="margin-bottom:1rem">
-<a href="https://discord.gg/spgmrXVMWq" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-discord"></i></a>
-<a href="https://tiktok.com/@theultimaterage079" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-tiktok"></i></a>
-<a href="https://youtube.com/@theultimaterage" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-youtube"></i></a>
-<a href="https://www.patreon.com/c/TheUltimateRage" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-patreon"></i></a>
-</div>
-<p style="color:#555;font-size:0.85rem">&copy; 2026 OD9 LLC. All rights reserved.</p>
-<p style="color:#444;font-size:0.75rem;margin-top:0.5rem"><a href="terms.php" style="color:#444">Terms</a> | <a href="privacy.php" style="color:#444">Privacy</a></p>
-</footer>
+<?php include('includes/footer.php'); ?>
 </body>
 </html>
+

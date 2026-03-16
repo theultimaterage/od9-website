@@ -13,7 +13,7 @@ if (!defined('SITE_PATH')) {
 }
 
 // Load the shared platform bootstrap
-require_once __DIR__ . '/../../shared-platform/core/Bootstrap.php';
+require_once 'C:/xampp/htdocs/freshthaband/public_html/shared-platform/core/Bootstrap.php';
 
 // Note: After this point, you have access to:
 // - site($key)     - Get site config value

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -145,26 +145,7 @@ h1{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#fff;text-align:cent
 </style>
 </head>
 <body>
-<nav class="od9-nav"><div class="nav-container">
-<a href="index.php" class="nav-logo"><img src="assets/images/logos/od9-logo.png" alt="OD9"><span class="nav-logo-text">OD9</span></a>
-<ul class="nav-menu">
-<li><a href="index.php" class="nav-link">Home</a></li>
-<li><a href="framework.php" class="nav-link">Framework</a></li>
-<li><a href="tiers.php" class="nav-link active">Tiers</a></li>
-<li><a href="da-crew.php" class="nav-link">Da Crew</a></li>
-<li><a href="music.php" class="nav-link">Music</a></li>
-<li><a href="resources.php" class="nav-link">Resources</a></li>
-<li><a href="support.php" class="nav-link">Support</a></li>
-<li><a href="contact.php" class="nav-link">Contact</a></li>
-<li><a href="https://discord.gg/spgmrXVMWq" target="_blank" class="nav-btn"><i class="fab fa-discord"></i> Discord</a></li>
-</ul>
-<button class="mobile-toggle" id="hamburger"><span></span><span></span><span></span></button>
-</div></nav>
-<div class="mobile-menu" id="mobileMenu">
-<a href="index.php">Home</a><a href="framework.php">Framework</a><a href="tiers.php" class="active">Tiers</a><a href="da-crew.php">Da Crew</a><a href="music.php">Music</a><a href="resources.php">Resources</a><a href="support.php">Support</a><a href="contact.php">Contact</a>
-<a href="https://discord.gg/spgmrXVMWq" target="_blank" class="mobile-discord"><i class="fab fa-discord"></i> Join Discord</a>
-</div>
-<script>document.getElementById("hamburger").addEventListener("click",function(){this.classList.toggle("active");document.getElementById("mobileMenu").classList.toggle("active")});</script>
+<?php $current_page = 'tiers'; include('includes/nav.php'); ?>
 
 <div class="container">
 <h1>PROGRESSION TIERS</h1>
@@ -315,7 +296,7 @@ h1{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#fff;text-align:cent
 <li><strong>Community Investment</strong> - sponsoring projects, retention programs</li>
 </ul></div>
 <div class="detail-box"><h4><i class="fas fa-tasks"></i> Requirements</h4><ul>
-<li>1000+ total credits</li>
+<li>750+ total credits</li>
 <li>6+ months active at Pioneer level</li>
 <li>Financial or resource contribution to operations</li>
 <li>Community nomination and Pioneer council approval</li>
@@ -358,26 +339,8 @@ h1{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#fff;text-align:cent
 </div>
 </div>
 
-<footer style="text-align:center;margin-top:3rem;padding:2rem;border-top:1px solid #333">
-<div style="margin-bottom:1rem">
-<a href="index.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Home</a>
-<a href="framework.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Framework</a>
-<a href="tiers.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Tiers</a>
-<a href="da-crew.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Da Crew</a>
-<a href="music.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Music</a>
-<a href="resources.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Resources</a>
-<a href="support.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Support</a>
-<a href="contact.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Contact</a>
-</div>
-<div style="margin-bottom:1rem">
-<a href="https://discord.gg/spgmrXVMWq" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-discord"></i></a>
-<a href="https://tiktok.com/@theultimaterage079" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-tiktok"></i></a>
-<a href="https://youtube.com/@theultimaterage" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-youtube"></i></a>
-<a href="https://www.patreon.com/c/TheUltimateRage" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-patreon"></i></a>
-</div>
-<p style="color:#555;font-size:0.85rem">&copy; 2026 OD9 LLC. All rights reserved.</p>
-<p style="color:#444;font-size:0.75rem;margin-top:0.5rem"><a href="terms.php" style="color:#444">Terms</a> | <a href="privacy.php" style="color:#444">Privacy</a></p>
-</footer>
+<?php include('includes/footer.php'); ?>
 <script>function toggleTier(header){header.parentElement.classList.toggle('open')}</script>
 </body>
 </html>
+

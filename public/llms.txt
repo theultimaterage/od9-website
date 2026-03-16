@@ -21,3 +21,6 @@
 
 ## Platform
 - [Powered by F.R.E.S.H.](https://freshthaplatform.com)
+
+## Machine-Readable
+- [Agent Profile (JSON)](https://offda9.com/api/agent/)

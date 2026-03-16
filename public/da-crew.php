@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -64,8 +64,7 @@
             "memberOf": {"@id": "https://offda9.com/#organization"},
             "sameAs": [
               "https://instagram.com/theultimaterage",
-              "https://tiktok.com/@theultimaterage079",
-              "https://youtube.com/@theultimaterage",
+"https://youtube.com/@theultimaterage",
               "https://open.spotify.com/artist/0QvH8H7obaMerk1UkfFGaD",
               "https://soundcloud.com/theultimaterage",
               "https://facebook.com/theultimaterage",
@@ -118,8 +117,7 @@
             "memberOf": {"@id": "https://offda9.com/#organization"},
             "sameAs": [
               "https://instagram.com/iambilla",
-              "https://tiktok.com/@iambilla079",
-              "https://facebook.com/lb079"
+"https://facebook.com/lb079"
             ]
           }
         },
@@ -219,38 +217,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.8rem;color:#fff;margin:3rem 0 1
 </style>
 </head>
 <body>
-<nav class="od9-nav"><div class="nav-container">
-<a href="index.php" class="nav-logo"><img src="images/logos/od9-logo.png" alt="OD9"><span class="nav-logo-text">OD9</span></a>
-<ul class="nav-menu">
-<li><a href="index.php" class="nav-link ">Home</a></li>
-<li><a href="framework.php" class="nav-link ">Framework</a></li>
-<li><a href="tiers.php" class="nav-link ">Tiers</a></li>
-<li><a href="da-crew.php" class="nav-link active">Da Crew</a></li>
-<li><a href="music.php" class="nav-link ">Music</a></li>
-<li><a href="resources.php" class="nav-link ">Resources</a></li>
-<li><a href="support.php" class="nav-link ">Support</a></li>
-<li><a href="contact.php" class="nav-link ">Contact</a></li>
-<li><a href="https://discord.gg/spgmrXVMWq" target="_blank" class="nav-btn"><i class="fab fa-discord"></i> Discord</a></li>
-</ul>
-<button class="mobile-toggle" id="hamburger"><span></span><span></span><span></span></button>
-</div></nav>
-<div class="mobile-menu" id="mobileMenu">
-<a href="index.php" class="">Home</a>
-<a href="framework.php" class="">Framework</a>
-<a href="tiers.php" class="">Tiers</a>
-<a href="da-crew.php" class="active">Da Crew</a>
-<a href="music.php" class="">Music</a>
-<a href="resources.php" class="">Resources</a>
-<a href="support.php" class="">Support</a>
-<a href="contact.php" class="">Contact</a>
-<a href="https://discord.gg/spgmrXVMWq" target="_blank" class="mobile-discord"><i class="fab fa-discord"></i> Join Discord</a>
-</div>
-<script>
-document.getElementById("hamburger").addEventListener("click", function() {
-    this.classList.toggle("active");
-    document.getElementById("mobileMenu").classList.toggle("active");
-});
-</script>
+<?php $current_page = 'da-crew'; include('includes/nav.php'); ?>
 <div class="container">
 <h1>DA CREW</h1>
 <p class="subtitle">OD9 Music Collective</p>
@@ -269,7 +236,7 @@ document.getElementById("hamburger").addEventListener("click", function() {
 <div class="role">Co-Founder</div>
 <div class="social-links">
 <a href="https://instagram.com/theultimaterage" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-<a href="https://tiktok.com/@theultimaterage079" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
+<a href="https://www.twitch.tv/theultimaterage" target="_blank" title="Twitch"><i class="fab fa-twitch"></i></a>
 <a href="https://youtube.com/@theultimaterage" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
 <a href="https://open.spotify.com/artist/0QvH8H7obaMerk1UkfFGaD" target="_blank" title="Spotify"><i class="fab fa-spotify"></i></a>
 <a href="https://soundcloud.com/theultimaterage" target="_blank" title="SoundCloud"><i class="fab fa-soundcloud"></i></a>
@@ -311,7 +278,6 @@ document.getElementById("hamburger").addEventListener("click", function() {
 <div class="role">Artist</div>
 <div class="social-links">
 <a href="https://instagram.com/iambilla" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-<a href="https://tiktok.com/@iambilla079" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
 <a href="https://facebook.com/lb079" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
 </div>
 </div>
@@ -341,7 +307,7 @@ document.getElementById("hamburger").addEventListener("click", function() {
 </video>
 <div class="ep-info">
 <h3>SUPREME ELEVATION</h3>
-<p style="color:#888;margin-bottom:1rem">The debut EP from Da Crew</p>
+<p style="color:#aaa;margin-bottom:1rem;line-height:1.6">The collective speaks. The first full-crew project from OD9 - every voice, every perspective, one coordinated strike.</p>
 <span class="coming-soon-badge">Coming Soon</span>
 </div>
 </div>
@@ -373,25 +339,6 @@ document.getElementById("hamburger").addEventListener("click", function() {
 </div>
 
 </div>
-<footer style="text-align:center;margin-top:3rem;padding:2rem;border-top:1px solid #333">
-<div style="margin-bottom:1rem">
-<a href="index.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Home</a>
-<a href="framework.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Framework</a>
-<a href="tiers.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Tiers</a>
-<a href="da-crew.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Da Crew</a>
-<a href="music.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Music</a>
-<a href="resources.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Resources</a>
-<a href="support.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Support</a>
-<a href="contact.php" style="color:#00BFFF;text-decoration:none;margin:0 0.75rem">Contact</a>
-</div>
-<div style="margin-bottom:1rem">
-<a href="https://discord.gg/spgmrXVMWq" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-discord"></i></a>
-<a href="https://tiktok.com/@theultimaterage079" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-tiktok"></i></a>
-<a href="https://youtube.com/@theultimaterage" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-youtube"></i></a>
-<a href="https://www.patreon.com/c/TheUltimateRage" target="_blank" style="color:#666;margin:0 0.5rem;font-size:1.3rem"><i class="fab fa-patreon"></i></a>
-</div>
-<p style="color:#555;font-size:0.85rem">&copy; 2026 OD9 LLC. All rights reserved.</p>
-<p style="color:#444;font-size:0.75rem;margin-top:0.5rem"><a href="terms.php" style="color:#444">Terms</a> | <a href="privacy.php" style="color:#444">Privacy</a></p>
-</footer>
+<?php include('includes/footer.php'); ?>
 </body>
 </html>

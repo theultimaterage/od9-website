@@ -37,12 +37,12 @@ return [
         'accent' => 'Oswald',
     ],
     
-    // Logos
+    // Logos (absolute URLs for cross-subdomain compatibility)
     'logos' => [
-        'default' => 'assets/images/logos/od9-logo.png',
-        'light' => 'assets/images/logos/od9-logo-light.png',
-        'icon' => 'assets/images/logos/od9-icon.png',
-        'favicon' => 'assets/images/favicon.ico',
+        'default' => 'https://offda9.com/assets/images/logos/od9-logo.png',
+        'light' => 'https://offda9.com/assets/images/logos/od9-logo-light.png',
+        'icon' => 'https://offda9.com/assets/images/logos/od9-logo.png',
+        'favicon' => 'https://offda9.com/assets/images/favicon.ico',
     ],
     
     // Feature toggles
