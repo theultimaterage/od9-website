@@ -1,12 +1,10 @@
 <?php
 /**
- * OD9 Universal Navigation
- * Include this at the top of every page's <body> tag.
- * Set $current_page before including to highlight the active link.
- * Example: $current_page = 'ncz'; include('includes/nav.php');
+ * OD9 Universal Navigation (Dashboard Version)
+ * Absolute paths for use in /dashboard/ subdirectory
  */
 $nav_links = [
-    'index' => ['href' => '/index.php', 'label' => 'Home'],
+    'index' => ['href' => '/', 'label' => 'Home'],
     'framework' => ['href' => '/framework.php', 'label' => 'Framework'],
     'ncz' => ['href' => '/ncz.php', 'label' => 'NCZ'],
     'updates' => ['href' => '/updates.php', 'label' => 'Updates'],
@@ -17,11 +15,13 @@ $nav_links = [
     'join' => ['href' => '/join.php', 'label' => 'Join'],
     'downloads' => ['href' => '/downloads.php', 'label' => 'Downloads'],
     'support' => ['href' => '/support.php', 'label' => 'Support'],
+    'dashboard' => ['href' => '/dashboard/', 'label' => 'Dashboard'],
 ];
 if (!isset($current_page)) $current_page = '';
 ?>
+<?php include __DIR__ . '/nav-styles.php'; ?>
 <nav class="od9-nav"><div class="nav-container">
-<a href="/index.php" class="nav-logo"><img src="/images/logos/od9-logo.png" alt="OD9"><span class="nav-logo-text">OD9</span></a>
+<a href="/" class="nav-logo"><img src="/images/logos/od9-logo.png" alt="OD9"><span class="nav-logo-text">OD9</span></a>
 <ul class="nav-menu" style="gap:0.7rem">
 <?php foreach ($nav_links as $key => $link): ?>
 <li><a href="<?= $link['href'] ?>" class="nav-link <?= $current_page === $key ? 'active' : '' ?>" style="font-size:0.85rem"><?= $link['label'] ?></a></li>
