@@ -1,0 +1,18 @@
+# OD9 API v1 - Apache Configuration
+
+# Rewrite engine for routing
+RewriteEngine On
+
+# Pass Authorization header to PHP (Apache strips it by default)
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# Security headers
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-Frame-Options "DENY"
+
+# Block direct access to bootstrap
+<Files "bootstrap.php">
+    Order Allow,Deny
+    Deny from all
+</Files>

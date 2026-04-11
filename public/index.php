@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -658,7 +658,7 @@ body{background:var(--carbon);background-image:linear-gradient(45deg,#111 25%,tr
 <h3>JOIN THE MOVEMENT</h3>
 <p class="tagline">Stay Updated on OD9</p>
 <p>Get exclusive updates, new music drops, and content directly in your inbox. Be the first to know about community events and releases.</p>
-<form class="email-signup-form" action="subscribe.php" method="POST">
+<form class="email-signup-form" id="popupSignupForm">
 <input type="text" name="name" placeholder="Your Name" required>
 <input type="email" name="email" placeholder="Your Email" required>
 <button type="submit"><i class="fas fa-bolt" style="margin-right:0.5rem"></i> Subscribe</button>
@@ -684,6 +684,52 @@ setTimeout(function() {
 document.getElementById('emailPopup').addEventListener('click', function(e) {
     if (e.target === this) closeEmailPopup();
 });
+
+// AJAX Subscribe Handler
+function handleSubscribeForm(form, msgEl) {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var btn = form.querySelector('button[type="submit"]');
+        var origText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:0.5rem"></i> Joining...';
+        btn.disabled = true;
+        msgEl.style.display = 'none';
+        var formData = new FormData(form);
+        var data = {};
+        formData.forEach(function(val, key) { data[key] = val; });
+        fetch('subscribe.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+            msgEl.style.display = 'block';
+            if (res.success) {
+                msgEl.style.color = '#00BFFF';
+                msgEl.textContent = res.message;
+                form.reset();
+                setTimeout(function() { closeEmailPopup(); }, 3000);
+            } else {
+                msgEl.style.color = '#ff4444';
+                msgEl.textContent = res.error || 'Something went wrong. Try again.';
+            }
+        })
+        .catch(function() {
+            msgEl.style.display = 'block';
+            msgEl.style.color = '#ff4444';
+            msgEl.textContent = 'Network error. Please try again.';
+        })
+        .finally(function() {
+            btn.innerHTML = origText;
+            btn.disabled = false;
+        });
+    });
+}
+var popupForm = document.getElementById('popupSignupForm');
+var popupMsg = document.getElementById('popupFormMsg');
+if (popupForm && popupMsg) handleSubscribeForm(popupForm, popupMsg);
+
 </script>
 <?php include('includes/footer.php'); ?>
 </body>

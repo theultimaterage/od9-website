@@ -30,9 +30,56 @@
 </section>
 <section class="card"><h2>GET THE 85 SECONDS BRIEFING</h2>
 <p>Enter your info below. When the newsletter goes live, you'll be first in line.</p>
-<form><div><label>Name</label><input type="text" placeholder="Your name"></div><div><label>Email</label><input type="email" placeholder="you@example.com"></div><div><label>What brought you here?</label><textarea rows="3" placeholder="NCZ, Think Tank, the Manifesto, music, all of it..."></textarea></div><button type="button" class="btn">Get on the List</button></form>
+<form id="joinPageForm"><div><label>Name</label><input type="text" name="name" placeholder="Your name" required></div><div><label>Email</label><input type="email" name="email" placeholder="you@example.com" required></div><div><label>What brought you here?</label><textarea name="context" rows="3" placeholder="NCZ, Think Tank, the Manifesto, music, all of it..."></textarea></div><input type="hidden" name="source" value="join-page"><button type="submit" class="btn"><i class="fas fa-bolt" style="margin-right:0.5rem"></i> Get on the List</button><p id="joinFormMsg" style="display:none;margin-top:0.75rem;font-size:0.95rem"></p></form>
 <p class="small">Your info stays private. No spam. Unsubscribe anytime.</p></section>
 </div>
+<script>
+(function() {
+    var form = document.getElementById('joinPageForm');
+    var msg = document.getElementById('joinFormMsg');
+    if (!form || !msg) return;
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var btn = form.querySelector('button[type="submit"]');
+        var origText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:0.5rem"></i> Joining...';
+        btn.disabled = true;
+        msg.style.display = 'none';
+
+        var formData = new FormData(form);
+        var data = {};
+        formData.forEach(function(val, key) { data[key] = val; });
+
+        fetch('subscribe.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+            msg.style.display = 'block';
+            if (res.success) {
+                msg.style.color = '#00BFFF';
+                msg.textContent = res.message;
+                form.reset();
+            } else {
+                msg.style.color = '#ff4444';
+                msg.textContent = res.error || 'Something went wrong. Try again.';
+            }
+        })
+        .catch(function() {
+            msg.style.display = 'block';
+            msg.style.color = '#ff4444';
+            msg.textContent = 'Network error. Please try again.';
+        })
+        .finally(function() {
+            btn.innerHTML = origText;
+            btn.disabled = false;
+        });
+    });
+})();
+</script>
 <?php include('includes/footer.php'); ?>
 </body>
 </html>

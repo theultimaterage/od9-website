@@ -1,0 +1,11 @@
+# OD9 Public Directory Rewrites
+RewriteEngine On
+
+# Clean URL: /wake-up -> wake-up.php
+RewriteRule ^wake-up$ wake-up.php [L,QSA]
+
+# Clean URL: /join -> join.php
+RewriteRule ^join$ join.php [L,QSA]
+
+# Clean URL: /subscribe -> subscribe.php (API endpoint)
+RewriteRule ^subscribe$ subscribe.php [L,QSA]

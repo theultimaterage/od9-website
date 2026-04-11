@@ -500,6 +500,25 @@ body {
     .nav-menu { display: none; }
     .mobile-toggle { display: block; }
 }
+
+/* Enhanced Mobile Responsive */
+@media (max-width: 600px) {
+    .dashboard-container { padding: 1rem 0.5rem; }
+    .card { padding: 1rem; }
+    .card h3 { font-size: 1rem; }
+    .radar-container { max-width: 280px; }
+    .achievement-grid { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+    .achievement-item { padding: 0.5rem; }
+    .achievement-icon { font-size: 1.5rem; }
+    .achievement-name { font-size: 0.65rem; }
+    .activity-item { padding: 0.5rem; gap: 0.5rem; }
+    .activity-icon { width: 32px; height: 32px; }
+    .tier-badge { font-size: 0.85rem; padding: 0.4rem 0.8rem; }
+}
+@media (max-width: 400px) {
+    .achievement-grid { grid-template-columns: repeat(2, 1fr); }
+    .card h3 { font-size: 0.9rem; }
+}
 </style>
 </head>
 <body>

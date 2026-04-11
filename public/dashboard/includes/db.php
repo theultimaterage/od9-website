@@ -227,3 +227,65 @@ function pruneOldActivity(int $userId, string $guildId, int $keepCount = 100): i
     
     return $stmt->rowCount();
 }
+
+/**
+ * Toggle public profile visibility
+ */
+function setPublicProfile(string $discordId, bool $isPublic): bool {
+    $db = getDatabaseConnection();
+    $stmt = $db->prepare("UPDATE dashboard_users SET public_profile = ? WHERE discord_id = ?");
+    return $stmt->execute([$isPublic ? 1 : 0, $discordId]);
+}
+
+/**
+ * Check if a user's profile is public
+ */
+function isProfilePublic(string $discordId): bool {
+    $db = getDatabaseConnection();
+    $stmt = $db->prepare("SELECT public_profile FROM dashboard_users WHERE discord_id = ?");
+    $stmt->execute([$discordId]);
+    return (bool) $stmt->fetchColumn();
+}
+
+/**
+ * Get user by Discord ID with public profile info
+ */
+function getPublicUserByDiscordId(string $discordId): ?array {
+    $db = getDatabaseConnection();
+    $stmt = $db->prepare("
+        SELECT id, discord_id, discord_username, discord_avatar, display_name, public_profile 
+        FROM dashboard_users 
+        WHERE discord_id = ?
+    ");
+    $stmt->execute([$discordId]);
+    return $stmt->fetch() ?: null;
+}
+
+/**
+ * Get full profile data for public viewing (only if profile is public)
+ */
+function getPublicProfileData(string $discordId, string $guildId = null): ?array {
+    $guildId = $guildId ?? (defined('OD9_GUILD_ID') ? OD9_GUILD_ID : '1309609816934559785');
+    
+    // Get user (must be public)
+    $user = getPublicUserByDiscordId($discordId);
+    if (!$user || !$user['public_profile']) {
+        return null;
+    }
+    
+    // Get progression
+    $progression = getProgression($user['id'], $guildId);
+    
+    // Get achievements
+    $achievements = getAchievements($user['id'], $guildId, 20);
+    
+    // Get recent activity (limited for public view)
+    $activity = getRecentActivity($user['id'], $guildId, 10);
+    
+    return [
+        'user' => $user,
+        'progression' => $progression,
+        'achievements' => $achievements,
+        'activity' => $activity
+    ];
+}

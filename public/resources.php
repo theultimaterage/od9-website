@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -152,6 +152,14 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:#fff;margin:2.5rem 0
 <span class="tag">Article</span><span class="tag">Analysis</span>
 <br><a href="https://www.bbc.com/news/blogs-echochambers-27074746" target="_blank" class="resource-link"><i class="fas fa-newspaper"></i> Read Article</a>
 </div>
+
+<div class="resource-card">
+<h3>CDC Suicide Prevention Data</h3>
+<p>Comprehensive data on suicide rates, trends, and risk factors in the United States. Rates have risen significantly over the past two decades - a direct symptom of communities losing their coordination around survival and purpose.</p>
+<span class="tag critical">Critical</span><span class="tag">Data</span>
+<br><a href="https://www.cdc.gov/suicide/facts/data.html" target="_blank" class="resource-link"><i class="fas fa-external-link-alt"></i> View CDC Data</a>
+</div>
+
 </div>
 
 <h2>Kardashev Scale & Civilization Theory</h2>

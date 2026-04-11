@@ -16,6 +16,7 @@ $nav_links = [
     'downloads' => ['href' => '/downloads.php', 'label' => 'Downloads'],
     'support' => ['href' => '/support.php', 'label' => 'Support'],
     'dashboard' => ['href' => '/dashboard/', 'label' => 'Dashboard'],
+    'settings' => ['href' => '/dashboard/settings.php', 'label' => 'Settings'],
 ];
 if (!isset($current_page)) $current_page = '';
 ?>
