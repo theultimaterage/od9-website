@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "platform": "F.R.E.S.H.",
+  "identity": {
+    "name": "OD9 - Off Da Nine",
+    "type": ["Organization", "MusicGroup"],
+    "url": "https://offda9.com",
+    "description": "Chicago-based music collective and creative innovation group producing original hip-hop, R&B, and funk music.",
+    "genre": ["Hip-Hop", "R&B", "Funk", "Alternative"],
+    "location": "Chicago, IL"
+  },
+  "capabilities": {
+    "music": {
+      "enabled": true,
+      "catalog_url": "https://offda9.com/music.php",
+      "streaming": {
+        "spotify": "https://open.spotify.com/album/6V3kmOLMgNgsCLrRJaMiN3"
+      }
+    },
+    "community": {
+      "enabled": true,
+      "discord": "https://discord.gg/spgmrXVMWq",
+      "tiers_url": "https://offda9.com/tiers.php"
+    },
+    "contact": {
+      "enabled": true,
+      "url": "https://offda9.com/contact.php"
+    }
+  },
+  "discovery": {
+    "schema_json_ld": "https://offda9.com/",
+    "llms_txt": "https://offda9.com/llms.txt",
+    "sitemap": "https://offda9.com/sitemap.xml"
+  },
+  "member_of": {
+    "platform": "F.R.E.S.H.",
+    "url": "https://freshthaplatform.com"
+  }
+}
