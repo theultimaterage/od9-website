@@ -13,6 +13,7 @@ $page_robots = 'noindex, nofollow';
  */
 
 require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/../includes/env.php';
 
 $current_page = 'dashboard';
 
@@ -20,7 +21,7 @@ $current_page = 'dashboard';
 session_set_cookie_params([
     'lifetime' => 604800,
     'path' => '/',
-    'secure' => strpos(__DIR__, 'xampp') === false,
+    'secure' => od9_cookie_secure(),
     'httponly' => true,
     'samesite' => 'Lax'
 ]);

@@ -12,6 +12,7 @@ $page_slug = 'settings.php';
 
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/db.php';
+require_once __DIR__ . '/../includes/env.php';
 
 $current_page = 'settings';
 
@@ -19,7 +20,7 @@ $current_page = 'settings';
 session_set_cookie_params([
     'lifetime' => 604800,
     'path' => '/',
-    'secure' => strpos(__DIR__, 'xampp') === false,
+    'secure' => od9_cookie_secure(),
     'httponly' => true,
     'samesite' => 'Lax'
 ]);
@@ -84,21 +85,12 @@ body {
 </head>
 <body>
 
-<!-- Navigation -->
-<nav class="od9-nav">
-    <div class="nav-container">
-        <a href="/" class="nav-logo">
-            <img src="/images/logos/od9-logo.png" alt="OD9">
-            <span class="nav-logo-text">OD9</span>
-        </a>
-        <ul class="nav-menu">
-            <li><a href="/" class="nav-link">Home</a></li>
-            <li><a href="/tiers.php" class="nav-link">Tiers</a></li>
-            <li><a href="/dashboard/" class="nav-link">Dashboard</a></li>
-            <li><a href="/dashboard/settings.php" class="nav-link active">Settings</a></li>
-        </ul>
-    </div>
-</nav>
+<?php
+// Universal site nav (matches the homepage). One level deep in /dashboard/,
+// so set the nav base to the site root before including it.
+$nav_base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'] ?? '/dashboard/settings.php')), '/\\');
+include __DIR__ . '/../includes/nav.php';
+?>
 
 <div class="settings-container">
     <div class="settings-header">
