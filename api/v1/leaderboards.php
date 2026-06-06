@@ -11,7 +11,7 @@ require_once __DIR__ . '/bootstrap.php';
 
 $type = $_GET['type'] ?? 'credits-alltime';
 $limit = min((int)($_GET['limit'] ?? 25), 100);
-$guildId = OD9_GUILD_ID ?? '1309609816934559785';
+$guildId = OD9_GUILD_ID ?? '1146833684952006769';
 
 // Rate limit by IP for public endpoint
 $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';

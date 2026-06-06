@@ -29,8 +29,11 @@ if ($isLocal) {
     define('API_BASE_URL', 'https://offda9.com/api/v1');
 }
 
-// OD9 Guild ID (for member verification)
-define('OD9_GUILD_ID', '1309609816934559785');
+// OD9 Guild ID (for member verification). This is the ACTUAL guild the bot
+// writes member rows under in its SQLite DB (verified: 92/93 users). The old
+// value 1309609816934559785 matched zero rows and silently blanked every
+// guild-filtered query. Do not revert without checking the live bot DB.
+define('OD9_GUILD_ID', '1146833684952006769');
 
 // Bot SQLite Database Path. Environment-aware (same switch as the callback URLs
 // above): the Windows dev path locally, the prod box's world-readable copy on
