@@ -1,76 +1,136 @@
 <?php
-$page_title = '<?= htmlspecialchars($pageTitle) ?>';
-$page_description = '<?= htmlspecialchars($pageDesc) ?>';
-$page_slug = 'profile.php';
-$page_og_title = '<?= htmlspecialchars($displayName) ?>\'s OD9 Progression';
-$page_og_description = '<?= htmlspecialchars($tierName) ?> tier member with <?= number_format($progression[\'total_credits\']) ?> credits';
-?>
-<?php
 /**
- * OD9 Public Profile Page
+ * OD9 Public Profile Page — /dashboard/profile.php?u=<discord_id>
  *
- * Displays a user's progression if their profile is public.
- * URL: /dashboard/profile.php?u=<discord_id>
+ * Shows a member's LIVE progression (read from the bot's SQLite DB, exactly
+ * like the dashboard) when their profile visibility is public. Visibility is
+ * web-owned in MySQL (od9_profile_visibility) — the bot has no profile_public
+ * logic, so the web is the single source of truth.
  */
 
-require_once __DIR__ . '/includes/config.php';
-require_once __DIR__ . '/includes/db.php';
+require_once __DIR__ . '/includes/config.php';             // OD9_BOT_DB_PATH
+require_once __DIR__ . '/includes/db.php';                 // loads config/database.php -> getDatabaseConnection()
+require_once __DIR__ . '/includes/profile_visibility.php'; // od9_is_profile_public()
+require_once __DIR__ . '/../includes/env.php';             // od9_local_time()
 
-// Get the requested Discord ID
 $requestedId = $_GET['u'] ?? '';
-$guildId = OD9_GUILD_ID ?? '1309609816934559785';
 
-// Validate input
+// View defaults.
+$error       = null;
+$user        = null;
+$progression = null;
+$achievements = [];
+$activity     = [];
+$displayName  = 'OD9 Member';
+$tierName     = 'OBSERVER';
+$tierColor    = '#808080';
+
 if (!$requestedId || !preg_match('/^\d{17,20}$/', $requestedId)) {
     http_response_code(404);
     $error = 'invalid';
+} elseif (!od9_is_profile_public($requestedId)) {
+    http_response_code(404);
+    $error = 'not_found';
 } else {
-    // Get public profile data
-    $profileData = getPublicProfileData($requestedId, $guildId);
+    // Live progression from the bot SQLite (same guarded pattern as index.php):
+    // one bad query degrades its own widget, never the whole page.
+    $botFetch = function (?PDO $db, string $sql, array $params): array {
+        if (!$db) return [];
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            error_log("profile.php query failed: " . $e->getMessage());
+            return [];
+        }
+    };
 
-    if (!$profileData) {
+    $bot = null;
+    try {
+        $bot = new PDO("sqlite:" . (defined('OD9_BOT_DB_PATH') ? OD9_BOT_DB_PATH : ''), null, null, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
+    } catch (PDOException $e) {
+        error_log("profile.php bot DB connection failed: " . $e->getMessage());
+    }
+
+    $p = [$requestedId];
+
+    // We key on user_id alone — the bot DB is single-guild and the OD9_GUILD_ID
+    // filter was the bug that blanked the dashboard (see index.php notes).
+    $user = $botFetch($bot,
+        "SELECT user_id, username, current_tier, total_credits, join_date
+         FROM users WHERE user_id = ? LIMIT 1", $p)[0] ?? null;
+
+    if (!$user) {
         http_response_code(404);
         $error = 'not_found';
+    } else {
+        $dimensions = ['knowledge' => 0, 'resource' => 0, 'community' => 0, 'consciousness' => 0, 'system' => 0];
+        foreach ($botFetch($bot, "SELECT dimension, score FROM user_dimensions WHERE user_id = ?", $p) as $row) {
+            $d = strtolower($row['dimension'] ?? '');
+            if (isset($dimensions[$d])) {
+                $dimensions[$d] = (float) $row['score'];
+            }
+        }
+
+        $achievements = $botFetch($bot,
+            "SELECT ua.achievement_id, ua.earned_at, ad.name, ad.icon, ad.rarity
+             FROM user_achievements ua
+             LEFT JOIN achievement_definitions ad
+               ON ua.achievement_id = ad.achievement_id AND ua.guild_id = ad.guild_id
+             WHERE ua.user_id = ? AND ua.earned_at IS NOT NULL
+             ORDER BY ua.earned_at DESC LIMIT 12", $p);
+
+        $activity = $botFetch($bot,
+            "SELECT activity_type, activity_description, credits_earned, activity_date
+             FROM activity_log WHERE user_id = ?
+             ORDER BY activity_date DESC LIMIT 8", $p);
+
+        $tierName   = strtoupper($user['current_tier'] ?? 'observer');
+        $tierColors = [
+            'OBSERVER' => '#808080', 'THEORIST' => '#4169E1', 'ARCHITECT' => '#9932CC',
+            'PIONEER' => '#FFD700', 'BENEFACTOR' => '#FF4500',
+        ];
+        $tierColor   = $tierColors[$tierName] ?? '#808080';
+        $displayName = $user['username'] ?: 'OD9 Member';
+
+        $progression = [
+            'tier'             => $tierName,
+            'total_credits'    => (int) ($user['total_credits'] ?? 0),
+            'dim_knowledge'    => $dimensions['knowledge'],
+            'dim_resource'     => $dimensions['resource'],
+            'dim_community'    => $dimensions['community'],
+            'dim_consciousness'=> $dimensions['consciousness'],
+            'dim_system'       => $dimensions['system'],
+        ];
     }
 }
 
-// If we have profile data, extract it
-if (isset($profileData)) {
-    $user = $profileData['user'];
-    $progression = $profileData['progression'];
-    $achievements = $profileData['achievements'];
-    $activity = $profileData['activity'];
-
-    // Tier colors
-    $tierColors = [
-        'OBSERVER' => '#808080',
-        'THEORIST' => '#4169E1',
-        'ARCHITECT' => '#9932CC',
-        'PIONEER' => '#FFD700',
-        'BENEFACTOR' => '#FF4500'
-    ];
-
-    $tierName = strtoupper($progression['tier'] ?? 'OBSERVER');
-    $tierColor = $tierColors[$tierName] ?? '#808080';
-
-    // Build page title and description for SEO
-    $displayName = $user['display_name'] ?: $user['discord_username'] ?: 'OD9 Member';
+// SEO / OG meta — computed AFTER the data (replaces the old broken preamble
+// that shipped literal '<?= ... ?>' strings into the OG tags).
+if ($error === null) {
     $pageTitle = "{$displayName}'s Progression - OD9 ASCEND Protocol";
-    $pageDesc = "{$displayName} is a {$tierName} tier member of OD9 with {$progression['total_credits']} credits earned.";
+    $pageDesc  = "{$displayName} is a {$tierName} tier member of OD9 with "
+               . number_format($progression['total_credits']) . " credits earned.";
 } else {
     $pageTitle = 'Profile Not Found - OD9';
-    $pageDesc = 'This profile is either private or does not exist.';
+    $pageDesc  = 'This profile is either private or does not exist.';
 }
-
-$page_title       = $pageTitle;
-$page_description = $pageDesc;
-$page_slug        = 'profile.php';
-$nav_base         = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'] ?? '/dashboard/profile.php')), '/\\');
+$page_title          = $pageTitle;
+$page_description    = $pageDesc;
+$page_slug           = 'profile.php';
+$page_og_title       = $pageTitle;
+$page_og_description = $pageDesc;
+$nav_base            = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'] ?? '/dashboard/profile.php')), '/\\');
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <?php include __DIR__ . '/../includes/head.php'; ?>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 body {
     background: var(--carbon);
@@ -114,26 +174,17 @@ include __DIR__ . '/../includes/nav.php';
 <?php else: ?>
     <!-- Profile header -->
     <div class="profile-header">
-        <?php
-        $avatarUrl = null;
-        if ($user['discord_avatar']) {
-            $avatarUrl = "https://cdn.discordapp.com/avatars/{$user['discord_id']}/{$user['discord_avatar']}.png?size=256";
-        }
-        ?>
-        <?php if ($avatarUrl): ?>
-            <img src="<?= htmlspecialchars($avatarUrl) ?>" alt="Avatar" class="profile-avatar">
-        <?php else: ?>
-            <div class="profile-avatar-placeholder">
-                <i class="fas fa-user"></i>
-            </div>
-        <?php endif; ?>
+        <?php // The bot users table has no avatar hash, so show the placeholder. ?>
+        <div class="profile-avatar-placeholder">
+            <i class="fas fa-user"></i>
+        </div>
 
         <div class="profile-info">
             <h1><?= htmlspecialchars($displayName) ?></h1>
             <span class="tier-badge"><?= htmlspecialchars($tierName) ?></span>
             <p class="credits"><strong><?= number_format($progression['total_credits'] ?? 0) ?></strong> total credits earned</p>
             <span class="public-badge"><i class="fas fa-globe"></i> Public Profile</span>
-            
+
             <!-- Share Buttons -->
             <div class="share-buttons">
                 <button class="share-btn share-twitter" onclick="shareTwitter()" title="Share on X/Twitter">
@@ -168,7 +219,7 @@ include __DIR__ . '/../includes/nav.php';
                 <div class="achievements-grid">
                     <?php foreach (array_slice($achievements, 0, 12) as $ach): ?>
                         <div class="achievement-item" title="<?= htmlspecialchars($ach['name'] ?? 'Achievement') ?>">
-                            <div class="achievement-icon"><?= $ach['icon'] ?? '🏆' ?></div>
+                            <div class="achievement-icon"><?= htmlspecialchars($ach['icon'] ?? '🏆') ?></div>
                             <div class="achievement-name"><?= htmlspecialchars($ach['name'] ?? 'Achievement') ?></div>
                         </div>
                     <?php endforeach; ?>
@@ -185,7 +236,8 @@ include __DIR__ . '/../includes/nav.php';
                 <ul class="activity-list">
                     <?php foreach (array_slice($activity, 0, 8) as $act): ?>
                         <li class="activity-item">
-                            <span class="activity-desc"><?= htmlspecialchars($act['description'] ?? $act['activity_type'] ?? 'Activity') ?></span>
+                            <span class="activity-desc"><?= htmlspecialchars($act['activity_description'] ?? $act['activity_type'] ?? 'Activity') ?></span>
+                            <span class="activity-time" style="color:#666;font-size:0.75rem;margin-left:0.5rem"><?= htmlspecialchars(od9_local_time($act['activity_date'] ?? null)) ?></span>
                             <?php if (!empty($act['credits_earned'])): ?>
                                 <span class="activity-credits">+<?= number_format($act['credits_earned']) ?></span>
                             <?php endif; ?>
@@ -203,19 +255,19 @@ include __DIR__ . '/../includes/nav.php';
     </div>
 
     <script>
-    // Dimension radar chart
+    // Dimension radar chart (bot dims: knowledge/resource/community/consciousness/system)
     const ctx = document.getElementById('dimensionChart').getContext('2d');
     new Chart(ctx, {
         type: 'radar',
         data: {
-            labels: ['Intellectual', 'Creative', 'Community', 'Practical', 'Leadership'],
+            labels: ['Knowledge', 'Resource', 'Community', 'Consciousness', 'System'],
             datasets: [{
                 data: [
-                    <?= (float)($progression['dim_analytical'] ?? 0) ?>,
-                    <?= (float)($progression['dim_creative'] ?? 0) ?>,
-                    <?= (float)($progression['dim_collaborative'] ?? 0) ?>,
-                    <?= (float)($progression['dim_practical'] ?? 0) ?>,
-                    <?= (float)($progression['dim_leadership'] ?? 0) ?>
+                    <?= (float)($progression['dim_knowledge'] ?? 0) ?>,
+                    <?= (float)($progression['dim_resource'] ?? 0) ?>,
+                    <?= (float)($progression['dim_community'] ?? 0) ?>,
+                    <?= (float)($progression['dim_consciousness'] ?? 0) ?>,
+                    <?= (float)($progression['dim_system'] ?? 0) ?>
                 ],
                 fill: true,
                 backgroundColor: 'rgba(0, 191, 255, 0.2)',
