@@ -29,17 +29,15 @@ ini_set('log_errors', 1);
 // Configuration
 $isLocal = strpos(__DIR__, 'xampp') !== false;
 
-if ($isLocal) {
-    define('DRIP_DB_HOST', 'localhost');
-    define('DRIP_DB_NAME', 'od9_tickets');
-    define('DRIP_DB_USER', 'root');
-    define('DRIP_DB_PASS', '');
-} else {
-    define('DRIP_DB_HOST', 'localhost');
-    define('DRIP_DB_NAME', 'offda9_od9_tickets');
-    define('DRIP_DB_USER', 'offda9_od9admin');
-    define('DRIP_DB_PASS', 'Xk9mPvR3nWq7sYd');
-}
+// DB credentials from the single source of truth (config/database.php) —
+// a password rotation now touches only that file.
+$_cfg = __DIR__ . '/../../config/database.php';
+if (!file_exists($_cfg)) $_cfg = __DIR__ . '/../../../config/database.php';
+require_once $_cfg;
+define('DRIP_DB_HOST', DB_HOST);
+define('DRIP_DB_NAME', DB_NAME);
+define('DRIP_DB_USER', DB_USER);
+define('DRIP_DB_PASS', DB_PASS);
 
 // Email configuration
 define('SMTP_ENABLED', !$isLocal); // Use SMTP in production

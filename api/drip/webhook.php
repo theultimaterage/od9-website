@@ -47,10 +47,12 @@ if (!defined('OD9_WEBHOOK_SECRET') || OD9_WEBHOOK_SECRET === '') {
     exit;
 }
 
-$DB_HOST = 'localhost';
-$DB_NAME = 'offda9_od9_tickets';
-$DB_USER = 'offda9_od9admin';
-$DB_PASS = 'Xk9mPvR3nWq7sYd';   // TODO move to a config file alongside the secret
+// DB credentials — single source of truth: config/database.php (rotation
+// touches that one file, never this webhook).
+$_cfg = __DIR__ . '/../../config/database.php';
+if (!file_exists($_cfg)) $_cfg = __DIR__ . '/../../../config/database.php';
+require_once $_cfg;
+$DB_HOST = DB_HOST; $DB_NAME = DB_NAME; $DB_USER = DB_USER; $DB_PASS = DB_PASS;
 
 // ---- Method gate ----
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

@@ -118,13 +118,13 @@ $avatarUrl = $avatar
 
 // Verify user exists in OD9 MySQL database (od9_members table)
 try {
-    // Production MySQL credentials
-    $dbHost = 'localhost';
-    $dbName = 'offda9_od9_tickets';
-    $dbUser = 'offda9_od9admin';
-    $dbPass = 'Xk9mPvR3nWq7sYd';
+    // DB credentials — single source of truth: config/database.php, so a
+    // password rotation touches that one file, never this OAuth handler.
+    $_cfg = __DIR__ . '/../../../config/database.php';
+    if (!file_exists($_cfg)) $_cfg = __DIR__ . '/../../config/database.php';
+    require_once $_cfg;
     
-    $db = new PDO("mysql:host=$dbHost;dbname=$dbName;charset=utf8mb4", $dbUser, $dbPass, [
+    $db = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4", DB_USER, DB_PASS, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
