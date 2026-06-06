@@ -61,11 +61,16 @@ if (isset($profileData)) {
     $pageTitle = 'Profile Not Found - OD9';
     $pageDesc = 'This profile is either private or does not exist.';
 }
+
+$page_title       = $pageTitle;
+$page_description = $pageDesc;
+$page_slug        = 'profile.php';
+$nav_base         = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'] ?? '/dashboard/profile.php')), '/\\');
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<?php include __DIR__ . '/includes/head.php'; ?>
+<?php include __DIR__ . '/../includes/head.php'; ?>
 <style>
 body {
     background: var(--carbon);
