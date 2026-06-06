@@ -1,25 +1,13 @@
+<?php
+$page_title = '85 Seconds to Midnight | OD9';
+$page_description = 'Download the 85 Seconds to Midnight briefing. Data, frameworks, and a clear path forward for why the systems around us are failing.';
+$page_slug = 'wake-up.php';
+$page_og_description = 'The systems are failing. The data proves it. Here\'s what we\'re doing about it. Free briefing.';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>85 Seconds to Midnight | OD9</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<meta name="description" content="Download the 85 Seconds to Midnight briefing. Data, frameworks, and a clear path forward for why the systems around us are failing.">
-<meta name="keywords" content="OD9, 85 Seconds, Doomsday Clock, coordination failure, paperclip maximizer, transhumanism, Thesean method, Type I civilization">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://offda9.com/wake-up.php">
-
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://offda9.com/wake-up.php">
-<meta property="og:title" content="85 Seconds to Midnight | OD9">
-<meta property="og:description" content="The systems are failing. The data proves it. Here's what we're doing about it. Free briefing.">
-<meta property="og:image" content="https://offda9.com/images/logos/od9-logo.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="85 Seconds to Midnight | OD9">
-<meta name="twitter:description" content="The systems are failing. The data proves it. Here's what we're doing about it.">
-
+<?php include __DIR__ . '/includes/head.php'; ?>
 <style>
 :root{--b:#00BFFF;--eb:#00A0FF;--d:#0A0A0A;--dd:#111;--c:#C0C0C0;--g:0 0 20px rgba(0,191,255,.45)}
 *{margin:0;padding:0;box-sizing:border-box}

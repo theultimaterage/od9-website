@@ -83,15 +83,18 @@ $safeMessage = htmlspecialchars($message, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 $safeTitle   = htmlspecialchars($title,   ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
 echo <<<HTML
+<?php
+$page_title = 'OD9 - Email Confirmation';
+$page_description = '';
+$page_slug = 'verify.php';
+$page_robots = 'noindex';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OD9 - Email Confirmation</title>
-<meta name="robots" content="noindex">
+<?php include __DIR__ . '/includes/head.php'; ?>
 <style>
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
          background: #0D0D0D; color: #fafafa; margin: 0; min-height: 100vh;
          display: flex; align-items: center; justify-content: center; }
   .card { max-width: 560px; padding: 48px 32px; text-align: center; }

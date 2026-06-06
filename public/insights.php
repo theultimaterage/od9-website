@@ -83,17 +83,15 @@ function fmt_date(string $rfc): string {
 
 $posts = load_feed();
 ?>
+<?php
+$page_title = 'OD9 Insights — Long-form essays from The Ultimate Rage';
+$page_description = 'Recent essays from The Ultimate Rage\'s Substack on coordination failure, Type I civilization, and the OD9 framework.';
+$page_slug = 'insights.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OD9 Insights — Long-form essays from The Ultimate Rage</title>
-<meta name="description" content="Recent essays from The Ultimate Rage's Substack on coordination failure, Type I civilization, and the OD9 framework.">
-<link rel="canonical" href="https://offda9.com/insights.php">
-<meta name="theme-color" content="#00BFFF">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<?php include __DIR__ . '/includes/head.php'; ?>
 <style>
 :root{--b:#00BFFF;--eb:#00A0FF;--d:#0A0A0A;--dd:#111;--c:#C0C0C0;--g:0 0 20px rgba(0,191,255,.45)}
 *{margin:0;padding:0;box-sizing:border-box}

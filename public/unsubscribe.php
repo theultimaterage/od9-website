@@ -67,15 +67,18 @@ $safeMessage = htmlspecialchars($message, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 $icon = $ok ? '✓' : '⚠';
 $bg = $ok ? '#0D0D0D' : '#0D0D0D';
 echo <<<HTML
+<?php
+$page_title = 'OD9 - Unsubscribe';
+$page_description = '';
+$page_slug = 'unsubscribe.php';
+$page_robots = 'noindex';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OD9 - Unsubscribe</title>
-<meta name="robots" content="noindex">
+<?php include __DIR__ . '/includes/head.php'; ?>
 <style>
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
          background: $bg; color: #fafafa; margin: 0; min-height: 100vh;
          display: flex; align-items: center; justify-content: center; }
   .card { max-width: 520px; padding: 48px 32px; text-align: center; }

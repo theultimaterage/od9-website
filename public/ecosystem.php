@@ -10,21 +10,17 @@
  * Mounted at https://offda9.com/ecosystem.php
  */
 ?>
+<?php
+$page_title = 'The OD9 Ecosystem | 5 entities, one mission';
+$page_description = 'OD9 is the philosophical layer of a 5-entity ecosystem: F.R.E.S.H. (financial engine), FTB (music), Synaptiq (intelligence), and NCZ (show). Here\'s how they connect.';
+$page_slug = 'ecosystem.php';
+$page_og_title = 'The OD9 Ecosystem';
+$page_og_description = '5 entities, one mission - how OD9, F.R.E.S.H., FTB, Synaptiq, and NCZ work together.';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The OD9 Ecosystem | 5 entities, one mission</title>
-<meta name="description" content="OD9 is the philosophical layer of a 5-entity ecosystem: F.R.E.S.H. (financial engine), FTB (music), Synaptiq (intelligence), and NCZ (show). Here's how they connect.">
-<link rel="canonical" href="https://offda9.com/ecosystem.php">
-<meta name="theme-color" content="#00BFFF">
-<meta property="og:title" content="The OD9 Ecosystem">
-<meta property="og:description" content="5 entities, one mission - how OD9, F.R.E.S.H., FTB, Synaptiq, and NCZ work together.">
-<meta property="og:url" content="https://offda9.com/ecosystem.php">
-<meta property="og:image" content="https://offda9.com/images/logos/od9-logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<?php include __DIR__ . '/includes/head.php'; ?>
 <style>
 :root{--b:#00BFFF;--eb:#00A0FF;--rg:#B76E79;--gold:#FFD700;--purple:#A55FFF;--green:#00E89A;--orange:#FF8A3D;--d:#0A0A0A;--dd:#111;--c:#C0C0C0;--g:0 0 20px rgba(0,191,255,.45)}
 *{margin:0;padding:0;box-sizing:border-box}

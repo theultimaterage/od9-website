@@ -92,18 +92,15 @@ if (!$key || !isset($VIDEO_MAP[$key])) {
     $page_title = $title . ' | ASCEND Guide';
 }
 
-$current_page = '';
+$page_description = $description;
+$page_slug        = 'guide.php';
+$page_robots      = 'noindex';   // per-key, DM-driven video player — keep out of search
+$current_page     = '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= htmlspecialchars($page_title) ?> | OD9</title>
-<meta name="description" content="<?= htmlspecialchars($description) ?>">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" href="<?= rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? '/guide.php'), '/') ?>/css/od9.css">
+<?php include __DIR__ . '/includes/head.php'; ?>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#050505;color:#e0e0e0;font-family:'Exo 2',sans-serif;min-height:100vh;padding-top:var(--nav-height,80px)}

@@ -206,14 +206,17 @@ function sendVerificationEmail(string $email, string $firstName, string $token):
     $subject = 'Confirm your OD9 subscription';
 
     $html = <<<HTML
+<?php
+$page_title = 'Confirm your OD9 subscription';
+$page_description = '';
+$page_slug = 'subscribe.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Confirm your OD9 subscription</title>
+<?php include __DIR__ . '/includes/head.php'; ?>
 <style>
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
          line-height: 1.6; color: #1a1a1a; background: #fafafa; margin: 0; padding: 0; }
   .wrap { max-width: 560px; margin: 0 auto; padding: 32px 20px; background: #ffffff; }
   h1 { color: #00BFFF; font-size: 22px; margin-bottom: 16px; }

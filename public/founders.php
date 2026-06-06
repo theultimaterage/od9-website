@@ -65,16 +65,17 @@ function joined_display(array $row): string {
     return date('F Y', $ts);
 }
 ?>
+<?php
+$page_title = 'OD9 Founding Patrons - The First 25';
+$page_description = 'The 25 lifetime Founding Patrons of OD9 - the public record of those who funded the infrastructure when it was still being built.';
+$page_slug = 'founders.php';
+?>
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OD9 Founding Patrons - The First 25</title>
-<link rel="canonical" href="https://offda9.com/founders.php">
-<meta name="description" content="The 25 lifetime Founding Patrons of OD9 - the public record of those who funded the infrastructure when it was still being built.">
+<?php include __DIR__ . '/includes/head.php'; ?>
 <style>
-  :root {
+:root {
     --bg: #0a0a0e;
     --bg-card: #15151c;
     --fg: #e8e8ea;
