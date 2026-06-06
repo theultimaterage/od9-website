@@ -115,11 +115,11 @@ if ($isLoggedIn) {
             $stmt->execute([$discordId, $guildId]);
             $dimensionRows = $stmt->fetchAll();
             $dimensions = [
-                'intellectual' => 0,
-                'creative' => 0,
+                'knowledge' => 0,
+                'resource' => 0,
                 'community' => 0,
-                'practical' => 0,
-                'leadership' => 0
+                'consciousness' => 0,
+                'system' => 0
             ];
             foreach ($dimensionRows as $row) {
                 $dim = strtolower($row['dimension']);
@@ -146,11 +146,11 @@ if ($isLoggedIn) {
                 'best_streak' => $streak['best'],
                 'achievements_count' => $achievementCount,
                 'member_since' => $user['join_date'],
-                'dim_intellectual' => $dimensions['intellectual'],
-                'dim_creative' => $dimensions['creative'],
+                'dim_knowledge' => $dimensions['knowledge'],
+                'dim_resource' => $dimensions['resource'],
                 'dim_community' => $dimensions['community'],
-                'dim_practical' => $dimensions['practical'],
-                'dim_leadership' => $dimensions['leadership']
+                'dim_consciousness' => $dimensions['consciousness'],
+                'dim_system' => $dimensions['system']
             ];
         }
     } catch (PDOException $e) {
@@ -468,7 +468,7 @@ include __DIR__ . '/../includes/nav.php';
             <h3><i class="fas fa-layer-group"></i> Current Tier</h3>
             <div style="text-align: center; margin: 1.5rem 0;">
                 <?php
-                $tier = strtolower($progression['tier'] ?? 'observer');
+                $tier = strtolower($progression['current_tier'] ?? 'observer');
                 $tierDisplay = ucfirst($tier);
                 $credits = $progression['total_credits'] ?? 0;
                 $progress = $progression['tier_progress_pct'] ?? 0;
@@ -505,9 +505,9 @@ include __DIR__ . '/../includes/nav.php';
             <?php else: ?>
                 <div class="achievement-grid">
                     <?php foreach ($achievements as $ach): ?>
-                    <div class="achievement-item" title="<?= htmlspecialchars($ach['achievement_desc'] ?? $ach['achievement_name']) ?>">
-                        <div class="achievement-icon">🏆</div>
-                        <div class="achievement-name"><?= htmlspecialchars($ach['achievement_name'] ?? $ach['achievement_id']) ?></div>
+                    <div class="achievement-item" title="<?= htmlspecialchars($ach['name'] ?? $ach['achievement_id']) ?>">
+                        <div class="achievement-icon"><?= htmlspecialchars($ach['icon'] ?? '🏆') ?></div>
+                        <div class="achievement-name"><?= htmlspecialchars($ach['name'] ?? $ach['achievement_id']) ?></div>
                     </div>
                     <?php endforeach; ?>
                 </div>
@@ -546,15 +546,15 @@ include __DIR__ . '/../includes/nav.php';
     new Chart(ctx, {
         type: 'radar',
         data: {
-            labels: ['Analytical', 'Creative', 'Collaborative', 'Practical', 'Leadership'],
+            labels: ['Knowledge', 'Resource', 'Community', 'Consciousness', 'System'],
             datasets: [{
                 label: 'Dimension Scores',
                 data: [
-                    <?= $progression['dim_analytical'] ?? 0 ?>,
-                    <?= $progression['dim_creative'] ?? 0 ?>,
-                    <?= $progression['dim_collaborative'] ?? 0 ?>,
-                    <?= $progression['dim_practical'] ?? 0 ?>,
-                    <?= $progression['dim_leadership'] ?? 0 ?>
+                    <?= $progression['dim_knowledge'] ?? 0 ?>,
+                    <?= $progression['dim_resource'] ?? 0 ?>,
+                    <?= $progression['dim_community'] ?? 0 ?>,
+                    <?= $progression['dim_consciousness'] ?? 0 ?>,
+                    <?= $progression['dim_system'] ?? 0 ?>
                 ],
                 fill: true,
                 backgroundColor: 'rgba(0, 191, 255, 0.2)',
