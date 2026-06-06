@@ -86,11 +86,34 @@ def lint_page(text: str) -> list[str]:
     return issues
 
 
-def find_dupes(repo: Path) -> dict[str, list[str]]:
+RX_DIR_INCLUDE = re.compile(
+    r"(?:include|require)(?:_once)?\s*\(?\s*__DIR__\s*\.\s*['\"]([^'\"]+\.php)['\"]")
+
+
+def check_includes(page: Path, text: str) -> list[str]:
+    """Resolve every `include/require __DIR__ . '<rel>'` of a shared chrome file
+    and flag it when the target doesn't exist. Catches a wrong relative depth
+    (./includes vs ../includes) that the string-match in lint_page misses -- the
+    2026-06-06 profile.php bug 'used head.php' per the regex but pointed at a
+    nonexistent dashboard/includes/head.php, so it rendered with no od9.css."""
+    issues = []
+    for rel in RX_DIR_INCLUDE.findall(text):
+        if not re.search(r"(?:head|nav|footer|env)\.php$", rel):
+            continue
+        target = (page.parent / rel.lstrip("/\\")).resolve()
+        if not target.exists():
+            issues.append(f"BROKEN_INCLUDE  __DIR__ . '{rel}' -> missing {target.name} (wrong path?)")
+    return issues
+
+
+def find_dupes(tree: Path) -> dict[str, list[str]]:
+    """Duplicate chrome WITHIN the deployed web root (public/). Untracked
+    repo-root siblings (includes/, config/) are a separate housekeeping concern,
+    not drift the deployed site can see, so they're intentionally out of scope."""
     dupes = {}
     for name in ("nav.php", "head.php", "footer.php"):
-        hits = [str(p.relative_to(repo)).replace("\\", "/")
-                for p in repo.rglob(name)
+        hits = [str(p.relative_to(tree)).replace("\\", "/")
+                for p in tree.rglob(name)
                 if "node_modules" not in str(p) and ".git" not in str(p)]
         if len(hits) > 1:
             dupes[name] = hits
@@ -116,10 +139,11 @@ def main() -> int:
         rel = str(p.relative_to(root)).replace("\\", "/")
         if is_exempt(rel):
             continue
-        issues = lint_page(p.read_text(encoding="utf-8", errors="replace"))
+        text = p.read_text(encoding="utf-8", errors="replace")
+        issues = lint_page(text) + check_includes(p, text)
         (drifted.__setitem__(rel, issues) if issues else ok.append(rel))
 
-    dupes = find_dupes(repo)
+    dupes = find_dupes(root)
 
     n_pages = len(drifted) + len(ok)
     print(f"web-template-lint: scanned {n_pages} page(s) under {args.root}/")
