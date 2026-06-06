@@ -38,7 +38,11 @@ $tier = null;
 
 if ($isLoggedIn) {
     $discordId = $_SESSION['discord_id'];
-    $guildId = OD9_GUILD_ID ?? '1309609816934559785';
+    // We intentionally do NOT filter by guild_id. The live bot SQLite stores
+    // members under the real OD9 guild (1146833684952006769), which differs from
+    // the OD9_GUILD_ID constant (1309609816934559785) — filtering by the constant
+    // matched zero users and blanked the dashboard. me.php keys on user_id alone
+    // too; the bot DB is single-guild in practice.
 
     // Each bot query is guarded independently (see api/v1/pulse.php's safe-read
     // pattern): a single schema drift — a renamed column, a missing table —
@@ -66,12 +70,12 @@ if ($isLoggedIn) {
         error_log("Dashboard DB connection error: " . $e->getMessage());
     }
 
-    $params = [$discordId, $guildId];
+    $params = [$discordId];
 
     // Foundational row: tier + credits + join date.
     $user = $botFetch($db,
         "SELECT user_id, username, current_tier, total_credits, join_date
-         FROM users WHERE user_id = ? AND guild_id = ? LIMIT 1", $params)[0] ?? null;
+         FROM users WHERE user_id = ? LIMIT 1", $params)[0] ?? null;
 
     if ($user) {
         $tierName = ucfirst($user['current_tier'] ?? 'observer');
@@ -80,7 +84,7 @@ if ($isLoggedIn) {
         // Streak (real bot columns: longest_streak, last_activity_date).
         $streakData = $botFetch($db,
             "SELECT current_streak, longest_streak, last_activity_date
-             FROM user_streaks WHERE user_id = ? AND guild_id = ? LIMIT 1", $params)[0] ?? [];
+             FROM user_streaks WHERE user_id = ? LIMIT 1", $params)[0] ?? [];
         $streak = [
             'current' => (int)($streakData['current_streak'] ?? 0),
             'best' => (int)($streakData['longest_streak'] ?? 0),
@@ -89,7 +93,7 @@ if ($isLoggedIn) {
         // Total earned achievements (may exceed the 10 shown in the grid).
         $achievementCount = (int)($botFetch($db,
             "SELECT COUNT(*) AS c FROM user_achievements
-             WHERE user_id = ? AND guild_id = ? AND earned_at IS NOT NULL", $params)[0]['c'] ?? 0);
+             WHERE user_id = ? AND earned_at IS NOT NULL", $params)[0]['c'] ?? 0);
 
         // Most-recent achievements for the grid.
         $achievements = $botFetch($db,
@@ -97,7 +101,7 @@ if ($isLoggedIn) {
              FROM user_achievements ua
              LEFT JOIN achievement_definitions ad
                ON ua.achievement_id = ad.achievement_id AND ua.guild_id = ad.guild_id
-             WHERE ua.user_id = ? AND ua.guild_id = ? AND ua.earned_at IS NOT NULL
+             WHERE ua.user_id = ? AND ua.earned_at IS NOT NULL
              ORDER BY ua.earned_at DESC LIMIT 10", $params);
 
         // Dimension scores for the radar (bot dims per the bot's config.py).
@@ -110,7 +114,7 @@ if ($isLoggedIn) {
         ];
         foreach ($botFetch($db,
             "SELECT dimension, score FROM user_dimensions
-             WHERE user_id = ? AND guild_id = ?", $params) as $row) {
+             WHERE user_id = ?", $params) as $row) {
             $dim = strtolower($row['dimension'] ?? '');
             if (isset($dimensions[$dim])) {
                 $dimensions[$dim] = (float)$row['score'];
@@ -120,7 +124,7 @@ if ($isLoggedIn) {
         // Recent activity feed.
         $recentActivity = $botFetch($db,
             "SELECT activity_type, activity_description, credits_earned, streak_bonus, activity_date
-             FROM activity_log WHERE user_id = ? AND guild_id = ?
+             FROM activity_log WHERE user_id = ?
              ORDER BY activity_date DESC LIMIT 20", $params);
 
         // Build progression object consumed by the view below.
