@@ -40,121 +40,103 @@ if ($isLoggedIn) {
     $discordId = $_SESSION['discord_id'];
     $guildId = OD9_GUILD_ID ?? '1309609816934559785';
 
+    // Each bot query is guarded independently (see api/v1/pulse.php's safe-read
+    // pattern): a single schema drift — a renamed column, a missing table —
+    // should blank only its own widget, never abort the whole dashboard load.
+    $botFetch = function (?PDO $db, string $sql, array $params): array {
+        if (!$db) return [];
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            error_log("Dashboard query failed: " . $e->getMessage());
+            return [];
+        }
+    };
+
+    $db = null;
     try {
         $botDbPath = defined('OD9_BOT_DB_PATH') ? OD9_BOT_DB_PATH : 'C:/Users/Rage/IdeaProjects/OD9-Discord-Bot/od9.db';
         $db = new PDO("sqlite:$botDbPath", null, null, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         ]);
-
-        // Get user data
-        $stmt = $db->prepare("
-            SELECT user_id, username, current_tier, total_credits, join_date
-            FROM users WHERE user_id = ? AND guild_id = ? LIMIT 1
-        ");
-        $stmt->execute([$discordId, $guildId]);
-        $user = $stmt->fetch();
-
-        if ($user) {
-            // Get tier info
-            $tierName = ucfirst($user['current_tier'] ?? 'observer');
-            $tier = [
-                'name' => $tierName,
-                'color' => match(strtolower($tierName)) {
-                    'observer' => '#808080',
-                    'theorist' => '#4169E1',
-                    'architect' => '#32CD32',
-                    'pioneer' => '#D4AF37',
-                    'benefactor' => '#9400D3',
-                    default => '#808080'
-                }
-            ];
-
-            // Get credits
-            $credits = [
-                'balance' => (int)($user['total_credits'] ?? 0)
-            ];
-
-            // Get streak (real bot columns: longest_streak, last_activity_date)
-            $stmt = $db->prepare("
-                SELECT current_streak, longest_streak, last_activity_date
-                FROM user_streaks WHERE user_id = ? AND guild_id = ? LIMIT 1
-            ");
-            $stmt->execute([$discordId, $guildId]);
-            $streakData = $stmt->fetch();
-            $streak = [
-                'current' => (int)($streakData['current_streak'] ?? 0),
-                'best' => (int)($streakData['longest_streak'] ?? 0)
-            ];
-
-            // Get achievements count
-            $stmt = $db->prepare("
-                SELECT COUNT(*) FROM user_achievements
-                WHERE user_id = ? AND guild_id = ? AND earned_at IS NOT NULL
-            ");
-            $stmt->execute([$discordId, $guildId]);
-            $achievementCount = (int)$stmt->fetchColumn();
-
-            // Get recent achievements
-            $stmt = $db->prepare("
-                SELECT ua.achievement_id, ua.earned_at, ad.name, ad.icon, ad.rarity, ad.credit_reward as points
-                FROM user_achievements ua
-                LEFT JOIN achievement_definitions ad ON ua.achievement_id = ad.achievement_id AND ua.guild_id = ad.guild_id
-                WHERE ua.user_id = ? AND ua.guild_id = ? AND ua.earned_at IS NOT NULL
-                ORDER BY ua.earned_at DESC LIMIT 10
-            ");
-            $stmt->execute([$discordId, $guildId]);
-            $achievements = $stmt->fetchAll();
-
-            // Get user dimensions for radar chart
-            $stmt = $db->prepare("
-                SELECT dimension, score
-                FROM user_dimensions 
-                WHERE user_id = ? AND guild_id = ?
-            ");
-            $stmt->execute([$discordId, $guildId]);
-            $dimensionRows = $stmt->fetchAll();
-            $dimensions = [
-                'knowledge' => 0,
-                'resource' => 0,
-                'community' => 0,
-                'consciousness' => 0,
-                'system' => 0
-            ];
-            foreach ($dimensionRows as $row) {
-                $dim = strtolower($row['dimension']);
-                if (isset($dimensions[$dim])) {
-                    $dimensions[$dim] = (float)$row['score'];
-                }
-            }
-
-            // Get recent activity feed
-            $stmt = $db->prepare("
-                SELECT activity_type, activity_description, credits_earned, streak_bonus, activity_date
-                FROM activity_log 
-                WHERE user_id = ? AND guild_id = ?
-                ORDER BY activity_date DESC LIMIT 20
-            ");
-            $stmt->execute([$discordId, $guildId]);
-            $recentActivity = $stmt->fetchAll();
-
-            // Build progression object for compatibility
-            $progression = [
-                'current_tier' => $tierName,
-                'total_credits' => $credits['balance'],
-                'current_streak' => $streak['current'],
-                'best_streak' => $streak['best'],
-                'achievements_count' => $achievementCount,
-                'member_since' => $user['join_date'],
-                'dim_knowledge' => $dimensions['knowledge'],
-                'dim_resource' => $dimensions['resource'],
-                'dim_community' => $dimensions['community'],
-                'dim_consciousness' => $dimensions['consciousness'],
-                'dim_system' => $dimensions['system']
-            ];
-        }
     } catch (PDOException $e) {
-        error_log("Dashboard DB error: " . $e->getMessage());
+        error_log("Dashboard DB connection error: " . $e->getMessage());
+    }
+
+    $params = [$discordId, $guildId];
+
+    // Foundational row: tier + credits + join date.
+    $user = $botFetch($db,
+        "SELECT user_id, username, current_tier, total_credits, join_date
+         FROM users WHERE user_id = ? AND guild_id = ? LIMIT 1", $params)[0] ?? null;
+
+    if ($user) {
+        $tierName = ucfirst($user['current_tier'] ?? 'observer');
+        $creditBalance = (int)($user['total_credits'] ?? 0);
+
+        // Streak (real bot columns: longest_streak, last_activity_date).
+        $streakData = $botFetch($db,
+            "SELECT current_streak, longest_streak, last_activity_date
+             FROM user_streaks WHERE user_id = ? AND guild_id = ? LIMIT 1", $params)[0] ?? [];
+        $streak = [
+            'current' => (int)($streakData['current_streak'] ?? 0),
+            'best' => (int)($streakData['longest_streak'] ?? 0),
+        ];
+
+        // Total earned achievements (may exceed the 10 shown in the grid).
+        $achievementCount = (int)($botFetch($db,
+            "SELECT COUNT(*) AS c FROM user_achievements
+             WHERE user_id = ? AND guild_id = ? AND earned_at IS NOT NULL", $params)[0]['c'] ?? 0);
+
+        // Most-recent achievements for the grid.
+        $achievements = $botFetch($db,
+            "SELECT ua.achievement_id, ua.earned_at, ad.name, ad.icon, ad.rarity, ad.credit_reward as points
+             FROM user_achievements ua
+             LEFT JOIN achievement_definitions ad
+               ON ua.achievement_id = ad.achievement_id AND ua.guild_id = ad.guild_id
+             WHERE ua.user_id = ? AND ua.guild_id = ? AND ua.earned_at IS NOT NULL
+             ORDER BY ua.earned_at DESC LIMIT 10", $params);
+
+        // Dimension scores for the radar (bot dims per the bot's config.py).
+        $dimensions = [
+            'knowledge' => 0,
+            'resource' => 0,
+            'community' => 0,
+            'consciousness' => 0,
+            'system' => 0,
+        ];
+        foreach ($botFetch($db,
+            "SELECT dimension, score FROM user_dimensions
+             WHERE user_id = ? AND guild_id = ?", $params) as $row) {
+            $dim = strtolower($row['dimension'] ?? '');
+            if (isset($dimensions[$dim])) {
+                $dimensions[$dim] = (float)$row['score'];
+            }
+        }
+
+        // Recent activity feed.
+        $recentActivity = $botFetch($db,
+            "SELECT activity_type, activity_description, credits_earned, streak_bonus, activity_date
+             FROM activity_log WHERE user_id = ? AND guild_id = ?
+             ORDER BY activity_date DESC LIMIT 20", $params);
+
+        // Build progression object consumed by the view below.
+        $progression = [
+            'current_tier' => $tierName,
+            'total_credits' => $creditBalance,
+            'current_streak' => $streak['current'],
+            'best_streak' => $streak['best'],
+            'achievements_count' => $achievementCount,
+            'member_since' => $user['join_date'],
+            'dim_knowledge' => $dimensions['knowledge'],
+            'dim_resource' => $dimensions['resource'],
+            'dim_community' => $dimensions['community'],
+            'dim_consciousness' => $dimensions['consciousness'],
+            'dim_system' => $dimensions['system'],
+        ];
     }
 }
 ?>
