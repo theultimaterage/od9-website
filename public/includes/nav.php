@@ -12,8 +12,10 @@
  * Detection: dirname() of SCRIPT_NAME gives the install dir prefix.
  */
 
-// Compute base path once. SCRIPT_NAME = "/od9/public/library.php" or "/library.php"
-$nav_base = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php'), '/\\');
+// Compute base path once. SCRIPT_NAME = "/od9/public/library.php" or "/library.php".
+// A caller in a subdirectory (e.g. /dashboard/) can pre-set $nav_base to the
+// site root so the menu links don't inherit the subdir prefix.
+$nav_base = $nav_base ?? rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php'), '/\\');
 // Helper: prefix a root-relative path with the base
 $nav_url = function(string $path) use ($nav_base): string {
     return $nav_base . '/' . ltrim($path, '/');

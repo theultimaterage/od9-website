@@ -523,7 +523,12 @@ body {
 </head>
 <body>
 
-<?php include __DIR__ . '/includes/nav.php'; ?>
+<?php
+// Universal site nav. We're one level deep in /dashboard/, so set the nav base
+// to the site root (up one dir from SCRIPT_NAME) before including it.
+$nav_base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'] ?? '/dashboard/index.php')), '/\\');
+include __DIR__ . '/../includes/nav.php';
+?>
 
 <div class="dashboard-container">
     <div class="dashboard-header">
