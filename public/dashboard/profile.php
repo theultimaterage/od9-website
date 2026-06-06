@@ -110,7 +110,7 @@ if (!$requestedId || !preg_match('/^\d{17,20}$/', $requestedId)) {
 }
 
 // SEO / OG meta — computed AFTER the data (replaces the old broken preamble
-// that shipped literal '<?= ... ?>' strings into the OG tags).
+// that leaked raw PHP echo tags into the OG meta as literal text).
 if ($error === null) {
     $pageTitle = "{$displayName}'s Progression - OD9 ASCEND Protocol";
     $pageDesc  = "{$displayName} is a {$tierName} tier member of OD9 with "
