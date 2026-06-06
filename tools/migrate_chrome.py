@@ -94,10 +94,14 @@ def migrate(text: str, slug: str) -> tuple[str | None, str]:
     head_inner = m.group(1)
 
     styles = RX_STYLE.findall(head_inner)
-    if not any(".od9-nav" in s for s in styles):
-        return None, "no nav (.od9-nav) - standalone page, needs manual nav/head add"
     inner_css = "\n".join(re.sub(r"(?is)^\s*<style[^>]*>|</style>\s*$", "", s).strip() for s in styles)
-    page_css = strip_shared_css(inner_css)
+    # A page that COPIED the shared nav CSS inline gets those rules stripped
+    # (od9.css owns them). A standalone page (no inline .od9-nav) owns its FULL
+    # CSS -- its own :root tokens / reset / body -- so keep it verbatim; only the
+    # boilerplate <head> meta is swapped for head.php. head.php loads od9.css
+    # BEFORE this page <style>, so on any token/reset overlap the page still wins.
+    has_inline_nav = any(".od9-nav" in s for s in styles)
+    page_css = strip_shared_css(inner_css) if has_inline_nav else inner_css
 
     def grab(rx):
         mm = rx.search(head_inner)

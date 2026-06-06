@@ -30,6 +30,15 @@ import re
 import sys
 from pathlib import Path
 
+# Windows consoles default to cp1252, which can't encode the ✓/✗ in the RESULT
+# line (or any non-ASCII a scanned page surfaces) -> UnicodeEncodeError crashes
+# the gate. Force utf-8 with replacement so the linter never dies on its output.
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # --- canonical convention (overridable via .claude/web-template-lint-config.json later) ---
 EXEMPT_FILES = {
     "includes/head.php", "includes/nav.php", "includes/footer.php",
