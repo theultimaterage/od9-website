@@ -552,6 +552,31 @@ body{background:var(--carbon);background-image:linear-gradient(45deg,#111 25%,tr
     </div>
 </section>
 
+<!-- Cold-Traffic Scaffolding: What is OD9, in plain language -->
+<section style="padding:4rem 2rem;border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a;background:linear-gradient(180deg,transparent,rgba(0,191,255,0.025))">
+    <div style="max-width:840px;margin:0 auto">
+        <div style="text-align:center;margin-bottom:2.5rem">
+            <p style="font-family:'Rajdhani',sans-serif;color:var(--primary-blue);letter-spacing:4px;font-size:0.85rem;text-transform:uppercase;margin-bottom:0.6rem">First time here?</p>
+            <h2 style="font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,3.5vw,2rem);color:#fff;letter-spacing:2px;margin-bottom:1.25rem;line-height:1.3">What OD9 actually is, in 60 seconds</h2>
+        </div>
+        <p style="color:#bbb;font-size:1.05rem;line-height:1.8;max-width:680px;margin:0 auto 1.25rem">
+            <strong style="color:var(--primary-blue)">Coordination failure</strong> is what kills civilizations. Not asteroids — institutions, incentive structures, and information systems that all locally optimize away from collective long-term interest. The Doomsday Clock's 85 seconds, the climate, runaway AI, broken education: same root pattern, different masks.
+        </p>
+        <p style="color:#bbb;font-size:1.05rem;line-height:1.8;max-width:680px;margin:0 auto 1.25rem">
+            <strong style="color:var(--primary-blue)">OD9</strong> is a framework, a music collective, a Discord community, and a five-entity ecosystem that exists to build the next round of coordination infrastructure — the kind that can carry humanity to <strong style="color:var(--primary-blue)">Kardashev Type I</strong> civilization status. Type I = a species that can harness the full energy budget of its home planet. We're at <strong style="color:#FFD700">~0.73</strong> on the Kardashev Scale. The gap is bridgeable.
+        </p>
+        <p style="color:#bbb;font-size:1.05rem;line-height:1.8;max-width:680px;margin:0 auto 2rem">
+            The work happens here through music, manifesto chapters, the ASCEND Protocol (a 5-tier progression system), Think Tanks, research cells, and the Discord bot that quietly tracks all of it. <strong>You don't have to believe in any of this to start. You just have to show up.</strong>
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:0.75rem;justify-content:center">
+            <a href="ecosystem.php" style="display:inline-block;padding:0.75rem 1.5rem;background:transparent;color:var(--primary-blue);border:1px solid var(--primary-blue);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border-radius:6px;font-size:0.85rem">The 5-Entity Ecosystem</a>
+            <a href="framework.php" style="display:inline-block;padding:0.75rem 1.5rem;background:transparent;color:var(--primary-blue);border:1px solid var(--primary-blue);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border-radius:6px;font-size:0.85rem">Read the Framework</a>
+            <a href="progress.php" style="display:inline-block;padding:0.75rem 1.5rem;background:transparent;color:var(--primary-blue);border:1px solid var(--primary-blue);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border-radius:6px;font-size:0.85rem">Live Progress</a>
+            <a href="support.php" style="display:inline-block;padding:0.75rem 1.5rem;background:transparent;color:var(--primary-blue);border:1px solid var(--primary-blue);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border-radius:6px;font-size:0.85rem">Why Patreon, Why Now</a>
+        </div>
+    </div>
+</section>
+
 <!-- Features Section -->
 <section class="features">
     <h2 class="section-title">The Mission</h2>

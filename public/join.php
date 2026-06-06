@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Join OD9 | Community + Newsletter</title>
+<link rel="canonical" href="https://offda9.com/join.php">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
 <meta name="description" content="Join the OD9 movement through Discord, the ASCEND path, and the future NCZ newsletter.">
 <style>

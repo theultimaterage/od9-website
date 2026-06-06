@@ -137,6 +137,20 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
         <p class="names">Bulletin of the Atomic Scientists, CDC, IPCC, Oxford Future of Humanity Institute, Princeton, MIT, Stockholm Resilience Centre, and the 6-volume Manifesto of Theseus</p>
     </div>
 
+    <div class="form-card" style="margin-top:2.5rem;border-color:rgba(0,191,255,0.3)">
+        <h2 style="color:var(--b);margin-bottom:1rem;font-size:1rem">85 seconds is the diagnosis. OD9 is the response.</h2>
+        <p style="color:#aaa;font-size:0.95rem;line-height:1.7;margin-bottom:1.25rem;text-align:left">
+            The Doomsday Clock is at 85 seconds because <strong style="color:var(--b)">coordination</strong> failed — institutions, incentives, and information systems all optimized away from the long-term human interest. OD9 exists to build the infrastructure for the next round of coordination, before the clock runs down.
+        </p>
+        <p style="color:#aaa;font-size:0.95rem;line-height:1.7;margin-bottom:1.25rem;text-align:left">
+            The briefing tells you what's broken. What you do next decides whether you're part of the diagnosis or part of the response.
+        </p>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;justify-content:center">
+            <a href="framework.php" style="display:inline-block;padding:0.7rem 1.5rem;background:linear-gradient(135deg,var(--b),var(--eb));color:var(--d);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border-radius:6px;font-size:0.9rem">Read the Framework</a>
+            <a href="https://discord.gg/spgmrXVMWq" target="_blank" style="display:inline-block;padding:0.7rem 1.5rem;background:transparent;color:var(--b);border:1px solid var(--b);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border-radius:6px;font-size:0.9rem">Join Discord</a>
+        </div>
+    </div>
+
     <div class="bottom-links">
         <a href="index.php">Home</a>
         <a href="framework.php">Framework</a>

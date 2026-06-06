@@ -1,6 +1,9 @@
 # OD9 Public Directory Rewrites
 RewriteEngine On
 
+# Serve the filesystem-generated sitemap at the conventional /sitemap.xml
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
 # Clean URL: /wake-up -> wake-up.php
 RewriteRule ^wake-up$ wake-up.php [L,QSA]
 

@@ -4,24 +4,38 @@
  * Include this at the top of every page's <body> tag.
  * Set $current_page before including to highlight the active link.
  * Example: $current_page = 'ncz'; include('includes/nav.php');
+ *
+ * BASE PATH AWARENESS (added 2026-04-23):
+ * Nav links auto-resolve against the install root so the same nav works in:
+ *   - Production: site at root - links like "/index.php"
+ *   - Local XAMPP: site at /od9/public/ - links like "/od9/public/index.php"
+ * Detection: dirname() of SCRIPT_NAME gives the install dir prefix.
  */
+
+// Compute base path once. SCRIPT_NAME = "/od9/public/library.php" or "/library.php"
+$nav_base = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php'), '/\\');
+// Helper: prefix a root-relative path with the base
+$nav_url = function(string $path) use ($nav_base): string {
+    return $nav_base . '/' . ltrim($path, '/');
+};
+
 $nav_links = [
-    'index' => ['href' => '/index.php', 'label' => 'Home'],
-    'framework' => ['href' => '/framework.php', 'label' => 'Framework'],
-    'ncz' => ['href' => '/ncz.php', 'label' => 'NCZ'],
-    'updates' => ['href' => '/updates.php', 'label' => 'Updates'],
-    'think-tank' => ['href' => '/think-tank.php', 'label' => 'Think Tank'],
-    'tiers' => ['href' => '/tiers.php', 'label' => 'Tiers'],
-    'da-crew' => ['href' => '/da-crew.php', 'label' => 'Da Crew'],
-    'music' => ['href' => '/music.php', 'label' => 'Music'],
-    'join' => ['href' => '/join.php', 'label' => 'Join'],
-    'downloads' => ['href' => '/downloads.php', 'label' => 'Downloads'],
-    'support' => ['href' => '/support.php', 'label' => 'Support'],
+    'index'      => ['href' => $nav_url('index.php'),      'label' => 'Home'],
+    'framework'  => ['href' => $nav_url('framework.php'),  'label' => 'Framework'],
+    'ncz'        => ['href' => $nav_url('ncz.php'),        'label' => 'NCZ'],
+    'updates'    => ['href' => $nav_url('updates.php'),    'label' => 'Updates'],
+    'tiers'      => ['href' => $nav_url('tiers.php'),      'label' => 'Tiers'],
+    'library'    => ['href' => $nav_url('library.php'),    'label' => 'Library'],
+    'da-crew'    => ['href' => $nav_url('da-crew.php'),    'label' => 'Da Crew'],
+    'music'      => ['href' => $nav_url('music.php'),      'label' => 'Music'],
+    'join'       => ['href' => $nav_url('join.php'),       'label' => 'Join'],
+    'downloads'  => ['href' => $nav_url('downloads.php'),  'label' => 'Downloads'],
+    'support'    => ['href' => $nav_url('support.php'),    'label' => 'Support'],
 ];
 if (!isset($current_page)) $current_page = '';
 ?>
 <nav class="od9-nav"><div class="nav-container">
-<a href="/index.php" class="nav-logo"><img src="/images/logos/od9-logo.png" alt="OD9"><span class="nav-logo-text">OD9</span></a>
+<a href="<?= $nav_url('index.php') ?>" class="nav-logo"><img src="<?= $nav_url('images/logos/od9-logo.png') ?>" alt="OD9"><span class="nav-logo-text">OD9</span></a>
 <ul class="nav-menu" style="gap:0.7rem">
 <?php foreach ($nav_links as $key => $link): ?>
 <li><a href="<?= $link['href'] ?>" class="nav-link <?= $current_page === $key ? 'active' : '' ?>" style="font-size:0.85rem"><?= $link['label'] ?></a></li>

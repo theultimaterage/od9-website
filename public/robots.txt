@@ -7,7 +7,9 @@ Allow: /
 # Sitemap
 Sitemap: https://offda9.com/sitemap.xml
 
-# Disallow admin and private directories
+# Disallow admin, private, member-gated, and utility paths
 Disallow: /admin/
 Disallow: /private/
+Disallow: /dashboard/
 Disallow: /subscribe.php
+Disallow: /founding_patron_launch_sender.php

@@ -57,7 +57,6 @@
 <li><a href="index.php">Home</a></li>
 <li><a href="framework.php">Framework</a></li>
 <li><a href="ncz.php">No Cap Zone</a></li>
-<li><a href="think-tank.php">Think Tank</a></li>
 <li><a href="tiers.php">Tier System</a></li>
 <li><a href="da-crew.php">Da Crew</a></li>
 <li><a href="music.php">Music</a></li>

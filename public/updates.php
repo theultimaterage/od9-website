@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OD9 Updates | Building the Future in Real Time</title>
+<link rel="canonical" href="https://offda9.com/updates.php">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <meta name="description" content="OD9 development updates. What we shipped, what we're building, and what's next for The No Cap Zone, ASCEND, and the independent media stack.">
