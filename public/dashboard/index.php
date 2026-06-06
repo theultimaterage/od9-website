@@ -75,16 +75,16 @@ if ($isLoggedIn) {
                 'balance' => (int)($user['total_credits'] ?? 0)
             ];
 
-            // Get streak
+            // Get streak (real bot columns: longest_streak, last_activity_date)
             $stmt = $db->prepare("
-                SELECT current_streak, best_streak, last_activity
+                SELECT current_streak, longest_streak, last_activity_date
                 FROM user_streaks WHERE user_id = ? AND guild_id = ? LIMIT 1
             ");
             $stmt->execute([$discordId, $guildId]);
             $streakData = $stmt->fetch();
             $streak = [
                 'current' => (int)($streakData['current_streak'] ?? 0),
-                'best' => (int)($streakData['best_streak'] ?? 0)
+                'best' => (int)($streakData['longest_streak'] ?? 0)
             ];
 
             // Get achievements count
