@@ -514,7 +514,7 @@ include __DIR__ . '/../includes/nav.php';
                         </div>
                         <div class="activity-content">
                             <div class="activity-desc"><?= htmlspecialchars($activity['activity_description'] ?? $activity['activity_type']) ?></div>
-                            <div class="activity-time"><?= date('M j, g:i A', strtotime($activity['activity_date'])) ?></div>
+                            <div class="activity-time"><?= htmlspecialchars(od9_local_time($activity['activity_date'] ?? null)) ?></div>
                         </div>
                         <?php if (($activity['credits_earned'] ?? 0) > 0): ?>
                         <div class="activity-credits">+<?= $activity['credits_earned'] ?><?= ($activity['streak_bonus'] ?? 0) > 0 ? ' (+' . $activity['streak_bonus'] . ' streak)' : '' ?></div>
