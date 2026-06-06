@@ -1,0 +1,37 @@
+# Prod deploy config — holds prod host + SSH key path. Never commit.
+tools/prod-deploy-config.json
+tools/deploys.log
+
+# Local-only / secrets
+.env
+.env.local
+
+# ── Secret configs ───────────────────────────────────────────────────────
+# Convention (documented in config/mail.php): a committed <name>.php loader
+# reads live credentials from a sibling <name>.config.php; only the
+# <name>.config.example.php template is committed. .gitignore never enforced
+# this, so every *.config.php sat un-ignored — one `git add -A` from being
+# published (mail.config.php, webhook_secret.config.php, pulse_secret.config.php).
+# Class-gate the whole convention rather than list files — an explicit list
+# already missed pulse_secret.config.php under public/. Defused 2026-06-05.
+*.config.php
+!*.config.example.php
+
+# Already TRACKED in history (gitignore alone won't untrack — full retirement
+# needs `git rm --cached` + rotating the live credential). Listed here so a
+# future `git add -A` doesn't re-stage a fresh secret value:
+config/database.php
+config/sp-credentials.php
+
+# Dashboard (Discord OAuth member app) keeps live secrets in a bare config.php
+# (Discord client secret + web-sync secret) that does NOT match *.config.php —
+# gate it explicitly. TODO: refactor to a committed config.example.php loader
+# reading a gitignored secret, like the config/ convention.
+dashboard/includes/config.php
+
+# Backup / editor cruft — never version these.
+*.bak
+*.bak.*
+*.bak-*
+*.orig
+*~
