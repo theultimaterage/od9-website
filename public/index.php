@@ -1,41 +1,13 @@
+<?php
+$page_title = 'OD9 - Off Da Nine | Advancing Humanity Toward Type I Civilization';
+$page_description = 'OD9 is a framework for accelerating human progress toward Type I civilization through STEAM optimization, the ASCEND Protocol, collaborative innovation, and the Kardashev Scale.';
+$page_slug = 'index.php';
+$page_og_description = 'A framework for accelerating human progress through STEAM optimization, collaborative innovation, and the systematic advancement of our species on the Kardashev Scale.';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OD9 - Off Da Nine | Advancing Humanity Toward Type I Civilization</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<meta name="description" content="OD9 is a framework for accelerating human progress toward Type I civilization through STEAM optimization, the ASCEND Protocol, collaborative innovation, and the Kardashev Scale.">
-<meta name="keywords" content="OD9, Off Da Nine, Kardashev Scale, Type I civilization, STEAM, ASCEND Protocol, transhumanism, human advancement, coordination failure">
-<meta name="robots" content="index, follow">
-<meta name="author" content="OD9 LLC">
-<link rel="canonical" href="https://offda9.com/">
-
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://offda9.com/">
-<meta property="og:title" content="OD9 - Off Da Nine | Advancing Humanity Toward Type I Civilization">
-<meta property="og:description" content="A framework for accelerating human progress through STEAM optimization, collaborative innovation, and the systematic advancement of our species on the Kardashev Scale.">
-<meta property="og:image" content="https://offda9.com/images/logos/od9-logo.png">
-<meta property="og:site_name" content="OD9 - Off Da Nine">
-<meta property="og:locale" content="en_US">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="OD9 - Off Da Nine | Advancing Humanity">
-<meta name="twitter:description" content="A framework for accelerating human progress through STEAM optimization, collaborative innovation, and the Kardashev Scale.">
-<meta name="twitter:image" content="https://offda9.com/images/logos/od9-logo.png">
-
-<!-- Favicon & Theme -->
-<meta name="theme-color" content="#00BFFF">
-<link rel="icon" type="image/png" href="/images/logos/od9-logo.png">
-<link rel="apple-touch-icon" href="/images/logos/od9-logo.png">
-
-<!-- Google Search Console Verification -->
-<meta name="google-site-verification" content="G0SUpJPVBFDvyZIemln1Pf4BN9DG4TLnr_X6g99gT-Y">
-
-<!-- Structured Data -->
+<?php include __DIR__ . '/includes/head.php'; ?>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -200,35 +172,8 @@
   ]
 }
 </script>
-
 <style>
-:root{--primary-blue:#00BFFF;--electric-blue:#00A0FF;--neon-blue:#00D4FF;--chrome:#C0C0C0;--carbon:#0D0D0D;--carbon-dark:#1A1A1A;--glow:0 0 20px rgba(0,191,255,0.5);--nav-height:80px}
-*{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--carbon);background-image:linear-gradient(45deg,#111 25%,transparent 25%),linear-gradient(-45deg,#111 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#111 75%),linear-gradient(-45deg,transparent 75%,#111 75%);background-size:4px 4px;color:var(--chrome);font-family:'Exo 2',sans-serif;padding-top:var(--nav-height);min-height:100vh}
-.od9-nav{position:fixed;top:0;left:0;width:100%;height:var(--nav-height);background:linear-gradient(180deg,rgba(13,13,13,0.98) 0%,rgba(26,26,26,0.95) 100%);backdrop-filter:blur(20px);border-bottom:2px solid var(--primary-blue);box-shadow:var(--glow);z-index:9999}
-.nav-container{max-width:1200px;margin:0 auto;padding:0 2rem;height:100%;display:flex;justify-content:space-between;align-items:center}
-.nav-logo{display:flex;align-items:center;text-decoration:none}
-.nav-logo img{height:50px;margin-right:0.75rem;filter:drop-shadow(var(--glow))}
-.nav-logo-text{font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:700;color:var(--primary-blue);letter-spacing:3px;text-shadow:var(--glow)}
-.nav-menu{display:flex;list-style:none;gap:0.8rem;align-items:center}
-.nav-link{color:var(--chrome);text-decoration:none;font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;transition:all 0.3s;padding:0.5rem 0;position:relative}
-.nav-link::after{content:'';position:absolute;bottom:0;left:50%;width:0;height:2px;background:var(--primary-blue);transition:all 0.3s;transform:translateX(-50%)}
-.nav-link:hover,.nav-link.active{color:var(--primary-blue)}
-.nav-link:hover::after,.nav-link.active::after{width:100%}
-.nav-btn{background:linear-gradient(135deg,var(--primary-blue),var(--electric-blue));color:var(--carbon);padding:0.6rem 1.2rem;border-radius:4px;text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.9rem;text-transform:uppercase;display:flex;align-items:center;gap:0.5rem;transition:all 0.3s;box-shadow:var(--glow)}
-.nav-btn:hover{transform:translateY(-2px)}
-.mobile-toggle{display:none;background:none;border:none;cursor:pointer;padding:0.5rem;z-index:10001}
-.mobile-toggle span{display:block;width:25px;height:3px;background:var(--primary-blue);margin:5px 0;border-radius:2px;transition:all 0.3s}
-.mobile-toggle.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
-.mobile-toggle.active span:nth-child(2){opacity:0}
-.mobile-toggle.active span:nth-child(3){transform:rotate(-45deg) translate(7px,-6px)}
-.mobile-menu{display:none;position:fixed;top:var(--nav-height);left:0;width:100%;background:linear-gradient(180deg,rgba(13,13,13,0.98) 0%,rgba(26,26,26,0.98) 100%);backdrop-filter:blur(20px);padding:1rem 0;border-bottom:2px solid var(--primary-blue);box-shadow:var(--glow);z-index:9998}
-.mobile-menu.active{display:block}
-.mobile-menu a{display:block;color:var(--chrome);text-decoration:none;font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:1rem 2rem;transition:all 0.3s;border-bottom:1px solid #222}
-.mobile-menu a:hover,.mobile-menu a.active{color:var(--primary-blue);background:rgba(0,191,255,0.1)}
-.mobile-menu a:last-child{border-bottom:none}
-.mobile-menu .mobile-discord{background:linear-gradient(135deg,var(--primary-blue),var(--electric-blue));color:var(--carbon);margin:1rem;border-radius:4px;text-align:center;border-bottom:none}
-@media(max-width:900px){.nav-menu{display:none}.mobile-toggle{display:block}}
 </style>
 <style>
 /* Hero Section */
