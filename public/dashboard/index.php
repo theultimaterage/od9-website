@@ -431,6 +431,13 @@ include __DIR__ . '/../includes/nav.php';
     <div class="dashboard-header">
         <h1><i class="fas fa-chart-line"></i> Progression Dashboard</h1>
         <p class="subtitle">Track your ASCEND Protocol journey</p>
+        <?php if ($isLoggedIn): ?>
+        <p style="margin-top: 0.75rem;">
+            <a href="/dashboard/settings.php" style="color: var(--primary-blue); text-decoration: none; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px;">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </p>
+        <?php endif; ?>
     </div>
 
     <?php if (!$isLoggedIn): ?>

@@ -71,17 +71,7 @@ $profileUrl = DASHBOARD_BASE_URL . '/profile.php?u=' . urlencode($discordId);
 <html lang="en">
 <head>
 <?php $nav_base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'] ?? '/dashboard/settings.php')), '/'); include __DIR__ . '/../includes/head.php'; ?>
-<style>
-body {
-    background: var(--carbon);
-    background-image: linear-gradient(45deg, #111 25%, transparent 25%), linear-gradient(-45deg, #111 25%, transparent 25%);
-    background-size: 4px 4px;
-    color: var(--chrome);
-    font-family: 'Exo 2', sans-serif;
-    padding-top: var(--nav-height);
-    min-height: 100vh;
-}
-</style>
+<link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body>
 
