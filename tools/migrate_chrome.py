@@ -43,6 +43,8 @@ RX_OGD = re.compile(r'(?is)<meta\s+property=["\']og:description["\']\s+content=[
 RX_OGI = re.compile(r'(?is)<meta\s+property=["\']og:image["\']\s+content=["\'](.*?)["\']\s*/?>')
 RX_STYLE = re.compile(r"(?is)<style\b[^>]*>.*?</style>")
 RX_JSONLD = re.compile(r'(?is)<script[^>]*type=["\']application/ld\+json["\'][^>]*>.*?</script>')
+RX_SCRIPT = re.compile(r"(?is)<script\b[^>]*>.*?</script>")
+RX_ROBOTS = re.compile(r'(?is)<meta\s+name=["\']robots["\']\s+content=["\'](.*?)["\']')
 RX_BODYRULE = re.compile(r"(?is)(?<![\.\w])(?:body|html)\s*\{[^{}]*\}")
 RX_PAGE_SEL = re.compile(r"\.(container|hero|wrapper|card|grid|panel|section|btn|"
                          r"contact-|music-|crew-|form-|social-|tier-|feature)[\s{.:]", re.I)
@@ -50,6 +52,37 @@ RX_PAGE_SEL = re.compile(r"\.(container|hero|wrapper|card|grid|panel|section|btn
 
 def php_str(s: str) -> str:
     return "'" + (s or "").strip().replace("\\", "\\\\").replace("'", "\\'") + "'"
+
+
+def strip_shared_css(css: str) -> str:
+    """Walk CSS rule-by-rule; drop the shared chrome rules (od9.css owns them)
+    while keeping page-specific rules + body/html. Handles one level of @media
+    nesting so a page's own responsive rules survive but the nav @media goes."""
+    out, i, n = [], 0, len(css)
+    while i < n:
+        brace = css.find("{", i)
+        if brace == -1:
+            out.append(css[i:]); break
+        selector = css[i:brace].strip()
+        depth, j = 0, brace
+        while j < n:
+            if css[j] == "{":
+                depth += 1
+            elif css[j] == "}":
+                depth -= 1
+                if depth == 0:
+                    break
+            j += 1
+        block = css[brace:j + 1]
+        rule = css[i:j + 1]
+        sel = selector
+        shared = (sel in ("*", ":root")
+                  or re.search(r"\.(od9-nav|nav-[\w-]*|mobile-[\w-]*)\b", sel) is not None)
+        nav_media = sel.startswith("@media") and re.search(r"\.nav-menu|\.mobile-toggle|\.od9-nav", block)
+        if not (shared or nav_media):
+            out.append(rule)
+        i = j + 1
+    return "".join(out).strip()
 
 
 def migrate(text: str, slug: str) -> tuple[str | None, str]:
@@ -61,12 +94,10 @@ def migrate(text: str, slug: str) -> tuple[str | None, str]:
     head_inner = m.group(1)
 
     styles = RX_STYLE.findall(head_inner)
-    shared = [s for s in styles if ".od9-nav" in s]
-    page_styles = [s for s in styles if ".od9-nav" not in s]
-    if not shared:
-        return None, "no shared .od9-nav <style> block (manual review)"
-    if any(RX_PAGE_SEL.search(s) for s in shared):
-        return None, "shared + page CSS mixed in one <style> (manual review)"
+    if not any(".od9-nav" in s for s in styles):
+        return None, "no nav (.od9-nav) - standalone page, needs manual nav/head add"
+    inner_css = "\n".join(re.sub(r"(?is)^\s*<style[^>]*>|</style>\s*$", "", s).strip() for s in styles)
+    page_css = strip_shared_css(inner_css)
 
     def grab(rx):
         mm = rx.search(head_inner)
@@ -74,13 +105,17 @@ def migrate(text: str, slug: str) -> tuple[str | None, str]:
 
     title, desc = grab(RX_TITLE), grab(RX_DESC)
     ogt, ogd, ogi = grab(RX_OGT), grab(RX_OGD), grab(RX_OGI)
-    jsonld = RX_JSONLD.findall(head_inner)
-    salvaged = [r for s in shared for r in RX_BODYRULE.findall(s)]
+    if any("<?" in (v or "") for v in (title, desc, ogt, ogd)):
+        return None, "dynamic <head> meta (PHP-generated title/desc) - manual"
+    scripts = RX_SCRIPT.findall(head_inner)
+    robots = grab(RX_ROBOTS)
 
     lines = ["<?php",
              f"$page_title = {php_str(title)};",
              f"$page_description = {php_str(desc)};",
              f"$page_slug = {php_str(slug)};"]
+    if "noindex" in robots.lower():
+        lines.append(f"$page_robots = {php_str(robots)};")
     if ogt and ogt != title:
         lines.append(f"$page_og_title = {php_str(ogt)};")
     if ogd and ogd != desc:
@@ -91,15 +126,23 @@ def migrate(text: str, slug: str) -> tuple[str | None, str]:
     preamble = "\n".join(lines)
 
     parts = ["\n" + HEAD_INCLUDE]
-    parts += ["\n" + j for j in jsonld]
-    if salvaged:
-        parts.append("\n<style>\n" + "\n".join(salvaged) + "\n</style>")
-    parts += ["\n" + s for s in page_styles]
+    parts += ["\n" + s for s in scripts]   # preserve page-specific head scripts (chart.js, JSON-LD, ...)
+    if page_css:
+        parts.append("\n<style>\n" + page_css + "\n</style>")
     new_inner = "".join(parts) + "\n"
 
     head_open = m.group(0)[: m.group(0).index(">") + 1]
     new_head = head_open + new_inner + "</head>"
-    new_text = preamble + "\n" + text[:m.start()] + new_head + text[m.end():]
+    # Insert the $page_* preamble right before <!DOCTYPE>/<html> (i.e. AFTER any
+    # existing top-of-file PHP) so a leading declare(strict_types=1)/namespace
+    # stays the first statement, and the page's own logic runs untouched.
+    prefix = text[:m.start()]
+    pos = prefix.lower().find("<!doctype")
+    if pos == -1:
+        pos = prefix.lower().find("<html")
+    if pos == -1:
+        pos = len(prefix)
+    new_text = prefix[:pos] + preamble + "\n" + prefix[pos:] + new_head + text[m.end():]
     return new_text, "migrated"
 
 

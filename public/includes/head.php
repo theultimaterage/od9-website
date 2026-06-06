@@ -25,7 +25,7 @@ $_ogimg     = $page_og_image ?? '/images/logos/od9-logo.png';
 if (strncmp($_ogimg, 'http', 4) !== 0) { $_ogimg = $_base . $_ogimg; }
 // Base path so local XAMPP (site under /od9/public/) and prod (site at /)
 // both resolve same-origin assets. Mirrors the helper in includes/nav.php.
-$_bp = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php'), '/\\');
+$_bp = $nav_base ?? rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php'), '/\\');
 $h = static fn(string $s): string => htmlspecialchars($s, ENT_QUOTES);
 ?>
 <meta charset="UTF-8">

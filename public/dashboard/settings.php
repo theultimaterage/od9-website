@@ -69,7 +69,7 @@ $profileUrl = DASHBOARD_BASE_URL . '/profile.php?u=' . urlencode($discordId);
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<?php include __DIR__ . '/includes/head.php'; ?>
+<?php $nav_base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'] ?? '/dashboard/settings.php')), '/'); include __DIR__ . '/../includes/head.php'; ?>
 <style>
 body {
     background: var(--carbon);

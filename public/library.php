@@ -1,4 +1,9 @@
 <?php
+$page_title = 'OD9 Pedagogical Library | The Complete Progression System';
+$page_description = 'The complete OD9 Pedagogical Library - 44 PDFs across 5 tiers (Observer, Theorist, Architect, Pioneer, Benefactor) covering the full progression from awareness to civilizational stewardship.';
+$page_slug = 'library.php';
+?>
+<?php
 /**
  * OD9 Pedagogical Library
  * Public-facing library page for the 5-tier OD9 progression system.
@@ -134,18 +139,9 @@ $total_docs = array_sum(array_map(fn($t) => count($t['docs']), $LIBRARY));
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OD9 Pedagogical Library | The Complete Progression System</title>
-<link rel="canonical" href="https://offda9.com/library.php">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<meta name="description" content="The complete OD9 Pedagogical Library - 44 PDFs across 5 tiers (Observer, Theorist, Architect, Pioneer, Benefactor) covering the full progression from awareness to civilizational stewardship.">
-<meta name="robots" content="index, follow">
+<?php include __DIR__ . '/includes/head.php'; ?>
 <style>
-:root{--b:#00BFFF;--d:#0D0D0D;--dd:#1A1A1A;--c:#C0C0C0;--g:0 0 20px rgba(0,191,255,.45)}
-*{margin:0;padding:0;box-sizing:border-box}body{background:var(--d);background-image:linear-gradient(45deg,#111 25%,transparent 25%),linear-gradient(-45deg,#111 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#111 75%),linear-gradient(-45deg,transparent 75%,#111 75%);background-size:4px 4px;color:var(--c);font-family:'Exo 2',sans-serif;padding-top:80px}
-.od9-nav{position:fixed;top:0;left:0;width:100%;height:80px;background:linear-gradient(180deg,rgba(13,13,13,.98),rgba(26,26,26,.95));backdrop-filter:blur(20px);border-bottom:2px solid var(--b);box-shadow:var(--g);z-index:9999}.nav-container{max-width:1200px;margin:0 auto;padding:0 2rem;height:100%;display:flex;justify-content:space-between;align-items:center}.nav-logo{display:flex;align-items:center;text-decoration:none}.nav-logo img{height:50px;margin-right:.75rem;filter:drop-shadow(var(--g))}.nav-logo-text{font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:700;color:var(--b);letter-spacing:3px;text-shadow:var(--g)}.nav-menu{display:flex;list-style:none;gap:1.2rem;align-items:center}.nav-link{color:var(--c);text-decoration:none;font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;transition:.3s;padding:.5rem 0;position:relative}.nav-link::after{content:'';position:absolute;bottom:0;left:50%;width:0;height:2px;background:var(--b);transition:.3s;transform:translateX(-50%)}.nav-link:hover,.nav-link.active{color:var(--b)}.nav-link:hover::after,.nav-link.active::after{width:100%}.nav-btn{background:linear-gradient(135deg,var(--b),#00A0FF);color:#0D0D0D;padding:.6rem 1.2rem;border-radius:4px;text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;display:flex;align-items:center;gap:.5rem;box-shadow:var(--g)}.mobile-toggle{display:none;background:none;border:none;cursor:pointer;padding:.5rem;z-index:10001}.mobile-toggle span{display:block;width:25px;height:3px;background:var(--b);margin:5px 0;border-radius:2px;transition:.3s}.mobile-toggle.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}.mobile-toggle.active span:nth-child(2){opacity:0}.mobile-toggle.active span:nth-child(3){transform:rotate(-45deg) translate(7px,-6px)}.mobile-menu{display:none;position:fixed;top:80px;left:0;width:100%;background:linear-gradient(180deg,rgba(13,13,13,.98),rgba(26,26,26,.98));padding:1rem 0;border-bottom:2px solid var(--b);box-shadow:var(--g);z-index:9998}.mobile-menu.active{display:block}.mobile-menu a{display:block;color:var(--c);text-decoration:none;font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:1rem 2rem;border-bottom:1px solid #222}.mobile-menu a.active,.mobile-menu a:hover{color:var(--b);background:rgba(0,191,255,.1)}.mobile-menu .mobile-discord{background:linear-gradient(135deg,var(--b),#00A0FF);color:#0D0D0D;margin:1rem;border-radius:4px;text-align:center;border-bottom:none}@media(max-width:900px){.nav-menu{display:none}.mobile-toggle{display:block}}
+body{background:var(--d);background-image:linear-gradient(45deg,#111 25%,transparent 25%),linear-gradient(-45deg,#111 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#111 75%),linear-gradient(-45deg,transparent 75%,#111 75%);background-size:4px 4px;color:var(--c);font-family:'Exo 2',sans-serif;padding-top:80px}
 .container{max-width:1200px;margin:0 auto;padding:2rem}
 .hero{background:linear-gradient(135deg,rgba(0,191,255,.13),rgba(0,0,0,.72));border:1px solid #2a2a2a;border-radius:16px;padding:3rem 2rem;margin-bottom:1.5rem;box-shadow:var(--g);text-align:center}
 .hero h1{font-family:'Orbitron',sans-serif;color:#fff;font-size:3rem;margin-bottom:1rem;letter-spacing:3px;line-height:1.1}
