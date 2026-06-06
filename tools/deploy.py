@@ -73,6 +73,45 @@ def staged_name(rel: str) -> str:
     return rel.replace("/", "__")
 
 
+def _site_base(url: str) -> str:
+    from urllib.parse import urlsplit
+    p = urlsplit(url)
+    return f"{p.scheme}://{p.netloc}"
+
+
+def opcache_reset(cfg: dict, verify_url: str) -> None:
+    """Clear the web FPM pool's opcache so deployed edits actually take effect.
+    A file edit is invisible to PHP-FPM until opcache_reset() runs IN that pool,
+    so drop a one-shot resetter into the docroot, hit it over HTTPS, remove it.
+    Absence of this step caused hours of 'deployed but prod didn't change'."""
+    tmp = f"{cfg['remote_doc_root']}/_ocreset.php"
+    php = '<?php echo function_exists("opcache_reset")&&opcache_reset()?"OK":"NONE";'
+    ssh(cfg, f"printf '%s' '{php}' | sudo tee '{tmp}' >/dev/null && "
+             f"sudo chown {cfg['prod_owner']} '{tmp}'")
+    url = f"{_site_base(verify_url)}/_ocreset.php?x={int(time.time())}"
+    r = subprocess.run(["curl", "-sS", "-m", "15", url], capture_output=True, text=True)
+    ssh(cfg, f"sudo rm -f '{tmp}'")
+    print(green(f"[deploy] opcache reset -> {r.stdout.strip() or '(no output)'}"))
+
+
+def cf_purge(cfg: dict) -> None:
+    """Purge Cloudflare so newly-deployed static assets aren't masked by a stale
+    edge cache - including a previously-cached 404 (the od9.css trap)."""
+    token, zone = cfg.get("cf_api_token"), cfg.get("cf_zone_id")
+    if not token or not zone:
+        print(dim("[deploy] cloudflare purge skipped (set cf_api_token + cf_zone_id in config)"))
+        return
+    r = subprocess.run(["curl", "-sS", "-m", "20", "-X", "POST",
+                        "-H", f"Authorization: Bearer {token}",
+                        "-H", "Content-Type: application/json",
+                        "--data", '{"purge_everything":true}',
+                        f"https://api.cloudflare.com/client/v4/zones/{zone}/purge_cache"],
+                       capture_output=True, text=True)
+    ok = '"success":true' in r.stdout
+    print((green if ok else yellow)(
+        f"[deploy] cloudflare purge: {'OK' if ok else 'FAILED ' + r.stdout[:140]}"))
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--files", nargs="+", required=True,
@@ -166,6 +205,9 @@ def main() -> int:
         ssh(cfg, f"rm -rf {staging}")
         sys.exit(red(f"[deploy] FAILED + rolled back. backups kept: {backup}"))
 
+    # Make the new bytes actually take effect, then bust the edge cache.
+    opcache_reset(cfg, verify_url)
+
     # Prod sanity curl.
     r = subprocess.run(["curl", "-sS", "-o", os.devnull, "-w", "%{http_code}", "-L", verify_url],
                        capture_output=True, text=True, timeout=20)
@@ -174,6 +216,7 @@ def main() -> int:
         ssh(cfg, f"rm -rf {staging}")
         sys.exit(red(f"[deploy] prod curl {verify_url} -> {code} (not 200). backups: {backup}"))
     print(green(f"[deploy] prod verify {verify_url} -> 200"))
+    cf_purge(cfg)
     ssh(cfg, f"rm -rf {staging}")
 
     log = REPO_ROOT / "tools" / "deploys.log"
