@@ -1,92 +1,74 @@
 <?php
 /**
  * Database Configuration - OD9
- * 
- * SECURITY NOTE: This file should NEVER be committed to version control.
+ *
+ * Environment-aware: detects local XAMPP vs prod cPanel via SERVER_NAME +
+ * filesystem path. Local uses XAMPP's root/no-password default with the
+ * od9_tickets db; prod uses the offda9_od9admin user with the prod db.
+ *
+ * Same file ships to both environments. The detection is the only switch.
+ *
+ * If a local DB query fails because tables are missing (XAMPP doesn't have
+ * the full prod schema), the calling page's try/catch handles the
+ * PDOException - getDatabaseConnection() itself throws on connection
+ * failure but does NOT log to error_log on local context (so we don't get
+ * recurring "Access denied" noise on every dev hit).
  */
 
-// Detect environment
-$isLocalDevelopment = (
-    ($_SERVER['SERVER_NAME'] ?? '') === 'localhost' ||
-    ($_SERVER['SERVER_NAME'] ?? '') === '127.0.0.1' ||
-    strpos(__DIR__, 'xampp') !== false
+$_od9_is_local = (
+    in_array($_SERVER['SERVER_NAME'] ?? '', ['localhost', '127.0.0.1'], true)
+    || (PHP_OS_FAMILY === 'Windows' && strpos(__DIR__, 'xampp') !== false)
 );
 
-if (!defined('ENVIRONMENT')) {
-    define('ENVIRONMENT', $isLocalDevelopment ? 'development' : 'production');
-}
+define('ENVIRONMENT', $_od9_is_local ? 'local' : 'production');
+define('DEBUG_MODE', $_od9_is_local);
 
-if (!defined('DEBUG_MODE')) {
-    define('DEBUG_MODE', ENVIRONMENT === 'development');
-}
-
-// Database configuration based on environment
-if (ENVIRONMENT === 'development') {
-    // Local XAMPP development settings
+if ($_od9_is_local) {
+    // XAMPP defaults - root with no password, local db name
     define('DB_HOST', 'localhost');
-    define('DB_NAME', 'od9_tickets'); // OD9's own database
+    define('DB_NAME', 'od9_tickets');
     define('DB_USER', 'root');
     define('DB_PASS', '');
-    define('DB_CHARSET', 'utf8mb4');
     define('DB_PORT', 3306);
-    
 } else {
-    // Production server settings
-    define('DB_HOST', 'localhost');
-    define('DB_NAME', 'od9_production'); // Update with real production DB
-    define('DB_USER', 'od9_user');
-    define('DB_PASS', 'CHANGE_THIS_PASSWORD');
-    define('DB_CHARSET', 'utf8mb4');
-    define('DB_PORT', 3306);
+    // Production cPanel — credentials live in the gitignored sibling
+    // config/database.config.php (see config/database.config.example.php).
+    // Rotate the MySQL password in cPanel, then update that file + redeploy.
+    $_prodDb = __DIR__ . '/database.config.php';
+    if (!is_file($_prodDb)) {
+        error_log('[database.php] production config/database.config.php missing');
+        throw new RuntimeException('Database configuration missing on production');
+    }
+    $_db = require $_prodDb;
+    define('DB_HOST', $_db['host'] ?? 'localhost');
+    define('DB_NAME', $_db['name'] ?? 'offda9_od9_tickets');
+    define('DB_USER', $_db['user'] ?? '');
+    define('DB_PASS', $_db['pass'] ?? '');
+    define('DB_PORT', (int)($_db['port'] ?? 3306));
 }
 
-// PDO options
+define('DB_CHARSET', 'utf8mb4');
 define('DB_OPTIONS', [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     PDO::ATTR_EMULATE_PREPARES => false,
-    PDO::ATTR_PERSISTENT => false,
-    1002 => "SET NAMES " . DB_CHARSET, // PDO::MYSQL_ATTR_INIT_COMMAND
 ]);
 
-/**
- * Get a PDO database connection
- */
-if (!function_exists('getDatabaseConnection')) {
-    function getDatabaseConnection() {
-        static $connection = null;
-        
-        if ($connection === null) {
-            try {
-                $dsn = sprintf(
-                    'mysql:host=%s;dbname=%s;charset=%s;port=%d',
-                    DB_HOST,
-                    DB_NAME,
-                    DB_CHARSET,
-                    DB_PORT
-                );
-                
-                $connection = new PDO($dsn, DB_USER, DB_PASS, DB_OPTIONS);
-                
-            } catch (PDOException $e) {
-                error_log("Database connection failed: " . $e->getMessage());
-                if (DEBUG_MODE) {
-                    die("Database Connection Error: " . $e->getMessage());
-                } else {
-                    die("Unable to connect to database. Please contact support.");
-                }
+function getDatabaseConnection() {
+    static $connection = null;
+    if ($connection === null) {
+        $dsn = sprintf('mysql:host=%s;dbname=%s;charset=%s;port=%d', DB_HOST, DB_NAME, DB_CHARSET, DB_PORT);
+        try {
+            $connection = new PDO($dsn, DB_USER, DB_PASS, DB_OPTIONS);
+        } catch (PDOException $e) {
+            // On local: stay quiet (don't spam error_log every page hit).
+            // On prod: re-throw so the page's try/catch can log + degrade.
+            if (ENVIRONMENT === 'local') {
+                throw $e;  // still throw so callers' try/catch fires, but no error_log spam
             }
+            error_log('[database.php] connection failed: ' . $e->getMessage());
+            throw $e;
         }
-        
-        return $connection;
     }
+    return $connection;
 }
-
-return [
-    'host' => DB_HOST,
-    'database' => DB_NAME,
-    'username' => DB_USER,
-    'password' => DB_PASS,
-    'charset' => DB_CHARSET,
-    'port' => DB_PORT
-];

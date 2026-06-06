@@ -1,16 +1,22 @@
 <?php
 /**
  * OD9 Dashboard Configuration
- * 
- * Discord OAuth2 + Bot Database Settings
+ *
+ * Discord OAuth2 + Bot Database Settings. Secrets (Discord client secret +
+ * web-sync secret) live in the gitignored sibling secrets.config.php — see
+ * secrets.config.example.php for the shape.
  */
 
-// Discord OAuth2 Application
+// Discord OAuth2 Application (client ID is public, not a secret)
 putenv('DISCORD_CLIENT_ID=1395923907818688552');
-putenv('DISCORD_CLIENT_SECRET=Du8m05duLD0jeFWYs2gU_KdVCZfin2gk');
+
+// Secrets: DISCORD_CLIENT_SECRET + OD9_WEB_SYNC_SECRET (gitignored sibling).
+// Without it, getenv() returns false and OAuth + bot sync stay disabled.
+$_dashSecrets = __DIR__ . '/secrets.config.php';
+if (is_file($_dashSecrets)) { require $_dashSecrets; }
 
 // Callback URLs (environment-aware)
-$isLocal = ($_SERVER['SERVER_NAME'] ?? 'localhost') === 'localhost' 
+$isLocal = ($_SERVER['SERVER_NAME'] ?? 'localhost') === 'localhost'
         || strpos(__DIR__, 'xampp') !== false;
 
 if ($isLocal) {
@@ -31,6 +37,3 @@ define('OD9_BOT_DB_PATH', 'C:/Users/Rage/IdeaProjects/OD9-Discord-Bot/data/od9.d
 
 // Session configuration
 define('SESSION_LIFETIME', 86400 * 7); // 7 days
-
-// Legacy sync secret (keeping for backwards compatibility)
-putenv('OD9_WEB_SYNC_SECRET=wr5fOF7VugK1NGk6eUAB0CWYRHiET8Jz');
