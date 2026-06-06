@@ -21,6 +21,9 @@ It reports a per-page worklist of violations:
 - **NAV_NO_CSS** — renders the nav but never loads `od9.css` (unstyled)
 - **OWN_ENV** — reimplements env/base-path inline (use `includes/env.php`)
 - **DUP_CHROME** — more than one `nav.php`/`head.php`/`footer.php` exists
+- **UNSTYLED** — page uses ≥3 content classes (e.g. `.settings-card`, `.toggle-switch`) defined in **no** stylesheet it loads. This is the class of bug where a migration strips a page's content CSS and `od9.css` never replaces it, leaving the content unstyled (the 2026-06-06 settings.php regression). Put page content styles in a linked stylesheet (`css/dashboard.css` for member-area pages, or a per-page `css/<slug>.css`) — never rely on classes with no CSS home. The threshold (`UNSTYLED_MIN`) keeps it to substantially-unstyled pages, not 1-2 dynamic/straggler classes.
+
+To scaffold a NEW page already wired correctly (so it never trips these), use the **`new-page`** skill.
 
 **Wire it in** (so drift cannot ship): a pre-commit hook, and as a gate at the
 top of `tools/deploy.py`. Exit 0 = clean, 1 = drift found.
