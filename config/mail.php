@@ -1,19 +1,15 @@
 <?php
 /**
- * OD9 Mail Configuration
+ * OD9 Mail Configuration — environment-aware.
  *
- * Environment-aware. Mirrors database.php's local-vs-prod detection.
+ *  - PROD: authenticated SMTP via the host mailserver (noreply@offda9.com),
+ *    which DKIM-signs outbound with offda9.com's published key. Falls back to
+ *    PHP mail() only if SMTP creds are absent.
+ *  - LOCAL (XAMPP): Mailtrap Sandbox HTTP API — captures mail without delivering.
  *
- *  - LOCAL (XAMPP): routes outgoing mail through Mailtrap Sandbox HTTP API
- *    so verification + drip emails get captured in the sandbox inbox without
- *    real delivery. Lets us iterate on rendering / copy / link correctness.
- *  - PROD (cPanel): passes through to PHP mail() / local exim, preserving
- *    existing delivery behavior. Same -f envelope-from + DKIM/SPF/DMARC
- *    alignment we already have configured for offda9.com.
- *
- * Sensitive credentials (Mailtrap inbox ID + API token) live in the
- * gitignored sibling `mail.config.php`. See `mail.config.example.php` for
- * the expected shape. On prod that file should be mode 600 + offda9:offda9.
+ * Secrets (SMTP password, Mailtrap token) live in the gitignored sibling
+ * config/mail.config.php (see config/mail.config.example.php). On prod that file
+ * must be mode 600 + owner offda9:offda9.
  */
 
 $_od9_mail_is_local = (
@@ -21,15 +17,27 @@ $_od9_mail_is_local = (
     || (PHP_OS_FAMILY === 'Windows' && strpos(__DIR__, 'xampp') !== false)
 );
 
+// Sender identity (same on both environments).
+define('MAIL_FROM_EMAIL', 'noreply@offda9.com');
+define('MAIL_FROM_NAME',  'The OD9 Movement');
+define('MAIL_REPLY_TO',   'contact@offda9.com');
+
+// Load secrets (defines SMTP_* and/or MAILTRAP_* if present).
+$_secretsPath = __DIR__ . '/mail.config.php';
+if (file_exists($_secretsPath)) {
+    require $_secretsPath;
+} else {
+    error_log('[mail] config/mail.config.php missing — see mail.config.example.php');
+}
+
+$_hasSmtp = defined('SMTP_USER') && SMTP_USER !== ''
+         && defined('SMTP_PASS') && SMTP_PASS !== '' && SMTP_PASS !== 'REPLACE_WITH_NOREPLY_PASSWORD';
+
 define('MAIL_ENVIRONMENT', $_od9_mail_is_local ? 'local' : 'production');
-define('MAIL_DRIVER', $_od9_mail_is_local ? 'mailtrap_sandbox' : 'mail_function');
+define('MAIL_DRIVER',
+    $_od9_mail_is_local ? 'mailtrap_sandbox'
+                        : ($_hasSmtp ? 'smtp' : 'mail_function'));
 
 if (MAIL_DRIVER === 'mailtrap_sandbox') {
     define('MAILTRAP_API_BASE', 'https://sandbox.api.mailtrap.io/api/send');
-    $_secretsPath = __DIR__ . '/mail.config.php';
-    if (file_exists($_secretsPath)) {
-        require $_secretsPath;  // defines MAILTRAP_INBOX_ID + MAILTRAP_API_TOKEN
-    } else {
-        error_log('[mail] config/mail.config.php missing — sandbox sends will fail. See mail.config.example.php.');
-    }
 }
