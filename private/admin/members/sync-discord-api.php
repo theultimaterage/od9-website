@@ -5,4 +5,4 @@
  */
 define('SITE_ID', 'od9');
 define('SITE_PATH', 'C:/xampp/htdocs/od9');
-require_once 'C:/xampp/htdocs/shared-platform/admin/members/sync-discord-api.php';
+require_once 'C:/xampp/htdocs/freshthaband/public_html/shared-platform/admin/members/sync-discord-api.php';

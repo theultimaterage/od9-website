@@ -5,7 +5,7 @@
  * Run once, then delete this file
  */
 
-$sharedPlatformPath = 'C:/xampp/htdocs/shared-platform/admin';
+$sharedPlatformPath = 'C:/xampp/htdocs/freshthaband/public_html/shared-platform/admin';
 $od9AdminPath = 'C:/xampp/htdocs/od9/private/admin';
 
 // Files to create wrappers for (excluding root admin files we already have)
