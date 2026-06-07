@@ -50,15 +50,26 @@ foreach ($files as $file) {
     }
     $loc = ($name === 'index.php') ? BASE . '/' : BASE . '/' . $name;
 
-    // Include only pages that point their canonical at THEMSELVES. Read just
-    // the head (canonical lives in <head>) to keep this cheap.
+    // A page is canonical-for-itself if it EITHER carries a literal
+    // <link rel="canonical"> (legacy/static pages) OR includes head.php, which
+    // emits the canonical from $page_slug at runtime (the shared-chrome pages).
+    // The old static-source test only saw literal tags, so after the 2026-06
+    // head.php migration it collapsed the sitemap to a single page. Skip
+    // noindex pages either way.
     $head = @file_get_contents($file, false, null, 0, 8192);
-    if ($head === false
-        || !preg_match('~<link\s+rel=["\']canonical["\']\s+href=["\']([^"\']+)["\']~i', $head, $m)) {
+    if ($head === false || stripos($head, 'noindex') !== false) {
         continue;
     }
-    if (rtrim($m[1], '/') !== rtrim($loc, '/')) {
-        continue;
+    if (preg_match('~<link\s+rel=["\']canonical["\']\s+href=["\']([^"\']+)["\']~i', $head, $m)) {
+        $canonical = $m[1];                                  // literal canonical
+    } elseif (strpos($head, 'includes/head.php') !== false) {
+        $slug = preg_match('~\$page_slug\s*=\s*[\'"]([^\'"]*)[\'"]~', $head, $sm) ? $sm[1] : $name;
+        $canonical = ($slug === '' || $slug === 'index.php') ? BASE . '/' : BASE . '/' . ltrim($slug, '/');
+    } else {
+        continue;                                            // not a self-canonical page
+    }
+    if (rtrim($canonical, '/') !== rtrim($loc, '/')) {
+        continue;                                            // canonicalizes elsewhere (merged/redirect)
     }
 
     $lastmod = date('Y-m-d', (int) filemtime($file));
