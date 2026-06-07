@@ -6,7 +6,7 @@
  */
 ?>
 <style>
-.od9-footer{background:linear-gradient(180deg,#0a0a0a 0%,#050505 100%);border-top:2px solid #00BFFF;margin-top:4rem;padding:0;font-family:'Exo 2','Rajdhani',sans-serif;position:relative}
+.od9-footer{background:linear-gradient(180deg,#0a0a0a 0%,#050505 100%);border-top:2px solid #00BFFF;margin-top:4rem;padding:0;font-family:'Exo 2','Rajdhani',sans-serif;position:relative;align-self:stretch}
 .od9-footer::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#00BFFF,transparent);box-shadow:0 0 20px rgba(0,191,255,0.4)}
 .footer-inner{max-width:1100px;margin:0 auto;padding:3rem 2rem 2rem}
 .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:2.5rem;margin-bottom:2.5rem}

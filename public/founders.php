@@ -88,15 +88,16 @@ $page_slug = 'founders.php';
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-family: 'Exo 2', sans-serif;
     background: var(--bg);
     color: var(--fg);
     line-height: 1.6;
-    padding: 2rem 1rem 4rem;
+    padding: calc(var(--nav-height) + 1rem) 1rem 4rem;
   }
   .container { max-width: 720px; margin: 0 auto; }
   header { text-align: center; margin-bottom: 3rem; }
   h1 {
+    font-family: 'Orbitron', sans-serif;
     font-size: clamp(1.8rem, 5vw, 2.8rem);
     font-weight: 700;
     background: linear-gradient(135deg, var(--rose-gold), var(--gold));
@@ -117,6 +118,7 @@ $page_slug = 'founders.php';
     margin: 1rem auto;
   }
   .counter-num {
+    font-family: 'Orbitron', sans-serif;
     font-size: 3rem;
     font-weight: 800;
     color: var(--rose-gold);
@@ -169,7 +171,7 @@ $page_slug = 'founders.php';
     border-radius: 12px;
     text-align: center;
   }
-  .cta-block h2 { font-size: 1.5rem; margin-bottom: 0.6rem; }
+  .cta-block h2 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; margin-bottom: 0.6rem; }
   .cta-block p { color: var(--fg-dim); margin-bottom: 1.5rem; }
   .cta-btn {
     display: inline-block;
@@ -196,6 +198,7 @@ $page_slug = 'founders.php';
 </style>
 </head>
 <body>
+<?php $current_page = ''; include('includes/nav.php'); ?>
 <div class="container">
   <header>
     <h1>The First 25</h1>
@@ -254,14 +257,7 @@ $page_slug = 'founders.php';
     </div>
   <?php endif; ?>
 
-  <footer>
-    <p>OD9 - Off Da Nine - Coordination infrastructure for Type I civilization.</p>
-    <p style="margin-top: 0.5rem;">
-      <a href="/">Home</a> &middot;
-      <a href="/library.php">Library</a> &middot;
-      <a href="<?= PATREON_URL ?>" target="_blank" rel="noopener">Patreon</a>
-    </p>
-  </footer>
 </div>
+<?php include('includes/footer.php'); ?>
 </body>
 </html>
