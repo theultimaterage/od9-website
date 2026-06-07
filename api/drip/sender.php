@@ -47,12 +47,14 @@ $pdo = getDatabaseConnection();
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $rows = $pdo->query(
-    "SELECT enrollment_id, discord_user_id, email, sequence_name, current_step
-     FROM od9_drip_enrollments
-     WHERE status = 'active'
-       AND next_send_at IS NOT NULL
-       AND next_send_at <= NOW()
-     ORDER BY next_send_at ASC
+    "SELECT en.enrollment_id, en.discord_user_id, en.email, en.sequence_name, en.current_step,
+            es.first_name
+     FROM od9_drip_enrollments en
+     LEFT JOIN email_signups es ON es.email = en.email
+     WHERE en.status = 'active'
+       AND en.next_send_at IS NOT NULL
+       AND en.next_send_at <= NOW()
+     ORDER BY en.next_send_at ASC
      LIMIT " . MAX_PER_RUN
 )->fetchAll(PDO::FETCH_ASSOC);
 
@@ -155,7 +157,10 @@ echo "[drip_sender] done: sent=$sent failed=$failed completed=$completed\n";
 // ============================================================
 
 function personalize(string $html, array $en): string {
-    $name = ucfirst(strtok($en['email'], '@')); // first-pass fallback if we don't know the name
+    // Greet by real first name (from email_signups via the sender's JOIN), with a
+    // friendly fallback — NEVER the email-prefix, which reads robotic/spammy.
+    $first = trim((string)($en['first_name'] ?? ''));
+    $name = $first !== '' ? $first : 'Friend';
     $unsubUrl = 'https://offda9.com/unsubscribe.php?email=' . urlencode($en['email']);
     return str_replace(
         ['{{username}}', '{{first_name}}', '{{FIRST_NAME}}', '{{NAME}}', '{{email}}', '{{EMAIL}}', '{{unsubscribe_url}}', '{{UNSUBSCRIBE_URL}}'],
