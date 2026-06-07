@@ -379,7 +379,7 @@ body {
 }
 
 .activity-time {
-    color: #666;
+    color: #888;
     font-size: 0.75rem;
     margin-top: 0.25rem;
 }
@@ -394,7 +394,7 @@ body {
     text-align: center;
     margin-top: 3rem;
     padding: 2rem;
-    color: #666;
+    color: #888;
     font-size: 0.9rem;
 }
 
@@ -448,7 +448,7 @@ include __DIR__ . '/../includes/nav.php';
         <a href="auth/discord.php" class="discord-login-btn">
             <i class="fab fa-discord"></i> Login with Discord
         </a>
-        <p style="margin-top: 1.5rem; font-size: 0.9rem; color: #666;">
+        <p style="margin-top: 1.5rem; font-size: 0.9rem; color: #888;">
             Don't have an account? <a href="/join.php" style="color: var(--primary-blue);">Join OD9 on Discord</a>
         </p>
     </div>
@@ -494,7 +494,7 @@ include __DIR__ . '/../includes/nav.php';
         <div class="card">
             <h3><i class="fas fa-trophy"></i> Recent Achievements</h3>
             <?php if (empty($achievements)): ?>
-                <p style="color: #666; text-align: center; padding: 2rem;">No achievements yet. Keep contributing!</p>
+                <p style="color: #888; text-align: center; padding: 2rem;">No achievements yet. Keep contributing!</p>
             <?php else: ?>
                 <div class="achievement-grid">
                     <?php foreach ($achievements as $ach): ?>
@@ -511,7 +511,7 @@ include __DIR__ . '/../includes/nav.php';
         <div class="card">
             <h3><i class="fas fa-stream"></i> Recent Activity</h3>
             <?php if (empty($recentActivity)): ?>
-                <p style="color: #666; text-align: center; padding: 2rem;">No activity yet. Start contributing on Discord!</p>
+                <p style="color: #888; text-align: center; padding: 2rem;">No activity yet. Start contributing on Discord!</p>
             <?php else: ?>
                 <div class="activity-feed">
                     <?php foreach ($recentActivity as $activity): ?>

@@ -48,7 +48,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:#fff;margin:2rem 0 1
 .form-group textarea{min-height:150px;resize:vertical}
 .btn{display:inline-block;background:linear-gradient(135deg,var(--primary-blue),var(--electric-blue));color:var(--carbon);padding:0.8rem 2rem;border-radius:4px;text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:2px;transition:all 0.3s;border:none;cursor:pointer;font-size:1rem}
 .btn:hover{transform:translateY(-3px);box-shadow:var(--glow)}
-.form-note{text-align:center;color:#666;font-size:0.85rem;margin-top:1rem}
+.form-note{text-align:center;color:#888;font-size:0.85rem;margin-top:1rem}
 
 /* Social Grid */
 .social-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:3rem}

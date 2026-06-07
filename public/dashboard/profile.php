@@ -228,7 +228,7 @@ include __DIR__ . '/../includes/nav.php';
                     <?php foreach (array_slice($activity, 0, 8) as $act): ?>
                         <li class="activity-item">
                             <span class="activity-desc"><?= htmlspecialchars($act['activity_description'] ?? $act['activity_type'] ?? 'Activity') ?></span>
-                            <span class="activity-time" style="color:#666;font-size:0.75rem;margin-left:0.5rem"><?= htmlspecialchars(od9_local_time($act['activity_date'] ?? null)) ?></span>
+                            <span class="activity-time" style="color:#888;font-size:0.75rem;margin-left:0.5rem"><?= htmlspecialchars(od9_local_time($act['activity_date'] ?? null)) ?></span>
                             <?php if (!empty($act['credits_earned'])): ?>
                                 <span class="activity-credits">+<?= number_format($act['credits_earned']) ?></span>
                             <?php endif; ?>

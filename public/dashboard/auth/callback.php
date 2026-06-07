@@ -228,7 +228,7 @@ function showError(string $message, string $errorCode, ?string $actionUrl = null
             .btn-discord { background: #5865F2; color: #fff; }
             .btn-discord:hover { background: #6d79ff; transform: translateY(-2px); }
             .btn-secondary { background: transparent; color: var(--primary-blue); border: 1px solid var(--primary-blue); }
-            .error-code { font-size: 0.8rem; color: #555; margin-top: 2rem; }
+            .error-code { font-size: 0.8rem; color: #888; margin-top: 2rem; }
         </style>
     </head>
     <body>

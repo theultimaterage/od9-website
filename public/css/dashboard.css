@@ -109,7 +109,7 @@ body {
     content: "";
     height: 24px; width: 24px;
     left: 2px; bottom: 2px;
-    background: #666;
+    background: #888;
     transition: 0.3s;
     border-radius: 50%;
 }
@@ -184,7 +184,7 @@ input:checked + .toggle-slider:before { transform: translateX(28px); background:
     margin-top: 3rem;
     padding-top: 2rem;
     border-top: 1px solid rgba(255,255,255,0.1);
-    color: #666;
+    color: #888;
     font-size: 0.85rem;
 }
 .settings-footer a { color: var(--primary-blue); text-decoration: none; }
@@ -195,7 +195,7 @@ input:checked + .toggle-slider:before { transform: translateX(28px); background:
 
 /* Error state */
 .error-container { text-align: center; padding: 4rem 2rem; }
-.error-icon { font-size: 4rem; color: #666; margin-bottom: 1.5rem; }
+.error-icon { font-size: 4rem; color: #888; margin-bottom: 1.5rem; }
 .error-container h1 { font-family: 'Orbitron', sans-serif; font-size: 2rem; color: #fff; margin-bottom: 1rem; }
 .error-container p { color: var(--chrome); margin-bottom: 2rem; font-size: 1.1rem; }
 .error-btn {
@@ -276,7 +276,7 @@ input:checked + .toggle-slider:before { transform: translateX(28px); background:
 .achievement-item:hover { transform: scale(1.05); }
 .achievement-icon { font-size: 1.5rem; margin-bottom: 0.25rem; }
 .achievement-name { font-size: 0.7rem; color: var(--chrome); line-height: 1.2; }
-.no-achievements { color: #666; font-style: italic; text-align: center; padding: 2rem; }
+.no-achievements { color: #888; font-style: italic; text-align: center; padding: 2rem; }
 
 /* Activity feed */
 .activity-list { list-style: none; }
@@ -284,7 +284,7 @@ input:checked + .toggle-slider:before { transform: translateX(28px); background:
 .activity-item:last-child { border-bottom: none; }
 .activity-desc { color: var(--chrome); font-size: 0.9rem; }
 .activity-credits { color: var(--primary-blue); font-weight: 600; font-size: 0.85rem; }
-.no-activity { color: #666; font-style: italic; text-align: center; padding: 2rem; }
+.no-activity { color: #888; font-style: italic; text-align: center; padding: 2rem; }
 
 /* Public badge */
 .public-badge { display: inline-flex; align-items: center; gap: 0.5rem; color: #28a745; font-size: 0.85rem; margin-top: 0.5rem; }
@@ -294,7 +294,7 @@ input:checked + .toggle-slider:before { transform: translateX(28px); background:
     margin-top: 3rem;
     padding-top: 2rem;
     border-top: 1px solid rgba(255,255,255,0.1);
-    color: #666;
+    color: #888;
     font-size: 0.85rem;
 }
 .profile-footer a { color: var(--primary-blue); text-decoration: none; }

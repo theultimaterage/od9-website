@@ -27,7 +27,7 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
 .proof-bar{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-bottom:2.5rem;padding:1rem 0;border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a}
 .proof-item{text-align:center}
 .proof-num{font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:700;color:var(--b)}
-.proof-label{font-size:0.75rem;color:#666;text-transform:uppercase;letter-spacing:1px}
+.proof-label{font-size:0.75rem;color:#888;text-transform:uppercase;letter-spacing:1px}
 
 .bullets{list-style:none;padding:0;margin:0 0 2.5rem}
 .bullets li{display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:1rem;color:#bbb;font-size:0.95rem;line-height:1.6}
@@ -36,7 +36,7 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
 .form-card{background:var(--dd);border:1px solid #222;border-radius:12px;padding:2rem;position:relative;overflow:hidden}
 .form-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--b),transparent)}
 .form-card h2{font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#fff;text-align:center;margin-bottom:0.5rem;letter-spacing:1px}
-.form-card .form-sub{text-align:center;color:#666;font-size:0.85rem;margin-bottom:1.5rem}
+.form-card .form-sub{text-align:center;color:#888;font-size:0.85rem;margin-bottom:1.5rem}
 
 .form-fields{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem}
 .form-fields input{padding:0.8rem 1rem;background:#0a0a0a;border:1px solid #333;border-radius:6px;color:#fff;font-family:'Exo 2',sans-serif;font-size:0.95rem;width:100%}
@@ -53,11 +53,11 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
 .privacy{text-align:center;color:#444;font-size:0.75rem;margin-top:1rem}
 
 .source-strip{text-align:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid #1a1a1a}
-.source-strip p{color:#555;font-size:0.8rem;line-height:1.6;max-width:500px;margin:0 auto}
-.source-strip .names{color:#777;font-style:italic}
+.source-strip p{color:#888;font-size:0.8rem;line-height:1.6;max-width:500px;margin:0 auto}
+.source-strip .names{color:#888;font-style:italic}
 
 .bottom-links{text-align:center;margin-top:2rem;padding-top:1rem}
-.bottom-links a{color:#555;text-decoration:none;font-size:0.8rem;margin:0 0.75rem;transition:color 0.2s}
+.bottom-links a{color:#888;text-decoration:none;font-size:0.8rem;margin:0 0.75rem;transition:color 0.2s}
 .bottom-links a:hover{color:var(--b)}
 
 @media(max-width:500px){

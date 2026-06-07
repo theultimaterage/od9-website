@@ -20,14 +20,14 @@
 <style>
 .od9-topbar{position:fixed;top:0;left:0;width:100%;height:var(--topbar-h);z-index:10000;background:#000;border-bottom:1px solid #1a1a1a;display:flex;align-items:center;padding:0 1.25rem;font-family:'Rajdhani',sans-serif;font-size:0.78rem;letter-spacing:2px;text-transform:uppercase}
 .od9-topbar-inner{width:100%;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.od9-topbar-tag{color:#777;font-family:'Orbitron',sans-serif;letter-spacing:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.od9-topbar-tag{color:#888;font-family:'Orbitron',sans-serif;letter-spacing:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .od9-topbar-tag .pulse{display:inline-block;width:6px;height:6px;border-radius:50%;background:#FF1744;margin-right:0.5rem;vertical-align:middle;box-shadow:0 0 6px rgba(255,23,68,0.7);animation:od9-pulse 2s infinite}
 @keyframes od9-pulse{0%,100%{opacity:1}50%{opacity:0.45}}
 .od9-topbar-right{display:flex;align-items:center;gap:0.85rem;white-space:nowrap}
 .od9-topbar-join{display:inline-flex;align-items:center;gap:0.4rem;padding:0.3rem 0.85rem;background:linear-gradient(135deg,#00BFFF,#00A0FF);color:#0a0a0e;text-decoration:none;border-radius:3px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:1.5px;text-transform:uppercase;border:none;cursor:pointer;transition:transform 0.15s,box-shadow 0.2s}
 .od9-topbar-join:hover{transform:translateY(-1px);box-shadow:0 0 14px rgba(0,191,255,0.5)}
 .od9-topbar-socials{display:flex;align-items:center;gap:0.7rem}
-.od9-topbar-socials a{color:#666;font-size:0.95rem;text-decoration:none;transition:color 0.2s}
+.od9-topbar-socials a{color:#888;font-size:0.95rem;text-decoration:none;transition:color 0.2s}
 .od9-topbar-socials a:hover{color:#00BFFF}
 @media(max-width:780px){
   .od9-topbar{padding:0 0.85rem;font-size:0.7rem}

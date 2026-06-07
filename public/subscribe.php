@@ -220,8 +220,8 @@ function sendVerificationEmail(string $email, string $firstName, string $token):
         . '<h1 style="font-family:\'Orbitron\',\'Arial Black\',Arial,sans-serif;font-weight:700;font-size:27px;line-height:1.18;letter-spacing:.01em;color:#FFFFFF;text-transform:uppercase;margin:13px 0 18px;">Confirm your email</h1>'
         . '<p style="font-family:\'Rajdhani\',Arial,sans-serif;font-size:16px;font-weight:500;line-height:1.62;color:#C0C0C0;margin:0 0 26px;">One more step, ' . $safeName . '. Confirm this address to activate your OD9 subscription and start receiving transmissions from the movement &mdash; the climb up the Kardashev scale through STEAM.</p>'
         . od9_email_button('Confirm Subscription', $verifyUrl)
-        . '<p style="font-family:\'Rajdhani\',Arial,sans-serif;font-size:13px;font-weight:500;line-height:1.6;color:#777777;margin:24px 0 0;">This link expires in 24 hours. If the button doesn&rsquo;t work, paste this into your browser:<br><span style="color:#999999;word-break:break-all;">' . $safeUrl . '</span></p>'
-        . '<p style="font-family:\'Rajdhani\',Arial,sans-serif;font-size:13px;font-weight:500;line-height:1.6;color:#777777;margin:14px 0 0;">Didn&rsquo;t sign up? Ignore this email &mdash; nothing happens without your tap.</p>';
+        . '<p style="font-family:\'Rajdhani\',Arial,sans-serif;font-size:13px;font-weight:500;line-height:1.6;color:#888888;margin:24px 0 0;">This link expires in 24 hours. If the button doesn&rsquo;t work, paste this into your browser:<br><span style="color:#999999;word-break:break-all;">' . $safeUrl . '</span></p>'
+        . '<p style="font-family:\'Rajdhani\',Arial,sans-serif;font-size:13px;font-weight:500;line-height:1.6;color:#888888;margin:14px 0 0;">Didn&rsquo;t sign up? Ignore this email &mdash; nothing happens without your tap.</p>';
 
     $html = od9_email_layout($inner, [
         'title'           => $subject,
