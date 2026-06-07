@@ -72,7 +72,7 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
 <div class="landing">
 
     <div class="logo-row">
-        <a href="index.php"><img src="images/logos/od9-logo.png" alt="OD9"></a>
+        <a href="index.php"><img width="1408" height="768" src="images/logos/od9-logo.png" alt="OD9"></a>
         <span>offda9.com</span>
     </div>
 

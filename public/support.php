@@ -115,7 +115,7 @@ body{background:var(--d);background-image:linear-gradient(45deg,#111 25%,transpa
 <a class="btn" href="ncz.php">Explore NCZ</a>
 </div>
 <div class="card">
-<img src="images/downloads/od9-wallpaper.png" alt="OD9 brand identity">
+<img width="768" height="1376" src="images/downloads/od9-wallpaper.png" alt="OD9 brand identity">
 <h3>THE BRAND</h3>
 <p>Diamond chrome on carbon fiber. The OD9 visual identity, the NCZ show format, the ASCEND progression system - all of it designed and built from scratch.</p>
 <a class="btn alt" href="downloads.php">Free Downloads</a>
@@ -146,22 +146,22 @@ body{background:var(--d);background-image:linear-gradient(45deg,#111 25%,transpa
 <p style="text-align:center;margin-bottom:1.5rem">No middleman. No platform cut. Scan and send directly.</p>
 <div class="grid">
 <div class="card qr-card">
-<i class="fab fa-square-cash-app" style="color:#00D632"></i>
+<i class="fas fa-sack-dollar" style="color:#00D632"></i>
 <h3>Cash App</h3>
 <p>$TheUltimateRage</p>
-<img src="images/payment/cashapp-qr.jpg" alt="Cash App QR Code">
+<img width="1439" height="1888" src="images/payment/cashapp-qr.jpg" alt="Cash App QR Code">
 </div>
 <div class="card qr-card">
 <i class="fab fa-paypal" style="color:#003087"></i>
 <h3>PayPal</h3>
 <p>@TheUltimateRage</p>
-<img src="images/payment/paypal-qr.jpg" alt="PayPal QR Code">
+<img width="1439" height="1946" src="images/payment/paypal-qr.jpg" alt="PayPal QR Code">
 </div>
 <div class="card qr-card">
 <i class="fas fa-bolt" style="color:#6D1ED4"></i>
 <h3>Zelle</h3>
 <p>Scan to support directly</p>
-<img src="images/payment/zelle-qr.jpg" alt="Zelle QR Code">
+<img width="1439" height="1454" src="images/payment/zelle-qr.jpg" alt="Zelle QR Code">
 </div>
 </div>
 </section>

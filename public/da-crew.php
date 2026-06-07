@@ -179,7 +179,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.8rem;color:#fff;margin:3rem 0 1
 <div class="members-grid">
 
 <div class="member-card founder">
-<div class="member-photo"><img src="images/crew/rage.png" alt="The Ultimate Rage"></div>
+<div class="member-photo"><img width="945" height="945" src="images/crew/rage.png" alt="The Ultimate Rage"></div>
 <div class="member-info">
 <h3>The Ultimate Rage</h3>
 <div class="role">Co-Founder</div>
@@ -197,7 +197,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.8rem;color:#fff;margin:3rem 0 1
 </div>
 
 <div class="member-card founder">
-<div class="member-photo"><img src="images/crew/deez.jpg" alt="Deezle Deez"></div>
+<div class="member-photo"><img width="816" height="801" src="images/crew/deez.jpg" alt="Deezle Deez"></div>
 <div class="member-info">
 <h3>Deezle Deez</h3>
 <div class="role">Co-Founder</div>
@@ -209,7 +209,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.8rem;color:#fff;margin:3rem 0 1
 </div>
 
 <div class="member-card">
-<div class="member-photo"><img src="images/crew/p-mac.png" alt="P-Mac"></div>
+<div class="member-photo"><img width="2940" height="1922" src="images/crew/p-mac.png" alt="P-Mac"></div>
 <div class="member-info">
 <h3>P-Mac</h3>
 <div class="role">Artist</div>
@@ -221,7 +221,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.8rem;color:#fff;margin:3rem 0 1
 </div>
 
 <div class="member-card">
-<div class="member-photo"><img src="images/crew/lb.jpg" alt="L.B."></div>
+<div class="member-photo"><img width="1080" height="1080" src="images/crew/lb.jpg" alt="L.B."></div>
 <div class="member-info">
 <h3>L.B.</h3>
 <div class="role">Artist</div>
@@ -233,7 +233,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.8rem;color:#fff;margin:3rem 0 1
 </div>
 
 <div class="member-card">
-<div class="member-photo"><img src="images/crew/joey-p.jpg" alt="Joey P."></div>
+<div class="member-photo"><img width="1280" height="1280" src="images/crew/joey-p.jpg" alt="Joey P."></div>
 <div class="member-info">
 <h3>Joey P.</h3>
 <div class="role">Artist</div>
@@ -264,7 +264,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.8rem;color:#fff;margin:3rem 0 1
 <h3 style="font-family:'Orbitron',sans-serif;color:#fff;text-align:center;margin:2rem 0 1.5rem">MUSIC VIDEOS</h3>
 <div class="music-videos">
 <div class="video-card">
-<img src="images/music/supreme-screenshot.png" alt="Supreme" class="video-thumb">
+<img width="3823" height="1890" src="images/music/supreme-screenshot.png" alt="Supreme" class="video-thumb">
 <div class="video-info">
 <h4>SUPREME</h4>
 <div class="status">Music Video Coming Soon</div>
@@ -272,7 +272,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.8rem;color:#fff;margin:3rem 0 1
 </div>
 
 <div class="video-card">
-<img src="images/music/hwul-screenshot.png" alt="HWUL" class="video-thumb">
+<img width="3701" height="2002" src="images/music/hwul-screenshot.png" alt="HWUL" class="video-thumb">
 <div class="video-info">
 <h4>HWUL</h4>
 <div class="status">Music Video Coming Soon</div>

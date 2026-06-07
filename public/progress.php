@@ -131,7 +131,7 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,5vw,2.6rem);font-wei
 <body>
 <div class="wrap">
   <header>
-    <a href="index.php" class="logo"><img src="images/logos/od9-logo.png" alt="OD9"></a>
+    <a href="index.php" class="logo"><img width="1408" height="768" src="images/logos/od9-logo.png" alt="OD9"></a>
     <p class="tag">Live receipts</p>
     <h1>OD9 by the Numbers</h1>
     <p class="sub">
