@@ -17,15 +17,9 @@ require_once __DIR__ . '/../includes/env.php';
 
 $current_page = 'dashboard';
 
-// Secure session
-session_set_cookie_params([
-    'lifetime' => 604800,
-    'path' => '/',
-    'secure' => od9_cookie_secure(),
-    'httponly' => true,
-    'samesite' => 'Lax'
-]);
-session_start();
+// Secure session + persistent remember-me login (centralized in includes/auth.php)
+require_once __DIR__ . '/includes/auth.php';
+od9_dashboard_boot();
 
 // Check if logged in via Discord OAuth
 $isLoggedIn = !empty($_SESSION['discord_id']);
@@ -435,6 +429,9 @@ include __DIR__ . '/../includes/nav.php';
         <p style="margin-top: 0.75rem;">
             <a href="/dashboard/settings.php" style="color: var(--primary-blue); text-decoration: none; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px;">
                 <i class="fas fa-cog"></i> Settings
+            </a>
+            <a href="/dashboard/auth/logout.php" style="color: #949494; text-decoration: none; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px; margin-left: 1.5rem;">
+                <i class="fas fa-door-open"></i> Sign Out
             </a>
         </p>
         <?php endif; ?>

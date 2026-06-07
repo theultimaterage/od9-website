@@ -7,15 +7,9 @@
  * fetches user info, and verifies membership in bot database.
  */
 
-// Secure session configuration
-session_set_cookie_params([
-    'lifetime' => 604800, // 7 days
-    'path' => '/',
-    'secure' => strpos(__DIR__, 'xampp') === false,
-    'httponly' => true,
-    'samesite' => 'Lax'
-]);
-session_start();
+// Secure session + persistent remember-me login (centralized in ../includes/auth.php)
+require_once __DIR__ . '/../includes/auth.php';
+od9_dashboard_boot();
 
 require_once __DIR__ . '/../includes/config.php';
 
@@ -162,7 +156,12 @@ try {
     $_SESSION['discord_access_token'] = $accessToken; // For future API calls
     $_SESSION['bot_user'] = $botUser; // Cache basic bot data
     $_SESSION['auth_time'] = time();
-    
+
+    // Session-fixation defense + issue the 30-day persistent remember token
+    // (so a returning member skips this whole OAuth round-trip; task #7).
+    session_regenerate_id(true);
+    od9_issue_remember_token($discordId);
+
     // Redirect to dashboard
     $redirectTo = $_SESSION['auth_redirect'] ?? DASHBOARD_BASE_URL;
     unset($_SESSION['auth_redirect']);

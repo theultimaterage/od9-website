@@ -17,15 +17,9 @@ require_once __DIR__ . '/../includes/env.php';
 
 $current_page = 'settings';
 
-// Secure session
-session_set_cookie_params([
-    'lifetime' => 604800,
-    'path' => '/',
-    'secure' => od9_cookie_secure(),
-    'httponly' => true,
-    'samesite' => 'Lax'
-]);
-session_start();
+// Secure session + persistent remember-me login (centralized in includes/auth.php)
+require_once __DIR__ . '/includes/auth.php';
+od9_dashboard_boot();
 
 // Must be logged in
 if (empty($_SESSION['discord_id'])) {

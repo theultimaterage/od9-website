@@ -115,7 +115,8 @@ if (!$clientId || !$clientSecret) {
 }
 
 // OAuth is configured - build authorization URL
-session_start();
+require_once __DIR__ . '/../includes/auth.php';
+od9_dashboard_boot();
 
 // Generate state token for CSRF protection
 $state = bin2hex(random_bytes(16));
