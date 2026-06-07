@@ -36,6 +36,7 @@ $nav_links = [
 ];
 if (!isset($current_page)) $current_page = '';
 ?>
+<?php include __DIR__ . '/topbar.php'; ?>
 <nav class="od9-nav"><div class="nav-container">
 <a href="<?= $nav_url('index.php') ?>" class="nav-logo"><img src="<?= $nav_url('images/logos/od9-logo.png') ?>" alt="OD9"><span class="nav-logo-text">OD9</span></a>
 <ul class="nav-menu" style="gap:0.7rem">

@@ -18,8 +18,8 @@
  */
 ?>
 <style>
-.od9-topbar{position:sticky;top:0;z-index:9100;background:#000;border-bottom:1px solid #1a1a1a;padding:0.4rem 1.25rem;font-family:'Rajdhani',sans-serif;font-size:0.78rem;letter-spacing:2px;text-transform:uppercase}
-.od9-topbar-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:24px}
+.od9-topbar{position:fixed;top:0;left:0;width:100%;height:var(--topbar-h);z-index:10000;background:#000;border-bottom:1px solid #1a1a1a;display:flex;align-items:center;padding:0 1.25rem;font-family:'Rajdhani',sans-serif;font-size:0.78rem;letter-spacing:2px;text-transform:uppercase}
+.od9-topbar-inner{width:100%;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem}
 .od9-topbar-tag{color:#777;font-family:'Orbitron',sans-serif;letter-spacing:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .od9-topbar-tag .pulse{display:inline-block;width:6px;height:6px;border-radius:50%;background:#FF1744;margin-right:0.5rem;vertical-align:middle;box-shadow:0 0 6px rgba(255,23,68,0.7);animation:od9-pulse 2s infinite}
 @keyframes od9-pulse{0%,100%{opacity:1}50%{opacity:0.45}}
@@ -30,7 +30,7 @@
 .od9-topbar-socials a{color:#666;font-size:0.95rem;text-decoration:none;transition:color 0.2s}
 .od9-topbar-socials a:hover{color:#00BFFF}
 @media(max-width:780px){
-  .od9-topbar{padding:0.35rem 0.85rem;font-size:0.7rem}
+  .od9-topbar{padding:0 0.85rem;font-size:0.7rem}
   .od9-topbar-tag{letter-spacing:2px}
   .od9-topbar-socials{display:none}
 }
@@ -48,7 +48,7 @@
       <div class="od9-topbar-socials">
         <a href="https://discord.gg/spgmrXVMWq" target="_blank" rel="noopener" title="Discord"><i class="fab fa-discord"></i></a>
         <a href="https://youtube.com/@theultimaterage" target="_blank" rel="noopener" title="YouTube"><i class="fab fa-youtube"></i></a>
-        <a href="https://www.patreon.com/TheUltimateRage" target="_blank" rel="noopener" title="Patreon"><i class="fab fa-patreon"></i></a>
+        <a href="https://www.patreon.com/c/TheUltimateRage" target="_blank" rel="noopener" title="Patreon"><i class="fab fa-patreon"></i></a>
         <a href="https://theultimaterage.substack.com" target="_blank" rel="noopener" title="Substack"><i class="fas fa-newspaper"></i></a>
       </div>
     </div>
