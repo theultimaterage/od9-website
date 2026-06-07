@@ -145,11 +145,11 @@ if (!function_exists('od9_email_layout')) {
               </tr>
             </table>
             <div style="height:1px;background:#333333;line-height:1px;font-size:0;margin:22px 0 18px;">&zwnj;</div>
-            {$transmission}<div style="font-family:'Rajdhani',Arial,sans-serif;font-size:12px;font-weight:500;line-height:1.75;color:#666666;text-align:center;">
+            {$transmission}<div style="font-family:'Rajdhani',Arial,sans-serif;font-size:12px;font-weight:500;line-height:1.75;color:#8a8a8a;text-align:center;">
               You're receiving this because you joined the movement at offda9.com.<br>
               <a href="{$unsub}" style="color:#999999;text-decoration:underline;">Unsubscribe</a> &nbsp;&middot;&nbsp; <a href="https://offda9.com" style="color:#00BFFF;text-decoration:none;">offda9.com</a><br>
-              <span style="color:#5a5a5a;">{$postal}</span><br>
-              <span style="color:#4d4d4d;">&copy; {$year} {$entity}. All rights reserved.</span>
+              <span style="color:#8a8a8a;">{$postal}</span><br>
+              <span style="color:#8a8a8a;">&copy; {$year} {$entity}. All rights reserved.</span>
             </div>
           </td></tr>
         </table>
