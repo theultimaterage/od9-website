@@ -30,6 +30,11 @@ $_mailLib = __DIR__ . '/../../includes/mail.php';
 if (!file_exists($_mailLib)) $_mailLib = __DIR__ . '/../../../includes/mail.php';
 require_once $_mailLib;
 
+// Shared branded email chrome (single source of truth for header/footer/logo).
+$_layoutLib = __DIR__ . '/../../includes/email_layout.php';
+if (!file_exists($_layoutLib)) $_layoutLib = __DIR__ . '/../../../includes/email_layout.php';
+require_once $_layoutLib;
+
 // ---- Config ----
 const LAUNCH_DATE = '2026-04-14';   // Monday week-1 send date per _EMAIL_CAMPAIGN_SUMMARY.md
 const TOTAL_WEEKS = 33;
@@ -76,7 +81,12 @@ echo "[broadcast] week=$week template=" . basename($templateFile) . "\n";
 $raw = file_get_contents($templateFile);
 [$meta, $body] = parseTemplate($raw);
 $subject = $meta['Subject'] ?? "OD9 Weekly: Week $week";
-$html    = wrapEmailHtml(mdToHtml($body), $subject, $week);
+$html    = od9_email_layout(mdToHtml($body), [
+    'title'           => $subject,
+    'preheader'       => $meta['Preheader'] ?? $subject,
+    'transmission'    => sprintf('%02d / %d', $week, TOTAL_WEEKS),
+    'unsubscribe_url' => 'https://offda9.com/unsubscribe.php?email={{EMAIL}}',
+]);
 
 // ---- Recipients ----
 $pdo = null;
@@ -198,61 +208,6 @@ function mdToHtml(string $md): string {
         return '<p>' . str_replace("\n", '<br>', $b) . '</p>';
     }, $blocks);
     return implode("\n\n", array_filter($blocks));
-}
-
-function wrapEmailHtml(string $bodyHtml, string $subject, int $week): string {
-    $safeSubject = htmlspecialchars($subject, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-    return <<<HTML
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{$safeSubject}</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  /* Rich element styling for the markdown body. Structural bg/text colors are
-     ALSO set inline below, so a client that strips this block still renders
-     light-on-dark (never light-on-white). */
-  body { margin:0; padding:0; background:#0D0D0D;
-         font-family:'Rajdhani',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-         color:#CCCCCC; line-height:1.6; }
-  .body h1,.body h2,.body h3 { font-family:'Orbitron','Segoe UI',sans-serif; line-height:1.25; }
-  .body h1 { font-size:24px; color:#00BFFF; }
-  .body h2 { font-size:20px; margin-top:32px; color:#00BFFF; }
-  .body h3 { font-size:16px; color:#FFFFFF; }
-  .body a { color:#00BFFF; text-decoration:none; }
-  .body strong { color:#FFFFFF; }
-  .body hr { border:0; border-top:1px solid #333; margin:24px 0; }
-  .body code { background:#0D0D0D; color:#00BFFF; padding:2px 6px; border-radius:3px; font-size:90%; }
-  .body ul { padding-left:24px; }
-  .body blockquote { border-left:3px solid #00BFFF; padding:8px 16px; margin:16px 0;
-                     background:#13202B; color:#E0E0E0; font-style:italic; }
-  .footer a { color:#00BFFF; text-decoration:none; }
-</style>
-</head>
-<body style="margin:0;padding:0;background:#0D0D0D;font-family:'Rajdhani',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0D0D0D;">
-<tr><td align="center" style="padding:40px 20px;">
-<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="width:640px;max-width:640px;background:#1A1A1A;border:1px solid #00BFFF;border-radius:8px;">
-<tr><td style="padding:24px 30px;text-align:center;border-bottom:2px solid #00BFFF;">
-<h1 style="font-family:'Orbitron','Segoe UI',sans-serif;color:#00BFFF;margin:0;font-size:28px;letter-spacing:2px;">OD9</h1>
-<p style="color:#777;margin:6px 0 0;font-size:13px;">LoveLogic &middot; Week {$week} of 33</p>
-</td></tr>
-<tr><td class="body" style="padding:36px 30px;background:#1A1A1A;color:#CCCCCC;font-size:16px;line-height:1.6;">
-{$bodyHtml}
-</td></tr>
-<tr><td class="footer" style="padding:20px 30px;background:#0D0D0D;border-top:1px solid #333;text-align:center;font-size:12px;color:#666;line-height:1.6;">
-You're receiving this because you signed up for OD9 weekly emails at <a href="https://offda9.com" style="color:#00BFFF;text-decoration:none;">offda9.com</a>.<br>
-<a href="https://offda9.com/unsubscribe.php?email={{EMAIL}}" style="color:#00BFFF;text-decoration:none;">Unsubscribe</a>
-&nbsp;&middot;&nbsp; OD9 LLC, Auburn-Gresham, Chicago
-</td></tr>
-</table>
-</td></tr>
-</table>
-</body>
-</html>
-HTML;
 }
 
 function personalize(string $html, array $r): string {

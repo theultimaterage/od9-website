@@ -36,6 +36,11 @@ $_mailLib = __DIR__ . '/includes/mail.php';
 if (!file_exists($_mailLib)) $_mailLib = __DIR__ . '/../includes/mail.php';
 require_once $_mailLib;
 
+// Shared branded email chrome (same beside-or-up resolution as the mailer).
+$_layoutLib = __DIR__ . '/includes/email_layout.php';
+if (!file_exists($_layoutLib)) $_layoutLib = __DIR__ . '/../includes/email_layout.php';
+require_once $_layoutLib;
+
 header('Content-Type: application/json; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -211,42 +216,18 @@ function sendVerificationEmail(string $email, string $firstName, string $token):
 
     $subject = 'Confirm your OD9 subscription';
 
-    $html = <<<HTML
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Confirm your OD9 subscription</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
-</head>
-<body style="margin:0;padding:0;background-color:#0D0D0D;font-family:'Rajdhani',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0D0D0D;">
-<tr><td align="center" style="padding:40px 20px;">
-<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;background-color:#1A1A1A;border-radius:8px;border:1px solid #00BFFF;">
-<tr><td style="padding:30px;text-align:center;border-bottom:2px solid #00BFFF;">
-<h1 style="font-family:'Orbitron','Segoe UI',sans-serif;color:#00BFFF;margin:0;font-size:32px;letter-spacing:2px;">OD9</h1>
-<p style="color:#777;margin:10px 0 0;font-size:14px;">Off Da 9 &middot; The Movement</p>
-</td></tr>
-<tr><td style="padding:40px 30px;">
-<h2 style="font-family:'Orbitron','Segoe UI',sans-serif;color:#FFFFFF;margin:0 0 20px;font-size:24px;">One more step, {$safeName}</h2>
-<p style="color:#CCCCCC;font-size:16px;line-height:1.6;margin:0 0 20px;">Click the button below to confirm you actually want OD9 weekly emails. Without this confirmation we won't send you anything &mdash; no spam, ever.</p>
-<table role="presentation" cellpadding="0" cellspacing="0" style="margin:28px 0;"><tr>
-<td style="background:linear-gradient(135deg,#00BFFF,#0099CC);border-radius:6px;">
-<a href="{$safeUrl}" style="display:inline-block;padding:14px 32px;font-family:'Orbitron','Segoe UI',sans-serif;color:#0D0D0D;text-decoration:none;font-weight:bold;font-size:14px;letter-spacing:1px;">CONFIRM SUBSCRIPTION</a>
-</td></tr></table>
-<p style="color:#888;font-size:13px;line-height:1.6;word-break:break-all;margin:0 0 20px;">Or paste this link into your browser:<br><a href="{$safeUrl}" style="color:#00BFFF;text-decoration:none;">{$safeUrl}</a></p>
-<p style="color:#888;font-size:14px;line-height:1.6;margin:0;">If you didn't sign up, just ignore this email &mdash; you'll never hear from us again.</p>
-</td></tr>
-<tr><td style="padding:20px 30px;background-color:#0D0D0D;border-top:1px solid #333;text-align:center;">
-<p style="color:#666;font-size:12px;margin:0;line-height:1.6;">OD9 LLC &middot; Auburn-Gresham, Chicago<br><a href="https://offda9.com" style="color:#00BFFF;text-decoration:none;">offda9.com</a></p>
-</td></tr>
-</table>
-</td></tr>
-</table>
-</body>
-</html>
-HTML;
+    $inner = '<div style="font-family:\'Rajdhani\',Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:.26em;color:#00BFFF;text-transform:uppercase;">Account Activation</div>'
+        . '<h1 style="font-family:\'Orbitron\',\'Arial Black\',Arial,sans-serif;font-weight:700;font-size:27px;line-height:1.18;letter-spacing:.01em;color:#FFFFFF;text-transform:uppercase;margin:13px 0 18px;">Confirm your email</h1>'
+        . '<p style="font-family:\'Rajdhani\',Arial,sans-serif;font-size:16px;font-weight:500;line-height:1.62;color:#C0C0C0;margin:0 0 26px;">One more step, ' . $safeName . '. Confirm this address to activate your OD9 subscription and start receiving transmissions from the movement &mdash; the climb up the Kardashev scale through STEAM.</p>'
+        . od9_email_button('Confirm Subscription', $verifyUrl)
+        . '<p style="font-family:\'Rajdhani\',Arial,sans-serif;font-size:13px;font-weight:500;line-height:1.6;color:#777777;margin:24px 0 0;">This link expires in 24 hours. If the button doesn&rsquo;t work, paste this into your browser:<br><span style="color:#999999;word-break:break-all;">' . $safeUrl . '</span></p>'
+        . '<p style="font-family:\'Rajdhani\',Arial,sans-serif;font-size:13px;font-weight:500;line-height:1.6;color:#777777;margin:14px 0 0;">Didn&rsquo;t sign up? Ignore this email &mdash; nothing happens without your tap.</p>';
+
+    $html = od9_email_layout($inner, [
+        'title'           => $subject,
+        'preheader'       => 'One tap to confirm your OD9 subscription.',
+        'unsubscribe_url' => 'https://offda9.com/unsubscribe.php?email=' . rawurlencode($email),
+    ]);
 
     $unsub = '<https://offda9.com/unsubscribe.php?email=' . rawurlencode($email)
            . '>, <mailto:contact@offda9.com?subject=unsubscribe>';

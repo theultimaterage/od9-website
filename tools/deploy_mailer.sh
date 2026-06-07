@@ -10,18 +10,20 @@ HOST="ultimaterage@72.167.54.213"
 SRC="/c/xampp/htdocs/od9"
 
 echo ">> uploading to /tmp ..."
-scp -i "$KEY" "$SRC/includes/mail.php"        "$HOST:/tmp/od9_inc_mail.php"
-scp -i "$KEY" "$SRC/config/mail.php"          "$HOST:/tmp/od9_cfg_mail.php"
-scp -i "$KEY" "$SRC/config/mail.config.php"   "$HOST:/tmp/od9_cfg_mc.php"
+scp -i "$KEY" "$SRC/includes/mail.php"          "$HOST:/tmp/od9_inc_mail.php"
+scp -i "$KEY" "$SRC/includes/email_layout.php"  "$HOST:/tmp/od9_inc_layout.php"
+scp -i "$KEY" "$SRC/config/mail.php"            "$HOST:/tmp/od9_cfg_mail.php"
+scp -i "$KEY" "$SRC/config/mail.config.php"     "$HOST:/tmp/od9_cfg_mc.php"
 
 echo ">> installing into public_html ..."
 ssh -i "$KEY" "$HOST" '
   set -e
-  sudo install -o offda9 -g offda9 -m 644 /tmp/od9_inc_mail.php /home/offda9/public_html/includes/mail.php
-  sudo install -o offda9 -g offda9 -m 644 /tmp/od9_cfg_mail.php /home/offda9/public_html/config/mail.php
-  sudo install -o offda9 -g offda9 -m 600 /tmp/od9_cfg_mc.php   /home/offda9/public_html/config/mail.config.php
-  rm -f /tmp/od9_inc_mail.php /tmp/od9_cfg_mail.php /tmp/od9_cfg_mc.php
+  sudo install -o offda9 -g offda9 -m 644 /tmp/od9_inc_mail.php   /home/offda9/public_html/includes/mail.php
+  sudo install -o offda9 -g offda9 -m 644 /tmp/od9_inc_layout.php /home/offda9/public_html/includes/email_layout.php
+  sudo install -o offda9 -g offda9 -m 644 /tmp/od9_cfg_mail.php   /home/offda9/public_html/config/mail.php
+  sudo install -o offda9 -g offda9 -m 600 /tmp/od9_cfg_mc.php     /home/offda9/public_html/config/mail.config.php
+  rm -f /tmp/od9_inc_mail.php /tmp/od9_inc_layout.php /tmp/od9_cfg_mail.php /tmp/od9_cfg_mc.php
   echo "   modes:"
-  ls -l /home/offda9/public_html/includes/mail.php /home/offda9/public_html/config/mail.php /home/offda9/public_html/config/mail.config.php
+  ls -l /home/offda9/public_html/includes/mail.php /home/offda9/public_html/includes/email_layout.php /home/offda9/public_html/config/mail.php /home/offda9/public_html/config/mail.config.php
 '
 echo "DEPLOYED-OK"
