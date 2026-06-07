@@ -12,6 +12,12 @@ HOST="ultimaterage@72.167.54.213"
 SRC="/c/xampp/htdocs/od9/email-templates"
 DEST="/home/offda9/public_html/email-templates"
 
+# Preflight: no email ships unbranded / non-compliant / with broken merge tokens.
+# (cd so Windows python resolves the relative path; it won't accept a /c/... path.)
+echo ">> email-lint preflight ..."
+( cd "/c/xampp/htdocs/od9" && python tools/email_lint.py --quiet ) \
+  || { echo "[deploy_templates] email-lint FAILED — fix drift before deploying"; exit 1; }
+
 echo ">> staging templates on prod ..."
 ssh -i "$KEY" "$HOST" 'rm -rf /tmp/od9tpl && mkdir -p /tmp/od9tpl'
 scp -i "$KEY" "$SRC"/*.html "$HOST:/tmp/od9tpl/"
