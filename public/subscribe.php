@@ -30,6 +30,12 @@ $configPath = __DIR__ . '/../config/database.php';
 if (!file_exists($configPath)) $configPath = __DIR__ . '/config/database.php';
 require_once $configPath;
 
+// Unified mailer — Brevo SMTP on prod, Mailtrap sandbox on local. Resolves
+// whether includes/ sits beside this file (prod public_html) or one up (repo).
+$_mailLib = __DIR__ . '/includes/mail.php';
+if (!file_exists($_mailLib)) $_mailLib = __DIR__ . '/../includes/mail.php';
+require_once $_mailLib;
+
 header('Content-Type: application/json; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -240,13 +246,12 @@ OD9 LLC, Auburn-Gresham, Chicago.<br>
 </html>
 HTML;
 
-    $headers = [
-        'MIME-Version: 1.0',
-        'Content-Type: text/html; charset=utf-8',
-        'From: The OD9 Movement <noreply@offda9.com>',
-        'Reply-To: contact@offda9.com',
-        'X-Mailer: OD9-Subscribe/1.0',
-    ];
-
-    return @mail($email, $subject, $html, implode("\r\n", $headers), '-f noreply@offda9.com');
+    $unsub = '<https://offda9.com/unsubscribe.php?email=' . rawurlencode($email)
+           . '>, <mailto:contact@offda9.com?subject=unsubscribe>';
+    return od9_send_mail($email, $subject, $html, [
+        'from_email'       => 'noreply@offda9.com',
+        'from_name'        => 'The OD9 Movement',
+        'reply_to'         => 'contact@offda9.com',
+        'list_unsubscribe' => $unsub,
+    ]);
 }
