@@ -29,7 +29,7 @@ That's a much harder pitch. "We're against extraction" packs into a tweet. "We'r
 
 ## This week's question
 
-Sunday's deep-dive QOTD in [#question-of-the-day](https://discord.gg/od9):
+Sunday's deep-dive QOTD in [#question-of-the-day](https://discord.gg/spgmrXVMWq):
 
 > *Suppose OD9 disappears in 100 years and all that survives is ONE artifact. What should it be, and what does that artifact prove we got right?*
 
@@ -47,4 +47,4 @@ Next week: how to map a system you're already inside — and why the leverage po
 
 — The OD9 team
 
-P.S. If you got this email and you're not already in the Discord: [come hang](https://discord.gg/od9). The community is small but sharp, and the QOTD threads are where most of the actual thinking happens.
+P.S. If you got this email and you're not already in the Discord: [come hang](https://discord.gg/spgmrXVMWq). The community is small but sharp, and the QOTD threads are where most of the actual thinking happens.

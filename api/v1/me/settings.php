@@ -9,7 +9,7 @@
 require_once dirname(__DIR__) . '/bootstrap.php';
 
 $discordId = requireAuth();
-$guildId = OD9_GUILD_ID ?? '1309609816934559785';
+$guildId = OD9_GUILD_ID ?? '1146833684952006769';
 
 checkRateLimit("settings_{$discordId}", 20, 60);
 

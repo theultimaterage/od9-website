@@ -26,9 +26,6 @@ error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
-// Configuration
-$isLocal = strpos(__DIR__, 'xampp') !== false;
-
 // DB credentials from the single source of truth (config/database.php) —
 // a password rotation now touches only that file.
 $_cfg = __DIR__ . '/../../config/database.php';
@@ -39,15 +36,15 @@ define('DRIP_DB_NAME', DB_NAME);
 define('DRIP_DB_USER', DB_USER);
 define('DRIP_DB_PASS', DB_PASS);
 
-// Email configuration
-define('SMTP_ENABLED', !$isLocal); // Use SMTP in production
-define('SMTP_HOST', getenv('SMTP_HOST') ?: 'smtp.gmail.com');
-define('SMTP_PORT', (int)(getenv('SMTP_PORT') ?: 587));
-define('SMTP_USER', getenv('SMTP_USER') ?: '');
-define('SMTP_PASS', getenv('SMTP_PASS') ?: '');
+// Email — route through the unified mailer. config/mail.php (loaded transitively
+// by includes/mail.php) owns the SMTP_* constants now; the old smtp.gmail.com
+// socket sender here was unsigned + hit GoDaddy's 587 redirect, so it's retired.
+$_mailLib = __DIR__ . '/../../includes/mail.php';
+if (!file_exists($_mailLib)) $_mailLib = __DIR__ . '/../../../includes/mail.php';
+require_once $_mailLib;
 define('FROM_EMAIL', 'noreply@offda9.com');
 define('FROM_NAME', 'The OD9 Movement');
-define('REPLY_TO', 'info@offda9.com');
+define('REPLY_TO', 'contact@offda9.com');
 
 // Template directory
 define('TEMPLATE_DIR', dirname(__DIR__, 2) . '/email-templates/');
@@ -157,112 +154,19 @@ function processTemplate(string $template, array $member, array $extraData = [])
 }
 
 /**
- * Send email via PHP mail() or SMTP
+ * Send a drip email through the unified Brevo-signed mailer (od9_send_mail).
+ * Handles multipart/alternative, DKIM via Brevo (port 2525), and the SMTP
+ * driver dispatch — no hand-rolled socket SMTP here anymore.
  */
 function sendEmail(string $to, string $subject, string $htmlBody): bool {
-    if (SMTP_ENABLED && !empty(SMTP_USER)) {
-        return sendSmtpEmail($to, $subject, $htmlBody);
-    }
-
-    return sendPhpMail($to, $subject, $htmlBody);
-}
-
-/**
- * Send via PHP mail()
- */
-function sendPhpMail(string $to, string $subject, string $htmlBody): bool {
-    $headers = [
-        'MIME-Version: 1.0',
-        'Content-type: text/html; charset=utf-8',
-        'From: ' . FROM_NAME . ' <' . FROM_EMAIL . '>',
-        'Reply-To: ' . REPLY_TO,
-        'X-Mailer: OD9-Drip-System/1.0'
-    ];
-
-    return mail($to, $subject, $htmlBody, implode("\r\n", $headers));
-}
-
-/**
- * Send via SMTP (using sockets - no external dependencies)
- */
-function sendSmtpEmail(string $to, string $subject, string $htmlBody): bool {
-    $socket = @fsockopen(SMTP_HOST, SMTP_PORT, $errno, $errstr, 30);
-    if (!$socket) {
-        dripLog('ERROR', "SMTP connection failed: {$errstr}");
-        return false;
-    }
-
-    try {
-        // Read greeting
-        fgets($socket, 1024);
-
-        // EHLO
-        fwrite($socket, "EHLO " . gethostname() . "\r\n");
-        while ($line = fgets($socket, 1024)) {
-            if (substr($line, 3, 1) === ' ') break;
-        }
-
-        // STARTTLS
-        fwrite($socket, "STARTTLS\r\n");
-        fgets($socket, 1024);
-        stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
-
-        // EHLO again after TLS
-        fwrite($socket, "EHLO " . gethostname() . "\r\n");
-        while ($line = fgets($socket, 1024)) {
-            if (substr($line, 3, 1) === ' ') break;
-        }
-
-        // AUTH
-        fwrite($socket, "AUTH LOGIN\r\n");
-        fgets($socket, 1024);
-        fwrite($socket, base64_encode(SMTP_USER) . "\r\n");
-        fgets($socket, 1024);
-        fwrite($socket, base64_encode(SMTP_PASS) . "\r\n");
-        $response = fgets($socket, 1024);
-        if (substr($response, 0, 3) !== '235') {
-            dripLog('ERROR', "SMTP auth failed: {$response}");
-            return false;
-        }
-
-        // MAIL FROM
-        fwrite($socket, "MAIL FROM:<" . FROM_EMAIL . ">\r\n");
-        fgets($socket, 1024);
-
-        // RCPT TO
-        fwrite($socket, "RCPT TO:<{$to}>\r\n");
-        fgets($socket, 1024);
-
-        // DATA
-        fwrite($socket, "DATA\r\n");
-        fgets($socket, 1024);
-
-        // Email content
-        $message = "From: " . FROM_NAME . " <" . FROM_EMAIL . ">\r\n";
-        $message .= "To: {$to}\r\n";
-        $message .= "Subject: {$subject}\r\n";
-        $message .= "Reply-To: " . REPLY_TO . "\r\n";
-        $message .= "MIME-Version: 1.0\r\n";
-        $message .= "Content-Type: text/html; charset=utf-8\r\n";
-        $message .= "X-Mailer: OD9-Drip-System/1.0\r\n";
-        $message .= "\r\n";
-        $message .= $htmlBody;
-        $message .= "\r\n.\r\n";
-
-        fwrite($socket, $message);
-        $response = fgets($socket, 1024);
-
-        // QUIT
-        fwrite($socket, "QUIT\r\n");
-        fclose($socket);
-
-        return substr($response, 0, 3) === '250';
-
-    } catch (Exception $e) {
-        dripLog('ERROR', "SMTP error: " . $e->getMessage());
-        if ($socket) fclose($socket);
-        return false;
-    }
+    $unsub = '<https://offda9.com/unsubscribe.php?email=' . rawurlencode($to)
+           . '>, <mailto:contact@offda9.com?subject=unsubscribe>';
+    return od9_send_mail($to, $subject, $htmlBody, [
+        'from_email'       => FROM_EMAIL,
+        'from_name'        => FROM_NAME,
+        'reply_to'         => REPLY_TO,
+        'list_unsubscribe' => $unsub,
+    ]);
 }
 
 /**

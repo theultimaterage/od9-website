@@ -44,3 +44,27 @@ if (!function_exists('od9_base_path')) {
         return rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php'), '/\\');
     }
 }
+
+if (!function_exists('od9_local_time')) {
+    /**
+     * Format a bot timestamp for display in OD9's local timezone.
+     *
+     * The bot stores activity/streak times via SQLite's CURRENT_TIMESTAMP,
+     * which is UTC. We convert to America/Chicago and label with a DST-aware
+     * abbreviation (CST/CDT) so the dashboard never shows bare UTC. Falls back
+     * to the raw string on parse failure rather than throwing.
+     */
+    function od9_local_time(?string $utc, string $fmt = 'M j, g:i A T'): string
+    {
+        if ($utc === null || $utc === '') {
+            return '';
+        }
+        try {
+            $dt = new DateTime($utc, new DateTimeZone('UTC'));
+            $dt->setTimezone(new DateTimeZone('America/Chicago'));
+            return $dt->format($fmt);
+        } catch (Throwable $e) {
+            return $utc;
+        }
+    }
+}

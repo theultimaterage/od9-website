@@ -50,13 +50,13 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,5vw,2.6rem);font-wei
 .entity-link:hover{text-decoration:underline}
 .diagram{background:var(--dd);border:1px solid #222;border-radius:12px;padding:2rem 1.5rem;margin-bottom:3rem;text-align:center}
 .diagram svg{max-width:100%;height:auto}
-.diagram-caption{color:#777;font-size:0.85rem;margin-top:1rem}
+.diagram-caption{color:#888;font-size:0.85rem;margin-top:1rem}
 .synthesis{background:linear-gradient(135deg,rgba(0,191,255,0.08),rgba(255,215,0,0.04));border:1px solid #2a3a4a;border-radius:12px;padding:2rem 1.75rem;margin-bottom:2rem}
 .synthesis h2{font-family:'Orbitron',sans-serif;color:#fff;font-size:1.2rem;letter-spacing:1px;margin-bottom:1rem}
 .synthesis p{color:#bbb;margin-bottom:0.85rem}
 .synthesis strong{color:var(--gold)}
 .bottom-links{text-align:center;margin-top:2rem}
-.bottom-links a{color:#666;text-decoration:none;font-size:0.85rem;margin:0 0.75rem}
+.bottom-links a{color:#888;text-decoration:none;font-size:0.85rem;margin:0 0.75rem}
 .bottom-links a:hover{color:var(--b)}
 </style>
 </head>

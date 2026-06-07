@@ -38,123 +38,109 @@ $tier = null;
 
 if ($isLoggedIn) {
     $discordId = $_SESSION['discord_id'];
-    $guildId = OD9_GUILD_ID ?? '1309609816934559785';
+    // We intentionally do NOT filter by guild_id. The live bot SQLite stores
+    // members under the real OD9 guild (1146833684952006769), which differs from
+    // the OD9_GUILD_ID constant (1309609816934559785) — filtering by the constant
+    // matched zero users and blanked the dashboard. me.php keys on user_id alone
+    // too; the bot DB is single-guild in practice.
 
+    // Each bot query is guarded independently (see api/v1/pulse.php's safe-read
+    // pattern): a single schema drift — a renamed column, a missing table —
+    // should blank only its own widget, never abort the whole dashboard load.
+    $botFetch = function (?PDO $db, string $sql, array $params): array {
+        if (!$db) return [];
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            error_log("Dashboard query failed: " . $e->getMessage());
+            return [];
+        }
+    };
+
+    $db = null;
     try {
         $botDbPath = defined('OD9_BOT_DB_PATH') ? OD9_BOT_DB_PATH : 'C:/Users/Rage/IdeaProjects/OD9-Discord-Bot/od9.db';
         $db = new PDO("sqlite:$botDbPath", null, null, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         ]);
-
-        // Get user data
-        $stmt = $db->prepare("
-            SELECT user_id, username, current_tier, total_credits, join_date
-            FROM users WHERE user_id = ? AND guild_id = ? LIMIT 1
-        ");
-        $stmt->execute([$discordId, $guildId]);
-        $user = $stmt->fetch();
-
-        if ($user) {
-            // Get tier info
-            $tierName = ucfirst($user['current_tier'] ?? 'observer');
-            $tier = [
-                'name' => $tierName,
-                'color' => match(strtolower($tierName)) {
-                    'observer' => '#808080',
-                    'theorist' => '#4169E1',
-                    'architect' => '#32CD32',
-                    'pioneer' => '#D4AF37',
-                    'benefactor' => '#9400D3',
-                    default => '#808080'
-                }
-            ];
-
-            // Get credits
-            $credits = [
-                'balance' => (int)($user['total_credits'] ?? 0)
-            ];
-
-            // Get streak
-            $stmt = $db->prepare("
-                SELECT current_streak, best_streak, last_activity
-                FROM user_streaks WHERE user_id = ? AND guild_id = ? LIMIT 1
-            ");
-            $stmt->execute([$discordId, $guildId]);
-            $streakData = $stmt->fetch();
-            $streak = [
-                'current' => (int)($streakData['current_streak'] ?? 0),
-                'best' => (int)($streakData['best_streak'] ?? 0)
-            ];
-
-            // Get achievements count
-            $stmt = $db->prepare("
-                SELECT COUNT(*) FROM user_achievements
-                WHERE user_id = ? AND guild_id = ? AND earned_at IS NOT NULL
-            ");
-            $stmt->execute([$discordId, $guildId]);
-            $achievementCount = (int)$stmt->fetchColumn();
-
-            // Get recent achievements
-            $stmt = $db->prepare("
-                SELECT ua.achievement_id, ua.earned_at, ad.name, ad.icon, ad.rarity, ad.credit_reward as points
-                FROM user_achievements ua
-                LEFT JOIN achievement_definitions ad ON ua.achievement_id = ad.achievement_id AND ua.guild_id = ad.guild_id
-                WHERE ua.user_id = ? AND ua.guild_id = ? AND ua.earned_at IS NOT NULL
-                ORDER BY ua.earned_at DESC LIMIT 10
-            ");
-            $stmt->execute([$discordId, $guildId]);
-            $achievements = $stmt->fetchAll();
-
-            // Get user dimensions for radar chart
-            $stmt = $db->prepare("
-                SELECT dimension, score
-                FROM user_dimensions 
-                WHERE user_id = ? AND guild_id = ?
-            ");
-            $stmt->execute([$discordId, $guildId]);
-            $dimensionRows = $stmt->fetchAll();
-            $dimensions = [
-                'intellectual' => 0,
-                'creative' => 0,
-                'community' => 0,
-                'practical' => 0,
-                'leadership' => 0
-            ];
-            foreach ($dimensionRows as $row) {
-                $dim = strtolower($row['dimension']);
-                if (isset($dimensions[$dim])) {
-                    $dimensions[$dim] = (float)$row['score'];
-                }
-            }
-
-            // Get recent activity feed
-            $stmt = $db->prepare("
-                SELECT activity_type, activity_description, credits_earned, streak_bonus, activity_date
-                FROM activity_log 
-                WHERE user_id = ? AND guild_id = ?
-                ORDER BY activity_date DESC LIMIT 20
-            ");
-            $stmt->execute([$discordId, $guildId]);
-            $recentActivity = $stmt->fetchAll();
-
-            // Build progression object for compatibility
-            $progression = [
-                'current_tier' => $tierName,
-                'total_credits' => $credits['balance'],
-                'current_streak' => $streak['current'],
-                'best_streak' => $streak['best'],
-                'achievements_count' => $achievementCount,
-                'member_since' => $user['join_date'],
-                'dim_intellectual' => $dimensions['intellectual'],
-                'dim_creative' => $dimensions['creative'],
-                'dim_community' => $dimensions['community'],
-                'dim_practical' => $dimensions['practical'],
-                'dim_leadership' => $dimensions['leadership']
-            ];
-        }
     } catch (PDOException $e) {
-        error_log("Dashboard DB error: " . $e->getMessage());
+        error_log("Dashboard DB connection error: " . $e->getMessage());
+    }
+
+    $params = [$discordId];
+
+    // Foundational row: tier + credits + join date.
+    $user = $botFetch($db,
+        "SELECT user_id, username, current_tier, total_credits, join_date
+         FROM users WHERE user_id = ? LIMIT 1", $params)[0] ?? null;
+
+    if ($user) {
+        $tierName = ucfirst($user['current_tier'] ?? 'observer');
+        $creditBalance = (int)($user['total_credits'] ?? 0);
+
+        // Streak (real bot columns: longest_streak, last_activity_date).
+        $streakData = $botFetch($db,
+            "SELECT current_streak, longest_streak, last_activity_date
+             FROM user_streaks WHERE user_id = ? LIMIT 1", $params)[0] ?? [];
+        $streak = [
+            'current' => (int)($streakData['current_streak'] ?? 0),
+            'best' => (int)($streakData['longest_streak'] ?? 0),
+        ];
+
+        // Total earned achievements (may exceed the 10 shown in the grid).
+        $achievementCount = (int)($botFetch($db,
+            "SELECT COUNT(*) AS c FROM user_achievements
+             WHERE user_id = ? AND earned_at IS NOT NULL", $params)[0]['c'] ?? 0);
+
+        // Most-recent achievements for the grid.
+        $achievements = $botFetch($db,
+            "SELECT ua.achievement_id, ua.earned_at, ad.name, ad.icon, ad.rarity, ad.credit_reward as points
+             FROM user_achievements ua
+             LEFT JOIN achievement_definitions ad
+               ON ua.achievement_id = ad.achievement_id AND ua.guild_id = ad.guild_id
+             WHERE ua.user_id = ? AND ua.earned_at IS NOT NULL
+             ORDER BY ua.earned_at DESC LIMIT 10", $params);
+
+        // Dimension scores for the radar (bot dims per the bot's config.py).
+        $dimensions = [
+            'knowledge' => 0,
+            'resource' => 0,
+            'community' => 0,
+            'consciousness' => 0,
+            'system' => 0,
+        ];
+        foreach ($botFetch($db,
+            "SELECT dimension, score FROM user_dimensions
+             WHERE user_id = ?", $params) as $row) {
+            $dim = strtolower($row['dimension'] ?? '');
+            if (isset($dimensions[$dim])) {
+                $dimensions[$dim] = (float)$row['score'];
+            }
+        }
+
+        // Recent activity feed.
+        $recentActivity = $botFetch($db,
+            "SELECT activity_type, activity_description, credits_earned, streak_bonus, activity_date
+             FROM activity_log WHERE user_id = ?
+             ORDER BY activity_date DESC LIMIT 20", $params);
+
+        // Build progression object consumed by the view below.
+        $progression = [
+            'current_tier' => $tierName,
+            'total_credits' => $creditBalance,
+            'current_streak' => $streak['current'],
+            'best_streak' => $streak['best'],
+            'achievements_count' => $achievementCount,
+            'member_since' => $user['join_date'],
+            'dim_knowledge' => $dimensions['knowledge'],
+            'dim_resource' => $dimensions['resource'],
+            'dim_community' => $dimensions['community'],
+            'dim_consciousness' => $dimensions['consciousness'],
+            'dim_system' => $dimensions['system'],
+        ];
     }
 }
 ?>
@@ -393,7 +379,7 @@ body {
 }
 
 .activity-time {
-    color: #666;
+    color: #888;
     font-size: 0.75rem;
     margin-top: 0.25rem;
 }
@@ -408,7 +394,7 @@ body {
     text-align: center;
     margin-top: 3rem;
     padding: 2rem;
-    color: #666;
+    color: #888;
     font-size: 0.9rem;
 }
 
@@ -445,6 +431,13 @@ include __DIR__ . '/../includes/nav.php';
     <div class="dashboard-header">
         <h1><i class="fas fa-chart-line"></i> Progression Dashboard</h1>
         <p class="subtitle">Track your ASCEND Protocol journey</p>
+        <?php if ($isLoggedIn): ?>
+        <p style="margin-top: 0.75rem;">
+            <a href="/dashboard/settings.php" style="color: var(--primary-blue); text-decoration: none; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px;">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </p>
+        <?php endif; ?>
     </div>
 
     <?php if (!$isLoggedIn): ?>
@@ -455,7 +448,7 @@ include __DIR__ . '/../includes/nav.php';
         <a href="auth/discord.php" class="discord-login-btn">
             <i class="fab fa-discord"></i> Login with Discord
         </a>
-        <p style="margin-top: 1.5rem; font-size: 0.9rem; color: #666;">
+        <p style="margin-top: 1.5rem; font-size: 0.9rem; color: #888;">
             Don't have an account? <a href="/join.php" style="color: var(--primary-blue);">Join OD9 on Discord</a>
         </p>
     </div>
@@ -468,7 +461,7 @@ include __DIR__ . '/../includes/nav.php';
             <h3><i class="fas fa-layer-group"></i> Current Tier</h3>
             <div style="text-align: center; margin: 1.5rem 0;">
                 <?php
-                $tier = strtolower($progression['tier'] ?? 'observer');
+                $tier = strtolower($progression['current_tier'] ?? 'observer');
                 $tierDisplay = ucfirst($tier);
                 $credits = $progression['total_credits'] ?? 0;
                 $progress = $progression['tier_progress_pct'] ?? 0;
@@ -501,13 +494,13 @@ include __DIR__ . '/../includes/nav.php';
         <div class="card">
             <h3><i class="fas fa-trophy"></i> Recent Achievements</h3>
             <?php if (empty($achievements)): ?>
-                <p style="color: #666; text-align: center; padding: 2rem;">No achievements yet. Keep contributing!</p>
+                <p style="color: #888; text-align: center; padding: 2rem;">No achievements yet. Keep contributing!</p>
             <?php else: ?>
                 <div class="achievement-grid">
                     <?php foreach ($achievements as $ach): ?>
-                    <div class="achievement-item" title="<?= htmlspecialchars($ach['achievement_desc'] ?? $ach['achievement_name']) ?>">
-                        <div class="achievement-icon">🏆</div>
-                        <div class="achievement-name"><?= htmlspecialchars($ach['achievement_name'] ?? $ach['achievement_id']) ?></div>
+                    <div class="achievement-item" title="<?= htmlspecialchars($ach['name'] ?? $ach['achievement_id']) ?>">
+                        <div class="achievement-icon"><?= htmlspecialchars($ach['icon'] ?? '🏆') ?></div>
+                        <div class="achievement-name"><?= htmlspecialchars($ach['name'] ?? $ach['achievement_id']) ?></div>
                     </div>
                     <?php endforeach; ?>
                 </div>
@@ -518,7 +511,7 @@ include __DIR__ . '/../includes/nav.php';
         <div class="card">
             <h3><i class="fas fa-stream"></i> Recent Activity</h3>
             <?php if (empty($recentActivity)): ?>
-                <p style="color: #666; text-align: center; padding: 2rem;">No activity yet. Start contributing on Discord!</p>
+                <p style="color: #888; text-align: center; padding: 2rem;">No activity yet. Start contributing on Discord!</p>
             <?php else: ?>
                 <div class="activity-feed">
                     <?php foreach ($recentActivity as $activity): ?>
@@ -528,7 +521,7 @@ include __DIR__ . '/../includes/nav.php';
                         </div>
                         <div class="activity-content">
                             <div class="activity-desc"><?= htmlspecialchars($activity['activity_description'] ?? $activity['activity_type']) ?></div>
-                            <div class="activity-time"><?= date('M j, g:i A', strtotime($activity['activity_date'])) ?></div>
+                            <div class="activity-time"><?= htmlspecialchars(od9_local_time($activity['activity_date'] ?? null)) ?></div>
                         </div>
                         <?php if (($activity['credits_earned'] ?? 0) > 0): ?>
                         <div class="activity-credits">+<?= $activity['credits_earned'] ?><?= ($activity['streak_bonus'] ?? 0) > 0 ? ' (+' . $activity['streak_bonus'] . ' streak)' : '' ?></div>
@@ -546,15 +539,15 @@ include __DIR__ . '/../includes/nav.php';
     new Chart(ctx, {
         type: 'radar',
         data: {
-            labels: ['Analytical', 'Creative', 'Collaborative', 'Practical', 'Leadership'],
+            labels: ['Knowledge', 'Resource', 'Community', 'Consciousness', 'System'],
             datasets: [{
                 label: 'Dimension Scores',
                 data: [
-                    <?= $progression['dim_analytical'] ?? 0 ?>,
-                    <?= $progression['dim_creative'] ?? 0 ?>,
-                    <?= $progression['dim_collaborative'] ?? 0 ?>,
-                    <?= $progression['dim_practical'] ?? 0 ?>,
-                    <?= $progression['dim_leadership'] ?? 0 ?>
+                    <?= $progression['dim_knowledge'] ?? 0 ?>,
+                    <?= $progression['dim_resource'] ?? 0 ?>,
+                    <?= $progression['dim_community'] ?? 0 ?>,
+                    <?= $progression['dim_consciousness'] ?? 0 ?>,
+                    <?= $progression['dim_system'] ?? 0 ?>
                 ],
                 fill: true,
                 backgroundColor: 'rgba(0, 191, 255, 0.2)',

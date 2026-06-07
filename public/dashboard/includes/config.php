@@ -29,11 +29,20 @@ if ($isLocal) {
     define('API_BASE_URL', 'https://offda9.com/api/v1');
 }
 
-// OD9 Guild ID (for member verification)
-define('OD9_GUILD_ID', '1309609816934559785');
+// OD9 Guild ID (for member verification). This is the ACTUAL guild the bot
+// writes member rows under in its SQLite DB (verified: 92/93 users). The old
+// value 1309609816934559785 matched zero rows and silently blanked every
+// guild-filtered query. Do not revert without checking the live bot DB.
+define('OD9_GUILD_ID', '1146833684952006769');
 
-// Bot SQLite Database Path (data/ subfolder)
-define('OD9_BOT_DB_PATH', 'C:/Users/Rage/IdeaProjects/OD9-Discord-Bot/data/od9.db');
+// Bot SQLite Database Path. Environment-aware (same switch as the callback URLs
+// above): the Windows dev path locally, the prod box's world-readable copy on
+// the server. The prod path is the same file pulse.php reads directly.
+if ($isLocal) {
+    define('OD9_BOT_DB_PATH', 'C:/Users/Rage/IdeaProjects/OD9-Discord-Bot/data/od9.db');
+} else {
+    define('OD9_BOT_DB_PATH', '/home/ultimaterage/od9-discord-bot/data/od9.db');
+}
 
 // Session configuration
 define('SESSION_LIFETIME', 86400 * 7); // 7 days

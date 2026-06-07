@@ -12,6 +12,7 @@ $page_slug = 'settings.php';
 
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/db.php';
+require_once __DIR__ . '/includes/profile_visibility.php';
 require_once __DIR__ . '/../includes/env.php';
 
 $current_page = 'settings';
@@ -45,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $publicProfile = isset($_POST['public_profile']) && $_POST['public_profile'] === '1';
         
-        if (setPublicProfile($discordId, $publicProfile)) {
+        if (od9_set_profile_public($discordId, $publicProfile)) {
             $message = $publicProfile 
                 ? 'Your profile is now public! Share your profile link with others.' 
                 : 'Your profile is now private.';
@@ -60,9 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Generate CSRF token
 $_SESSION['csrf_token'] = bin2hex(random_bytes(16));
 
-// Get current settings
-$user = getPublicUserByDiscordId($discordId);
-$isPublic = $user ? (bool)$user['public_profile'] : false;
+// Get current visibility (web-owned MySQL; default private / opt-in)
+$isPublic = od9_is_profile_public($discordId);
 
 // Build profile URL
 $profileUrl = DASHBOARD_BASE_URL . '/profile.php?u=' . urlencode($discordId);
@@ -71,17 +71,7 @@ $profileUrl = DASHBOARD_BASE_URL . '/profile.php?u=' . urlencode($discordId);
 <html lang="en">
 <head>
 <?php $nav_base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'] ?? '/dashboard/settings.php')), '/'); include __DIR__ . '/../includes/head.php'; ?>
-<style>
-body {
-    background: var(--carbon);
-    background-image: linear-gradient(45deg, #111 25%, transparent 25%), linear-gradient(-45deg, #111 25%, transparent 25%);
-    background-size: 4px 4px;
-    color: var(--chrome);
-    font-family: 'Exo 2', sans-serif;
-    padding-top: var(--nav-height);
-    min-height: 100vh;
-}
-</style>
+<link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body>
 

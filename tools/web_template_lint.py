@@ -106,6 +106,72 @@ def check_includes(page: Path, text: str) -> list[str]:
     return issues
 
 
+# --- [UNSTYLED] content-class check -------------------------------------------
+# The gap that let settings.php ship unstyled (2026-06-06): the shared-chrome
+# migration stripped a page's page-specific content CSS, and od9.css never
+# defined those classes, so the content rendered with no styling. lint_page only
+# knows about chrome. This check gathers the classes a page actually USES and the
+# classes DEFINED in every stylesheet it loads (od9.css via head.php, any
+# <link>ed local .css, inline <style>) and flags content classes with no CSS home.
+RX_CLASS_ATTR = re.compile(r'class\s*=\s*"([^"]*)"')
+RX_LINK_CSS   = re.compile(r'<link[^>]+href=["\']([^"\']+\.css)[^"\']*["\']', re.I)
+RX_STYLE_BLK  = re.compile(r'<style\b[^>]*>(.*?)</style>', re.I | re.S)
+RX_CSS_CLASS  = re.compile(r'\.([A-Za-z_][\w-]*)')
+RX_PHP_TAG    = re.compile(r'<\?.*?\?>', re.S)
+# FontAwesome + JS-toggled state classes that legitimately have no static CSS.
+SAFE_CLASSES  = {"fa", "fas", "fab", "far", "fal", "fad", "active", "hidden", "copied"}
+SAFE_PREFIXES = ("fa-",)
+# Only flag a SUBSTANTIALLY unstyled page (the settings.php case had ~15 undefined
+# content classes), not 1-2 dynamic/straggler classes — keeps the gate high-signal
+# and false-positive-free. Tune here if needed.
+UNSTYLED_MIN  = 3
+
+
+def _classes_used(text: str) -> set[str]:
+    used = set()
+    for attr in RX_CLASS_ATTR.findall(text):
+        attr = RX_PHP_TAG.sub(" ", attr)  # drop dynamic class="<?= ... ?>" parts
+        for tok in attr.split():
+            if tok and "<" not in tok and "?" not in tok:
+                used.add(tok)
+    return used
+
+
+def _classes_defined(text: str, root: Path, uses_head: bool) -> set[str]:
+    defined = set()
+    for blk in RX_STYLE_BLK.findall(text):
+        defined |= set(RX_CSS_CLASS.findall(blk))
+    css = set()
+    if uses_head or RX["loads_css"].search(text):
+        css.add("css/od9.css")  # head.php links od9.css
+    for href in RX_LINK_CSS.findall(text):
+        h = href.split("?")[0]
+        if not h.startswith("http"):
+            css.add(h.lstrip("/"))
+    for rel in css:
+        cand = root / rel
+        if not cand.exists():
+            cand = root / "css" / Path(rel).name  # fall back to basename under css/
+        if cand.exists():
+            defined |= set(RX_CSS_CLASS.findall(cand.read_text(encoding="utf-8", errors="replace")))
+    return defined
+
+
+def check_unstyled(text: str, root: Path) -> list[str]:
+    used = _classes_used(text)
+    if not used:
+        return []
+    defined = _classes_defined(text, root, bool(RX["uses_head"].search(text)))
+    unknown = sorted(c for c in used
+                     if c not in defined and c not in SAFE_CLASSES
+                     and not c.endswith("-")  # dynamic remnant: class="tier-<?= $t ?>"
+                     and not any(c.startswith(p) for p in SAFE_PREFIXES))
+    if len(unknown) >= UNSTYLED_MIN:
+        shown = ", ".join(unknown[:10]) + (" ..." if len(unknown) > 10 else "")
+        return [f"UNSTYLED  {len(unknown)} content classes defined in no loaded stylesheet: {shown}"]
+    return []
+
+
 def find_dupes(tree: Path) -> dict[str, list[str]]:
     """Duplicate chrome WITHIN the deployed web root (public/). Untracked
     repo-root siblings (includes/, config/) are a separate housekeeping concern,
@@ -140,7 +206,7 @@ def main() -> int:
         if is_exempt(rel):
             continue
         text = p.read_text(encoding="utf-8", errors="replace")
-        issues = lint_page(text) + check_includes(p, text)
+        issues = lint_page(text) + check_includes(p, text) + check_unstyled(text, root)
         (drifted.__setitem__(rel, issues) if issues else ok.append(rel))
 
     dupes = find_dupes(root)

@@ -36,8 +36,9 @@ $nav_links = [
 ];
 if (!isset($current_page)) $current_page = '';
 ?>
+<?php include __DIR__ . '/topbar.php'; ?>
 <nav class="od9-nav"><div class="nav-container">
-<a href="<?= $nav_url('index.php') ?>" class="nav-logo"><img src="<?= $nav_url('images/logos/od9-logo.png') ?>" alt="OD9"><span class="nav-logo-text">OD9</span></a>
+<a href="<?= $nav_url('index.php') ?>" class="nav-logo"><img src="<?= $nav_url('images/logos/od9-logo-nav.png') ?>" alt="OD9" width="132" height="72"><span class="nav-logo-text">OD9</span></a>
 <ul class="nav-menu" style="gap:0.7rem">
 <?php foreach ($nav_links as $key => $link): ?>
 <li><a href="<?= $link['href'] ?>" class="nav-link <?= $current_page === $key ? 'active' : '' ?>" style="font-size:0.85rem"><?= $link['label'] ?></a></li>
@@ -53,3 +54,4 @@ if (!isset($current_page)) $current_page = '';
 <a href="https://discord.gg/spgmrXVMWq" target="_blank" class="mobile-discord"><i class="fab fa-discord"></i> Join Discord</a>
 </div>
 <script>document.getElementById('hamburger').addEventListener('click',function(){this.classList.toggle('active');document.getElementById('mobileMenu').classList.toggle('active');});</script>
+<?php include __DIR__ . '/email-popup.php'; ?>

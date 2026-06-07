@@ -51,8 +51,8 @@ h1{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#fff;text-align:cent
 .tier-meta h2{font-family:'Orbitron',sans-serif;font-size:1.2rem;color:#fff;margin-bottom:0.2rem}
 .tier-meta .tagline{font-family:'Rajdhani',sans-serif;font-size:0.95rem;font-weight:600;margin-bottom:0.3rem}
 .observer .tagline{color:#808080}.theorist .tagline{color:#4169E1}.architect .tagline{color:#9932CC}.pioneer .tagline{color:#FFD700}.benefactor .tagline{color:#00FF88}
-.tier-meta .credits{font-size:0.8rem;color:#666}
-.tier-toggle{color:#555;font-size:1.2rem;transition:transform 0.3s}
+.tier-meta .credits{font-size:0.8rem;color:#888}
+.tier-toggle{color:#888;font-size:1.2rem;transition:transform 0.3s}
 .tier-card.open .tier-toggle{transform:rotate(180deg)}
 .tier-body{max-height:0;overflow:hidden;transition:max-height 0.5s ease}
 .tier-card.open .tier-body{max-height:2000px}
@@ -80,8 +80,8 @@ h1{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#fff;text-align:cent
 .rubric-item{text-align:center;padding:1rem 0.75rem;border-radius:8px;border:1px solid #222;background:rgba(0,0,0,0.2)}
 .rubric-item .label{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.85rem;margin-bottom:0.3rem}
 .rubric-item .pts{font-family:'Orbitron',sans-serif;font-size:1.1rem;margin-bottom:0.3rem}
-.rubric-item p{font-size:0.75rem;color:#666;line-height:1.4}
-.r-inadequate{border-color:#444}.r-inadequate .label{color:#666}.r-inadequate .pts{color:#666}
+.rubric-item p{font-size:0.75rem;color:#888;line-height:1.4}
+.r-inadequate{border-color:#444}.r-inadequate .label{color:#888}.r-inadequate .pts{color:#888}
 .r-adequate{border-color:#4169E1}.r-adequate .label{color:#4169E1}.r-adequate .pts{color:#4169E1}
 .r-strong{border-color:#9932CC}.r-strong .label{color:#9932CC}.r-strong .pts{color:#9932CC}
 .r-exceptional{border-color:#FFD700}.r-exceptional .label{color:#FFD700}.r-exceptional .pts{color:#FFD700}

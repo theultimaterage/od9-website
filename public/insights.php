@@ -106,7 +106,7 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,4.5vw,2.4rem);font-w
 .posts{display:grid;gap:1rem}
 .post{background:var(--dd);border:1px solid #222;border-radius:10px;padding:1.5rem 1.5rem;transition:border-color 0.2s,transform 0.2s}
 .post:hover{border-color:var(--b);transform:translateY(-2px)}
-.post-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;color:#666;font-size:0.8rem}
+.post-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;color:#888;font-size:0.8rem}
 .post-meta .date{font-family:'Orbitron',sans-serif;letter-spacing:1px;text-transform:uppercase}
 .post-meta .source{color:var(--b);font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:1.5px}
 .post h2{font-family:'Orbitron',sans-serif;font-size:1.15rem;color:#fff;margin-bottom:0.65rem;line-height:1.35;letter-spacing:0.5px}
@@ -123,7 +123,7 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,4.5vw,2.4rem);font-w
 .btn{display:inline-block;padding:0.85rem 1.75rem;background:linear-gradient(135deg,var(--b),var(--eb));color:var(--d);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border-radius:6px;font-size:0.9rem;box-shadow:var(--g)}
 .btn:hover{transform:translateY(-2px)}
 .bottom-links{text-align:center;margin-top:2rem}
-.bottom-links a{color:#666;text-decoration:none;font-size:0.85rem;margin:0 0.75rem}
+.bottom-links a{color:#888;text-decoration:none;font-size:0.85rem;margin:0 0.75rem}
 .bottom-links a:hover{color:var(--b)}
 </style>
 </head>

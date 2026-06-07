@@ -30,6 +30,17 @@ $configPath = __DIR__ . '/../config/database.php';
 if (!file_exists($configPath)) $configPath = __DIR__ . '/config/database.php';
 require_once $configPath;
 
+// Unified mailer — Brevo SMTP on prod, Mailtrap sandbox on local. Resolves
+// whether includes/ sits beside this file (prod public_html) or one up (repo).
+$_mailLib = __DIR__ . '/includes/mail.php';
+if (!file_exists($_mailLib)) $_mailLib = __DIR__ . '/../includes/mail.php';
+require_once $_mailLib;
+
+// Shared branded email chrome (same beside-or-up resolution as the mailer).
+$_layoutLib = __DIR__ . '/includes/email_layout.php';
+if (!file_exists($_layoutLib)) $_layoutLib = __DIR__ . '/../includes/email_layout.php';
+require_once $_layoutLib;
+
 header('Content-Type: application/json; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -205,52 +216,25 @@ function sendVerificationEmail(string $email, string $firstName, string $token):
 
     $subject = 'Confirm your OD9 subscription';
 
-    $html = <<<HTML
-<?php
-$page_title = 'Confirm your OD9 subscription';
-$page_description = '';
-$page_slug = 'subscribe.php';
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<?php include __DIR__ . '/includes/head.php'; ?>
-<style>
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-         line-height: 1.6; color: #1a1a1a; background: #fafafa; margin: 0; padding: 0; }
-  .wrap { max-width: 560px; margin: 0 auto; padding: 32px 20px; background: #ffffff; }
-  h1 { color: #00BFFF; font-size: 22px; margin-bottom: 16px; }
-  .btn { display: inline-block; padding: 14px 28px; background: #00BFFF; color: #0D0D0D !important;
-         text-decoration: none; border-radius: 4px; font-weight: 700; letter-spacing: 1px;
-         text-transform: uppercase; margin: 16px 0; }
-  .small { font-size: 12px; color: #888; word-break: break-all; }
-  .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #e5e5e5;
-            font-size: 12px; color: #888; }
-</style>
-</head>
-<body>
-<div class="wrap">
-<h1>One more step, {$safeName}</h1>
-<p>Click the button below to confirm you actually want OD9 weekly emails. Without this confirmation, we won't send you anything (no spam, ever).</p>
-<p><a class="btn" href="{$safeUrl}">Confirm subscription</a></p>
-<p class="small">Or paste this link in your browser: <a href="{$safeUrl}">{$safeUrl}</a></p>
-<p>If you didn't sign up, just ignore this email - you'll never hear from us again.</p>
-<div class="footer">
-OD9 LLC, Auburn-Gresham, Chicago.<br>
-<a href="https://offda9.com">offda9.com</a>
-</div>
-</div>
-</body>
-</html>
-HTML;
+    $inner = '<div style="font-family:\'Rajdhani\',Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:.26em;color:#00BFFF;text-transform:uppercase;">Account Activation</div>'
+        . '<h1 style="font-family:\'Orbitron\',\'Arial Black\',Arial,sans-serif;font-weight:700;font-size:27px;line-height:1.18;letter-spacing:.01em;color:#FFFFFF;text-transform:uppercase;margin:13px 0 18px;">Confirm your email</h1>'
+        . '<p style="font-family:\'Rajdhani\',Arial,sans-serif;font-size:16px;font-weight:500;line-height:1.62;color:#C0C0C0;margin:0 0 26px;">One more step, ' . $safeName . '. Confirm this address to activate your OD9 subscription and start receiving transmissions from the movement &mdash; the climb up the Kardashev scale through STEAM.</p>'
+        . od9_email_button('Confirm Subscription', $verifyUrl)
+        . '<p style="font-family:\'Rajdhani\',Arial,sans-serif;font-size:13px;font-weight:500;line-height:1.6;color:#888888;margin:24px 0 0;">This link expires in 24 hours. If the button doesn&rsquo;t work, paste this into your browser:<br><span style="color:#999999;word-break:break-all;">' . $safeUrl . '</span></p>'
+        . '<p style="font-family:\'Rajdhani\',Arial,sans-serif;font-size:13px;font-weight:500;line-height:1.6;color:#888888;margin:14px 0 0;">Didn&rsquo;t sign up? Ignore this email &mdash; nothing happens without your tap.</p>';
 
-    $headers = [
-        'MIME-Version: 1.0',
-        'Content-Type: text/html; charset=utf-8',
-        'From: The OD9 Movement <noreply@offda9.com>',
-        'Reply-To: contact@offda9.com',
-        'X-Mailer: OD9-Subscribe/1.0',
-    ];
+    $html = od9_email_layout($inner, [
+        'title'           => $subject,
+        'preheader'       => 'One tap to confirm your OD9 subscription.',
+        'unsubscribe_url' => 'https://offda9.com/unsubscribe.php?email=' . rawurlencode($email),
+    ]);
 
-    return @mail($email, $subject, $html, implode("\r\n", $headers), '-f noreply@offda9.com');
+    $unsub = '<https://offda9.com/unsubscribe.php?email=' . rawurlencode($email)
+           . '>, <mailto:contact@offda9.com?subject=unsubscribe>';
+    return od9_send_mail($email, $subject, $html, [
+        'from_email'       => 'noreply@offda9.com',
+        'from_name'        => 'The OD9 Movement',
+        'reply_to'         => 'contact@offda9.com',
+        'list_unsubscribe' => $unsub,
+    ]);
 }

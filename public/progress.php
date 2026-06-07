@@ -104,7 +104,7 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,5vw,2.6rem);font-wei
 .card-num{font-family:'Orbitron',sans-serif;font-size:2.4rem;font-weight:800;color:var(--b);line-height:1.05}
 .card.gold .card-num{color:var(--gold)}
 .card.rose .card-num{color:var(--rg)}
-.card-label{font-size:0.75rem;color:#666;text-transform:uppercase;letter-spacing:1.5px;margin-top:0.4rem}
+.card-label{font-size:0.75rem;color:#888;text-transform:uppercase;letter-spacing:1.5px;margin-top:0.4rem}
 .card-sub{font-size:0.85rem;color:#999;margin-top:0.5rem;line-height:1.4}
 .mrr-section{background:var(--dd);border:1px solid #222;border-radius:12px;padding:2rem 1.5rem;margin-bottom:2.5rem;position:relative;overflow:hidden}
 .mrr-section::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--b),var(--gold))}
@@ -120,10 +120,10 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,5vw,2.6rem);font-wei
 .btn-primary:hover{transform:translateY(-2px)}
 .btn-secondary{background:transparent;color:var(--b);border:1px solid var(--b)}
 .btn-secondary:hover{background:rgba(0,191,255,0.1)}
-.note{text-align:center;color:#555;font-size:0.8rem;margin-top:2rem;font-family:'Orbitron',sans-serif;letter-spacing:1px}
+.note{text-align:center;color:#888;font-size:0.8rem;margin-top:2rem;font-family:'Orbitron',sans-serif;letter-spacing:1px}
 .note a{color:var(--b);text-decoration:none}
 .bottom-links{text-align:center;margin-top:2rem}
-.bottom-links a{color:#666;text-decoration:none;font-size:0.85rem;margin:0 0.75rem}
+.bottom-links a{color:#888;text-decoration:none;font-size:0.85rem;margin:0 0.75rem}
 .bottom-links a:hover{color:var(--b)}
 @media(max-width:600px){h1{letter-spacing:1.5px}.mrr-section{padding:1.5rem 1.25rem}}
 </style>

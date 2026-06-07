@@ -35,3 +35,7 @@ dashboard/includes/config.php
 *.bak-*
 *.orig
 *~
+
+# Python build artifacts (tools/ has helper scripts).
+__pycache__/
+*.pyc

@@ -31,6 +31,17 @@ if (php_sapi_name() !== 'cli') {
 
 require_once __DIR__ . '/../../config/database.php';
 
+// Unified mailer — Brevo SMTP (port 2525) on prod, Mailtrap sandbox locally.
+// Replaces the old raw mail()/exim path so drip mail is Brevo-DKIM-signed.
+$_mailLib = __DIR__ . '/../../includes/mail.php';
+if (!file_exists($_mailLib)) $_mailLib = __DIR__ . '/../../../includes/mail.php';
+require_once $_mailLib;
+
+// Shared branded email chrome — wraps each drip template fragment.
+$_layoutLib = __DIR__ . '/../../includes/email_layout.php';
+if (!file_exists($_layoutLib)) $_layoutLib = __DIR__ . '/../../../includes/email_layout.php';
+require_once $_layoutLib;
+
 const FROM_EMAIL = 'noreply@offda9.com';
 const FROM_NAME  = 'The OD9 Movement';
 const REPLY_TO   = 'contact@offda9.com';
@@ -41,12 +52,14 @@ $pdo = getDatabaseConnection();
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $rows = $pdo->query(
-    "SELECT enrollment_id, discord_user_id, email, sequence_name, current_step
-     FROM od9_drip_enrollments
-     WHERE status = 'active'
-       AND next_send_at IS NOT NULL
-       AND next_send_at <= NOW()
-     ORDER BY next_send_at ASC
+    "SELECT en.enrollment_id, en.discord_user_id, en.email, en.sequence_name, en.current_step,
+            es.first_name
+     FROM od9_drip_enrollments en
+     LEFT JOIN email_signups es ON es.email = en.email
+     WHERE en.status = 'active'
+       AND en.next_send_at IS NOT NULL
+       AND en.next_send_at <= NOW()
+     ORDER BY en.next_send_at ASC
      LIMIT " . MAX_PER_RUN
 )->fetchAll(PDO::FETCH_ASSOC);
 
@@ -93,24 +106,21 @@ foreach ($rows as $en) {
             echo "  enrollment $enrId: FAIL - template not found ({$step['template_name']}.html)\n";
             continue;
         }
-        $html = personalize(file_get_contents($templatePath), $en);
+        // Each template is now an inner-content fragment; the shared layout
+        // supplies the head/logo/footer. personalize() then resolves tokens in
+        // both the fragment and the layout footer ({{username}}, {{EMAIL}}, ...).
+        $fragment = file_get_contents($templatePath);
+        $html = personalize(od9_email_layout($fragment, ['title' => $step['subject']]), $en);
 
-        // Send
-        $headers = [
-            'MIME-Version: 1.0',
-            'Content-Type: text/html; charset=utf-8',
-            'From: ' . FROM_NAME . ' <' . FROM_EMAIL . '>',
-            'Reply-To: ' . REPLY_TO,
-            'List-Unsubscribe: <https://offda9.com/unsubscribe.php?email=' . urlencode($en['email']) . '>',
-            'List-Unsubscribe-Post: List-Unsubscribe=One-Click',
-            'X-Mailer: OD9-Drip-Sender/1.0',
-            'Message-ID: <' . uniqid('od9-drip-', true) . '@offda9.com>',
-        ];
-        $ok = @mail(
-            $en['email'], $step['subject'], $html,
-            implode("\r\n", $headers),
-            '-f ' . FROM_EMAIL
-        );
+        // Send via the unified Brevo-signed mailer.
+        $unsub = '<https://offda9.com/unsubscribe.php?email=' . rawurlencode($en['email'])
+               . '>, <mailto:contact@offda9.com?subject=unsubscribe>';
+        $ok = od9_send_mail($en['email'], $step['subject'], $html, [
+            'from_email'       => FROM_EMAIL,
+            'from_name'        => FROM_NAME,
+            'reply_to'         => REPLY_TO,
+            'list_unsubscribe' => $unsub,
+        ]);
 
         if ($ok) {
             logSendAttempt($pdo, $en, $step, 'sent', null);
@@ -156,7 +166,10 @@ echo "[drip_sender] done: sent=$sent failed=$failed completed=$completed\n";
 // ============================================================
 
 function personalize(string $html, array $en): string {
-    $name = ucfirst(strtok($en['email'], '@')); // first-pass fallback if we don't know the name
+    // Greet by real first name (from email_signups via the sender's JOIN), with a
+    // friendly fallback — NEVER the email-prefix, which reads robotic/spammy.
+    $first = trim((string)($en['first_name'] ?? ''));
+    $name = $first !== '' ? $first : 'Friend';
     $unsubUrl = 'https://offda9.com/unsubscribe.php?email=' . urlencode($en['email']);
     return str_replace(
         ['{{username}}', '{{first_name}}', '{{FIRST_NAME}}', '{{NAME}}', '{{email}}', '{{EMAIL}}', '{{unsubscribe_url}}', '{{UNSUBSCRIBE_URL}}'],

@@ -8,7 +8,7 @@
 require_once __DIR__ . '/bootstrap.php';
 
 $discordId = $_GET['id'] ?? null;
-$guildId = OD9_GUILD_ID ?? '1309609816934559785';
+$guildId = OD9_GUILD_ID ?? '1146833684952006769';
 
 if (!$discordId || !preg_match('/^\d{17,19}$/', $discordId)) {
     apiError('Invalid or missing Discord ID', 400);

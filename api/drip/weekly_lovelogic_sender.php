@@ -23,6 +23,18 @@ if (php_sapi_name() !== 'cli') {
     die("CLI only.\n");
 }
 
+// Unified mailer — Brevo SMTP (port 2525) on prod, Mailtrap sandbox locally.
+// Replaces the old raw mail()/exim path so the weekly broadcast is
+// Brevo-DKIM-signed (was going out unsigned via GoDaddy → spam).
+$_mailLib = __DIR__ . '/../../includes/mail.php';
+if (!file_exists($_mailLib)) $_mailLib = __DIR__ . '/../../../includes/mail.php';
+require_once $_mailLib;
+
+// Shared branded email chrome (single source of truth for header/footer/logo).
+$_layoutLib = __DIR__ . '/../../includes/email_layout.php';
+if (!file_exists($_layoutLib)) $_layoutLib = __DIR__ . '/../../../includes/email_layout.php';
+require_once $_layoutLib;
+
 // ---- Config ----
 const LAUNCH_DATE = '2026-04-14';   // Monday week-1 send date per _EMAIL_CAMPAIGN_SUMMARY.md
 const TOTAL_WEEKS = 33;
@@ -69,7 +81,12 @@ echo "[broadcast] week=$week template=" . basename($templateFile) . "\n";
 $raw = file_get_contents($templateFile);
 [$meta, $body] = parseTemplate($raw);
 $subject = $meta['Subject'] ?? "OD9 Weekly: Week $week";
-$html    = wrapEmailHtml(mdToHtml($body), $subject, $week);
+$html    = od9_email_layout(mdToHtml($body), [
+    'title'           => $subject,
+    'preheader'       => $meta['Preheader'] ?? $subject,
+    'transmission'    => sprintf('%02d / %d', $week, TOTAL_WEEKS),
+    'unsubscribe_url' => 'https://offda9.com/unsubscribe.php?email={{EMAIL}}',
+]);
 
 // ---- Recipients ----
 $pdo = null;
@@ -104,23 +121,16 @@ foreach ($recipients as $r) {
         continue;
     }
     $personalized = personalize($html, $r);
-    $headers = [
-        'MIME-Version: 1.0',
-        'Content-Type: text/html; charset=utf-8',
-        'From: ' . FROM_NAME . ' <' . FROM_EMAIL . '>',
-        'Reply-To: ' . REPLY_TO,
-        'List-Unsubscribe: <https://offda9.com/unsubscribe.php?email=' . urlencode($r['email']) . '>',
-        'List-Unsubscribe-Post: List-Unsubscribe=One-Click',
-        'X-Mailer: OD9-Weekly-Broadcast/1.0',
-        'Message-ID: <' . uniqid('od9-', true) . '@offda9.com>',
-    ];
-    // -f sets the envelope-from so Return-Path aligns with the From: header
-    // domain (offda9.com), keeping SPF + DKIM + DMARC happy at recipients.
-    $ok = @mail(
-        $r['email'], $subject, $personalized,
-        implode("\r\n", $headers),
-        '-f ' . FROM_EMAIL
-    );
+    // Send via the unified Brevo-signed mailer (Brevo sets Return-Path +
+    // DKIM-signs, keeping SPF/DKIM/DMARC aligned at recipients).
+    $unsub = '<https://offda9.com/unsubscribe.php?email=' . rawurlencode($r['email'])
+           . '>, <mailto:contact@offda9.com?subject=unsubscribe>';
+    $ok = od9_send_mail($r['email'], $subject, $personalized, [
+        'from_email'       => FROM_EMAIL,
+        'from_name'        => FROM_NAME,
+        'reply_to'         => REPLY_TO,
+        'list_unsubscribe' => $unsub,
+    ]);
     if ($ok) {
         $sent++;
         if (!$testEmail) logSend($pdo, $r['email'], $subject, $campaign, 'sent', null);
@@ -198,49 +208,6 @@ function mdToHtml(string $md): string {
         return '<p>' . str_replace("\n", '<br>', $b) . '</p>';
     }, $blocks);
     return implode("\n\n", array_filter($blocks));
-}
-
-function wrapEmailHtml(string $bodyHtml, string $subject, int $week): string {
-    $safeSubject = htmlspecialchars($subject, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-    return <<<HTML
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{$safeSubject}</title>
-<style>
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-         line-height: 1.6; color: #1a1a1a; background: #fafafa; margin: 0; padding: 0; }
-  .wrap { max-width: 640px; margin: 0 auto; padding: 32px 20px; background: #ffffff; }
-  h1, h2, h3 { color: #00BFFF; line-height: 1.25; }
-  h1 { font-size: 24px; }
-  h2 { font-size: 20px; margin-top: 32px; }
-  h3 { font-size: 16px; }
-  a { color: #00BFFF; text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  hr { border: 0; border-top: 1px solid #e5e5e5; margin: 24px 0; }
-  code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 90%; }
-  ul { padding-left: 24px; }
-  blockquote { border-left: 3px solid #00BFFF; padding: 8px 16px; margin: 16px 0;
-               background: #f7fbff; color: #1a1a1a; font-style: italic; }
-  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid #e5e5e5;
-            font-size: 12px; color: #888; }
-  .footer a { color: #888; }
-</style>
-</head>
-<body>
-<div class="wrap">
-{$bodyHtml}
-<div class="footer">
-You're receiving this because you signed up for OD9 weekly emails at <a href="https://offda9.com">offda9.com</a>.<br>
-<a href="https://offda9.com/unsubscribe.php?email={{EMAIL}}">Unsubscribe</a>
-&nbsp;&middot;&nbsp; Week {$week} of 33 &nbsp;&middot;&nbsp; OD9 LLC, Auburn-Gresham, Chicago
-</div>
-</div>
-</body>
-</html>
-HTML;
 }
 
 function personalize(string $html, array $r): string {
