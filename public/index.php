@@ -413,9 +413,9 @@ body{background:var(--carbon);background-image:linear-gradient(45deg,#111 25%,tr
     margin-bottom: 1rem;
 }
 
-.tier-card.observer .tier-icon { color: #808080; }
-.tier-card.theorist .tier-icon { color: #4169E1; }
-.tier-card.architect .tier-icon { color: #9932CC; }
+.tier-card.observer .tier-icon { color: #949494; }
+.tier-card.theorist .tier-icon { color: #6b8ff5; }
+.tier-card.architect .tier-icon { color: #bb6be8; }
 .tier-card.pioneer .tier-icon { color: #FFD700; }
 .tier-card.benefactor .tier-icon { color: #E74C3C; }
 

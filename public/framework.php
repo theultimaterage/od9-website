@@ -37,7 +37,7 @@ h1{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#fff;text-align:cent
 .section.problem h2{color:#FF4444}
 .section.approach h2{color:#00FF88}
 .section.why h2{color:#FFD700}
-.section.action h2{color:#9932CC}
+.section.action h2{color:#bb6be8}
 .section p{line-height:1.9;margin-bottom:1rem;color:#bbb}
 .section p strong{color:#fff}
 .section ul{padding-left:0;margin:1rem 0;list-style:none}
@@ -55,12 +55,12 @@ h1{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#fff;text-align:cent
 
 .tier-flow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0.5rem;margin:1rem 0;font-family:'Rajdhani',sans-serif;font-weight:600}
 .tier-flow span{padding:0.5rem 1rem;border-radius:4px;font-size:0.95rem}
-.tier-flow .observer{background:rgba(128,128,128,0.2);color:#808080}
-.tier-flow .theorist{background:rgba(65,105,225,0.2);color:#4169E1}
-.tier-flow .architect{background:rgba(153,50,204,0.2);color:#9932CC}
+.tier-flow .observer{background:rgba(128,128,128,0.2);color:#949494}
+.tier-flow .theorist{background:rgba(65,105,225,0.2);color:#6b8ff5}
+.tier-flow .architect{background:rgba(153,50,204,0.2);color:#bb6be8}
 .tier-flow .pioneer{background:rgba(255,215,0,0.2);color:#FFD700}
 .tier-flow .benefactor{background:rgba(0,255,136,0.2);color:#00FF88}
-.tier-flow .arrow{color:#444;font-size:1.2rem}
+.tier-flow .arrow{color:#949494;font-size:1.2rem}
 
 .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0}
 .compare-box{padding:1.25rem;border-radius:8px}
@@ -73,7 +73,7 @@ h1{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#fff;text-align:cent
 
 .action-steps{counter-reset:step}
 .action-step{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1rem;padding:1rem;background:rgba(153,50,204,0.1);border-radius:8px}
-.action-step::before{counter-increment:step;content:counter(step);font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:700;color:#9932CC;min-width:2rem}
+.action-step::before{counter-increment:step;content:counter(step);font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:700;color:#bb6be8;min-width:2rem}
 .action-step p{margin:0}
 .action-step strong{color:#fff}
 
@@ -214,7 +214,7 @@ h1{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#fff;text-align:cent
 <p><strong>Contribute to research</strong> &rarr; Help discover what mechanisms actually solve coordination problems</p>
 </div>
 <div class="action-step">
-<p><strong>Support the mission</strong> &rarr; <a href="support.php" style="color:#9932CC">Donate</a> to help fund the infrastructure we need to build</p>
+<p><strong>Support the mission</strong> &rarr; <a href="support.php" style="color:#bb6be8">Donate</a> to help fund the infrastructure we need to build</p>
 </div>
 </div>
 </div>

@@ -50,7 +50,7 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
 .submit-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
 
 .form-msg{display:none;margin-top:0.75rem;font-size:0.9rem;text-align:center;line-height:1.5}
-.privacy{text-align:center;color:#444;font-size:0.75rem;margin-top:1rem}
+.privacy{text-align:center;color:#949494;font-size:0.75rem;margin-top:1rem}
 
 .source-strip{text-align:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid #1a1a1a}
 .source-strip p{color:#888;font-size:0.8rem;line-height:1.6;max-width:500px;margin:0 auto}

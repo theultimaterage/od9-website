@@ -22,10 +22,10 @@
 .footer-socials a:hover{color:#00BFFF;transform:translateY(-2px);text-shadow:0 0 10px rgba(0,191,255,0.5)}
 .footer-divider{border:none;border-top:1px solid #1a1a1a;margin:0 0 1.5rem}
 .footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
-.footer-copy{color:#444;font-size:0.8rem}
+.footer-copy{color:#949494;font-size:0.8rem}
 .footer-copy a{color:#888;text-decoration:none}
 .footer-copy a:hover{color:#00BFFF}
-.footer-tagline{color:#333;font-size:0.75rem;font-family:'Orbitron',sans-serif;letter-spacing:2px;text-transform:uppercase}
+.footer-tagline{color:#949494;font-size:0.75rem;font-family:'Orbitron',sans-serif;letter-spacing:2px;text-transform:uppercase}
 @media(max-width:768px){
 .footer-grid{grid-template-columns:1fr;gap:2rem;text-align:center}
 .footer-col h4::after{left:50%;transform:translateX(-50%)}

@@ -152,13 +152,13 @@ body{background:var(--d);background-image:linear-gradient(45deg,#111 25%,transpa
 <img width="1439" height="1888" src="images/payment/cashapp-qr.jpg" alt="Cash App QR Code">
 </div>
 <div class="card qr-card">
-<i class="fab fa-paypal" style="color:#003087"></i>
+<i class="fab fa-paypal" style="color:#009cde"></i>
 <h3>PayPal</h3>
 <p>@TheUltimateRage</p>
 <img width="1439" height="1946" src="images/payment/paypal-qr.jpg" alt="PayPal QR Code">
 </div>
 <div class="card qr-card">
-<i class="fas fa-bolt" style="color:#6D1ED4"></i>
+<i class="fas fa-bolt" style="color:#9b6cf0"></i>
 <h3>Zelle</h3>
 <p>Scan to support directly</p>
 <img width="1439" height="1454" src="images/payment/zelle-qr.jpg" alt="Zelle QR Code">
