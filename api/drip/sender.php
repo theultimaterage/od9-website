@@ -37,6 +37,11 @@ $_mailLib = __DIR__ . '/../../includes/mail.php';
 if (!file_exists($_mailLib)) $_mailLib = __DIR__ . '/../../../includes/mail.php';
 require_once $_mailLib;
 
+// Shared branded email chrome — wraps each drip template fragment.
+$_layoutLib = __DIR__ . '/../../includes/email_layout.php';
+if (!file_exists($_layoutLib)) $_layoutLib = __DIR__ . '/../../../includes/email_layout.php';
+require_once $_layoutLib;
+
 const FROM_EMAIL = 'noreply@offda9.com';
 const FROM_NAME  = 'The OD9 Movement';
 const REPLY_TO   = 'contact@offda9.com';
@@ -101,7 +106,11 @@ foreach ($rows as $en) {
             echo "  enrollment $enrId: FAIL - template not found ({$step['template_name']}.html)\n";
             continue;
         }
-        $html = personalize(file_get_contents($templatePath), $en);
+        // Each template is now an inner-content fragment; the shared layout
+        // supplies the head/logo/footer. personalize() then resolves tokens in
+        // both the fragment and the layout footer ({{username}}, {{EMAIL}}, ...).
+        $fragment = file_get_contents($templatePath);
+        $html = personalize(od9_email_layout($fragment, ['title' => $step['subject']]), $en);
 
         // Send via the unified Brevo-signed mailer.
         $unsub = '<https://offda9.com/unsubscribe.php?email=' . rawurlencode($en['email'])
