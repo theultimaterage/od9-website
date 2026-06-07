@@ -80,7 +80,7 @@
 
 <hr class="footer-divider">
 <div class="footer-bottom">
-<span class="footer-copy">&copy; <?= date('Y') ?> OD9 LLC. All rights reserved. | <a href="contact.php">contact@offda9.com</a></span>
+<span class="footer-copy">&copy; <?= date('Y') ?> Off Da 9 Ent. LLC. All rights reserved. | <a href="contact.php">contact@offda9.com</a></span>
 <span class="footer-tagline">85 Seconds to Midnight</span>
 </div>
 
