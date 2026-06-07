@@ -45,8 +45,9 @@ $h = static fn(string $s): string => htmlspecialchars($s, ENT_QUOTES);
 <link rel="icon" type="image/png" href="<?= $_bp ?>/images/logos/od9-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<!-- Self-hosted Font Awesome subset (only the ~85 icons the site uses, ~14 KB
+     vs ~342 KB from the cdnjs kit). Regenerate via tools/build_fa_subset.py. -->
+<link rel="stylesheet" href="<?= $_bp ?>/css/od9-fa.css">
 <link rel="stylesheet" href="<?= $_bp ?>/css/od9.css">
 <?php include __DIR__ . '/seo_schema.php'; // Organization + WebSite JSON-LD (after page meta) ?>
