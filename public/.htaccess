@@ -1,6 +1,20 @@
 # OD9 Public Directory Rewrites
 RewriteEngine On
 
+# Transparent WebP: if the browser advertises image/webp AND a same-named
+# .webp twin exists on disk, serve it in place of the .jpg/.png. The HTML
+# keeps requesting the original URL, so there are zero markup changes and
+# non-supporting clients (and missing twins) fall through to the original.
+RewriteCond %{HTTP_ACCEPT} image/webp
+RewriteCond %{REQUEST_FILENAME} (.+)\.(jpe?g|png)$
+RewriteCond %1\.webp -f
+RewriteRule (.+)\.(jpe?g|png)$ $1.webp [T=image/webp,E=webp:1,L]
+<IfModule mod_headers.c>
+  # Tell caches the response varies on Accept so a webp isn't served to a
+  # non-webp client (or vice-versa) from a shared cache.
+  Header append Vary Accept env=webp
+</IfModule>
+
 # Serve the filesystem-generated sitemap at the conventional /sitemap.xml
 RewriteRule ^sitemap\.xml$ sitemap.php [L]
 
