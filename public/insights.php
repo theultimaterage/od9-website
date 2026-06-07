@@ -130,7 +130,7 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,4.5vw,2.4rem);font-w
 <body>
 <div class="wrap">
   <header>
-    <a href="index.php" class="logo"><img src="images/logos/od9-logo.png" alt="OD9"></a>
+    <a href="index.php" class="logo"><img width="1408" height="768" src="images/logos/od9-logo.png" alt="OD9"></a>
     <p class="tag">Long-form essays</p>
     <h1>OD9 Insights</h1>
     <p class="lede">Essays from <strong style="color:var(--b)">The Ultimate Rage's Substack</strong> on coordination failure, Type I civilization, and the OD9 framework. Updated automatically.</p>

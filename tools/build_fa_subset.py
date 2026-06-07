@@ -1,0 +1,121 @@
+#!/usr/bin/env python3
+"""Regenerate OD9's self-hosted Font Awesome subset.
+
+The site uses ~85 of Font Awesome's ~2000 free icons. Loading the full kit from
+cdnjs costs ~342 KB (73 KB CSS + ~269 KB of woff2 the browser pulls for the
+solid+brands glyphs that render). This builds a subset CSS + two subset woff2
+fonts containing ONLY the icons the site actually references — ~14 KB total —
+and writes them into public/css/ for same-origin loading (no cdnjs round-trip).
+
+Source: Font Awesome Free 6.7.2 (was 6.4.0 on cdnjs; 6.7.2 adds fa-x-twitter,
+which 6.4.0 lacked — that icon was rendering as a blank box on prod). Two icons
+the site referenced are FA *Pro*-only (square-cash-app, chart-radar) and were
+already broken; they're substituted in markup with the free sack-dollar +
+chart-pie, which this subset includes.
+
+Run from the repo root:  python tools/build_fa_subset.py
+Re-run whenever the set of icons used on the site changes (add the new name to
+USED below). Requires fonttools + brotli:  pip install fonttools brotli
+
+Codepoint verification: every USED icon's codepoint is asserted present in one
+of the two subset fonts' cmaps before anything is written — a missing glyph
+fails the build rather than silently shipping a blank icon.
+"""
+from __future__ import annotations
+import re, sys, tempfile, urllib.request, subprocess
+from pathlib import Path
+from fontTools.ttLib import TTFont
+
+FA_VERSION = "6.7.2"
+CDN = f"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/{FA_VERSION}"
+REPO = Path(__file__).resolve().parent.parent
+CSS_OUT = REPO / "public" / "css" / "od9-fa.css"
+FONT_DIR = REPO / "public" / "css" / "fonts"
+
+# Every fa-* icon the site renders. Keep in sync with:
+#   grep -rhoE 'fa-[a-z0-9-]+' public/ --include=*.php --include=*.html
+USED = """
+discord youtube external-link-alt download twitch spotify instagram newspaper
+facebook bolt tasks chevron-down x-twitter star spinner soundcloud lock link
+exclamation-triangle check brain book users trophy rocket patreon lightbulb
+file-pdf eye drafting-compass copy cog chart-line book-open arrow-left virus
+video-slash user-shield user-secret user-check user-astronaut user tools
+sync-alt stream sack-dollar ship shield-alt save project-diagram play-circle
+paypal paper-plane music microscope microphone linkedin-in layer-group landmark
+key info-circle history heart headphones globe gem flask fist-raised facebook-f
+envelope door-open dna crosshairs compass comments coins cogs church chart-pie
+chalkboard-teacher bookmark atom
+""".split()
+
+
+def fetch(url: str, dest: Path) -> None:
+    with urllib.request.urlopen(url, timeout=30) as r:
+        dest.write_bytes(r.read())
+
+
+def main() -> int:
+    with tempfile.TemporaryDirectory() as td:
+        work = Path(td)
+        print(f"[fa] downloading Font Awesome Free {FA_VERSION} ...")
+        fetch(f"{CDN}/css/all.min.css", work / "all.min.css")
+        fetch(f"{CDN}/webfonts/fa-solid-900.woff2", work / "fa-solid-900.woff2")
+        fetch(f"{CDN}/webfonts/fa-brands-400.woff2", work / "fa-brands-400.woff2")
+        css = (work / "all.min.css").read_text(encoding="utf-8", errors="replace")
+
+        # FA 6.5+ stores codepoints in a `--fa` custom property and groups v4/v5
+        # aliases with the canonical name: `.fa-cog,.fa-gear{--fa:"\f013"}`.
+        name_to_cp: dict[str, int] = {}
+        for m in re.finditer(r'((?:\.fa-[a-z0-9-]+,)*\.fa-[a-z0-9-]+)\{[^}]*?--fa:"\\([0-9a-fA-F]+)"', css):
+            cp = int(m.group(2), 16)
+            for nm in re.findall(r'\.fa-([a-z0-9-]+)', m.group(1)):
+                name_to_cp.setdefault(nm, cp)
+
+        missing = [n for n in USED if n not in name_to_cp]
+        if missing:
+            print(f"[fa] ERROR: not in FA {FA_VERSION} Free: {missing}", file=sys.stderr)
+            return 1
+
+        codepoints = sorted({name_to_cp[n] for n in USED})
+        uni = ",".join(f"U+{c:04X}" for c in codepoints)
+        FONT_DIR.mkdir(parents=True, exist_ok=True)
+        for src, out in [("fa-solid-900.woff2", "fa-solid-900.subset.woff2"),
+                         ("fa-brands-400.woff2", "fa-brands-400.subset.woff2")]:
+            subprocess.run([
+                "pyftsubset", str(work / src), f"--unicodes={uni}",
+                "--flavor=woff2", "--layout-features=*",
+                f"--output-file={FONT_DIR / out}",
+            ], check=True)
+
+        # Gate: every used codepoint must land in a subset font's cmap.
+        solid = set(TTFont(FONT_DIR / "fa-solid-900.subset.woff2").getBestCmap())
+        brands = set(TTFont(FONT_DIR / "fa-brands-400.subset.woff2").getBestCmap())
+        orphans = [n for n in USED if name_to_cp[n] not in solid and name_to_cp[n] not in brands]
+        if orphans:
+            print(f"[fa] ERROR: codepoint missing from BOTH subsets: {orphans}", file=sys.stderr)
+            return 1
+
+        lines = [
+            f"/* OD9 Font Awesome Free {FA_VERSION} subset — generated by",
+            "   tools/build_fa_subset.py. Only the icons the site uses. Do not hand-edit. */",
+            '@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:900;font-display:block;src:url(fonts/fa-solid-900.subset.woff2) format("woff2")}',
+            '@font-face{font-family:"Font Awesome 6 Brands";font-style:normal;font-weight:400;font-display:block;src:url(fonts/fa-brands-400.subset.woff2) format("woff2")}',
+            '.fa,.fas,.fa-solid,.fab,.fa-brands{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;display:var(--fa-display,inline-block);font-style:normal;font-variant:normal;line-height:1;text-rendering:auto}',
+            '.fa,.fas,.fa-solid{font-family:"Font Awesome 6 Free";font-weight:900}',
+            '.fab,.fa-brands{font-family:"Font Awesome 6 Brands";font-weight:400}',
+            '.fa-spin{animation:fa-spin 2s linear infinite}@keyframes fa-spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}',
+        ]
+        for n in sorted(USED):
+            lines.append(f'.fa-{n}:before{{content:"\\{name_to_cp[n]:x}"}}')
+        CSS_OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+        total = CSS_OUT.stat().st_size + sum(
+            (FONT_DIR / f).stat().st_size
+            for f in ("fa-solid-900.subset.woff2", "fa-brands-400.subset.woff2"))
+        print(f"[fa] {len(USED)} icons  solid={len(solid)} brands={len(brands)} glyphs")
+        print(f"[fa] wrote {CSS_OUT.relative_to(REPO)} + 2 woff2 = {total // 1024} KB total")
+        print("[fa] OK")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

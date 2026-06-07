@@ -197,7 +197,7 @@ include __DIR__ . '/../includes/nav.php';
     <div class="stats-grid">
         <!-- Dimension Radar -->
         <div class="stat-card">
-            <h2><i class="fas fa-chart-radar"></i> Dimension Scores</h2>
+            <h2><i class="fas fa-chart-pie"></i> Dimension Scores</h2>
             <div class="radar-container">
                 <canvas id="dimensionChart"></canvas>
             </div>

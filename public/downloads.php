@@ -26,13 +26,13 @@ body{background:var(--d);background-image:linear-gradient(45deg,#111 25%,transpa
 <h2>WALLPAPER & LOCKSCREEN</h2>
 <div class="grid">
 <div class="card">
-<img src="images/downloads/od9-wallpaper.png" alt="OD9 Wallpaper - Diamond Chrome Logo">
+<img width="768" height="1376" src="images/downloads/od9-wallpaper.png" alt="OD9 Wallpaper - Diamond Chrome Logo">
 <h3>OD9 WALLPAPER</h3>
 <p>Desktop and phone background. Diamond chrome OD9 logo with blue neon glow on carbon fiber.</p>
 <a href="images/downloads/od9-wallpaper.png" download class="btn"><i class="fas fa-download"></i> Download</a>
 </div>
 <div class="card">
-<img src="images/downloads/od9-lockscreen.png" alt="OD9 Lockscreen">
+<img width="768" height="1376" src="images/downloads/od9-lockscreen.png" alt="OD9 Lockscreen">
 <h3>OD9 LOCKSCREEN</h3>
 <p>Lock screen with the OD9 chrome logo, time display, and OFF DA NINE branding.</p>
 <a href="images/downloads/od9-lockscreen.png" download class="btn"><i class="fas fa-download"></i> Download</a>
@@ -44,17 +44,17 @@ body{background:var(--d);background-image:linear-gradient(45deg,#111 25%,transpa
 <h2>iPHONE WIDGETS</h2>
 <div class="grid">
 <div class="card">
-<img src="images/downloads/od9-iphone-widget-1.png" alt="OD9 iPhone Widget 1">
+<img width="1024" height="1024" src="images/downloads/od9-iphone-widget-1.png" alt="OD9 iPhone Widget 1">
 <h3>iPHONE WIDGET 1</h3>
 <a href="images/downloads/od9-iphone-widget-1.png" download class="btn"><i class="fas fa-download"></i> Download</a>
 </div>
 <div class="card">
-<img src="images/downloads/od9-iphone-widget-2.png" alt="OD9 iPhone Widget 2">
+<img width="1376" height="768" src="images/downloads/od9-iphone-widget-2.png" alt="OD9 iPhone Widget 2">
 <h3>iPHONE WIDGET 2</h3>
 <a href="images/downloads/od9-iphone-widget-2.png" download class="btn"><i class="fas fa-download"></i> Download</a>
 </div>
 <div class="card">
-<img src="images/downloads/od9-iphone-widget-3.png" alt="OD9 iPhone Widget 3">
+<img width="1408" height="768" src="images/downloads/od9-iphone-widget-3.png" alt="OD9 iPhone Widget 3">
 <h3>iPHONE WIDGET 3</h3>
 <a href="images/downloads/od9-iphone-widget-3.png" download class="btn"><i class="fas fa-download"></i> Download</a>
 </div>
@@ -65,22 +65,22 @@ body{background:var(--d);background-image:linear-gradient(45deg,#111 25%,transpa
 <h2>ANDROID WIDGETS</h2>
 <div class="grid">
 <div class="card">
-<img src="images/downloads/od9-android-widget-1.png" alt="OD9 Android Widget 1">
+<img width="1408" height="768" src="images/downloads/od9-android-widget-1.png" alt="OD9 Android Widget 1">
 <h3>ANDROID WIDGET 1</h3>
 <a href="images/downloads/od9-android-widget-1.png" download class="btn"><i class="fas fa-download"></i> Download</a>
 </div>
 <div class="card">
-<img src="images/downloads/od9-android-widget-2.png" alt="OD9 Android Widget 2">
+<img width="1024" height="1024" src="images/downloads/od9-android-widget-2.png" alt="OD9 Android Widget 2">
 <h3>ANDROID WIDGET 2</h3>
 <a href="images/downloads/od9-android-widget-2.png" download class="btn"><i class="fas fa-download"></i> Download</a>
 </div>
 <div class="card">
-<img src="images/downloads/od9-android-widget-3.png" alt="OD9 Android Widget 3">
+<img width="1456" height="720" src="images/downloads/od9-android-widget-3.png" alt="OD9 Android Widget 3">
 <h3>ANDROID WIDGET 3</h3>
 <a href="images/downloads/od9-android-widget-3.png" download class="btn"><i class="fas fa-download"></i> Download</a>
 </div>
 <div class="card">
-<img src="images/downloads/od9-android-widget-4.png" alt="OD9 Android Widget 4">
+<img width="1024" height="1024" src="images/downloads/od9-android-widget-4.png" alt="OD9 Android Widget 4">
 <h3>ANDROID WIDGET 4</h3>
 <a href="images/downloads/od9-android-widget-4.png" download class="btn"><i class="fas fa-download"></i> Download</a>
 </div>

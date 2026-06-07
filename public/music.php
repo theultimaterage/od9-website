@@ -166,7 +166,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.6rem;color:#fff;margin:2.5rem 0
 <!-- Joey P. - Missing In Action (Newest Release - Top) -->
 <div class="featured-release">
 <div class="featured-grid">
-<img src="images/music/joey-p-missing-in-action.jpg" alt="Joey P. - Missing In Action" class="album-cover">
+<img width="588" height="588" src="images/music/joey-p-missing-in-action.jpg" alt="Joey P. - Missing In Action" class="album-cover">
 <div class="album-info">
 <h3>MISSING IN ACTION</h3>
 <p class="artist">Joey P.</p>
@@ -180,7 +180,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.6rem;color:#fff;margin:2.5rem 0
 <!-- The Ultimate Rage - Outrageous EP (Debut) -->
 <div class="release-section">
 <div class="release-grid">
-<img src="images/music/outrageous-ep-cover.png" alt="The Ultimate Rage - Outrageous EP" class="album-cover">
+<img width="3000" height="4000" src="images/music/outrageous-ep-cover.png" alt="The Ultimate Rage - Outrageous EP" class="album-cover">
 <div class="album-info">
 <h3>OUTRAGEOUS EP</h3>
 <p class="artist">The Ultimate Rage</p>
@@ -193,7 +193,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.6rem;color:#fff;margin:2.5rem 0
 <!-- Phuryous Stylez - Discord Exclusive -->
 <div class="exclusive-release">
 <div class="featured-grid">
-<img src="images/music/phuryous-stylez-cover.png" alt="Phuryous Stylez Vol. 1" class="album-cover">
+<img width="1400" height="1400" src="images/music/phuryous-stylez-cover.png" alt="Phuryous Stylez Vol. 1" class="album-cover">
 <div class="album-info">
 <h3>PHURYOUS STYLEZ VOL. 1</h3>
 <p class="artist">The Ultimate Rage</p>
@@ -207,7 +207,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.6rem;color:#fff;margin:2.5rem 0
 <h2>THE ULTIMATE RAGE</h2>
 <div class="artist-section">
 <div class="artist-header">
-<img src="images/crew/rage.png" alt="The Ultimate Rage" class="artist-avatar">
+<img width="945" height="945" src="images/crew/rage.png" alt="The Ultimate Rage" class="artist-avatar">
 <div>
 <div class="artist-name">The Ultimate Rage</div>
 <div class="artist-role">Co-Founder / Artist</div>
@@ -249,7 +249,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.6rem;color:#fff;margin:2.5rem 0
 <h2>JOEY P.</h2>
 <div class="artist-section">
 <div class="artist-header">
-<img src="images/crew/joey-p.jpg" alt="Joey P." class="artist-avatar">
+<img width="1280" height="1280" src="images/crew/joey-p.jpg" alt="Joey P." class="artist-avatar">
 <div>
 <div class="artist-name">Joey P.</div>
 <div class="artist-role">Artist</div>
