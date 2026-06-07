@@ -54,3 +54,4 @@ if (!isset($current_page)) $current_page = '';
 <a href="https://discord.gg/spgmrXVMWq" target="_blank" class="mobile-discord"><i class="fab fa-discord"></i> Join Discord</a>
 </div>
 <script>document.getElementById('hamburger').addEventListener('click',function(){this.classList.toggle('active');document.getElementById('mobileMenu').classList.toggle('active');});</script>
+<?php include __DIR__ . '/email-popup.php'; ?>
