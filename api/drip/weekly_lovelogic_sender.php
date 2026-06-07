@@ -23,6 +23,13 @@ if (php_sapi_name() !== 'cli') {
     die("CLI only.\n");
 }
 
+// Unified mailer — Brevo SMTP (port 2525) on prod, Mailtrap sandbox locally.
+// Replaces the old raw mail()/exim path so the weekly broadcast is
+// Brevo-DKIM-signed (was going out unsigned via GoDaddy → spam).
+$_mailLib = __DIR__ . '/../../includes/mail.php';
+if (!file_exists($_mailLib)) $_mailLib = __DIR__ . '/../../../includes/mail.php';
+require_once $_mailLib;
+
 // ---- Config ----
 const LAUNCH_DATE = '2026-04-14';   // Monday week-1 send date per _EMAIL_CAMPAIGN_SUMMARY.md
 const TOTAL_WEEKS = 33;
@@ -104,23 +111,16 @@ foreach ($recipients as $r) {
         continue;
     }
     $personalized = personalize($html, $r);
-    $headers = [
-        'MIME-Version: 1.0',
-        'Content-Type: text/html; charset=utf-8',
-        'From: ' . FROM_NAME . ' <' . FROM_EMAIL . '>',
-        'Reply-To: ' . REPLY_TO,
-        'List-Unsubscribe: <https://offda9.com/unsubscribe.php?email=' . urlencode($r['email']) . '>',
-        'List-Unsubscribe-Post: List-Unsubscribe=One-Click',
-        'X-Mailer: OD9-Weekly-Broadcast/1.0',
-        'Message-ID: <' . uniqid('od9-', true) . '@offda9.com>',
-    ];
-    // -f sets the envelope-from so Return-Path aligns with the From: header
-    // domain (offda9.com), keeping SPF + DKIM + DMARC happy at recipients.
-    $ok = @mail(
-        $r['email'], $subject, $personalized,
-        implode("\r\n", $headers),
-        '-f ' . FROM_EMAIL
-    );
+    // Send via the unified Brevo-signed mailer (Brevo sets Return-Path +
+    // DKIM-signs, keeping SPF/DKIM/DMARC aligned at recipients).
+    $unsub = '<https://offda9.com/unsubscribe.php?email=' . rawurlencode($r['email'])
+           . '>, <mailto:contact@offda9.com?subject=unsubscribe>';
+    $ok = od9_send_mail($r['email'], $subject, $personalized, [
+        'from_email'       => FROM_EMAIL,
+        'from_name'        => FROM_NAME,
+        'reply_to'         => REPLY_TO,
+        'list_unsubscribe' => $unsub,
+    ]);
     if ($ok) {
         $sent++;
         if (!$testEmail) logSend($pdo, $r['email'], $subject, $campaign, 'sent', null);

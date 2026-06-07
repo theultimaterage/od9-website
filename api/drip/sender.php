@@ -31,6 +31,12 @@ if (php_sapi_name() !== 'cli') {
 
 require_once __DIR__ . '/../../config/database.php';
 
+// Unified mailer — Brevo SMTP (port 2525) on prod, Mailtrap sandbox locally.
+// Replaces the old raw mail()/exim path so drip mail is Brevo-DKIM-signed.
+$_mailLib = __DIR__ . '/../../includes/mail.php';
+if (!file_exists($_mailLib)) $_mailLib = __DIR__ . '/../../../includes/mail.php';
+require_once $_mailLib;
+
 const FROM_EMAIL = 'noreply@offda9.com';
 const FROM_NAME  = 'The OD9 Movement';
 const REPLY_TO   = 'contact@offda9.com';
@@ -95,22 +101,15 @@ foreach ($rows as $en) {
         }
         $html = personalize(file_get_contents($templatePath), $en);
 
-        // Send
-        $headers = [
-            'MIME-Version: 1.0',
-            'Content-Type: text/html; charset=utf-8',
-            'From: ' . FROM_NAME . ' <' . FROM_EMAIL . '>',
-            'Reply-To: ' . REPLY_TO,
-            'List-Unsubscribe: <https://offda9.com/unsubscribe.php?email=' . urlencode($en['email']) . '>',
-            'List-Unsubscribe-Post: List-Unsubscribe=One-Click',
-            'X-Mailer: OD9-Drip-Sender/1.0',
-            'Message-ID: <' . uniqid('od9-drip-', true) . '@offda9.com>',
-        ];
-        $ok = @mail(
-            $en['email'], $step['subject'], $html,
-            implode("\r\n", $headers),
-            '-f ' . FROM_EMAIL
-        );
+        // Send via the unified Brevo-signed mailer.
+        $unsub = '<https://offda9.com/unsubscribe.php?email=' . rawurlencode($en['email'])
+               . '>, <mailto:contact@offda9.com?subject=unsubscribe>';
+        $ok = od9_send_mail($en['email'], $step['subject'], $html, [
+            'from_email'       => FROM_EMAIL,
+            'from_name'        => FROM_NAME,
+            'reply_to'         => REPLY_TO,
+            'list_unsubscribe' => $unsub,
+        ]);
 
         if ($ok) {
             logSendAttempt($pdo, $en, $step, 'sent', null);
