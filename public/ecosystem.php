@@ -24,7 +24,7 @@ $page_og_description = '5 entities, one mission - how OD9, F.R.E.S.H., FTB, Syna
 <style>
 :root{--b:#00BFFF;--eb:#00A0FF;--rg:#B76E79;--gold:#FFD700;--purple:#A55FFF;--green:#00E89A;--orange:#FF8A3D;--d:#0A0A0A;--dd:#111;--c:#C0C0C0;--g:0 0 20px rgba(0,191,255,.45)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-height:100vh;padding:2rem 1rem 4rem;line-height:1.7}
+body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-height:100vh;padding:calc(var(--nav-height) + 1rem) 1rem 4rem;line-height:1.7}
 .wrap{max-width:880px;margin:0 auto}
 header{text-align:center;margin-bottom:3rem}
 .logo{display:inline-block;margin-bottom:1.25rem}
@@ -61,6 +61,7 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,5vw,2.6rem);font-wei
 </style>
 </head>
 <body>
+<?php $current_page = ''; include('includes/nav.php'); ?>
 <div class="wrap">
   <header>
     <a href="index.php" class="logo"><img width="1408" height="768" src="images/logos/od9-logo.png" alt="OD9"></a>
@@ -211,5 +212,6 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,5vw,2.6rem);font-wei
     <a href="https://discord.gg/spgmrXVMWq" target="_blank">Discord</a>
   </div>
 </div>
+<?php include('includes/footer.php'); ?>
 </body>
 </html>

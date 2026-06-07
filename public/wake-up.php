@@ -11,7 +11,7 @@ $page_og_description = 'The systems are failing. The data proves it. Here\'s wha
 <style>
 :root{--b:#00BFFF;--eb:#00A0FF;--d:#0A0A0A;--dd:#111;--c:#C0C0C0;--g:0 0 20px rgba(0,191,255,.45)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-top:calc(var(--nav-height) + 1rem)}
 
 .landing{max-width:680px;margin:0 auto;padding:2rem 1.5rem 3rem;width:100%}
 
@@ -68,7 +68,7 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
 </style>
 </head>
 <body>
-
+<?php $current_page = ''; include('includes/nav.php'); ?>
 <div class="landing">
 
     <div class="logo-row">
@@ -201,5 +201,6 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
     });
 })();
 </script>
+<?php include('includes/footer.php'); ?>
 </body>
 </html>
