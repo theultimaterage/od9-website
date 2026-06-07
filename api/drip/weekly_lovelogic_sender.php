@@ -209,35 +209,47 @@ function wrapEmailHtml(string $bodyHtml, string $subject, int $week): string {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{$safeSubject}</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-         line-height: 1.6; color: #1a1a1a; background: #fafafa; margin: 0; padding: 0; }
-  .wrap { max-width: 640px; margin: 0 auto; padding: 32px 20px; background: #ffffff; }
-  h1, h2, h3 { color: #00BFFF; line-height: 1.25; }
-  h1 { font-size: 24px; }
-  h2 { font-size: 20px; margin-top: 32px; }
-  h3 { font-size: 16px; }
-  a { color: #00BFFF; text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  hr { border: 0; border-top: 1px solid #e5e5e5; margin: 24px 0; }
-  code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 90%; }
-  ul { padding-left: 24px; }
-  blockquote { border-left: 3px solid #00BFFF; padding: 8px 16px; margin: 16px 0;
-               background: #f7fbff; color: #1a1a1a; font-style: italic; }
-  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid #e5e5e5;
-            font-size: 12px; color: #888; }
-  .footer a { color: #888; }
+  /* Rich element styling for the markdown body. Structural bg/text colors are
+     ALSO set inline below, so a client that strips this block still renders
+     light-on-dark (never light-on-white). */
+  body { margin:0; padding:0; background:#0D0D0D;
+         font-family:'Rajdhani',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+         color:#CCCCCC; line-height:1.6; }
+  .body h1,.body h2,.body h3 { font-family:'Orbitron','Segoe UI',sans-serif; line-height:1.25; }
+  .body h1 { font-size:24px; color:#00BFFF; }
+  .body h2 { font-size:20px; margin-top:32px; color:#00BFFF; }
+  .body h3 { font-size:16px; color:#FFFFFF; }
+  .body a { color:#00BFFF; text-decoration:none; }
+  .body strong { color:#FFFFFF; }
+  .body hr { border:0; border-top:1px solid #333; margin:24px 0; }
+  .body code { background:#0D0D0D; color:#00BFFF; padding:2px 6px; border-radius:3px; font-size:90%; }
+  .body ul { padding-left:24px; }
+  .body blockquote { border-left:3px solid #00BFFF; padding:8px 16px; margin:16px 0;
+                     background:#13202B; color:#E0E0E0; font-style:italic; }
+  .footer a { color:#00BFFF; text-decoration:none; }
 </style>
 </head>
-<body>
-<div class="wrap">
+<body style="margin:0;padding:0;background:#0D0D0D;font-family:'Rajdhani',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0D0D0D;">
+<tr><td align="center" style="padding:40px 20px;">
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="width:640px;max-width:640px;background:#1A1A1A;border:1px solid #00BFFF;border-radius:8px;">
+<tr><td style="padding:24px 30px;text-align:center;border-bottom:2px solid #00BFFF;">
+<h1 style="font-family:'Orbitron','Segoe UI',sans-serif;color:#00BFFF;margin:0;font-size:28px;letter-spacing:2px;">OD9</h1>
+<p style="color:#777;margin:6px 0 0;font-size:13px;">LoveLogic &middot; Week {$week} of 33</p>
+</td></tr>
+<tr><td class="body" style="padding:36px 30px;background:#1A1A1A;color:#CCCCCC;font-size:16px;line-height:1.6;">
 {$bodyHtml}
-<div class="footer">
-You're receiving this because you signed up for OD9 weekly emails at <a href="https://offda9.com">offda9.com</a>.<br>
-<a href="https://offda9.com/unsubscribe.php?email={{EMAIL}}">Unsubscribe</a>
-&nbsp;&middot;&nbsp; Week {$week} of 33 &nbsp;&middot;&nbsp; OD9 LLC, Auburn-Gresham, Chicago
-</div>
-</div>
+</td></tr>
+<tr><td class="footer" style="padding:20px 30px;background:#0D0D0D;border-top:1px solid #333;text-align:center;font-size:12px;color:#666;line-height:1.6;">
+You're receiving this because you signed up for OD9 weekly emails at <a href="https://offda9.com" style="color:#00BFFF;text-decoration:none;">offda9.com</a>.<br>
+<a href="https://offda9.com/unsubscribe.php?email={{EMAIL}}" style="color:#00BFFF;text-decoration:none;">Unsubscribe</a>
+&nbsp;&middot;&nbsp; OD9 LLC, Auburn-Gresham, Chicago
+</td></tr>
+</table>
+</td></tr>
+</table>
 </body>
 </html>
 HTML;

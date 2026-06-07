@@ -217,31 +217,33 @@ function sendVerificationEmail(string $email, string $firstName, string $token):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-         line-height: 1.6; color: #1a1a1a; background: #fafafa; margin: 0; padding: 0; }
-  .wrap { max-width: 560px; margin: 0 auto; padding: 32px 20px; background: #ffffff; }
-  h1 { color: #00BFFF; font-size: 22px; margin-bottom: 16px; }
-  .btn { display: inline-block; padding: 14px 28px; background: #00BFFF; color: #0D0D0D !important;
-         text-decoration: none; border-radius: 4px; font-weight: 700; letter-spacing: 1px;
-         text-transform: uppercase; margin: 16px 0; }
-  .small { font-size: 12px; color: #888; word-break: break-all; }
-  .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #e5e5e5;
-            font-size: 12px; color: #888; }
-</style>
+<title>Confirm your OD9 subscription</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
-<body>
-<div class="wrap">
-<h1>One more step, {$safeName}</h1>
-<p>Click the button below to confirm you actually want OD9 weekly emails. Without this confirmation, we won't send you anything (no spam, ever).</p>
-<p><a class="btn" href="{$safeUrl}">Confirm subscription</a></p>
-<p class="small">Or paste this link in your browser: <a href="{$safeUrl}">{$safeUrl}</a></p>
-<p>If you didn't sign up, just ignore this email - you'll never hear from us again.</p>
-<div class="footer">
-OD9 LLC, Auburn-Gresham, Chicago.<br>
-<a href="https://offda9.com">offda9.com</a>
-</div>
-</div>
+<body style="margin:0;padding:0;background-color:#0D0D0D;font-family:'Rajdhani',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0D0D0D;">
+<tr><td align="center" style="padding:40px 20px;">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;background-color:#1A1A1A;border-radius:8px;border:1px solid #00BFFF;">
+<tr><td style="padding:30px;text-align:center;border-bottom:2px solid #00BFFF;">
+<h1 style="font-family:'Orbitron','Segoe UI',sans-serif;color:#00BFFF;margin:0;font-size:32px;letter-spacing:2px;">OD9</h1>
+<p style="color:#777;margin:10px 0 0;font-size:14px;">Off Da 9 &middot; The Movement</p>
+</td></tr>
+<tr><td style="padding:40px 30px;">
+<h2 style="font-family:'Orbitron','Segoe UI',sans-serif;color:#FFFFFF;margin:0 0 20px;font-size:24px;">One more step, {$safeName}</h2>
+<p style="color:#CCCCCC;font-size:16px;line-height:1.6;margin:0 0 20px;">Click the button below to confirm you actually want OD9 weekly emails. Without this confirmation we won't send you anything &mdash; no spam, ever.</p>
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:28px 0;"><tr>
+<td style="background:linear-gradient(135deg,#00BFFF,#0099CC);border-radius:6px;">
+<a href="{$safeUrl}" style="display:inline-block;padding:14px 32px;font-family:'Orbitron','Segoe UI',sans-serif;color:#0D0D0D;text-decoration:none;font-weight:bold;font-size:14px;letter-spacing:1px;">CONFIRM SUBSCRIPTION</a>
+</td></tr></table>
+<p style="color:#888;font-size:13px;line-height:1.6;word-break:break-all;margin:0 0 20px;">Or paste this link into your browser:<br><a href="{$safeUrl}" style="color:#00BFFF;text-decoration:none;">{$safeUrl}</a></p>
+<p style="color:#888;font-size:14px;line-height:1.6;margin:0;">If you didn't sign up, just ignore this email &mdash; you'll never hear from us again.</p>
+</td></tr>
+<tr><td style="padding:20px 30px;background-color:#0D0D0D;border-top:1px solid #333;text-align:center;">
+<p style="color:#666;font-size:12px;margin:0;line-height:1.6;">OD9 LLC &middot; Auburn-Gresham, Chicago<br><a href="https://offda9.com" style="color:#00BFFF;text-decoration:none;">offda9.com</a></p>
+</td></tr>
+</table>
+</td></tr>
+</table>
 </body>
 </html>
 HTML;
