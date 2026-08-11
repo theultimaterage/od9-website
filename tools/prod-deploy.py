@@ -13,9 +13,20 @@ central justification — "the SSH user (ultimaterage) cannot write offda9's web
 root directly", hence SCP-to-/tmp + sudo install — is also obsolete: this repo
 now connects AS offda9, which owns its writable docroot.
 
-Config is passed explicitly because the old deploy.py still reads the legacy
-tools/prod-deploy-config.json (different schema). The two coexist until
-deploy.py is retired; do NOT rename the v2 file over the legacy one before then.
+deploy.py was retired 2026-08-11 once this path was proven in production. Its
+two extra capabilities were checked before removal, not assumed away:
+  * opcache reset — NOT needed. Prod runs opcache.validate_timestamps=1 with
+    revalidate_freq=2, so deployed changes are picked up within ~2s. Confirmed
+    empirically: faq.php and insights.php served correctly the instant they
+    landed.
+  * Cloudflare cache purge — genuinely lost. Static assets may sit stale at the
+    edge until TTL. Purge by hand if a CSS/JS change must appear immediately;
+    a post_deploy hook in the shared engine is the proper fix.
+
+Config is passed explicitly because the legacy tools/prod-deploy-config.json
+(different schema, gitignored) still exists — it is no longer a deploy config,
+but it holds the Cloudflare zone id + API token used for manual DNS work. Do
+NOT rename the v2 file over it.
 
 Run from the repo root, under WSL (for native rsync/ssh):
   wsl python3 tools/prod-deploy.py --dry     # preview rsync diff, no writes

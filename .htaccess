@@ -1,6 +1,19 @@
 # OD9 Public Directory Rewrites
 RewriteEngine On
 
+# No auto-generated directory listings. Without this Apache indexed every
+# directory lacking an index file — /api/, /api/v1/, /api/drip/, /api/discord/,
+# /includes/, /library/, /email-templates/ and /images/ all served a browsable
+# "Index of" page (found 2026-08-11). That is structure enumeration: it exposes
+# every include and endpoint filename to anyone who asks.
+#
+# It was NOT a content bypass — library/.htaccess already 403s the gated
+# Architect/Pioneer/Benefactor tiers, and that stays the mechanism for gating.
+# This only stops Apache advertising what is on disk.
+#
+# Directories with a real index.php/index.html are unaffected; they keep serving it.
+Options -Indexes
+
 # Transparent WebP: if the browser advertises image/webp AND a same-named
 # .webp twin exists on disk, serve it in place of the .jpg/.png. The HTML
 # keeps requesting the original URL, so there are zero markup changes and
