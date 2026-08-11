@@ -16,8 +16,38 @@ if ($isLocal) {
     ini_set('display_errors', 0);
 }
 
-// Load dashboard config
-require_once dirname(__DIR__, 2) . '/public/dashboard/includes/config.php';
+// Load dashboard config.
+//
+// The old path was dirname(__DIR__, 2) . '/public/dashboard/includes/config.php',
+// a pre-restructure leftover: back when public/ WAS the docroot that resolved
+// correctly, but after public/* moved to the repo root the file lives at
+// dashboard/includes/config.php. On prod the public/ path does not exist, so
+// this require fataled and EVERY api/v1 endpoint returned 500 — which is what
+// /api/v1/me.php was doing. Every other file in the repo already resolved it
+// correctly (see curriculum/view-beacon.php); this was the only straggler.
+//
+// The legacy path is kept as a fallback so the endpoints still work from a
+// checkout that predates the restructure.
+$_od9Config = dirname(__DIR__, 2) . '/dashboard/includes/config.php';
+if (!is_file($_od9Config)) {
+    $_od9Config = dirname(__DIR__, 2) . '/public/dashboard/includes/config.php';
+}
+if (!is_file($_od9Config)) {
+    http_response_code(500);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['error' => true, 'code' => 'CONFIG_MISSING',
+                      'message' => 'API config not found']);
+    exit;
+}
+require_once $_od9Config;
+
+// Constants the endpoints read. config.php defines NEITHER, and in PHP 8 an
+// undefined constant is a fatal Error that `??` does NOT rescue — verified:
+// `UNDEFINED ?? 'x'` throws "Error: Undefined constant". Nine endpoint files
+// write `OD9_GUILD_ID ?? '...'` expecting a graceful fallback, so defining
+// them here once fixes all of them rather than patching nine call sites.
+if (!defined('OD9_GUILD_ID'))    { define('OD9_GUILD_ID', '1146833684952006769'); }
+if (!defined('SESSION_LIFETIME')) { define('SESSION_LIFETIME', 604800); } // 7 days
 
 // CORS headers
 header('Content-Type: application/json; charset=utf-8');
