@@ -1,0 +1,41 @@
+{
+    "schema_version": "1.0",
+    "platform": "F.R.E.S.H.",
+    "platform_url": "https://freshthaplatform.com",
+    "generated_at": "2026-03-24T18:51:32Z",
+    "business": {
+        "name": "OFF DA NINE",
+        "type": [
+            "Organization",
+            "MusicGroup"
+        ],
+        "description": "Advancing Humanity Toward Type I Civilization",
+        "contact": {
+            "booking_url": "https://offda9.com/contact.php"
+        }
+    },
+    "capabilities": {
+        "booking": true,
+        "ticketing": true,
+        "merchandise": true,
+        "music": true,
+        "events": true,
+        "digital_downloads": true,
+        "discord": true,
+        "membership_tiers": true
+    },
+    "protocols": {
+        "schema_org": true,
+        "llms_txt": true,
+        "agent_profile": true,
+        "a2a": true,
+        "ucp": true,
+        "webmcp": true
+    },
+    "links": {
+        "website": "https://offda9.com",
+        "json_ld": "https://offda9.com/#organization",
+        "llms_txt": "https://offda9.com/llms.txt",
+        "api": "https://offda9.com/api/v1/agent/profile"
+    }
+}

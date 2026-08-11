@@ -1,0 +1,127 @@
+{
+  "_comment": "Canonical catalog of OD9 Codex canon lessons. The skill tool .claude/skills/codex-lesson/codex_lesson.py reads this to (a) seed content_library rows and (b) know what lessons exist + their order. Lesson CONTENT lives in scripts/web/curriculum/<tier>/<slug>.php (the $lesson data array on the shared _codex.php renderer). Add lessons via `codex_lesson.py new`, never by hand.",
+  "url_base": "https://offda9.com/curriculum",
+  "content_type": "canon",
+  "category": "canon",
+  "difficulty_by_tier": {
+    "observer": 1,
+    "theorist": 2,
+    "architect": 3,
+    "pioneer": 4,
+    "benefactor": 5
+  },
+  "lessons": [
+    {
+      "slug": "the-creed",
+      "tier": "observer",
+      "title": "The OD9 Creed",
+      "display_order": 12,
+      "credit_value": 10
+    },
+    {
+      "slug": "the-thesean-method",
+      "tier": "observer",
+      "title": "The Thesean Method",
+      "display_order": 14,
+      "credit_value": 10
+    },
+    {
+      "slug": "the-evidence-standard",
+      "tier": "observer",
+      "title": "The Evidence Standard",
+      "display_order": 16,
+      "credit_value": 10
+    },
+    {
+      "slug": "love-as-infrastructure",
+      "tier": "observer",
+      "title": "Love as Infrastructure",
+      "display_order": 18,
+      "credit_value": 10
+    },
+    {
+      "slug": "the-twin-singularities",
+      "tier": "observer",
+      "title": "The Twin Singularities",
+      "display_order": 115,
+      "credit_value": 10
+    },
+    {
+      "slug": "the-system-in-crisis",
+      "tier": "observer",
+      "title": "The System in Crisis",
+      "display_order": 116,
+      "credit_value": 10
+    },
+    {
+      "slug": "responsible-transformation",
+      "tier": "observer",
+      "title": "Responsible Transformation",
+      "display_order": 117,
+      "credit_value": 10
+    },
+    {
+      "slug": "the-solution-framework",
+      "tier": "observer",
+      "title": "The Solution Framework",
+      "display_order": 118,
+      "credit_value": 10
+    },
+    {
+      "slug": "from-vision-to-action",
+      "tier": "observer",
+      "title": "From Vision to Action",
+      "display_order": 119,
+      "credit_value": 10
+    },
+    {
+      "slug": "religious-institutions",
+      "tier": "theorist",
+      "title": "Religious Institutions and Pseudoscience",
+      "display_order": 45,
+      "credit_value": 10
+    },
+    {
+      "slug": "economic-dysfunction",
+      "tier": "theorist",
+      "title": "Economic Dysfunction",
+      "display_order": 55,
+      "credit_value": 10
+    },
+    {
+      "slug": "the-information-crisis",
+      "tier": "theorist",
+      "title": "Media and Information Crisis",
+      "display_order": 65,
+      "credit_value": 10
+    },
+    {
+      "slug": "the-collective-psyche",
+      "tier": "theorist",
+      "title": "Mental Health and Collective Psyche",
+      "display_order": 75,
+      "credit_value": 10
+    },
+    {
+      "slug": "political-corruption",
+      "tier": "theorist",
+      "title": "Political System Corruption",
+      "display_order": 82,
+      "credit_value": 10
+    },
+    {
+      "slug": "scientific-institutions",
+      "tier": "theorist",
+      "title": "Scientific Institution Analysis",
+      "display_order": 84,
+      "credit_value": 10
+    },
+    {
+      "slug": "environmental-degradation",
+      "tier": "theorist",
+      "title": "Environmental Degradation",
+      "display_order": 86,
+      "credit_value": 10
+    }
+  ]
+}

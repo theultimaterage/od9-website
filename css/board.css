@@ -1,0 +1,481 @@
+/* ============================================================
+   OD9 Progression Board — "iced-out world"
+   Web port of the design-system board (design-system/ui_kits/board).
+   Tokens inlined here (the design-system tokens/ aren't deployed to the
+   web); fonts load from Google's CDN — offda9.com isn't CSP-restricted
+   like the Claude Design pane, so no self-host needed here.
+   Used by: dashboard/board.php
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  /* world */
+  --cyan: #00FFF7; --cyan-soft: #00D4FF; --violet: #7A00FF; --violet-soft: #9B5CFF;
+  /* HUD — iced out */
+  --gold: #D4AF37; --gold-bright: #FFD700; --gold-deep: #B8962B;
+  --gold-lo: #9E7C1E; --gold-hi: #F6E27A; --ice: #AADDFF; --diamond: #F0F0F5;
+  /* base */
+  --void: #0A0A0A; --panel: #101417; --panel-2: #161C20; --panel-3: #1C242A;
+  --line: rgba(201,210,214,0.10); --line-strong: rgba(201,210,214,0.20);
+  /* ink */
+  --ink: #E8EEF0; --ink-dim: #9AA6AB; --ink-faint: #5F6A70;
+  /* tiers */
+  --t-observer: #8A9499; --t-theorist: #2E8BFF; --t-architect: #9B5CFF;
+  --t-pioneer: #E5B53A; --t-benefactor: #E5483A;
+  --ok: #3FB950; --warn: #E0900F; --err: #E5483A;
+  /* semantic */
+  --bg-page: var(--void); --surface: var(--panel); --surface-raised: var(--panel-2); --surface-inset: var(--panel-3);
+  --border: var(--line); --border-strong: var(--line-strong); --border-hud: var(--gold);
+  --text-body: var(--ink); --text-muted: var(--ink-dim); --text-faint: var(--ink-faint); --text-on-gold: #0A0A0A;
+  --world: var(--cyan); --world-2: var(--violet); --hud: var(--gold); --hud-bright: var(--gold-bright);
+  --edge: var(--ice); --heading: var(--diamond);
+  /* type */
+  --font-display: "Chakra Petch", system-ui, sans-serif;
+  --font-body: "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+  /* effects */
+  --r-sm: 4px; --r-md: 8px; --r-lg: 14px; --r-pill: 999px;
+  --shadow-md: 0 8px 28px rgba(0,0,0,0.50);
+  --glow-cyan: 0 0 18px rgba(0,255,247,0.35); --glow-violet: 0 0 18px rgba(122,0,255,0.40);
+  --glow-gold: 0 0 20px rgba(212,175,55,0.45);
+  --grad-gold: linear-gradient(180deg, var(--gold-hi), var(--gold), var(--gold-lo));
+  --grad-meter: linear-gradient(90deg, var(--gold-deep), var(--gold), var(--gold-bright));
+  --grad-diamond: linear-gradient(135deg, var(--gold), var(--gold-bright), var(--ice));
+  --ease: cubic-bezier(0.22,1,0.36,1); --dur: 200ms;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+body { background: var(--bg-page); color: var(--text-body); font-family: var(--font-body); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration:.001ms!important; transition-duration:.001ms!important; } }
+
+/* backdrop set inline on .board by board.php so the zone art is per-tier */
+.board { position: relative; width: 100%; min-height: 100vh; overflow: hidden; color: var(--ink); }
+.board::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5; z-index: 1;
+  background-image: repeating-linear-gradient(to bottom, rgba(255,255,255,.014) 0, rgba(255,255,255,.014) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: overlay;
+}
+.board > * { position: relative; z-index: 2; }
+
+/* TOP HUD */
+.hud { display: flex; align-items: center; gap: 22px; padding: 14px 26px; background: linear-gradient(180deg, rgba(13,13,13,.92), rgba(13,13,13,.4)); border-bottom: 1px solid var(--line); backdrop-filter: blur(8px); flex-wrap: wrap; }
+.hud .brand { display: flex; align-items: center; gap: 10px; }
+.hud .brand img { height: 30px; filter: drop-shadow(var(--glow-cyan)); }
+.hud .brand b { font-family: var(--font-display); font-weight: 700; letter-spacing: .22em; font-size: 15px; color: var(--diamond); }
+.hud .zone { font-family: var(--font-mono); font-size: 11px; letter-spacing: .28em; color: var(--world); text-transform: uppercase; }
+.hud .spacer { flex: 1; }
+.hud .exit { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; color: var(--ice); text-transform: uppercase; text-decoration: none; }
+.hud .exit:hover { color: var(--world); }
+.hud .exit.has-notif { color: var(--world); }
+/* tour beacon styling lives in css/tour.css (.od9-tour-beacon) — shared across
+   all four toured surfaces, one implementation */
+.hud .notif-dot { display: inline-block; background: #FF3B5C; color: #fff; font-family: var(--font-mono); font-size: 9px; font-weight: 700; min-width: 14px; text-align: center; padding: 1px 4px; border-radius: 999px; margin: 0 2px; vertical-align: middle; animation: notifPulse 1.8s ease-in-out infinite; }
+@keyframes notifPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,59,92,.55); } 50% { box-shadow: 0 0 0 5px rgba(255,59,92,0); } }
+.tier-badge { display: inline-flex; flex-direction: column; gap: 2px; padding: 8px 16px; border-radius: var(--r-md); background: var(--grad-gold); color: var(--text-on-gold); box-shadow: var(--glow-gold); }
+.tier-badge .k { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .18em; text-transform: uppercase; opacity: .82; }
+.tier-badge .v { font-family: var(--font-display); font-weight: 700; font-size: 15px; letter-spacing: .04em; }
+.credits { text-align: right; min-width: 150px; }
+.credits .num { font-family: var(--font-mono); font-size: 14px; color: var(--hud-bright); }
+.credits .meter { height: 7px; border-radius: 999px; background: rgba(0,0,0,.5); border: 1px solid var(--line-strong); overflow: hidden; margin-top: 6px; }
+.credits .meter > i { display: block; height: 100%; background: var(--grad-meter); box-shadow: var(--glow-gold); }
+.credits .lbl { font-family: var(--font-mono); font-size: 9px; letter-spacing: .12em; color: var(--ice); text-transform: uppercase; margin-top: 5px; }
+/* Max-tier chip has no progress meter, so it doesn't need the 150px meter width
+   or right-alignment — left-align + shrink so it sits tight next to the gold
+   Current Tier badge instead of floating far to the right. */
+.credits.maxed { min-width: 0; text-align: left; }
+
+/* WORLD STATE */
+.worldstate { display: flex; gap: 10px; padding: 12px 26px 0; flex-wrap: wrap; align-items: flex-start; }
+.ws-eyebrow { width: 100%; font-family: var(--font-mono); font-size: 11px; letter-spacing: .26em; color: var(--ice); text-transform: uppercase; margin-bottom: 2px; display: flex; align-items: center; gap: 8px; }
+.ws-eyebrow::before { content: ""; width: 16px; height: 1px; background: var(--violet); box-shadow: var(--glow-violet); }
+.ws { position: relative; display: flex; flex-direction: column; gap: 1px; padding: 8px 28px 8px 13px; min-width: 132px; background: rgba(13,13,13,.62); border: 1px solid var(--line); border-left: 2px solid var(--violet); backdrop-filter: blur(4px); }
+.ws .wk { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .12em; color: var(--ice); text-transform: uppercase; }
+.ws .wv { font-family: var(--font-display); font-weight: 600; font-size: 18px; color: var(--diamond); line-height: 1.15; }
+.ws .wv small { font-size: 11.5px; color: var(--ink); font-family: var(--font-mono); }
+.ws .opt { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .03em; color: var(--ice); margin-top: 3px; }
+.ws .opt b { color: var(--world); font-weight: 400; }
+.ws.kard { border-left-color: var(--gold); }
+.ws.kard .wv { color: var(--gold-bright); }
+.ws.kard .opt b { color: var(--gold-bright); }
+
+/* VERIFIED VALUE — the member's 5 contribution dimensions. The iced-out/gold
+   counterpart to World State's world/violet layer: the world's deficits above,
+   the verified value YOU'VE built here. Each point is verification-earned, never
+   from presence — the note makes that explicit (this is value, not XP). */
+.value { display: flex; gap: 10px; padding: 16px 26px 0; flex-wrap: wrap; align-items: stretch; }
+.val-eyebrow { width: 100%; font-family: var(--font-mono); font-size: 11px; letter-spacing: .26em; color: var(--gold-hi); text-transform: uppercase; margin-bottom: 2px; display: flex; align-items: center; gap: 8px; }
+.val-eyebrow::before { content: ""; width: 16px; height: 1px; background: var(--gold); box-shadow: var(--glow-gold); }
+.vd { position: relative; display: flex; flex-direction: column; gap: 2px; padding: 9px 14px; min-width: 124px; flex: 1; background: rgba(13,13,13,.62); border: 1px solid var(--line); border-left: 2px solid var(--gold-deep); backdrop-filter: blur(4px); }
+.vd .vk { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .12em; color: var(--ice); text-transform: uppercase; }
+.vd .vv { font-family: var(--font-display); font-weight: 600; font-size: 22px; color: var(--diamond); line-height: 1.1; }
+.vd .vv small { font-size: 11.5px; color: var(--ink); font-family: var(--font-mono); font-weight: 400; }
+.vd .vbar { height: 4px; border-radius: 999px; background: rgba(0,0,0,.5); border: 1px solid var(--line-strong); overflow: hidden; margin-top: 6px; }
+.vd .vbar > i { display: block; height: 100%; background: var(--grad-meter); }
+.vd .vsub { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .04em; color: var(--ice); margin-top: 5px; }
+.vd.scarce { border-left-color: var(--gold-bright); }
+.vd.scarce .vk { color: var(--gold-deep); }
+.vd.scarce .vv { color: var(--gold-bright); }
+.vd.scarce .vbar > i { background: var(--grad-diamond); }
+.val-note { padding: 9px 26px 0; font-family: var(--font-mono); font-size: 13px; letter-spacing: .03em; color: var(--ice); max-width: 760px; line-height: 1.6; }
+.val-note b { color: var(--edge); font-weight: 400; }
+/* "emerging" dims — real but not yet earnable at this tier (Resource = the
+   far-future ROT layer; System opens at Theorist+). Muted, no bar, honest
+   "unlocks" sub, so the board never implies a path that isn't there. */
+.vd.emerging { border-left-color: var(--ice); background: rgba(13,13,13,.4); }
+.vd.emerging .vk { color: var(--ice); }
+.vd.emerging .vv { color: var(--ice); font-size: 18px; }
+.vd.emerging .vsub { color: var(--ice); }
+.lock .ref { font-family: var(--font-mono); font-size: 8px; letter-spacing: .02em; color: var(--ice); margin-left: 8px; }
+/* per-dimension info tooltip — a small (i) in each value cell; hover/focus reveals
+   a one-line "what this measures". Positioned below + within .board (whose
+   overflow:hidden won't clip an interior tip); high z-index over siblings. */
+.vinfo { position: absolute; top: 8px; right: 9px; width: 15px; height: 15px; border-radius: 50%; border: 1px solid var(--border-strong); color: var(--ink); font-family: var(--font-mono); font-style: normal; font-weight: 700; font-size: 9px; line-height: 1; display: grid; place-items: center; cursor: help; user-select: none; z-index: 3; }
+.vinfo:hover, .vinfo:focus { color: var(--ice); border-color: var(--ice); outline: none; }
+.vinfo .tip { position: absolute; top: 23px; right: -7px; width: 212px; padding: 10px 12px; background: rgba(7,9,11,.98); border: 1px solid var(--border-hud); border-radius: var(--r-md); color: var(--ink); font-family: var(--font-body); font-weight: 400; font-size: 11px; line-height: 1.5; letter-spacing: .01em; text-transform: none; box-shadow: var(--shadow-md); opacity: 0; transform: translateY(-4px); pointer-events: none; transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); z-index: 30; }
+.vinfo:hover .tip, .vinfo:focus .tip { opacity: 1; transform: translateY(0); }
+
+/* COHORT — "your crew" (cohort-lite v1). Read-only panel; the cyan --world accent
+   marks it as the community/together layer (vs gold value, violet world-state).
+   Mirrors the .value panel + .vbar conventions. */
+.cohort { padding: 16px 26px 0; }
+.cohort-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: .26em; color: var(--ice); text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.cohort-eyebrow::before { content: ""; width: 16px; height: 1px; background: var(--world, #00FFF7); box-shadow: 0 0 8px rgba(0,255,247,.6); }
+.cohort-roster { display: flex; flex-direction: column; gap: 6px; max-width: 760px; }
+.cm { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 12px; padding: 7px 14px; background: rgba(13,13,13,.62); border: 1px solid var(--line); border-left: 2px solid var(--line-strong); backdrop-filter: blur(4px); }
+.cm.me { border-left-color: var(--world, #00FFF7); background: rgba(0,255,247,.06); }
+.cm-name { font-family: var(--font-display); font-size: 15px; color: var(--diamond); }
+.cm-name small { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .1em; color: var(--world, #00FFF7); text-transform: uppercase; }
+.cm-prog { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink); white-space: nowrap; }
+.cm-bar { grid-column: 1 / -1; height: 4px; border-radius: 999px; background: rgba(0,0,0,.5); border: 1px solid var(--line-strong); overflow: hidden; }
+.cm-bar > i { display: block; height: 100%; background: var(--grad-meter); }
+.cm.me .cm-bar > i { background: linear-gradient(90deg, #00FFF7, #00BFFF); }
+.cohort-foot { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .03em; color: var(--ice); margin-top: 8px; max-width: 760px; }
+.cohort-foot b { color: var(--world, #00FFF7); font-weight: 400; }
+
+/* MAP */
+.map { position: relative; margin-top: 18px; padding: 0 26px 40px; }
+.pathsvg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .9; }
+
+/* moves list (quest cards) — the live, interactive layer */
+.moves { max-width: 720px; }
+.moves-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; color: var(--ice); text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.moves-eyebrow::before { content: ""; width: 18px; height: 1px; background: var(--world); box-shadow: var(--glow-cyan); }
+.q { display: grid; grid-template-columns: 46px 1fr auto; gap: 16px; align-items: center; border: 1px solid var(--border); background: rgba(13,13,13,.72); border-radius: var(--r-lg); padding: 18px 20px; margin-bottom: 14px; backdrop-filter: blur(6px); transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
+.q:hover { border-color: var(--border-strong); }
+.q.live { border-color: var(--border-hud); box-shadow: var(--glow-gold); }
+.q.done { opacity: .7; }
+.q .ic { width: 46px; height: 46px; border-radius: var(--r-md); display: grid; place-items: center; border: 1px solid var(--border-strong); background: var(--surface-inset); font-size: 18px; }
+.q .ic.world { color: var(--world); } .q .ic.violet { color: var(--violet); border-color: rgba(122,0,255,.4); } .q .ic.gold { color: var(--hud); border-color: rgba(212,175,55,.5); } .q .ic.done { color: var(--ok); border-color: rgba(63,185,80,.4); }
+.q .type { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ice); }
+.q .title { font-family: var(--font-display); font-weight: 600; font-size: 16px; margin: 4px 0; color: var(--text-body); }
+.q .meta { font-size: 12.5px; color: var(--ink); }
+.q .reward { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.q .cr { font-family: var(--font-mono); font-size: 13px; color: var(--hud-bright); }
+.q .dim { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ice); }
+
+/* interactive move card — a block <details> with a grid "head" (the clickable
+   row) and a normal block body below, so the reflection textarea gets real
+   height instead of being crushed as a grid cell (the old .q grid did exactly
+   that — align-items:center collapsed the form's track). */
+.move { border: 1px solid var(--border); background: rgba(13,13,13,.72); border-radius: var(--r-lg); margin-bottom: 14px; backdrop-filter: blur(6px); overflow: hidden; transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
+.move:hover { border-color: var(--border-strong); }
+.move.live { border-color: var(--border-hud); box-shadow: var(--glow-gold); }
+.move[open] { border-color: var(--border-hud); }
+.move.done { opacity: .68; }
+.move-head { display: grid; grid-template-columns: 46px 1fr auto; gap: 16px; align-items: center; padding: 18px 20px; cursor: pointer; list-style: none; }
+.move-head::-webkit-details-marker { display: none; }
+.move-head .ic { width: 46px; height: 46px; border-radius: var(--r-md); display: grid; place-items: center; border: 1px solid var(--border-strong); background: var(--surface-inset); font-size: 18px; }
+.move-head .ic.world { color: var(--world); }
+.move-head .ic.done { color: var(--ok); border-color: rgba(63,185,80,.4); }
+.move-head .move-body { min-width: 0; }
+.move-head .type { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ice); }
+.move-head .title { font-family: var(--font-display); font-weight: 600; font-size: 16px; margin: 4px 0; color: var(--text-body); }
+.move-head .meta { font-size: 12.5px; color: var(--ink); line-height: 1.4; }
+.move-head .reward { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; text-align: right; }
+.move-head .cr { font-family: var(--font-mono); font-size: 13px; color: var(--hud-bright); }
+.move-head .dim { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ice); }
+.cta { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--text-on-gold); background: var(--grad-gold); border: none; border-radius: var(--r-sm); padding: 9px 16px; cursor: pointer; box-shadow: var(--glow-gold); text-decoration: none; display: inline-block; }
+.cta.ghost { background: transparent; color: var(--world); border: 1px solid rgba(0,255,247,.4); box-shadow: none; }
+.cta.muted { background: transparent; color: var(--ok); border: 1px solid rgba(63,185,80,.4); box-shadow: none; cursor: default; }
+
+/* THE GATE */
+.gate { max-width: 720px; margin-top: 8px; border: 1px solid rgba(122,0,255,.32); background: linear-gradient(180deg, rgba(122,0,255,.06), transparent); padding: 16px 20px; backdrop-filter: blur(4px); }
+.gate h4 { font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; color: var(--violet); text-transform: uppercase; margin-bottom: 12px; }
+.lock { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; font-size: 12.5px; color: var(--ink); }
+.lock:last-child { margin-bottom: 0; }
+.lock .x { width: 15px; height: 15px; border-radius: 3px; border: 1px solid var(--ink-faint); flex: 0 0 15px; display: grid; place-items: center; font-size: 10px; }
+.lock.met .x { border-color: var(--ok); color: var(--ok); }
+.lock b { color: var(--diamond); font-weight: 400; font-family: var(--font-mono); font-size: 12px; }
+
+/* THE GUIDE */
+.guide { max-width: 720px; margin-top: 18px; display: flex; gap: 14px; align-items: center; border: 1px solid var(--line); background: rgba(13,13,13,.6); padding: 16px 18px; backdrop-filter: blur(4px); }
+.guide .portrait { position: relative; width: 76px; height: 90px; flex: 0 0 76px; overflow: hidden; border: 1px solid var(--line-strong); }
+.guide .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
+.guide .who { font-family: var(--font-mono); font-size: 9px; letter-spacing: .16em; color: var(--world); text-transform: uppercase; }
+.guide .vo { font-family: var(--font-display); font-size: 14px; color: var(--diamond); font-style: italic; line-height: 1.4; margin-top: 6px; }
+
+/* flash messages (action results) */
+.flash { max-width: 720px; margin: 0 26px 16px; padding: 13px 16px; border-radius: var(--r-md); font-size: 13.5px; backdrop-filter: blur(6px); }
+.flash.ok { border: 1px solid rgba(63,185,80,.4); background: rgba(63,185,80,.10); color: #b6f0c6; }
+.flash.pending { border: 1px solid rgba(0,191,255,.4); background: rgba(0,191,255,.08); color: var(--ice); }
+.flash.err { border: 1px solid rgba(229,72,58,.4); background: rgba(229,72,58,.10); color: #f2b2a8; }
+
+.tagline { text-align: center; padding: 18px; font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .26em; color: var(--ice); text-transform: uppercase; }
+
+/* modal for QOTD / reflection entry */
+/* the in-card body/form — a normal block inside the .move card (the card owns
+   the border/background), so the textarea is no longer a crushed grid cell. */
+.entry { padding: 0 20px 18px; }
+.entry .read-link { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 14px; padding: 11px 18px; background: var(--grad-gold); color: var(--text-on-gold); font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: .03em; border-radius: var(--r-sm); text-decoration: none; box-shadow: var(--glow-gold); }
+.entry .read-link:hover { filter: brightness(1.08); }
+.entry .prompt, .entry p.prompt { color: var(--ink); font-size: 13.5px; line-height: 1.5; margin-bottom: 12px; }
+.entry textarea { width: 100%; min-height: 150px; background: var(--surface-inset); border: 1px solid var(--border-strong); border-radius: var(--r-sm); color: var(--ink); font-family: var(--font-body); font-size: 14px; line-height: 1.6; padding: 12px 14px; resize: vertical; }
+.entry textarea:focus { outline: none; border-color: var(--world); }
+.entry textarea:disabled { opacity: .45; cursor: not-allowed; resize: none; }
+.entry .row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; gap: 12px; flex-wrap: wrap; }
+.entry .hint { font-family: var(--font-mono); font-size: 10px; color: var(--ice); }
+.entry .hint .lockmsg { color: var(--warn); }
+.entry button:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+
+/* in-board reading modal (Phase 2) — embeds the gated PDF via the authenticated
+   download.php proxy (inline) so members read in-context; closing it unlocks the
+   reflection. Fixed overlay, so .board's overflow:hidden never clips it. */
+.reader[hidden] { display: none; }
+.reader { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 3vh 3vw; }
+.reader-overlay { position: absolute; inset: 0; background: rgba(4,5,7,.86); backdrop-filter: blur(4px); }
+.reader-panel { position: relative; z-index: 1; display: flex; flex-direction: column; width: min(980px, 96vw); height: min(92vh, 1040px); background: var(--panel); border: 1px solid var(--border-hud); border-radius: var(--r-lg); box-shadow: var(--shadow-md); overflow: hidden; }
+.reader-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 18px; border-bottom: 1px solid var(--line); background: linear-gradient(180deg, rgba(13,13,13,.92), rgba(13,13,13,.5)); }
+.reader-title { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--diamond); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.reader-x { background: none; border: none; color: var(--ink); font-size: 26px; line-height: 1; cursor: pointer; padding: 0 6px; }
+.reader-x:hover { color: var(--world); }
+.reader-frame { flex: 1; width: 100%; border: none; background: #30343a; }
+.reader-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 18px; border-top: 1px solid var(--line); background: rgba(13,13,13,.6); }
+.reader-hint { font-family: var(--font-mono); font-size: 10px; letter-spacing: .04em; color: var(--ice); }
+
+/* Curriculum board v2 (T-PROG-CONTENT-GATE-001): rejected-item flag, reviewer
+   feedback banner, and the optional-depth "go deeper" divider. */
+.move.rejected { border-color: rgba(229,72,58,0.45); }
+.move.rejected .ic.world { color: var(--err); }
+.reject-note { background: rgba(229,72,58,0.10); border: 1px solid rgba(229,72,58,0.35); border-radius: var(--r-sm); padding: 8px 12px; margin-bottom: 12px; font-size: 13px; color: var(--ice); }
+.reject-note b { color: var(--err); }
+.optional-eyebrow { margin-top: 22px; color: var(--ice); }
+.optional-eyebrow::before { background: var(--ink-faint); box-shadow: none; }
+
+/* Zone Navigator (T-WEB-ZONE-NAV-001): the world-map strip of tier-zones. Travel to
+   any zone at/below your tier (ztrans "gate" transition); future zones = locked teasers. */
+.zone-nav { display: flex; gap: 8px; padding: 14px 24px; overflow-x: auto; border-bottom: 1px solid var(--line); background: rgba(10,10,10,.45); }
+.zone-node { flex: 1 0 auto; min-width: 118px; display: flex; flex-direction: column; gap: 3px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--panel-2); text-decoration: none; transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease); }
+.zone-node:hover { border-color: var(--world); transform: translateY(-1px); }
+.zone-node .zn-i { font-family: var(--font-mono); font-size: 12px; color: var(--world); letter-spacing: .1em; }
+.zone-node .zn-name { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--heading); }
+.zone-node .zn-tier { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ice); }
+.zone-node.active { border-color: var(--world); box-shadow: var(--glow-cyan); background: linear-gradient(180deg, rgba(0,255,247,.08), var(--panel-2)); }
+.zone-node.current .zn-tier { color: var(--hud); }
+.zone-node.locked { opacity: .45; cursor: default; pointer-events: none; }
+.zone-node.locked .zn-i { color: var(--ice); }
+.zone-preview-banner { padding: 9px 24px; background: rgba(0,255,247,.07); border-bottom: 1px solid var(--line); font-size: 13px; color: var(--ice); }
+.zone-preview-banner a { color: var(--world); text-decoration: none; font-weight: 600; }
+.preview-note { padding: 10px 12px; border: 1px dashed var(--line-strong); border-radius: var(--r-sm); font-size: 13px; color: var(--ink); background: rgba(0,255,247,.04); }
+
+@media (max-width: 760px) {
+  .hud { gap: 12px; padding: 12px 16px; }
+  .worldstate, .map, .flash, .guide { padding-left: 16px; padding-right: 16px; }
+  .credits { min-width: 120px; }
+}
+
+/* ── Board v3: HUD lockup + DNA-helix journey map (T-WEB-BOARD-HELIX-001) ─────── */
+.hud .brand { display: flex; align-items: center; gap: 10px; }
+.hud .brand .bmark { height: 26px; width: auto; display: block; filter: drop-shadow(0 0 8px rgba(0,255,247,.35)); }
+.hud .brand .bword { height: 30px; width: auto; filter: drop-shadow(0 0 9px rgba(0,212,255,.5)); }
+.hud .brand .bsep { font-family: var(--font-display); font-weight: 700; font-size: 26px; line-height: 1; color: var(--ice); }
+.hud .brand .bzone { font-family: var(--font-mono); font-weight: 700; font-size: 30px; letter-spacing: .12em; line-height: 1; color: var(--world); text-transform: uppercase; }
+
+.helixmap { position: relative; height: 640px; margin: 14px 18px 0; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden;
+  background: linear-gradient(180deg, rgba(10,12,14,.4), rgba(10,10,10,.72)), radial-gradient(1100px 460px at 70% -8%, rgba(122,0,255,.06), transparent); }
+.helixmap .pathsvg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+/* Per-tier origin crest (illustrated, founder-generated) filling the empty lower-left
+   corner the strands rise out of. z-index:2 = above the strands, below the nodes (z-index:3);
+   pointer-events:none so nodes stay clickable; masked toward the top-right so it connects to
+   the helix base without crossing it. Conservative size keeps it clear of the first node's
+   "YOU ARE HERE"; tune left/bottom/max-height once real art lands (visual-verify). */
+.helixmap .origin-crest { position: absolute; left: -84px; bottom: -36px; height: 82%; width: auto; z-index: 2; pointer-events: none; opacity: .9;
+  -webkit-mask-image: linear-gradient(to top right, #000 38%, rgba(0,0,0,.6) 60%, transparent 82%);
+  mask-image: linear-gradient(to top right, #000 38%, rgba(0,0,0,.6) 60%, transparent 82%); }
+.helixmap .hnode { position: absolute; transform: translate(-50%,-50%); z-index: 3; text-decoration: none; display: block; }
+.helixmap .hnode .dot { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; background: rgba(13,13,13,.92);
+  border: 2px solid var(--world); color: var(--world); font-family: var(--font-mono); font-size: 10px; box-shadow: var(--glow-cyan); transition: transform .15s; }
+.helixmap a.hnode:hover .dot { transform: scale(1.3); }
+.helixmap .hnode.done .dot { border-color: var(--ok); color: var(--ok); box-shadow: 0 0 9px rgba(63,185,80,.5); }
+.helixmap .hnode.current .dot { width: 32px; height: 32px; font-size: 13px; border-color: var(--gold); color: var(--gold-bright); box-shadow: var(--glow-gold); animation: hpulse 2.4s ease-in-out infinite; }
+.helixmap .hnode.locked .dot { border-color: var(--ice); color: var(--ice); box-shadow: none; opacity: .85; }
+.helixmap .hnode.pending .dot { border-color: var(--warn); color: var(--warn); box-shadow: 0 0 8px rgba(224,144,15,.4); }
+.helixmap .hnode.opt .dot { border-color: var(--violet); color: var(--violet-soft); box-shadow: 0 0 8px rgba(122,0,255,.4); }
+@keyframes hpulse { 0%,100%{ box-shadow: 0 0 14px rgba(212,175,55,.5);} 50%{ box-shadow: 0 0 26px rgba(212,175,55,.95);} }
+.helixmap .hnode .here { position: absolute; left: 50%; top: 100%; transform: translateX(-50%); margin-top: 5px; white-space: nowrap;
+  padding: 3px 8px; background: rgba(13,13,13,.88); border: 1px solid rgba(212,175,55,.6); border-radius: var(--r-sm);
+  font-family: var(--font-mono); font-size: 8px; letter-spacing: .16em; color: var(--gold-bright); text-transform: uppercase; }
+.helixmap a.hnode::after { content: attr(title); position: absolute; left: 50%; bottom: 100%; transform: translateX(-50%); margin-bottom: 6px;
+  white-space: nowrap; max-width: 210px; overflow: hidden; text-overflow: ellipsis; padding: 3px 8px; background: rgba(13,13,13,.96);
+  border: 1px solid var(--line-strong); border-radius: var(--r-sm); font-size: 10px; color: var(--diamond); opacity: 0; pointer-events: none; transition: opacity .15s; z-index: 30; }
+.helixmap a.hnode:hover::after { opacity: 1; }
+
+.helixmap .gate { position: absolute; top: 18px; right: 20px; width: 248px; z-index: 5; }
+.helixmap .gate .gate-frame { position: relative; height: 94px; border: 1px solid rgba(122,0,255,.5); border-radius: var(--r-md); overflow: hidden; box-shadow: 0 0 24px rgba(122,0,255,.3); background: linear-gradient(135deg, rgba(122,0,255,.3), rgba(13,13,13,.9)); }
+.helixmap .gate .gate-frame img { width: 100%; height: 100%; object-fit: cover; }
+.helixmap .gate .gtag { position: absolute; left: 9px; bottom: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; color: var(--violet-soft); background: rgba(11,11,11,.82); border: 1px solid rgba(122,0,255,.5); padding: 4px 8px; text-transform: uppercase; }
+.helixmap .gate .gate-locks { margin-top: 9px; background: rgba(13,13,13,.78); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 11px 13px; backdrop-filter: blur(4px); }
+.helixmap .gate .gate-locks h4 { font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; color: var(--ice); text-transform: uppercase; margin: 0 0 8px; }
+.helixmap .gate .lock { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 11px; color: var(--ink); }
+.helixmap .gate .lock:last-child { margin-bottom: 0; }
+.helixmap .gate .lock .x { width: 13px; height: 13px; border-radius: 3px; border: 1px solid var(--ink-faint); flex: 0 0 13px; display: grid; place-items: center; font-size: 9px; }
+.helixmap .gate .lock.met .x { border-color: var(--ok); color: var(--ok); }
+.helixmap .gate .lock b { color: var(--diamond); font-weight: 400; font-family: var(--font-mono); font-size: 11px; }
+
+/* Max-tier SUMMIT terminus (T-WEB-BOARD-SUMMIT-001): benefactor has no gate, so the helix
+   lands on a "mastery" emblem (founder's Flow art) instead of empty space. Sits at the
+   top-right where the gate would be; pointer-events:none keeps any nodes clickable. The
+   .summit-art auto-hides if the PNG is missing, leaving the gold label to hold the spot. */
+.helixmap .summit { position: absolute; top: 14px; right: 20px; width: 400px; z-index: 5; display: flex; flex-direction: column; align-items: center; text-align: center; pointer-events: none; }
+/* the art is a full black-bg JPEG scene — mix-blend-mode:screen drops the black so only
+   the glowing helix/planet/ship composite onto the board's starfield (no boxy rectangle). */
+.helixmap .summit .summit-art { width: 100%; height: auto; mix-blend-mode: screen;
+  -webkit-mask-image: radial-gradient(86% 82% at 50% 48%, #000 56%, transparent 100%); mask-image: radial-gradient(86% 82% at 50% 48%, #000 56%, transparent 100%);
+  animation: summitFloat 6s ease-in-out infinite; }
+.helixmap .summit .summit-tag { margin-top: 10px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--gold-bright); text-shadow: 0 0 12px rgba(212,175,55,.55); background: rgba(11,11,11,.72); border: 1px solid rgba(212,175,55,.5); border-radius: var(--r-sm); padding: 6px 11px; backdrop-filter: blur(4px); }
+@keyframes summitFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+.helixmap .guide { position: absolute; right: 20px; bottom: 18px; width: 290px; display: flex; gap: 12px; align-items: flex-end; z-index: 4; }
+.helixmap .guide .portrait { width: 120px; height: 84px; flex: 0 0 120px; border: 1px solid var(--gold); border-radius: var(--r-md); overflow: hidden; box-shadow: var(--glow-gold); }
+.helixmap .guide .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center 26%; }
+.helixmap .guide .say .who { font-family: var(--font-mono); font-size: 9px; letter-spacing: .16em; color: var(--world); text-transform: uppercase; }
+.helixmap .guide .say .vo { font-family: var(--font-display); font-size: 12.5px; color: var(--diamond); font-style: italic; line-height: 1.35; margin-top: 5px; }
+
+.helixmap .dockwrap { position: absolute; left: 20px; top: 18px; width: 360px; max-width: 42%; max-height: calc(100% - 36px); overflow: auto; display: flex; flex-direction: column; gap: 10px; z-index: 6; }
+/* polished lesson-quest panel (the dock) — was falling back to unstyled .read-link/.reflect */
+.helixmap .questdock .read-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 11px; padding: 10px 16px; background: var(--grad-gold); color: var(--text-on-gold); font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: .03em; border-radius: var(--r-sm); text-decoration: none; box-shadow: var(--glow-gold); border: none; cursor: pointer; }
+.helixmap .questdock .read-link:hover { filter: brightness(1.08); }
+.helixmap .questdock .reflect { margin-top: 12px; }
+.helixmap .questdock .reflect textarea { width: 100%; min-height: 72px; background: var(--surface-inset); border: 1px solid var(--line-strong); border-radius: var(--r-sm); color: var(--ink); padding: 9px 11px; font-family: var(--font-body); font-size: 13px; box-sizing: border-box; resize: vertical; }
+.helixmap .questdock .reflect textarea:focus { outline: none; border-color: var(--world); box-shadow: 0 0 0 1px var(--world); }
+.helixmap .questdock .reflect .row { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-top: 11px; }
+.helixmap .questdock .reflect .hint { font-family: var(--font-mono); font-size: 10px; color: var(--ice); margin-right: auto; }
+.helixmap .questdock .reflect .hint .lockmsg { color: var(--warn); }
+.helixmap .questdock .reflect .cta { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--text-on-gold); background: var(--grad-gold); border: none; border-radius: var(--r-sm); padding: 9px 16px; box-shadow: var(--glow-gold); cursor: pointer; }
+.helixmap .questdock .reflect .cta:disabled { opacity: .5; cursor: default; box-shadow: none; }
+.helixmap .questdock .reject-note { margin-top: 9px; } .helixmap .questdock .preview-note { margin-top: 11px; }
+.helixmap .questdock { background: rgba(13,13,13,.86); border: 1px solid var(--border-hud); border-radius: var(--r-lg); box-shadow: var(--glow-gold); backdrop-filter: blur(8px); padding: 14px 16px; }
+.helixmap .questdock.qotd { border-color: var(--line-strong); box-shadow: none; }
+.helixmap .questdock .qd-eyebrow { font-family: var(--font-mono); font-size: 9px; letter-spacing: .2em; color: var(--ice); text-transform: uppercase; margin-bottom: 9px; display: block; }
+.helixmap .questdock .qd-card { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.helixmap .questdock .qd-card .ty { font-family: var(--font-mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--ice); }
+.helixmap .questdock .qd-card .ti { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--diamond); margin-top: 3px; }
+.helixmap .questdock .qd-card .cr { font-family: var(--font-mono); font-size: 12px; color: var(--hud-bright); white-space: nowrap; }
+.helixmap .questdock .qd-head { cursor: pointer; list-style: none; }
+.helixmap .questdock.qotd .qd-q { display: block; font-family: var(--font-display); font-size: 13px; color: var(--diamond); margin-top: 4px; }
+.helixmap .questdock .qd-form { margin-top: 10px; }
+.helixmap .questdock .qd-form textarea { width: 100%; min-height: 54px; background: var(--surface-inset); border: 1px solid var(--line-strong); border-radius: var(--r-sm); color: var(--ink); padding: 8px; font-family: var(--font-body); font-size: 13px; box-sizing: border-box; }
+.helixmap .tagline-h { position: absolute; left: 50%; bottom: 5px; transform: translateX(-50%); font-family: var(--font-mono); font-size: 9px; letter-spacing: .26em; color: var(--ice); text-transform: uppercase; z-index: 2; }
+/* ── Mobile (<=760px): the board's top half reflows fine, but the HUD headline
+   wordmark and the DNA-helix canvas do not. Scale the oversized brand so the zone
+   name can't get clipped, and drop the spatial helix metaphor for a clean linear
+   journey (your move -> progress dots -> gate -> guide -> crest). This is a
+   deliberately SEPARATE mobile design; the desktop canvas above is left untouched. ── */
+@media (max-width: 760px) {
+  /* HUD headline: shrink + wrap so a long zone name ("The Diagnostic") drops to its
+     OWN line instead of being cut off on a narrow, vertical phone. */
+  .hud .brand { flex-wrap: wrap; gap: 4px 10px; }
+  .hud .brand .bmark { height: 28px; }
+  .hud .brand .bword { height: 28px; }
+  .hud .brand .bsep  { font-size: 24px; }
+  .hud .brand .bzone { flex-basis: 100%; font-size: 30px; letter-spacing: .1em; }
+
+  /* helix MAP -> linear, stacked mobile journey. Flex-wrap with full-width panels
+     (dock/gate/guide/crest at flex:0 0 100%) forces each onto its own row, while the
+     journey nodes stay auto-width and flow into a centered progress-dot track. */
+  .map.helixmap { height: auto; overflow: visible; margin: 14px 12px 0; padding: 14px;
+    display: flex; flex-flow: row wrap; justify-content: center; align-content: flex-start; gap: 12px 8px; }
+  .helixmap .pathsvg { display: none; }                 /* strands distort at a narrow aspect ratio */
+
+  /* dock = "your move this turn" — the functional core: first + full width */
+  .helixmap .dockwrap { position: static; order: 1; flex: 0 0 100%; width: auto; max-width: none;
+    max-height: none; overflow: visible; margin: 0; }
+
+  /* the 24 journey nodes -> a compact, centered progress track. Dots only: the
+     current lesson is named in the dock, and hover tooltips are dead weight on touch. */
+  .helixmap .hnode { position: static !important; transform: none; order: 2; margin: 0; }
+  .helixmap .hnode .here { display: none; }
+  .helixmap a.hnode::after { display: none; }
+
+  .helixmap .gate { position: static; order: 3; flex: 0 0 100%; width: auto; top: auto; right: auto; margin: 0; }
+  .helixmap .guide { position: static; order: 4; flex: 0 0 100%; width: auto; right: auto; bottom: auto;
+    margin: 0; align-items: center; }
+
+  /* the Flow-generated origin crest: not needed inline on mobile — drop it to the very
+     bottom as a small centered emblem (per founder's suggestion). */
+  /* max-tier summit -> top of the mobile map as a centered "mastery" banner */
+  .helixmap .summit { position: static; order: 1; flex: 0 0 100%; width: auto; top: auto; right: auto; margin: 0; }
+  .helixmap .summit .summit-art { max-width: 190px; }
+
+  .helixmap .origin-crest { position: static !important; order: 5; flex: 0 0 100%; height: auto; width: auto;
+    max-width: 150px; margin: 4px auto 0; left: auto; bottom: auto; opacity: .8;
+    -webkit-mask-image: none; mask-image: none; }
+}
+
+/* Newspaper "special bulletin" spin-in for the reader (PDFs + OD9 codex docs). The
+   panel spins in from tiny+rotated; a gold headline flashes — then the doc loads. The
+   reader is display:none while [hidden], so removing [hidden] re-runs both animations. */
+@keyframes newspaperSpin { 0% { transform: scale(.04) rotate(-560deg); opacity: 0; } 65% { opacity: 1; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+@keyframes bulletinFlash { 0% { opacity: 0; transform: scale(.5); } 28% { opacity: 1; transform: scale(1.04); } 62% { opacity: 1; transform: scale(1.04); } 100% { opacity: 0; transform: scale(1.25); } }
+.reader-panel { transform-origin: center center; }
+.reader.spin .reader-panel { animation: newspaperSpin .72s cubic-bezier(.2,.85,.25,1) both; }
+.reader-bulletin { position: absolute; z-index: 3; font-family: var(--font-display); font-weight: 700; font-size: 40px; letter-spacing: .14em; color: var(--gold-bright); text-shadow: 0 0 22px rgba(212,175,55,.85); text-transform: uppercase; pointer-events: none; opacity: 0; }
+.reader.spin .reader-bulletin { animation: bulletinFlash .72s ease-out both; }
+
+/* Codex unseal transition — official OD9 codex docs play /video/transitions/codex.* full-screen, then the reader opens (no newspaper spin). */
+.codex-trans { position: fixed; inset: 0; z-index: 200; background: #000; display: flex; align-items: center; justify-content: center; }
+.codex-trans[hidden] { display: none; }
+.codex-trans .codex-vid { width: 100%; height: 100%; object-fit: contain; }
+
+/* ── State of the Filter (worldstate upgrade) + Live Roadmap · 2026-07-04 ─────────
+   Canonical data: includes/filter-scorecard-data.php. Marquee tiles reuse .ws;
+   these style the expandable scorecard + the roadmap panel. */
+.sofb-count { margin-left: auto; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .14em; color: #E24632; border: 1px solid rgba(226,70,50,.45); background: rgba(226,70,50,.08); padding: 2px 8px; border-radius: 999px; }
+.sofb-x { width: 100%; }
+.sofb-x > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ice); padding: 7px 12px; border: 1px dashed var(--line); background: rgba(13,13,13,.5); transition: border-color .15s, background .15s, box-shadow .15s; }
+.sofb-x > summary::-webkit-details-marker { display: none; }
+.sofb-x > summary::before { content: '\25B8'; color: var(--world, #00FFF7); font-size: 12px; line-height: 1; transition: transform .15s; text-shadow: 0 0 6px rgba(0,255,247,.5); }
+.sofb-x[open] > summary::before { transform: rotate(90deg); }
+.sofb-x > summary::after { content: 'tap to expand +'; margin-left: auto; flex: none; color: var(--world, #00FFF7); font-size: 9.5px; letter-spacing: .14em; padding: 2px 9px; border: 1px solid rgba(0,255,247,.35); border-radius: 999px; background: rgba(0,255,247,.06); }
+.sofb-x[open] > summary::after { content: 'collapse \2212'; }
+.sofb-x > summary:hover { border-color: var(--world, #00FFF7); background: rgba(0,255,247,.05); box-shadow: 0 0 12px rgba(0,255,247,.18); }
+.sofb-rows { display: flex; flex-direction: column; gap: 5px; padding: 8px 0 2px; }
+.sofb-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; padding: 7px 12px; background: rgba(13,13,13,.62); border: 1px solid var(--line); border-left: 2px solid #E24632; }
+.sofb-row.st-at_risk { border-left-color: var(--gold, #FFD700); }
+.sofb-row.st-unmeasured { border-left-color: #b388ff; }
+.sofb-badge { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .12em; color: #E24632; flex: none; width: 34px; }
+.st-at_risk .sofb-badge { color: var(--gold, #FFD700); }
+.st-unmeasured .sofb-badge { color: #b388ff; }
+.sofb-t { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--diamond); }
+.sofb-t small { margin-left: 7px; font-size: 9px; letter-spacing: .08em; color: var(--ink); text-transform: lowercase; }
+.sofb-t small.tr-improving { color: #2ECC71; }
+.sofb-t small.tr-worsening { color: #E24632; }
+.sofb-v { font-family: var(--font-display); font-weight: 600; font-size: 13.5px; color: var(--diamond); margin-left: auto; }
+.sofb-o { font-family: var(--font-mono); font-size: 10.5px; color: var(--ice); }
+.sofb-o b { color: var(--world, #00FFF7); font-weight: 400; }
+.sofb-foot { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; color: var(--ink); padding: 4px 12px 0; }
+.sofb-foot a { color: var(--world, #00FFF7); text-decoration: none; }
+.rmap { display: flex; flex-direction: column; gap: 5px; padding: 10px 26px 0; }
+.rmap-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; padding: 7px 12px; background: rgba(13,13,13,.62); border: 1px solid var(--line); border-left: 2px solid var(--world, #00FFF7); text-decoration: none; transition: border-color .15s; }
+.rmap-row:hover { border-color: var(--world, #00FFF7); }
+.rmap-dom { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .12em; padding: 2px 7px; border-radius: 3px; flex: none; color: #0a0a0a; background: #3498DB; }
+.rmap-dom.dom-REV { background: #2ECC71; } .rmap-dom.dom-INF { background: #E67E22; }
+.rmap-dom.dom-RES { background: #9B59B6; color: #fff; } .rmap-dom.dom-CON { background: #F1C40F; }
+.rmap-dom.dom-CRD { background: #E74C3C; color: #fff; }
+.rmap-t { font-family: var(--font-display); font-weight: 600; font-size: 13.5px; color: var(--diamond); }
+.rmap-c { font-family: var(--font-mono); font-size: 10.5px; color: var(--ice); }
+.rmap-none { font-family: var(--font-mono); font-size: 11px; color: var(--ink); padding: 6px 12px; }
+.rmap-foot { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; color: var(--ink); padding: 2px 12px 0; }
+.rmap-foot a { color: var(--world, #00FFF7); text-decoration: none; }
+@media (max-width: 860px) { .rmap { padding-left: 16px; padding-right: 16px; } .sofb-v { margin-left: 0; width: 100%; } }

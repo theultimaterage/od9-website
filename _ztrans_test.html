@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>ztrans test</title>
+<link rel="stylesheet" href="/css/ztrans.css?v=1781989235">
+<style>body{background:#0a0e15;color:#fff;font-family:system-ui;display:grid;place-items:center;height:100vh;margin:0}
+a.go{padding:18px 30px;border:1px solid #D4AF37;border-radius:10px;color:#D4AF37;text-decoration:none;font:700 16px ui-monospace;letter-spacing:.1em}</style>
+</head><body>
+<!-- click-triggered zone transition: <a class="ztrans-link" data-ztrans="…"> plays the clip, then navigates -->
+<div class="ztrans" id="ztrans" aria-hidden="true">
+  <video class="ztrans-vid" id="ztransVid" muted playsinline preload="none"></video>
+  <button class="ztrans-skip" type="button" id="ztransSkip">SKIP &rsaquo;</button>
+</div>
+<script>
+(function(){
+  var VID = "/video/transitions";
+  var ov  = document.getElementById('ztrans');
+  var v   = document.getElementById('ztransVid');
+  if (!ov || !v) return;
+  var nav = null, going = false;
+  function go(){ if (going) return; going = true; if (nav) window.location.href = nav; }
+  function play(clip, href){
+    nav = href; going = false;
+    v.innerHTML = '<source src="' + VID + '/' + clip + '.webm" type="video/webm">'
+                + '<source src="' + VID + '/' + clip + '.mp4" type="video/mp4">';
+    v.setAttribute('poster', VID + '/' + clip + '.jpg');
+    ov.classList.add('zt-on');
+    v.onended = go; v.onerror = go;
+    try { v.load(); } catch (e) {}
+    var p = v.play();
+    if (p && p.catch) p.catch(go);
+    setTimeout(go, 7000);
+  }
+  document.addEventListener('click', function(e){
+    var a = e.target.closest ? e.target.closest('a.ztrans-link') : null;
+    if (!a) return;
+    var clip = a.getAttribute('data-ztrans'), href = a.getAttribute('href');
+    if (!clip || !href) return;
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (a.target && a.target !== '_self') return;
+    e.preventDefault();
+    play(clip, href);
+  });
+  var skip = document.getElementById('ztransSkip');
+  if (skip) skip.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); go(); });
+})();
+</script>
+    <a class="go ztrans-link" data-ztrans="hq-door-k1" href="/_ztrans_dest.html">ENTER THE BUNKER &rsaquo;</a>
+</body></html>

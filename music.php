@@ -1,0 +1,319 @@
+<?php
+$page_title = 'Music - OD9 | Hip-Hop for Human Advancement';
+$page_description = 'OD9 music catalog. Hip-hop engineered for paradigm shifts - encoding coordination theory into culture, building identity beyond consumption. Stream, support, or join the Discord for exclusives.';
+$page_slug = 'music.php';
+$page_og_description = 'Logic doesn\'t change behavior. Culture does. This is OD9\'s weapon - music that encodes coordination theory and refuses to let you stay asleep.';
+
+// SoundCloud catalog (slice 2) — read from music_catalog, populated by api/soundcloud/fetch.php.
+// Outer-first DB config (live password lives above webroot), mirroring patron_gate.php.
+// Degrades silently: the page never depends on a live DB or SC call.
+$sc_tracks = [];
+foreach ([__DIR__ . '/../config/database.php', __DIR__ . '/config/database.php'] as $__cfg) {
+    if (is_file($__cfg)) { require_once $__cfg; break; }
+}
+if (function_exists('getDatabaseConnection')) {
+    try {
+        $__db = getDatabaseConnection();
+        $__q = $__db->query("SELECT title, permalink_url FROM music_catalog WHERE platform='soundcloud' AND is_public=1 AND permalink_url<>'' ORDER BY src_created_at DESC, last_synced_at DESC LIMIT 4");
+        $sc_tracks = $__q ? $__q->fetchAll(PDO::FETCH_ASSOC) : [];
+    } catch (Throwable $e) {
+        $sc_tracks = [];
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<?php include __DIR__ . '/includes/head.php'; ?>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": "https://offda9.com/music.php",
+      "url": "https://offda9.com/music.php",
+      "name": "Music - OD9 | Hip-Hop for Human Advancement",
+      "description": "Listen to OD9's music catalog. Hip-hop and conscious music that creates culture shifts and builds identity beyond consumption.",
+      "isPartOf": {"@id": "https://offda9.com/#website"},
+      "mainEntity": {"@id": "https://offda9.com/music.php#catalog"}
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://offda9.com/music.php#catalog",
+      "name": "OD9 Music Catalog",
+      "numberOfItems": 3,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "MusicAlbum",
+            "name": "Missing In Action",
+            "byArtist": {
+              "@type": "Person",
+              "name": "Joey P.",
+              "@id": "https://offda9.com/da-crew.php#joey-p"
+            },
+            "albumReleaseType": "https://schema.org/EPRelease",
+            "datePublished": "2025-11-07",
+            "image": "https://offda9.com/images/music/joey-p-missing-in-action.jpg",
+            "url": "https://open.spotify.com/album/7jnkBN83bZO0YTsORUrKBZ"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "MusicAlbum",
+            "name": "Outrageous EP",
+            "byArtist": {
+              "@type": "Person",
+              "name": "The Ultimate Rage",
+              "@id": "https://offda9.com/da-crew.php#rage"
+            },
+            "albumReleaseType": "https://schema.org/EPRelease",
+            "albumProductionType": "https://schema.org/StudioAlbum",
+            "image": "https://offda9.com/images/music/outrageous-ep-cover.png",
+            "url": "https://open.spotify.com/album/6V3kmOLMgNgsCLrRJaMiN3"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "MusicAlbum",
+            "name": "Phuryous Stylez Vol. 1",
+            "byArtist": {
+              "@type": "Person",
+              "name": "The Ultimate Rage",
+              "@id": "https://offda9.com/da-crew.php#rage"
+            },
+            "albumReleaseType": "https://schema.org/MixtapeRelease",
+            "image": "https://offda9.com/images/bunker/phuryous-cover.jpg",
+            "description": "Discord exclusive mixtape - available only to OD9 Discord community members"
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+body{background:var(--carbon);background-image:linear-gradient(45deg,#111 25%,transparent 25%),linear-gradient(-45deg,#111 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#111 75%),linear-gradient(-45deg,transparent 75%,#111 75%);background-size:4px 4px;color:var(--chrome);font-family:'Exo 2',sans-serif;min-height:100vh}
+</style>
+<style>
+.container{max-width:1100px;margin:0 auto;padding:2rem}
+h1{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#fff;text-align:center;margin-bottom:0.5rem;text-shadow:var(--glow)}
+.subtitle{text-align:center;color:var(--primary-blue);font-size:1.2rem;margin-bottom:3rem}
+h2{font-family:'Orbitron',sans-serif;font-size:1.6rem;color:#fff;margin:2.5rem 0 1.5rem;text-align:center}
+
+/* Featured Release - Top of Page */
+.featured-release{background:linear-gradient(135deg,rgba(255,0,0,0.1),rgba(255,100,0,0.05));border:2px solid #FF4444;border-radius:16px;padding:2.5rem;margin-bottom:2rem;position:relative;overflow:hidden}
+.featured-release::before{content:'NEW RELEASE';position:absolute;top:20px;right:-30px;background:#FF4444;color:#fff;font-family:'Orbitron',sans-serif;font-size:0.7rem;font-weight:700;padding:0.3rem 3rem;transform:rotate(45deg);letter-spacing:1px}
+.featured-grid{display:grid;grid-template-columns:280px 1fr;gap:2rem;align-items:center}
+.album-cover{width:100%;aspect-ratio:1/1;object-fit:cover;height:auto;border-radius:12px;box-shadow:0 0 30px rgba(255,68,68,0.3)}
+.album-info h3{font-family:'Orbitron',sans-serif;font-size:1.8rem;color:#fff;margin-bottom:0.25rem}
+.album-info .artist{color:#FF4444;font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:600;margin-bottom:0.5rem}
+.album-info .release-date{color:#888;font-size:0.9rem;margin-bottom:1rem}
+.album-info p{color:#aaa;line-height:1.8;margin-bottom:1.5rem}
+.btn{display:inline-block;background:linear-gradient(135deg,var(--primary-blue),var(--electric-blue));color:var(--carbon);padding:0.8rem 2rem;border-radius:4px;text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:2px;transition:all 0.3s}
+.btn:hover{transform:translateY(-3px);box-shadow:var(--glow)}
+.btn.spotify{background:linear-gradient(135deg,#1DB954,#1ed760)}
+.btn.spotify:hover{box-shadow:0 0 20px rgba(29,185,84,0.5)}
+.btn i{margin-right:0.5rem}
+
+/* Standard Release */
+.release-section{background:var(--carbon-dark);border:1px solid #333;border-radius:16px;padding:3rem 2rem;margin-bottom:2rem}
+.release-grid{display:grid;grid-template-columns:240px 1fr;gap:2rem;align-items:center}
+/* Outrageous EP art is a 3:4 portrait — show it whole (no square crop) */
+.release-section .album-cover{box-shadow:var(--glow);aspect-ratio:auto;object-fit:contain;height:auto}
+.release-section .album-info h3{font-size:1.5rem}
+.release-section .album-info .artist{color:var(--primary-blue)}
+
+/* Exclusive Release */
+.exclusive-release{background:linear-gradient(135deg,rgba(0,191,255,0.15),rgba(0,191,255,0.05));border:2px solid var(--primary-blue);border-radius:16px;padding:2.5rem;margin-bottom:2rem;position:relative;overflow:hidden}
+.exclusive-release::before{content:'DISCORD EXCLUSIVE';position:absolute;top:20px;right:-35px;background:var(--primary-blue);color:var(--carbon);font-family:'Orbitron',sans-serif;font-size:0.7rem;font-weight:700;padding:0.3rem 3rem;transform:rotate(45deg);letter-spacing:1px}
+
+/* Artist Sections */
+.artist-section{background:var(--carbon-dark);border-radius:12px;padding:2rem;margin-bottom:2rem;border-left:4px solid var(--primary-blue)}
+.artist-header{display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem}
+.artist-avatar{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--primary-blue)}
+.artist-name{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:#fff}
+.artist-role{color:var(--neon-blue);font-family:'Rajdhani',sans-serif;text-transform:uppercase;letter-spacing:2px;font-size:0.85rem}
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+.platform-link{display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,191,255,0.05);border:1px solid #333;border-radius:8px;padding:1.25rem 1rem;text-decoration:none;transition:all 0.3s}
+.platform-link:hover{border-color:var(--primary-blue);transform:translateY(-3px);box-shadow:var(--glow)}
+.platform-link i{font-size:2rem;margin-bottom:0.5rem}
+.platform-link span{color:#fff;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:0.9rem}
+.platform-link.spotify i{color:#1DB954}
+.platform-link.soundcloud i{color:#FF5500}
+.platform-link.youtube i{color:#FF0000}
+.platform-link.reverbnation i{color:#E43526}
+.platform-link.soundclick i{color:#FF6600}
+.platform-link.twitch i{color:#9146FF}
+.platform-link.ourstage i{color:#00BFFF}
+
+/* Upcoming Section */
+.upcoming-section{background:var(--carbon-dark);border-radius:12px;padding:2rem;margin-bottom:2rem}
+.ep-promo{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center}
+.ep-promo video{width:100%;border-radius:8px;box-shadow:var(--glow)}
+.ep-info{text-align:center}
+.ep-info h3{font-family:'Orbitron',sans-serif;font-size:1.8rem;color:#fff;margin-bottom:0.5rem;text-shadow:var(--glow)}
+.coming-soon-badge{display:inline-block;background:linear-gradient(135deg,var(--primary-blue),var(--electric-blue));color:var(--carbon);padding:0.5rem 1.5rem;border-radius:20px;font-family:'Rajdhani',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-top:1rem;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 10px rgba(0,191,255,0.5)}50%{box-shadow:0 0 25px rgba(0,191,255,0.8)}}
+
+/* Full SoundCloud catalog (slice 2) */
+.sc-catalog{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:1.25rem;margin-bottom:1rem}
+.sc-track iframe{border-radius:8px;display:block;box-shadow:0 0 12px rgba(0,191,255,0.12)}
+
+@media(max-width:768px){
+.featured-grid,.release-grid{grid-template-columns:1fr;text-align:center}
+.featured-release::before,.exclusive-release::before{display:none}
+.ep-promo{grid-template-columns:1fr}
+.artist-header{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+<?php $current_page = 'music'; include('includes/nav.php'); ?>
+<div class="container">
+<h1>MUSIC</h1>
+<p class="subtitle">Logic Doesn't Change Behavior. Culture Does. This Is the Weapon.</p>
+
+<div style="text-align:center;max-width:700px;margin:0 auto 2.5rem;padding:1.5rem;border-left:3px solid var(--primary-blue);border-right:3px solid var(--primary-blue)">
+<p style="color:#aaa;line-height:1.8;font-size:1.05rem">Every civilization that failed did so with a soundtrack that kept them asleep. OD9 music exists to do the opposite - to create cultural artifacts that encode coordination theory, challenge default thinking, and build identity beyond consumption. These aren't albums. They're deployments.</p>
+</div>
+
+<!-- Joey P. - Missing In Action (Newest Release - Top) -->
+<div class="featured-release">
+<div class="featured-grid">
+<img width="588" height="588" src="images/music/joey-p-missing-in-action.jpg" alt="Joey P. - Missing In Action" class="album-cover">
+<div class="album-info">
+<h3>MISSING IN ACTION</h3>
+<p class="artist">Joey P.</p>
+<p class="release-date">Released November 7, 2025</p>
+<p>Joey P. doesn't make music you vibe to and forget. Missing In Action is a sonic debriefing - bars that hit like evidence, production that refuses to let you scroll past. This is what it sounds like when OD9 stops explaining and starts demonstrating.</p>
+<a href="https://open.spotify.com/album/7jnkBN83bZO0YTsORUrKBZ" target="_blank" class="btn spotify"><i class="fab fa-spotify"></i> Listen on Spotify</a>
+</div>
+</div>
+</div>
+
+<!-- The Ultimate Rage - Outrageous EP (Debut) -->
+<div class="release-section">
+<div class="release-grid">
+<img width="3000" height="4000" src="images/music/outrageous-ep-cover.png" alt="The Ultimate Rage - Outrageous EP" class="album-cover">
+<div class="album-info">
+<h3>OUTRAGEOUS EP</h3>
+<p class="artist">The Ultimate Rage</p>
+<p>Where it all started. The Outrageous EP was The Ultimate Rage's opening statement - raw, unfiltered, and deliberately uncomfortable. Before the framework, before the tiers, before the mission had a name, there was this: proof that the energy was always real.</p>
+<a href="https://open.spotify.com/album/6V3kmOLMgNgsCLrRJaMiN3" target="_blank" class="btn spotify"><i class="fab fa-spotify"></i> Listen on Spotify</a>
+</div>
+</div>
+</div>
+
+<!-- Phuryous Stylez - Discord Exclusive -->
+<div class="exclusive-release">
+<div class="featured-grid">
+<img width="2048" height="2048" src="images/bunker/phuryous-cover.jpg" alt="Phuryous Stylez Vol. 1" class="album-cover">
+<div class="album-info">
+<h3>PHURYOUS STYLEZ VOL. 1</h3>
+<p class="artist">The Ultimate Rage</p>
+<p>You can't stream this. You can't buy this. Phuryous Stylez Vol. 1 is The Ultimate Rage unleashed with zero commercial compromise - a mixtape forged exclusively for the Discord community. This is what happens when an artist stops performing for algorithms and starts creating for their people. Join the server, link your account, and crack the vault in The Bunker.</p>
+<a href="/dashboard/bunker.php" class="btn"><i class="fas fa-unlock"></i> Unlock in The Bunker</a>
+</div>
+</div>
+</div>
+
+<!-- The Ultimate Rage - All Platforms -->
+<h2>THE ULTIMATE RAGE</h2>
+<div class="artist-section">
+<div class="artist-header">
+<img width="945" height="945" src="images/crew/rage.png" alt="The Ultimate Rage" class="artist-avatar">
+<div>
+<div class="artist-name">The Ultimate Rage</div>
+<div class="artist-role">Co-Founder / Artist</div>
+</div>
+</div>
+<div class="platform-grid">
+<a href="https://open.spotify.com/artist/0QvH8H7obaMerk1UkfFGaD" target="_blank" class="platform-link spotify">
+<i class="fab fa-spotify"></i>
+<span>Spotify</span>
+</a>
+<a href="https://soundcloud.com/theultimaterage" target="_blank" class="platform-link soundcloud">
+<i class="fab fa-soundcloud"></i>
+<span>SoundCloud</span>
+</a>
+<a href="https://www.twitch.tv/theultimaterage" target="_blank" class="platform-link twitch">
+<i class="fab fa-twitch"></i>
+<span>Twitch</span>
+</a>
+<a href="https://youtube.com/@theultimaterage" target="_blank" class="platform-link youtube">
+<i class="fab fa-youtube"></i>
+<span>YouTube</span>
+</a>
+<a href="https://www.reverbnation.com/theultimaterage1" target="_blank" class="platform-link reverbnation">
+<i class="fas fa-music"></i>
+<span>ReverbNation</span>
+</a>
+<a href="https://www.soundclick.com/TheUltimateRAGE" target="_blank" class="platform-link soundclick">
+<i class="fas fa-headphones"></i>
+<span>SoundClick</span>
+</a>
+<a href="https://ourstage.com/theultimaterage" target="_blank" class="platform-link ourstage">
+<i class="fas fa-microphone"></i>
+<span>OurStage</span>
+</a>
+</div>
+<?php if (!empty($sc_tracks)): ?>
+<div class="sc-catalog" style="margin-top:1.5rem">
+<?php foreach ($sc_tracks as $t):
+    $__u = 'https://w.soundcloud.com/player/?url=' . urlencode($t['permalink_url']) . '&color=%2300bfff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false';
+?>
+<div class="sc-track"><iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy" title="<?= htmlspecialchars($t['title'] ?? 'OD9 track', ENT_QUOTES) ?>" src="<?= htmlspecialchars($__u, ENT_QUOTES) ?>"></iframe></div>
+<?php endforeach; ?>
+</div>
+<?php endif; ?>
+</div>
+
+<!-- Joey P. - All Platforms -->
+<h2>JOEY P.</h2>
+<div class="artist-section">
+<div class="artist-header">
+<img width="1280" height="1280" src="images/crew/joey-p.jpg" alt="Joey P." class="artist-avatar">
+<div>
+<div class="artist-name">Joey P.</div>
+<div class="artist-role">Artist</div>
+</div>
+</div>
+<div class="platform-grid">
+<a href="https://open.spotify.com/artist/2a1dff70K0i5OZXBkYQOzZ" target="_blank" class="platform-link spotify">
+<i class="fab fa-spotify"></i>
+<span>Spotify</span>
+</a>
+<a href="https://youtube.com/@joeyp." target="_blank" class="platform-link youtube">
+<i class="fab fa-youtube"></i>
+<span>YouTube</span>
+</a>
+</div>
+</div>
+
+<!-- Upcoming Release -->
+<h2>COMING SOON</h2>
+<div class="upcoming-section">
+<div class="ep-promo">
+<video autoplay loop muted playsinline>
+<source src="images/music/supreme-elevation-promo.mp4" type="video/mp4">
+</video>
+<div class="ep-info">
+<h3>SUPREME ELEVATION EP</h3>
+<p style="color:#aaa;margin-bottom:1rem;line-height:1.6">The collective speaks. Supreme Elevation is the first full-crew project from OD9 - every voice, every perspective, one mission. This isn't a compilation. It's a coordinated strike.</p>
+<span class="coming-soon-badge">Coming Soon</span>
+</div>
+</div>
+</div>
+
+</div>
+<?php include('includes/footer.php'); ?>
+</body>
+</html>

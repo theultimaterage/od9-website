@@ -1,0 +1,36 @@
+/* OD9 guided tour — shared chrome for all four toured surfaces
+   (board / dashboard / bunker / settings). docs/GUIDED_TOUR_SPEC.md.
+   The ONE beacon implementation: "▶ Start Here / Tour" pill, gold + pulsing
+   until this page's chapter is done, then a subtle text link (.seen — toggled
+   by tour.js from od9_tour state). */
+
+.od9-tour-beacon { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px;
+  background: linear-gradient(180deg, #FFE8A3, #F5C542, #C99A1E); color: #0E1216;
+  font-family: 'Rajdhani', var(--font-display, sans-serif); font-weight: 700; font-size: 12px;
+  letter-spacing: .12em; text-transform: uppercase; text-decoration: none; border-radius: 999px;
+  box-shadow: 0 0 18px rgba(245,197,66,.55); animation: od9TourBeacon 2s ease-in-out infinite; cursor: pointer; }
+.od9-tour-beacon:hover { color: #0E1216; filter: brightness(1.08); }
+.od9-tour-beacon .tc-seen { display: none; }
+.od9-tour-beacon.seen { padding: 0; background: none; color: var(--ice, #7f8a90); font-weight: 400;
+  border-radius: 0; box-shadow: none; animation: none; }
+.od9-tour-beacon.seen:hover { color: var(--world, #00FFF7); filter: none; }
+.od9-tour-beacon.seen .tc-new { display: none; }
+.od9-tour-beacon.seen .tc-seen { display: inline; }
+@keyframes od9TourBeacon { 0%, 100% { box-shadow: 0 0 12px rgba(245,197,66,.4); } 50% { box-shadow: 0 0 26px rgba(245,197,66,.85); } }
+
+/* continue-the-tour link inside a driver.js popover */
+.od9-tour-next { margin-top: 12px; }
+.od9-tour-next a { display: inline-block; padding: 8px 14px; background: linear-gradient(180deg, #FFE8A3, #F5C542, #C99A1E);
+  color: #0E1216; font-weight: 700; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+  text-decoration: none; border-radius: 8px; box-shadow: 0 0 14px rgba(245,197,66,.45); }
+.od9-tour-next a:hover { filter: brightness(1.08); }
+
+/* driver.js popover — pull toward the OD9 dark chrome */
+.driver-popover { background: linear-gradient(180deg, #0d1117, #0a0a0a); color: #c4c7cb;
+  border: 1px solid #1c242a; box-shadow: 0 0 40px rgba(0,255,247,.14); }
+.driver-popover-title { color: #F0F0F5; }
+.driver-popover-description { color: #9AA6AB; }
+.driver-popover-arrow-side-left.driver-popover-arrow { border-left-color: #0d1117; }
+.driver-popover-arrow-side-right.driver-popover-arrow { border-right-color: #0d1117; }
+.driver-popover-arrow-side-top.driver-popover-arrow { border-top-color: #0d1117; }
+.driver-popover-arrow-side-bottom.driver-popover-arrow { border-bottom-color: #0d1117; }

@@ -39,3 +39,8 @@ dashboard/includes/config.php
 # Python build artifacts (tools/ has helper scripts).
 __pycache__/
 *.pyc
+
+# Runtime artifacts: captured outbound mail (.eml) + job logs.
+# Not ignored before the 2026-08-11 restructure commit, so 70 smoke-test
+# .eml captures were staged as if they were source.
+logs/

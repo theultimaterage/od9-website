@@ -1,0 +1,47 @@
+{
+  "_doc": "The OD9 lyrics library. Maps a title keyword ('match') to a lyrics .txt in this folder. The Song-of-the-Week picker (crons/sotw_picker.py) draws the Quartermaster's grounded read from the matched file's lyrics; no match -> reaction-only that week (never fabricated). 'match' is matched case-insensitively as a substring of the catalog track title. track_id/platform document the exact song so re-cycles stay unambiguous (matching uses the title, not track_id). See README.md.",
+  "entries": [
+    {
+      "match": "Traffic",
+      "file": "traffic.txt",
+      "song": "Traffic (feat. Joey P) [Prod. Lazy_AyeBeat$]",
+      "platform": "soundcloud",
+      "track_id": "950440270"
+    },
+    {
+      "match": "Chopper City",
+      "file": "chopper-city.txt",
+      "song": "The Ultimate Rage - Chopper City",
+      "platform": "soundcloud",
+      "track_id": "975428137"
+    },
+    {
+      "match": "Bernie Bros",
+      "file": "bernie-bros.txt",
+      "song": "Bernie Bros",
+      "platform": "soundcloud",
+      "track_id": "252236061"
+    },
+    {
+      "match": "BernieOrBust",
+      "file": "bernie-or-bust.txt",
+      "song": "The Ultimate Rage -  BernieOrBust",
+      "platform": "soundcloud",
+      "track_id": "269623166"
+    },
+    {
+      "match": "Purpose",
+      "file": "purpose.txt",
+      "song": "Purpose",
+      "platform": "spotify",
+      "track_id": "3W1hKrprBYSU4HbRr7hurJ"
+    },
+    {
+      "match": "Emergence",
+      "file": "emergence.txt",
+      "song": "Emergence",
+      "platform": "spotify",
+      "track_id": "6VJw1OMEZYvUPntMHDsbFZ"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+# OD9 email tracking routes (offda9.com/t/) -> index.php. Self-contained so it
+# never touches the site's root rewrites. See t/index.php.
+RewriteEngine On
+# No RewriteBase: relative substitution works at offda9.com/t/ (prod) AND
+# localhost/od9/t/ (dev) without hardcoding the base path.
+RewriteRule ^o/([A-Za-z0-9_-]+)/?$ index.php?type=open&id=$1 [L,QSA]
+RewriteRule ^c/([A-Za-z0-9_-]+)/?$ index.php?type=click&id=$1 [L,QSA]

@@ -1,0 +1,23 @@
+/* ztrans.css — CLICK-triggered video zone transition (reusable across zones).
+ *
+ * A nav link <a class="ztrans-link" data-ztrans="<clip>"> plays a fullscreen
+ * muted Flow/Veo clip OVER the current page, then navigates to the link's href
+ * when the clip ends (see includes/ztrans.php). The overlay is display:none
+ * until JS adds `.zt-on` on click, so it can NEVER trap content; the JS fails
+ * open (play() rejection / error / end / 7s cap all navigate). Reduced-motion
+ * users skip the clip entirely and navigate normally. Supersedes the old
+ * on-arrival model + the CSS-animated hatch.css.
+ */
+.ztrans { position: fixed; inset: 0; z-index: 9999; display: none; overflow: hidden; background: #06080d; }
+.ztrans.zt-on { display: block; animation: ztIn .18s ease both; }   /* fade in over the current page */
+@keyframes ztIn { from { opacity: 0; } to { opacity: 1; } }
+.ztrans-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #06080d; display: block; }
+.ztrans-skip {
+  position: absolute; top: 18px; right: 20px; z-index: 2; cursor: pointer;
+  background: rgba(8,11,16,.6); color: #aeb9c8; border: 1px solid rgba(255,255,255,.18);
+  border-radius: 7px; padding: 7px 13px; font: 600 11px/1 ui-monospace, monospace;
+  letter-spacing: .18em; backdrop-filter: blur(4px); transition: color .2s, border-color .2s;
+}
+.ztrans-skip:hover { color: #fff; border-color: #fff; }
+/* NOTE: OS reduced-motion is intentionally NOT honored here — the owner wants the
+   transitions for everyone; the SKIP button is the dismiss path. */

@@ -1,0 +1,12 @@
+# OD9 Pedagogical Library — protect gated tiers.
+#
+# Observer + Theorist are public (cold-visitor samples) and stay directly
+# accessible. Architect, Pioneer, and Benefactor PDFs are members-only: deny
+# all direct HTTP access here and require them through /download.php, which
+# verifies the visitor's tier first. download.php reads the files from the
+# filesystem (readfile), so it is unaffected by this rule.
+#
+# bunker/ holds Bunker audio exclusives (Phuryous Stylez Vol. 1); denied here and
+# served ONLY through /bunker-audio.php, which verifies login + streams with Range.
+RewriteEngine On
+RewriteRule ^(architect|pioneer|benefactor|founding|bunker)/ - [F]

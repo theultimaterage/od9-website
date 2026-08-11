@@ -1,0 +1,199 @@
+/* hatch.css — "Vault Descent" zone-entry transition (reusable).
+ *
+ * A skippable arrival overlay: a vault door unlocks, the blast panels part, and
+ * the view descends through the opening into the zone beneath. Themed here for
+ * The Bunker ("the Quartermaster cracked the vault"); the .hatch component is
+ * zone-agnostic — override the --hx-* vars to retheme it for another zone.
+ *
+ * Wiring (see bunker.php): a synchronous <head> script adds `.hatch-play` to
+ * <html> ONLY when motion is allowed and it hasn't played this session — so the
+ * overlay is opt-in. If JS never runs, `.hatch` stays display:none and the zone
+ * shows immediately (it can never trap content). Skip adds `.hatch-gone`.
+ *
+ * GPU-only (transform/opacity/filter); ~2.5s; honours prefers-reduced-motion.
+ */
+
+.hatch {
+  --hx-accent: #37e0ff;   /* electric chrome-blue — the Quartermaster's palette */
+  --hx-gold:   #e8c24a;   /* OD9 gold */
+  --hx-dark:   #06080d;
+  --hx-metal0: #11151d;
+  --hx-metal1: #232b38;
+  --hx-metal2: #394353;
+  --hx-edge:   #424d5e;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow: hidden;
+  display: none;                 /* opt-in: only shown under .hatch-play */
+  background: radial-gradient(120% 90% at 50% 58%, #0c121c 0%, var(--hx-dark) 64%, #04060a 100%);
+  font-family: "Space Mono", ui-monospace, "Cascadia Code", monospace;
+  contain: strict;
+}
+.hatch-play .hatch { display: block; animation: hxFadeOut .6s ease 1.95s forwards; }
+.hatch-gone  .hatch { display: none !important; }
+
+/* ---- scanlines + vignette (atmosphere) ---- */
+.hatch-scan {
+  position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+  background:
+    repeating-linear-gradient(0deg, rgba(55,224,255,.05) 0 1px, transparent 1px 3px),
+    radial-gradient(130% 100% at 50% 50%, transparent 52%, rgba(0,0,0,.6) 100%);
+  animation: hxFlicker 2.4s steps(60) infinite;
+}
+
+/* ---- the descent shaft (revealed behind the doors) ---- */
+.hatch-shaft {
+  position: absolute; left: 50%; top: 50%;
+  width: min(72vw, 520px); height: min(72vw, 520px);
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 0;
+  animation: hxShaftIn .5s ease .95s forwards, hxDescend .95s cubic-bezier(.6,0,.85,.3) 1.55s forwards;
+  perspective: 460px;
+}
+.hatch-steps {
+  position: absolute; inset: -6% 8% -30% 8%;
+  transform: rotateX(62deg);
+  transform-origin: 50% 100%;
+  background:
+    repeating-linear-gradient(180deg,
+      rgba(55,224,255,.42) 0 2px,
+      rgba(55,224,255,.06) 2px 7px,
+      rgba(4,8,14,.85) 7px 9px,
+      transparent 9px 22px);
+  filter: drop-shadow(0 0 14px rgba(55,224,255,.5));
+  mask-image: linear-gradient(180deg, transparent 0%, #000 28%, #000 100%);
+}
+.hatch-glow {
+  position: absolute; left: 50%; bottom: 4%; transform: translateX(-50%);
+  width: 60%; height: 46%;
+  background: radial-gradient(50% 60% at 50% 100%,
+    #d9f7ff 0%, var(--hx-accent) 26%, rgba(55,224,255,.35) 52%, transparent 78%);
+  filter: blur(6px);
+}
+
+/* ---- vault blast doors (two halves part vertically) ---- */
+.hatch-door {
+  position: absolute; left: -2%; right: -2%; height: 51%;
+  background:
+    linear-gradient(180deg, var(--hx-metal1) 0%, var(--hx-metal0) 100%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05),
+              inset 0 0 120px rgba(0,0,0,.7);
+  will-change: transform;
+}
+/* brushed-metal striations + bolt rows via layered gradients */
+.hatch-door::before {
+  content: ""; position: absolute; inset: 0; opacity: .5;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 2px, transparent 2px 9px),
+    radial-gradient(circle at 6% 50%, var(--hx-edge) 2.5px, transparent 3px),
+    radial-gradient(circle at 94% 50%, var(--hx-edge) 2.5px, transparent 3px);
+  background-size: auto, 100% 46px, 100% 46px;
+}
+.hatch-door-top {
+  top: 0;
+  border-bottom: 3px solid var(--hx-edge);
+  animation: hxDoorTop 1s cubic-bezier(.7,.02,.5,1) 1s forwards;
+}
+.hatch-door-bot {
+  bottom: 0;
+  border-top: 3px solid var(--hx-edge);
+  animation: hxDoorBot 1s cubic-bezier(.7,.02,.5,1) 1s forwards;
+}
+/* hazard stripe along each door's meeting edge */
+.hatch-door-top::after, .hatch-door-bot::after {
+  content: ""; position: absolute; left: 0; right: 0; height: 10px;
+  background: repeating-linear-gradient(45deg, var(--hx-gold) 0 12px, #0c0c0c 12px 24px);
+  opacity: .8;
+}
+.hatch-door-top::after { bottom: 0; }
+.hatch-door-bot::after { top: 0; }
+
+/* light that spills from the seam as the doors crack apart */
+.hatch-seam {
+  position: absolute; left: 0; right: 0; top: 50%; height: 3px;
+  transform: translateY(-50%) scaleX(.12); transform-origin: 50% 50%;
+  background: linear-gradient(90deg, transparent, #d9f7ff 30%, var(--hx-accent) 50%, #d9f7ff 70%, transparent);
+  filter: blur(2px); opacity: 0; pointer-events: none;
+  animation: hxSeam 1.05s ease 1s forwards;
+}
+
+/* ---- vault lock mechanism at the seam ---- */
+.hatch-lock {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(34vw, 230px); height: min(34vw, 230px);
+  animation: hxLockOut .5s ease 1.05s forwards;
+  will-change: transform, opacity;
+}
+.hatch-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--hx-metal2), var(--hx-metal1), var(--hx-edge), var(--hx-metal1), var(--hx-metal2));
+  box-shadow: 0 0 0 4px var(--hx-metal0), inset 0 0 26px rgba(0,0,0,.8),
+              0 14px 40px rgba(0,0,0,.6);
+}
+.hatch-ring2 {
+  position: absolute; inset: 16%; border-radius: 50%;
+  background:
+    repeating-conic-gradient(from 0deg, var(--hx-edge) 0 6deg, transparent 6deg 30deg),
+    radial-gradient(circle, var(--hx-metal1) 58%, var(--hx-metal0) 60%);
+  box-shadow: inset 0 0 18px rgba(0,0,0,.85);
+  animation: hxLockSpin 1s cubic-bezier(.4,.9,.3,1) .05s forwards, hxLockClunk .22s ease .9s;
+}
+.hatch-mark {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  color: var(--hx-accent); font-weight: 700; letter-spacing: .08em;
+  font-size: clamp(15px, 4vw, 30px);
+  text-shadow: 0 0 14px rgba(55,224,255,.7);
+  font-family: "Chakra Petch", "Space Mono", monospace;
+}
+
+/* ---- HUD copy ---- */
+.hatch-hud { position: absolute; left: 0; right: 0; text-align: center; pointer-events: none; }
+.hatch-hud-top {
+  top: 16%; color: var(--hx-accent); letter-spacing: .42em; font-size: clamp(10px,1.6vw,13px);
+  text-shadow: 0 0 10px rgba(55,224,255,.6); opacity: 0;
+  animation: hxHudTop .9s ease .15s forwards, hxFadeOut .35s ease .95s forwards;
+}
+.hatch-hud-top .dots::after { content: ""; animation: hxDots 1s steps(4) infinite; }
+.hatch-hud-mid {
+  top: 45%; color: var(--hx-gold); letter-spacing: .3em; font-weight: 700;
+  font-size: clamp(15px,3.4vw,30px); text-shadow: 0 0 22px rgba(232,194,74,.8);
+  opacity: 0; transform: scale(.82);
+  font-family: "Chakra Petch", "Space Mono", monospace;
+  animation: hxGranted 1.1s cubic-bezier(.2,1.4,.4,1) .92s forwards;
+}
+.hatch-hud-low {
+  bottom: 19%; color: var(--hx-accent); letter-spacing: .5em; font-size: clamp(10px,1.7vw,14px);
+  text-shadow: 0 0 12px rgba(55,224,255,.6); opacity: 0;
+  animation: hxHudLow 1.1s ease 1.45s forwards;
+}
+
+/* ---- skip ---- */
+.hatch-skip {
+  position: absolute; top: 18px; right: 20px; z-index: 2;
+  background: rgba(12,16,22,.6); color: #aeb9c8; cursor: pointer;
+  border: 1px solid rgba(255,255,255,.16); border-radius: 7px;
+  padding: 7px 13px; font: 600 11px/1 "Space Mono", monospace; letter-spacing: .18em;
+  backdrop-filter: blur(4px); transition: color .2s, border-color .2s;
+}
+.hatch-skip:hover { color: var(--hx-accent); border-color: var(--hx-accent); }
+
+/* ---- keyframes ---- */
+@keyframes hxFadeOut  { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+@keyframes hxFlicker  { 0%,100%{opacity:.9} 50%{opacity:.7} 53%{opacity:.95} }
+@keyframes hxShaftIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes hxDescend  { to { transform: translate(-50%,-46%) scale(2.75); filter: blur(7px); opacity: .15; } }
+@keyframes hxDoorTop  { to { transform: translateY(-102%); } }
+@keyframes hxDoorBot  { to { transform: translateY(102%); } }
+@keyframes hxLockSpin { from { transform: rotate(0); } to { transform: rotate(278deg); } }
+@keyframes hxLockClunk{ 0%{filter:none} 40%{filter:drop-shadow(0 0 18px var(--hx-accent))} 70%{filter:drop-shadow(0 0 26px var(--hx-gold))} 100%{filter:none} }
+@keyframes hxLockOut  { to { opacity: 0; transform: translate(-50%,-50%) scale(1.18); } }
+@keyframes hxSeam     { 0%{opacity:0;transform:translateY(-50%) scaleX(.1)} 28%{opacity:1;transform:translateY(-50%) scaleX(1)} 60%{opacity:.85;height:14px;filter:blur(9px)} 100%{opacity:0;height:34px;filter:blur(20px)} }
+@keyframes hxHudTop   { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@keyframes hxDots     { 0%{content:""} 25%{content:"."} 50%{content:".."} 75%{content:"..."} }
+@keyframes hxGranted  { 0%{opacity:0;transform:scale(.82)} 30%{opacity:1;transform:scale(1.04)} 64%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(1)} }
+@keyframes hxHudLow   { 0%{opacity:0;letter-spacing:.2em} 36%{opacity:1;letter-spacing:.5em} 78%{opacity:1} 100%{opacity:0} }
+
+@media (prefers-reduced-motion: reduce) {
+  .hatch, .hatch-play .hatch { display: none !important; }
+}
