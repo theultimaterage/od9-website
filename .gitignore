@@ -1,6 +1,15 @@
 # Prod deploy config — holds prod host + SSH key path. Never commit.
+# (Legacy schema, read by the retired tools/deploy.py. Kept only because it
+# still holds the Cloudflare zone id + API token used for manual DNS work —
+# that credential belongs in Bitwarden. The live config is
+# tools/prod-deploy-config.v2.json, which is committed and secret-free.)
 tools/prod-deploy-config.json
 tools/deploys.log
+
+# Deploy run artifacts written by the canonical prod-deploy engine. Same two
+# rules the marketing repo uses, so all three web repos ignore them identically.
+tools/deploy-log.jsonl
+tools/deploy-runs/
 
 # Local-only / secrets
 .env
