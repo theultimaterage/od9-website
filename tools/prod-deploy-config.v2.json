@@ -3,8 +3,8 @@
   "name": "OD9 — offda9.com (Off Da Nine)",
   "site_url": "https://offda9.com",
 
-  "deploy_enabled": false,
-  "_deploy_enabled_note": "DRY-ONLY until the first --dry run is reviewed. The repo/prod trees still diverge (170 repo-only / 158 prod-only as of 2026-08-11) and 72 files are CRLF on both sides pending a deliberate renormalization. Flip to true only after a --dry diff shows nothing unexpected. Same posture the marketing config used while its own drift was being reconciled.",
+  "deploy_enabled": true,
+  "_deploy_enabled_note": "Enabled 2026-08-11 after the --dry diff was reviewed line by line. That review was not a formality: it caught that api/drip/weekly_lovelogic_sender.php (cron-driven, Mondays 9 AM) was NEWER ON PROD than in the repo, so deploying would have reverted a live weekly broadcast to a stale build using the wrong PHP interpreter. Fixed in 5b023d1 before enabling. The diff was also cut from 22 creates / 16 changes to 16 / 15 by removing five root-level duplicates of live senders; of the 15 remaining changes, 13 are prod-side CRLF being normalized to LF (verified zero real content difference with --strip-trailing-cr) and 2 are repo-ahead comment updates.",
 
   "ssh": {
     "host": "72.167.54.213",
