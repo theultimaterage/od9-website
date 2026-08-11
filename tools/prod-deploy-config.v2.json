@@ -43,6 +43,7 @@
         "_sof_board_harness.php",
         "_ztrans_test.html",
         "_ztrans_dest.html",
+        "dashboard/_board_preview.php",
 
         "*.config.php",
         "config/database.php",

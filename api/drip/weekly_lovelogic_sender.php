@@ -6,16 +6,18 @@
  * verified, opted-in subscribers in email_signups. Idempotent per
  * (recipient, week_N) via the email_log.campaign column.
  *
- * Cron (Mondays 9 AM CT == 14:00 UTC):
- *   0 14 * * 1 /usr/bin/php /home/offda9/public_html/api/drip/weekly_lovelogic_sender.php >> /home/offda9/logs/lovelogic_sender.log 2>&1
+ * Cron (Mondays 9 AM CT == 14:00 UTC), run as offda9 so it can read the
+ * mode-600 mail secrets:
+ *   0 14 * * 1 sudo -u offda9 /opt/cpanel/ea-php82/root/usr/bin/php /home/offda9/public_html/api/drip/weekly_lovelogic_sender.php >> ... 2>&1
  *
  * CLI flags:
  *   --week=N           Override calculated week number (1..33)
  *   --dry-run          Print plan, don't send
  *   --test-email=ADDR  Send only to ADDR (skips subscriber list, skips idempotency log)
  *
- * Local exim handles delivery via PHP mail(). SPF/DKIM/DMARC are configured for
- * offda9.com so deliverability should be solid out of the gate.
+ * The body renders through od9_email_layout() — the same branded shell the drip
+ * sender uses — and ships via the unified od9_send_mail() (SMTP+DKIM on prod,
+ * Mailtrap capture on local). One design source; no per-sender chrome.
  */
 
 if (php_sapi_name() !== 'cli') {
@@ -23,30 +25,37 @@ if (php_sapi_name() !== 'cli') {
     die("CLI only.\n");
 }
 
-// Unified mailer — Brevo SMTP (port 2525) on prod, Mailtrap sandbox locally.
-// Replaces the old raw mail()/exim path so the weekly broadcast is
-// Brevo-DKIM-signed (was going out unsigned via GoDaddy → spam).
-$_mailLib = __DIR__ . '/../../includes/mail.php';
-if (!file_exists($_mailLib)) $_mailLib = __DIR__ . '/../../../includes/mail.php';
-require_once $_mailLib;
-
-// Shared branded email chrome (single source of truth for header/footer/logo).
-$_layoutLib = __DIR__ . '/../../includes/email_layout.php';
-if (!file_exists($_layoutLib)) $_layoutLib = __DIR__ . '/../../../includes/email_layout.php';
-require_once $_layoutLib;
-
 // ---- Config ----
-const LAUNCH_DATE = '2026-04-14';   // Monday week-1 send date per _EMAIL_CAMPAIGN_SUMMARY.md
+const LAUNCH_DATE = '2026-06-01';   // First Monday send date (reset 2026-05-25)
 const TOTAL_WEEKS = 33;
 const FROM_EMAIL = 'noreply@offda9.com';
 const FROM_NAME  = 'The OD9 Movement';
 const REPLY_TO   = 'contact@offda9.com';
-const TEMPLATE_DIR = '/home/offda9/public_html/email-templates/lovelogic-weekly/';
+// Prod docroot path; local XAMPP keeps the templates beside this script
+// (sync-local mirrors scripts/web/email-templates/ -> htdocs/od9/). The
+// fallback makes the sender locally testable (--test-email) instead of
+// prod-only.
+$_tplDir = '/home/offda9/public_html/email-templates/lovelogic-weekly/';
+if (!is_dir($_tplDir)) $_tplDir = __DIR__ . '/email-templates/lovelogic-weekly/';
+define('TEMPLATE_DIR', $_tplDir);
 
-$DB_HOST = getenv('OD9_DB_HOST') ?: 'localhost';
-$DB_NAME = getenv('OD9_DB_NAME') ?: 'offda9_od9_tickets';
-$DB_USER = getenv('OD9_DB_USER') ?: 'offda9_od9admin';
-$DB_PASS = getenv('OD9_DB_PASS') ?: '';
+// Shared DB config (defines DB_HOST, DB_NAME, DB_USER, DB_PASS, DB_PORT constants).
+// getenv() doesn't see the shell's env vars under cron — use the canonical config.
+// Path fallback: prod deploys this script to api/drip/ (../../config) but local
+// XAMPP keeps it at htdocs root (./config).
+$_dbConfig = __DIR__ . '/../../config/database.php';
+if (!file_exists($_dbConfig)) $_dbConfig = __DIR__ . '/config/database.php';
+require_once $_dbConfig;
+
+// Unified mailer (od9_send_mail): Mailtrap on local-XAMPP, SMTP+DKIM on prod.
+$_mailHelper = __DIR__ . '/../../includes/mail.php';
+if (!file_exists($_mailHelper)) $_mailHelper = __DIR__ . '/includes/mail.php';
+require_once $_mailHelper;
+
+// Shared branded email shell (od9_email_layout) — the one design source.
+$_layoutLib = __DIR__ . '/../../includes/email_layout.php';
+if (!file_exists($_layoutLib)) $_layoutLib = __DIR__ . '/includes/email_layout.php';
+require_once $_layoutLib;
 
 // ---- CLI args ----
 $opts = getopt('', ['week::', 'dry-run', 'test-email::']);
@@ -58,13 +67,21 @@ $testEmail = $opts['test-email'] ?? null;
 $launch = new DateTime(LAUNCH_DATE);
 $now    = new DateTime('now');
 $daysSinceLaunch = (int)$launch->diff($now)->days * ($launch <= $now ? 1 : -1);
+// No clamp (2026-07-11): min(TOTAL_WEEKS, ...) made every post-calendar Monday
+// re-send week 33 forever. Past the calendar, $autoWeek exceeds TOTAL_WEEKS and
+// the range check below exits cleanly (heartbeat still written by the cron
+// wrapper); --week can still force a re-send of any past week.
 $autoWeek = ($daysSinceLaunch >= 0)
-    ? min(TOTAL_WEEKS, (int)floor($daysSinceLaunch / 7) + 1)
+    ? (int)floor($daysSinceLaunch / 7) + 1
     : 0;
 $week = $forceWeek ?? $autoWeek;
 if ($week < 1 || $week > TOTAL_WEEKS) {
-    fwrite(STDERR, "[broadcast] Week $week is out of range [1, " . TOTAL_WEEKS . "]\n");
-    exit(1);
+    if ($forceWeek !== null) {  // operator typo on --week: loud failure
+        fwrite(STDERR, "[broadcast] Forced week $week is out of range [1, " . TOTAL_WEEKS . "]\n");
+        exit(1);
+    }
+    fwrite(STDERR, "[broadcast] Week $week is outside the calendar — complete or pre-launch; nothing to send.\n");
+    exit(0);
 }
 
 // ---- Locate template ----
@@ -81,11 +98,11 @@ echo "[broadcast] week=$week template=" . basename($templateFile) . "\n";
 $raw = file_get_contents($templateFile);
 [$meta, $body] = parseTemplate($raw);
 $subject = $meta['Subject'] ?? "OD9 Weekly: Week $week";
-$html    = od9_email_layout(mdToHtml($body), [
-    'title'           => $subject,
-    'preheader'       => $meta['Preheader'] ?? $subject,
-    'transmission'    => sprintf('%02d / %d', $week, TOTAL_WEEKS),
-    'unsubscribe_url' => 'https://offda9.com/unsubscribe.php?email={{EMAIL}}',
+// Render the markdown body into the shared branded shell. {{EMAIL}} in the
+// layout footer's unsubscribe link is resolved per-recipient by personalize().
+$html = od9_email_layout(mdToHtml($body), [
+    'title'        => $subject,
+    'transmission' => sprintf('%02d / %d', $week, TOTAL_WEEKS),
 ]);
 
 // ---- Recipients ----
@@ -94,8 +111,7 @@ if ($testEmail) {
     $recipients = [['id' => 0, 'email' => $testEmail, 'first_name' => null, 'name' => null]];
     echo "[broadcast] TEST MODE - sending only to $testEmail (skipping db log)\n";
 } else {
-    $pdo = new PDO("mysql:host=$DB_HOST;dbname=$DB_NAME;charset=utf8mb4", $DB_USER, $DB_PASS,
-        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+    $pdo = getDatabaseConnection();   // canonical connection (same as the drip sender)
     ensureCampaignColumn($pdo);
     $stmt = $pdo->query(
         "SELECT id, email, first_name, name FROM email_signups
@@ -121,8 +137,8 @@ foreach ($recipients as $r) {
         continue;
     }
     $personalized = personalize($html, $r);
-    // Send via the unified Brevo-signed mailer (Brevo sets Return-Path +
-    // DKIM-signs, keeping SPF/DKIM/DMARC aligned at recipients).
+    // od9_send_mail supplies List-Unsubscribe-Post, X-Mailer, and Message-ID
+    // itself, and handles SMTP+DKIM (prod) / Mailtrap capture (local).
     $unsub = '<https://offda9.com/unsubscribe.php?email=' . rawurlencode($r['email'])
            . '>, <mailto:contact@offda9.com?subject=unsubscribe>';
     $ok = od9_send_mail($r['email'], $subject, $personalized, [
