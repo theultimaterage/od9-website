@@ -1,0 +1,125 @@
+{
+  "$schema_version": "prod-deploy-config.v2",
+  "name": "OD9 — offda9.com (Off Da Nine)",
+  "site_url": "https://offda9.com",
+
+  "deploy_enabled": false,
+  "_deploy_enabled_note": "DRY-ONLY until the first --dry run is reviewed. The repo/prod trees still diverge (170 repo-only / 158 prod-only as of 2026-08-11) and 72 files are CRLF on both sides pending a deliberate renormalization. Flip to true only after a --dry diff shows nothing unexpected. Same posture the marketing config used while its own drift was being reconciled.",
+
+  "ssh": {
+    "host": "72.167.54.213",
+    "user": "offda9",
+    "key": "~/.ssh/id_rsa_automation",
+    "remote_base": "/home/offda9",
+    "timeouts": { "ssh": 120, "tar": 600, "rsync": 900 }
+  },
+  "_topology_note": "Connects AS the owning account. The retired tools/deploy.py SCP'd each file to /tmp and sudo-installed it as ultimaterage because 'the SSH user cannot write offda9's web root directly' — that is obsolete: /home/offda9/.ssh already holds an automation key, both ~/.ssh/id_rsa_automation and ~/.ssh/freshthaband_key authenticate directly as offda9@, the account owns its writable docroot, and rsync is present. So od9 needs NO engine changes; plain rsync-as-owner works exactly like the platform repos.",
+
+  "mappings": [
+    {
+      "local": "./",
+      "remote": "public_html/",
+      "_note": "Whole-tree sync. The repo root IS the docroot since the public/→root restructure (commit 801668f). rsync runs WITHOUT --delete, so prod-only runtime content (guide-videos/, library/ media uploaded out-of-band, cache/, data/) is never removed.",
+      "exclude": [
+        ".git/",
+        ".gitignore",
+        ".gitattributes",
+        ".claude/",
+        "tools/",
+        "logs/",
+        "cache/",
+        "migrations/",
+        "tests/",
+        "docs/",
+        "node_modules/",
+        "__pycache__/",
+        "*.py",
+        "*.pyc",
+
+        "AGENTS.md",
+        "CLAUDE.md",
+        "OD9_AUDIT_INVENTORY.md",
+        "ADMIN_DESIGN_STANDARDIZATION.md",
+        "_sof_board_harness.php",
+        "_ztrans_test.html",
+        "_ztrans_dest.html",
+
+        "*.config.php",
+        "config/database.php",
+        "config/mail.php",
+        "config/sp-credentials.php",
+        "dashboard/includes/config.php",
+        "dashboard/includes/db.php",
+        "founding_patron_launch_sender.php",
+        ".htpasswd",
+
+        "check_db.php",
+        "check-admin.php",
+
+        "php.ini",
+        ".user.ini",
+        ".env",
+        ".env.*",
+
+        "*.bak",
+        "*.bak.*",
+        "*.bak-*",
+        "*.orig",
+        "*~",
+        ".DS_Store"
+      ]
+    }
+  ],
+
+  "skip_always": {
+    "_doc": "Human-readable summary of the exclude list above — why each class never ships.",
+    "credentials": "config/database.php, config/mail.php, config/sp-credentials.php, dashboard/includes/config.php and the *.config.php glob (platform.config.php, mail.config.php, secrets.config.php, api/v1/pulse_secret.config.php). Several of these are TRACKED IN THE REPO with local-dev values AND live on prod with real credentials — deploying the repo copy would overwrite prod's working config. The *.config.php glob deliberately does NOT match *.config.example.php, so the examples still ship.",
+    "server_config": "php.ini, .user.ini — cPanel/server level, prod-only, correctly absent from the repo.",
+    "workstation_only": "tools/, .claude/, docs/, tests/, migrations/, *.py — never web-served.",
+    "runtime_artifacts": "logs/ (70 .eml mail-outbox captures from smoke runs), cache/.",
+    "dev_scratch": "_sof_board_harness.php, _ztrans_test.html, _ztrans_dest.html and the root *.md docs.",
+    "legacy_never_deploy": "dashboard/includes/db.php, founding_patron_launch_sender.php and .htpasswd are carried over from the retired tools/deploy.py's `never_deploy` list. The first --dry run of this config would have shipped all three — porting that list is not optional when replacing a deployer.",
+    "diagnostics": "check_db.php and check-admin.php are DB/admin diagnostics that the first dry run would have newly created in a public webroot — the same class as the _phpinfo.php found serving on freshthaband.com. They stay local."
+  },
+
+  "pre_deploy": {
+    "_note": "Starts minimal on purpose. lint_php is universally valuable and catches the parse errors this repo's bespoke deployer never checked. The FRESH-ecosystem gates are OFF because they encode platform-specific rules (FRESH brand palette, tenant-scope queries, cron contract, schema usage) that od9 does not follow — enable them individually only after confirming each is meaningful here, rather than shipping gates that fail for reasons unrelated to od9's correctness.",
+    "lint_php": true,
+    "bootstrap_compliance": { "enabled": false },
+    "guardrail_lint": false,
+    "deploy_coverage": false,
+    "brand_lint": false,
+    "cron_contract": false,
+    "schema_usage": false
+  },
+
+  "post_deploy_smoke_tests": [
+    { "url": "https://offda9.com/",            "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"], "must_contain": ["Off Da Nine"] },
+    { "url": "https://offda9.com/about.php",   "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] },
+    { "url": "https://offda9.com/music.php",   "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] },
+    { "url": "https://offda9.com/join.php",    "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] },
+    { "url": "https://offda9.com/library.php", "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] },
+    { "url": "https://offda9.com/support.php", "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] }
+  ],
+  "_smoke_note": "must_contain 'Off Da Nine' on the apex proves we reached OD9 and not a parked domain or a misrouted edge — status+200 alone cannot tell those apart.",
+
+  "backup": {
+    "prefix": "_backup_pre_sync_od9_web_",
+    "include": ["public_html"],
+    "exclude": [
+      "public_html/guide-videos",
+      "public_html/library",
+      "public_html/cache",
+      "public_html/logs"
+    ],
+    "_exclude_note": "Large out-of-band media and runtime dirs are omitted from the pre-deploy tar to keep it small and fast. They are also never written by the deploy (excluded from the mapping, and rsync runs without --delete), so nothing that changes goes un-backed-up.",
+    "retention_days": 30
+  },
+
+  "log": {
+    "path": "tools/deploy-log.jsonl",
+    "runs_dir": "tools/deploy-runs"
+  },
+
+  "_provenance": "Authored 2026-08-11 as part of the od9 repo↔prod reconciliation. Replaces the 234-line repo-local tools/deploy.py, whose web_src pointed at a public/ directory that no longer exists (so it was already broken). RETIRE deploy.py only after a --dry run here is reviewed and deploy_enabled is flipped. Two capabilities of the old deployer are NOT yet in the canonical engine and remain open: Cloudflare cache purge (cf_zone_id/cf_api_token) and opcache reset."
+}
