@@ -1,0 +1,29 @@
+# Line endings are pinned to LF.
+#
+# Prod is Linux and the deploy rsyncs this working tree straight into
+# /home/offda9/public_html. Git for Windows ships core.autocrlf=true at SYSTEM
+# level, and this repo pinned nothing, so a fresh checkout produced CRLF while
+# prod holds LF. Verified 2026-08-11: force-checking-out customer/login.php made
+# it diverge from prod's byte-identical copy. Left unpinned, the first rsync
+# deploy would rewrite EVERY text file on prod as a CRLF diff-storm — and CRLF
+# genuinely breaks shell scripts and can upset .htaccess directives.
+#
+# Same class the platform repo closed with `tools/git-hooks/* text eol=lf`.
+* text=auto eol=lf
+
+# Binary assets must never be line-ending converted or diffed as text.
+*.pdf  binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf  binary
+*.eot  binary
+*.mp3  binary
+*.mp4  binary
+*.zip  binary
+*.sqlite binary
