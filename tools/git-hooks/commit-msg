@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# commit-msg hook: THE CLASS-FIX GATE.
+#
+# Born 2026-07-23, after the QOTD pool drought — the SECOND occurrence of the
+# same failure class (silent supply-chain starvation). The first fix (88c5353)
+# patched the broken link and declared victory; no invariant was built, so the
+# class recurred and cost the founder another day.
+#
+# The founder's demand, verbatim: "WHY CAN'T YOU ALWAYS ASK THE QUESTION
+# 'WHAT HAS TO EXIST SO THIS CLASS CAN NEVER FAIL SILENTLY AGAIN?'"
+# Intention doesn't persist across sessions. THIS GATE does.
+#
+# Rule: any commit whose subject starts with "fix(" or "fix:" MUST contain a
+# trailer line answering the class question:
+#
+#   Class-fix: <the invariant/monitor/test/gate built so this class cannot
+#               silently recur>
+#   -- or, when a class fix truly doesn't apply (typo, cosmetic, one-shot): --
+#   Class-fix: none — <one-line reason why this cannot be a recurring class>
+#
+# The gate cannot force a good answer. It makes SILENTLY SKIPPING THE QUESTION
+# impossible — for every session, every model, forever.
+#
+# Bypass (logged in your conscience): git commit --no-verify
+
+MSG_FILE="$1"
+
+subject="$(head -1 "$MSG_FILE")"
+
+case "$subject" in
+  fix\(*|fix:*)
+    if ! grep -qiE '^Class-fix:[[:space:]]*\S' "$MSG_FILE"; then
+      echo ""
+      echo "COMMIT BLOCKED — this is a fix commit with no Class-fix: trailer."
+      echo ""
+      echo "Answer the question the QOTD drought taught us to never skip:"
+      echo "  WHAT HAS TO EXIST SO THIS CLASS CAN NEVER FAIL SILENTLY AGAIN?"
+      echo ""
+      echo "Add to the commit body ONE of:"
+      echo "  Class-fix: <the invariant/monitor/test/gate this commit ships for the class>"
+      echo "  Class-fix: none — <why this cannot recur as a class (typo/cosmetic/one-shot)>"
+      echo ""
+      echo "If the honest answer is 'the invariant doesn't exist yet' — BUILD IT,"
+      echo "then commit. That is the entire point of this gate."
+      exit 1
+    fi
+    ;;
+esac
+
+exit 0
