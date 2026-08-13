@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+# pre-commit hook: THE SECRET GATE (+ chain).
+#
+# Born 2026-08-12 from an audit, not an incident — which is the point. A repo's .gitignore
+# is a DENYLIST: it excludes secret-config.json and *.log by name, so a new
+# credential-bearing file under any other name is committed by DEFAULT. "Clean today" is a
+# fact. This is the invariant.
+#
+# Scans STAGED CONTENT, not the working tree — they differ under `git add -p` or an edit
+# made after staging, and what lands in the commit is what is staged.
+#
+# FAILS CLOSED. If the scanner's own selftest fails the commit is REFUSED, not waved
+# through: a detector that cannot find anything reports exactly like a clean tree.
+#
+# CHAINS, NEVER REPLACES. Six repos in this fleet already ran their own pre-commit gates
+# (Design Cop, documentation enforcement, static guards, fabrication guard). Installing
+# over one destroys it — and five of them were unversioned, so "destroys" meant
+# permanently. If tools/git-hooks/pre-commit.local exists it runs too, and EITHER failing
+# fails the commit. The repo's own gate keeps its exit code and its output.
+#
+# Never prints a matched value — only file:line and TYPE. Echoing a near-miss into the
+# terminal is how a caught secret becomes a leaked one.
+#
+# Bypass: git commit --no-verify  (disables EVERY gate in that commit — if this fired on a
+# false positive, widen PLACEHOLDER/IS_PATH/ALLOW_FILE in tools/secret-scan.py instead.)
+
+set -uo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+cd "$REPO_ROOT" || exit 0
+
+FAILED=0
+
+# ── 1. the repo's own pre-existing gate, if any ──────────────────────────────
+LOCAL_HOOK="$REPO_ROOT/tools/git-hooks/pre-commit.local"
+[ -f "$LOCAL_HOOK" ] || LOCAL_HOOK="$REPO_ROOT/scripts/git-hooks/pre-commit.local"
+if [ -f "$LOCAL_HOOK" ]; then
+  bash "$LOCAL_HOOK" "$@"
+  rc=$?
+  if [ "$rc" -ne 0 ]; then
+    echo "  ✖ pre-commit: this repo's own gate refused (exit $rc)" >&2
+    FAILED=1
+  fi
+fi
+
+# ── 2. the secret gate ───────────────────────────────────────────────────────
+SCANNER=""
+for c in "$REPO_ROOT/tools/secret-scan.py" "$REPO_ROOT/scripts/secret-scan.py" \
+         "$HOME/.claude/skills/tools/secret-scan.py"; do
+  [ -f "$c" ] && { SCANNER="$c"; break; }
+done
+
+if [ -z "$SCANNER" ]; then
+  # Refuse rather than skip. A missing scanner is indistinguishable from a clean scan,
+  # and "silently stopped running" is the failure mode this whole fleet keeps fighting.
+  echo "  ✖ pre-commit: secret-scan.py NOT FOUND (looked in tools/, scripts/, ~/.claude/skills/tools/)" >&2
+  echo "    refusing to commit unscanned; restore it or use --no-verify deliberately." >&2
+  exit 1
+fi
+
+PY=""
+for c in python python3 py; do command -v "$c" >/dev/null 2>&1 && { PY="$c"; break; }; done
+if [ -z "$PY" ]; then
+  echo "  ✖ pre-commit: no python on PATH — refusing to commit unscanned." >&2
+  exit 1
+fi
+
+OUT="$("$PY" "$SCANNER" --staged 2>&1)"
+RC=$?
+if [ "$RC" -ne 0 ]; then
+  echo "" >&2
+  echo "  ✖ pre-commit SECRET GATE" >&2
+  printf '%s\n' "$OUT" | sed 's/^/  /' >&2
+  echo "" >&2
+  FAILED=1
+else
+  printf '%s\n' "$OUT" | sed 's/^/  /'
+fi
+
+exit "$FAILED"
