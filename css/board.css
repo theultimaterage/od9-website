@@ -581,3 +581,117 @@ body.present .reader-panel {
   height: 100%;
   max-height: none;
 }
+
+/* ============================================================================
+   P1 — "CONSOLE" REDESIGN, phase 1: surfaces + grid
+   docs/BOARD_REDESIGN_SPEC.md. Appended as an override layer so P1 is a
+   reviewable, revertible block rather than a rewrite of the file above it.
+   Phases 2-5 (relocation, progress rail, native broadcast, token unification)
+   fold these rules back into the base as each lands.
+   ========================================================================= */
+:root{
+  /* spacing — Fibonacci (spec §3.2) */
+  --sp-1:4px; --sp-2:8px; --sp-3:13px; --sp-4:21px; --sp-5:34px; --sp-6:55px; --sp-7:89px;
+  /* type — modular scale, ratio √φ ≈ 1.272, base 16 (spec §4) */
+  --fs-micro:10px; --fs-label:12.5px; --fs-body:16px; --fs-lead:20px;
+  --fs-h3:26px; --fs-h2:33px; --fs-h1:42px;
+}
+
+/* --- 1. THE MUD FIX -------------------------------------------------------
+   The page is FLAT --void and the zone plate lives in a framed .viewport
+   (markup in board.php). Nothing translucent, nothing blurred, sits under
+   live text any more: every scrim added to keep text readable was flattening
+   the whole surface to one grey. Panels are opaque, full stop. */
+.board{ background:var(--void) !important; }
+
+/* A cinematic BAND, not a 16:9 plate: at content width a true 16:9 would be
+   ~900px tall and push every panel below the fold, while capping its height
+   with an aspect-ratio letterboxes it narrow and leaves dead margins. Fixed
+   height + object-fit cover gives full width and a controlled crop. */
+.viewport{
+  position:relative; width:calc(100% - (2 * var(--sp-5)));
+  max-width:1680px; margin:0 auto var(--sp-4);
+  height:clamp(240px, 34vh, 400px);
+  border:1px solid var(--line-strong); border-radius:var(--r-lg);
+  overflow:hidden; background:#000;
+}
+.viewport>img{ width:100%; height:100%; object-fit:cover; object-position:center 38%; display:block; }
+.viewport .vtag{
+  position:absolute; left:var(--sp-4); top:var(--sp-4);
+  font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.16em;
+  text-transform:uppercase; color:var(--diamond);
+  background:rgba(10,10,10,.72); border:1px solid var(--line-strong);
+  padding:var(--sp-1) var(--sp-3); border-radius:var(--r-pill);
+}
+.viewport .vname{
+  position:absolute; left:var(--sp-4); bottom:var(--sp-4);
+  font-family:var(--font-display); font-weight:700; font-size:var(--fs-h1);
+  line-height:1.05; color:var(--diamond); text-shadow:0 2px 24px rgba(0,0,0,.9);
+}
+
+/* opaque panels — kills every backdrop-filter/translucent fill on the board */
+.q, .gate, .guide, .questdock, .worldstate, .cohort, .rmap, .sofb-v, .entry{
+  background:var(--panel) !important; backdrop-filter:none !important;
+}
+.q, .questdock{ background:var(--panel-2) !important; }
+
+/* --- 2. THE GATE'S CONTRAST VIOLATION ------------------------------------
+   --violet #7A00FF measures 2.9:1 on --panel: it CANNOT legally carry text,
+   and .gate h4 was using it for the panel's own label. Violet stays as the
+   Gate's frame + glow (its per-destination accent, brand §3.1); the label
+   moves to --ice (12.8:1). Spec §5. */
+.gate{ border-color:var(--violet-soft) !important; box-shadow:0 0 26px rgba(122,0,255,.16) inset; }
+.gate h4{ color:var(--ice) !important; font-size:var(--fs-label); letter-spacing:.16em; }
+
+/* --- 3. THE φ GRID (spec §3.1) -------------------------------------------
+   .map is the board's real layout container (it holds the helix, the Gate,
+   the Guide and the dock). Its children are normal-flow, so it becomes the
+   grid directly: 61.8% world / 38.2% act. The helix SVG + crest stay
+   absolutely positioned across the whole container as the backdrop of the
+   primary column until the progress rail replaces them in P3. */
+.map{
+  display:grid; grid-template-columns:61.8fr 38.2fr;
+  gap:var(--sp-4); align-items:start;
+  max-width:1680px; margin-inline:auto; padding:0 var(--sp-5) var(--sp-5);
+}
+/* Explicit rows for the secondary stack. Without them every column-2 child
+   auto-places into row 1 and the move dock draws straight over the Gate. */
+.map>.pathsvg, .map>.origin-crest, .map>.helix-you,
+.map>.summit{ grid-column:1; grid-row:1 / span 3; }
+.map>.dockwrap{ grid-column:2; grid-row:1; }
+.map>.gate    { grid-column:2; grid-row:2; margin-top:0 !important; }
+.map>.guide   { grid-column:2; grid-row:3; margin-top:0 !important; }
+/* THE defect from spec §1.2, in code: these three were position:absolute,
+   placed over the helix by coordinate rather than laid out. An absolutely
+   positioned element ignores grid placement entirely, so the grid cannot
+   exist until they return to normal flow. */
+.map>.gate, .map>.guide, .map>.dockwrap{
+  position:static !important; inset:auto !important;
+  max-width:none !important; width:auto !important;
+  /* the dock also carried max-height:calc(100% - 36px) + overflow:auto from
+     its absolute days — inside a grid cell that silently clips the reflection
+     field and the submit button off the bottom of the card. */
+  max-height:none !important; overflow:visible !important;
+}
+/* keep the helix backdrop in the primary column instead of spanning under
+   the action panels (it is retired outright in P3) */
+.map>.pathsvg, .map>.presence-layer{ right:38.2% !important; }
+
+/* the primary column needs height for the helix to live in until P3 */
+.map::before{ content:""; grid-column:1; grid-row:1 / span 3; min-height:420px; pointer-events:none; }
+
+/* --- 4. TYPE + accent budget (spec §4/§5) --------------------------------- */
+.hud .bzone{ font-size:calc(var(--hud-mk-h,26px) / .72); line-height:1; }
+.q .title{ font-size:var(--fs-lead); }
+.q .meta{ font-size:var(--fs-body); color:var(--ink-dim); }
+.qd-card .ti{ font-size:var(--fs-lead); }
+.entry textarea{ font-size:var(--fs-body); }
+/* --ink-faint is 3.3:1 — large text only, never body copy */
+.preview-note, .rmap-foot{ color:var(--ink-dim); }
+
+@media (max-width:1100px){
+  .map{ grid-template-columns:1fr; }
+  .map>.gate, .map>.guide, .map>.dockwrap{ grid-column:1; }
+  .map>.dockwrap{ grid-row:auto; }
+  .map::before{ display:none; }
+}

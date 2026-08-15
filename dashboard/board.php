@@ -368,7 +368,11 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
      zone (muted video = autoplay-safe; odZtransPlay fails open if blocked). -->
 <script>(function(){ if (window.odZtransPlay) { window.odZtransPlay('gate'); } })();</script>
 <?php endif; ?>
-<div class="board" style="background: linear-gradient(180deg, rgba(10,10,10,.35), rgba(10,10,10,.55) 45%, rgba(10,10,10,.92)), url('<?= $h($IMG) ?>/<?= $h($zone['img']) ?>') center 38% / cover no-repeat;">
+<?php /* P1 "Console" (docs/BOARD_REDESIGN_SPEC.md): the zone plate is no longer
+   a full-bleed background under live text — that is what forced a scrim onto
+   every panel and turned the whole surface grey. The page is flat --void and
+   the art is FRAMED in .viewport below. */ ?>
+<div class="board">
 
   <header class="hud">
     <div class="brand">
@@ -427,6 +431,15 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
   <?php if ($isPreview): ?>
   <div class="zone-preview-banner"><?php if ($readOnly): ?>&#128270; Previewing <b><?= $h($zone['zone']) ?></b> (<?= $h(ucfirst($tier)) ?>) — read-only.<?php else: ?>&#128296; Admin view — <b><?= $h($zone['zone']) ?></b> (<?= $h(ucfirst($tier)) ?>), fully interactive; anything you complete here applies to your account.<?php endif; ?> <a class="ztrans-link" data-ztrans="gate" href="?tier=<?= $h($memberTier) ?>">Return to <?= $h(ZONES[$memberTier]['zone']) ?> &rsaquo;</a></div>
   <?php endif; ?>
+
+  <?php /* P1: the world as a framed VIEWPORT, not a wallpaper. Same plate, same
+     guide, same zone name — but contained, so every panel below it can be
+     opaque and legible. Decorative: the zone name is already in the HUD. */ ?>
+  <div class="viewport" aria-hidden="true">
+    <img src="<?= $h($IMG) ?>/<?= $h($zone['img']) ?>" alt="">
+    <span class="vtag">&#9670; <?= $h($zone['guide']) ?></span>
+    <span class="vname"><?= $h($zone['zone']) ?></span>
+  </div>
 
   <?php // World State → State of the Filter (canonical data) + the Live Roadmap panel.
         // (The old hardcoded rows had a stale CO₂ (426) and an unsourced GPI rank —
