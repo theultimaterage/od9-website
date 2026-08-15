@@ -151,3 +151,18 @@ body.embed .codex{padding-top:24px}
   .codex-cover{aspect-ratio:16/9}
   .codex-cover .sigil{font-size:120px}
 }
+
+/* ---- PRESENT MODE (?present=1) — codex read aloud during a sermon --------
+   Set by dashboard/board.php's reader when the board itself is in present
+   mode (docs/SERMON_PIPELINE_SPEC.md). The board reader hands this document
+   a much wider panel than the desk layout, so the 800px reading column is
+   released and the whole document is magnified for 1080p legibility. zoom
+   (not font-size) because the codex sizes its parts in px — zoom scales the
+   plate, drop caps and marginalia together instead of breaking their rhythm.
+   Only ever applies inside the embed; a member reading normally is untouched.
+   ------------------------------------------------------------------------ */
+body.embed.present { zoom: 1.3; }
+body.embed.present .codex { max-width: 1000px; padding-top: 18px; }
+/* The cover plate is atmosphere; on a stream it must not push the first
+   paragraph below the fold — the audience should land on TEXT. */
+body.embed.present .codex-cover { max-height: 22vh; }

@@ -60,7 +60,7 @@ function codex_render(array $L): void {
 <title><?= $h($title) ?> — The Codex · OD9</title>
 <link rel="stylesheet" href="../../css/codex.css?v=<?= $cssV ?>">
 </head>
-<body class="<?= $embed ? 'embed' : '' ?>">
+<body class="<?= $embed ? 'embed' : '' ?><?= !empty($_GET['present']) ? ' present' : '' ?>">
 
 <?php if (!$embed): ?>
 <header class="codex-hud">

@@ -221,6 +221,8 @@ a { color: inherit; }
 .flash.ok { border: 1px solid rgba(63,185,80,.4); background: rgba(63,185,80,.10); color: #b6f0c6; }
 .flash.pending { border: 1px solid rgba(0,191,255,.4); background: rgba(0,191,255,.08); color: var(--ice); }
 .flash.err { border: 1px solid rgba(229,72,58,.4); background: rgba(229,72,58,.10); color: #f2b2a8; }
+/* the ascension flash (chunk 4's "you passed" moment) — gold, unmissable */
+.flash.ascend { border: 1px solid rgba(212,175,55,.65); background: rgba(212,175,55,.12); color: var(--gold-bright); font-family: var(--font-display); font-weight: 700; box-shadow: var(--glow-gold); }
 
 .tagline { text-align: center; padding: 18px; font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .26em; color: var(--ice); text-transform: uppercase; }
 
@@ -327,6 +329,28 @@ a { color: inherit; }
 .helixmap .gate .gtag { position: absolute; left: 9px; bottom: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; color: var(--violet-soft); background: rgba(11,11,11,.82); border: 1px solid rgba(122,0,255,.5); padding: 4px 8px; text-transform: uppercase; }
 .helixmap .gate .gate-locks { margin-top: 9px; background: rgba(13,13,13,.78); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 11px 13px; backdrop-filter: blur(4px); }
 .helixmap .gate .gate-locks h4 { font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; color: var(--ice); text-transform: uppercase; margin: 0 0 8px; }
+.helixmap .gate .gate-face { margin: 11px 0 2px; }
+.helixmap .gate .gate-face-btn { width: 100%; font-size: 11.5px; letter-spacing: .12em; }
+/* presence pins (SPEC §5) — consensual member tokens clustered at their current node */
+.helixmap .presence-layer { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.helixmap .ptok-cluster { position: absolute; transform: translate(10px, -22px); display: flex; gap: 2px; pointer-events: auto; }
+.helixmap .ptok { width: 15px; height: 15px; border-radius: 50%; display: grid; place-items: center;
+  font-family: var(--font-mono); font-size: 8px; font-weight: 700; color: var(--diamond);
+  background: rgba(13,13,13,.9); border: 1px solid var(--world);
+  box-shadow: 0 0 6px rgba(0,255,247,.35); transform: translateY(calc(var(--pi, 0) * -2px)); }
+.helixmap .ptok.anon { border-color: var(--ice); color: transparent;
+  background: radial-gradient(circle at 50% 42%, rgba(170,221,255,.75) 0 3px, rgba(13,13,13,.9) 4px); }
+.helixmap .ptok.more { border-color: var(--line-strong); color: var(--ice); box-shadow: none; }
+.helixmap .ptok-gate { position: absolute; top: 218px; right: 24px; pointer-events: auto;
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--gold-bright); background: rgba(11,11,11,.78); border: 1px solid rgba(212,175,55,.5);
+  border-radius: 999px; padding: 4px 10px; backdrop-filter: blur(4px); }
+@media (max-width: 760px) { .helixmap .presence-layer { display: none; } }
+
+/* the QOTD daily beacon (chunk 5) — gold pulse until today's question is answered */
+.helixmap .hnode.qotd:not(.done) .dot { border-color: var(--gold); color: var(--gold-bright); }
+.helixmap .hnode.daily .dot { box-shadow: 0 0 12px rgba(212,175,55,.55); animation: qotdPulse 2.2s ease-in-out infinite; }
+@keyframes qotdPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.22); } }
 .helixmap .gate .lock { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 11px; color: var(--ink); }
 .helixmap .gate .lock:last-child { margin-bottom: 0; }
 .helixmap .gate .lock .x { width: 13px; height: 13px; border-radius: 3px; border: 1px solid var(--ink-faint); flex: 0 0 13px; display: grid; place-items: center; font-size: 9px; }
@@ -346,11 +370,27 @@ a { color: inherit; }
 .helixmap .summit .summit-tag { margin-top: 10px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--gold-bright); text-shadow: 0 0 12px rgba(212,175,55,.55); background: rgba(11,11,11,.72); border: 1px solid rgba(212,175,55,.5); border-radius: var(--r-sm); padding: 6px 11px; backdrop-filter: blur(4px); }
 @keyframes summitFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
-.helixmap .guide { position: absolute; right: 20px; bottom: 18px; width: 290px; display: flex; gap: 12px; align-items: flex-end; z-index: 4; }
+.helixmap .guide { position: absolute; right: 20px; bottom: 18px; width: 322px; display: flex; gap: 12px; align-items: flex-end; z-index: 6; }
 .helixmap .guide .portrait { width: 120px; height: 84px; flex: 0 0 120px; border: 1px solid var(--gold); border-radius: var(--r-md); overflow: hidden; box-shadow: var(--glow-gold); }
 .helixmap .guide .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center 26%; }
+.helixmap .guide .say { min-width: 0; }
 .helixmap .guide .say .who { font-family: var(--font-mono); font-size: 9px; letter-spacing: .16em; color: var(--world); text-transform: uppercase; }
-.helixmap .guide .say .vo { font-family: var(--font-display); font-size: 12.5px; color: var(--diamond); font-style: italic; line-height: 1.35; margin-top: 5px; }
+.helixmap .guide .say .vo { font-family: var(--font-display); font-size: 12.5px; color: var(--diamond); font-style: italic; line-height: 1.35; margin-top: 5px; max-height: 170px; overflow: auto; }
+/* the Coach's fixed intent menu (chunk 3) — chips ask coach-ask.php, answer lands in .vo */
+.helixmap .coach-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+.helixmap .coach-chip { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ice); background: rgba(11,11,11,.72); border: 1px solid var(--line-strong); border-radius: 999px; padding: 4px 9px; cursor: pointer; }
+.helixmap .coach-chip:hover { color: var(--diamond); border-color: var(--world); }
+.helixmap .coach-chip:disabled { opacity: .45; cursor: default; }
+.helixmap .coach-chip.on { color: var(--text-on-gold); background: var(--grad-gold); border-color: transparent; box-shadow: var(--glow-gold); }
+/* guide_talk ask lane (SPEC §4 deep mode) + citations + the map node */
+.helixmap .guide-askrow { display: flex; gap: 5px; margin-top: 8px; }
+.helixmap .guide-askinput { flex: 1; min-width: 0; background: var(--surface-inset); border: 1px solid var(--line-strong); border-radius: 999px; color: var(--ink); padding: 5px 11px; font-family: var(--font-body); font-size: 11.5px; }
+.helixmap .guide-askinput:focus { outline: none; border-color: var(--world); box-shadow: 0 0 0 1px var(--world); }
+.helixmap .guide-askbtn { flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--world); background: rgba(13,13,13,.8); color: var(--world); cursor: pointer; font-size: 12px; line-height: 1; }
+.helixmap .guide-askbtn:hover { background: rgba(0,255,247,.12); }
+.helixmap .guide-askbtn:disabled { opacity: .45; cursor: default; }
+.helixmap .guide-cites { margin-top: 7px; font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .04em; color: var(--ice); line-height: 1.5; }
+.helixmap .hnode.gtalk .dot { border-color: var(--zone-violet, #9B5CFF); box-shadow: 0 0 9px rgba(155,92,255,.5); }
 
 .helixmap .dockwrap { position: absolute; left: 20px; top: 18px; width: 360px; max-width: 42%; max-height: calc(100% - 36px); overflow: auto; display: flex; flex-direction: column; gap: 10px; z-index: 6; }
 /* polished lesson-quest panel (the dock) — was falling back to unstyled .read-link/.reflect */
@@ -479,3 +519,65 @@ a { color: inherit; }
 .rmap-foot { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; color: var(--ink); padding: 2px 12px 0; }
 .rmap-foot a { color: var(--world, #00FFF7); text-decoration: none; }
 @media (max-width: 860px) { .rmap { padding-left: 16px; padding-right: 16px; } .sofb-v { margin-left: 0; width: 100%; } }
+
+/* ============================================================================
+   PRESENT MODE — ?present=1 : the board as a BROADCAST surface
+   ----------------------------------------------------------------------------
+   The 4 PM sermon puts this page on screen while the founder preaches one
+   lesson off it (docs/SERMON_PIPELINE_SPEC.md). Two facts drive every rule:
+
+     1. OBS occludes two zones — the facecam PiP (right ~26%, below ~69% of
+        frame height) and the chyron bar (bottom ~8%). Anything live under
+        either is invisible to the audience.
+     2. A dashboard built for one member at a desk is NOISE mid-sermon. The
+        planet metrics, roadmap, dimension bars and cohort roster all compete
+        with the one thing being taught.
+
+   TYPE SIZE is deliberately NOT set here: magnification is a display concern
+   owned by the OBS browser source's own zoom (source 3840x2160 + body{zoom:3}
+   => a 1280px layout viewport rendered 1.5x on a 1080p stream). This block
+   owns LAYOUT only, so the two concerns can be tuned independently.
+
+   Members never carry ?present — their board is untouched.
+   ========================================================================= */
+:root { --present-cam: 26.6%; --present-chyron: 8%; }
+
+/* 1 — drop the furniture a sermon does not use */
+body.present .zone-nav,
+body.present .ws,
+body.present .worldstate,
+body.present .sofb-rows,
+body.present .sofb-x,
+body.present .rmap,
+body.present .value,
+body.present .val-eyebrow,
+body.present .val-note,
+body.present .cohort,
+body.present .gate,
+body.present .guide,
+body.present .zone-preview-banner,
+body.present .preview-note,
+body.present .od9-tour-beacon,
+body.present .hud .exit,
+body.present .od9-welcome { display: none !important; }
+
+/* 2 — reserve the occluded zones: content lives left of the facecam column
+       and above the chyron bar. The background art still fills the frame. */
+body.present .board {
+  padding-right: var(--present-cam);
+  padding-bottom: var(--present-chyron);
+}
+
+/* 3 — the reader is the sermon's main surface (the lesson text itself).
+       Off the centre line, filling the safe rectangle instead of straddling
+       the facecam corner the way the centred desk layout does. */
+body.present .reader {
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 2vh var(--present-cam) var(--present-chyron) 2vw;
+}
+body.present .reader-panel {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+}

@@ -24,34 +24,9 @@ if (empty($_SESSION['discord_id'])) {
 }
 $discordId = $_SESSION['discord_id'];
 
-// ---- Per-tier zone + guide (the world). Observer -> The Wake -> Archivist. ----
-const ZONES = [
-    'observer'   => ['zone' => 'The Wake',       'img' => 'wake.jpg',       'guide' => 'The Archivist',  'guide_img' => 'archivist.jpg',  'vo' => "You're awake now. Good. Let me show you what they kept from you."],
-    'theorist'   => ['zone' => 'The Diagnostic',  'img' => 'diagnostic.jpg', 'guide' => 'The Archivist',  'guide_img' => 'archivist.jpg',  'vo' => "Now we map the machine. Every failure has a mechanism."],
-    'architect'  => ['zone' => 'The Forge',       'img' => 'forge.jpg',      'guide' => 'The Forgemaster','guide_img' => 'forgemaster.jpg','vo' => "Enough theory. Build something that holds weight."],
-    'pioneer'    => ['zone' => 'The Bridge',       'img' => 'bridge.jpg',     'guide' => 'The Navigator',  'guide_img' => 'navigator.jpg',  'vo' => "You don't climb alone anymore. Lead."],
-    'benefactor' => ['zone' => 'The Horizon',      'img' => 'horizon.jpg',    'guide' => 'The Watcher',    'guide_img' => 'watcher.jpg',    'vo' => "What you sustain outlives you. That is the point."],
-];
-// Gate requirements per transition (mirror of config.TIER_REQUIREMENTS /
-// TIER_DIMENSION_REQUIREMENTS / CAPSTONE_PARTS — keep in sync if those change).
-const NEXT_TIER = ['observer' => 'Theorist', 'theorist' => 'Architect', 'architect' => 'Pioneer', 'pioneer' => 'Benefactor', 'benefactor' => null];
-const GATE = [
-    'observer'  => ['credits' => 150, 'dims' => ['knowledge' => 30, 'consciousness' => 10], 'capstone' => 'Observer', 'capstone_parts' => 3],
-    'theorist'  => ['credits' => 300, 'dims' => ['knowledge' => 60, 'community' => 20, 'consciousness' => 25], 'capstone' => 'Theorist', 'capstone_parts' => 3],
-    'architect' => ['credits' => 500, 'dims' => ['knowledge' => 80, 'community' => 40, 'consciousness' => 40, 'system' => 20], 'capstone' => 'Architect', 'capstone_parts' => 3],
-    'pioneer'   => ['credits' => 750, 'dims' => ['knowledge' => 100, 'resource' => 15, 'community' => 60, 'consciousness' => 60, 'system' => 40], 'capstone' => 'Pioneer', 'capstone_parts' => 1],
-];
-// The five value dimensions, member-facing. Order = relevance (the two Observer-
-// gate dims first; consciousness flagged scarce). `sub` says what verifiably earns
-// each — the honest framing that this is value, not XP: it comes only from
-// evaluated contributions, never presence (Manifesto Vol.5 Ch.49 verification-first).
-const DIMS = [
-    'knowledge'     => ['label' => 'Knowledge',     'sub' => 'evaluated learning',  'scarce' => false, 'desc' => 'Your grasp of the OD9 frameworks — from content you read and discussions that pass evaluation.'],
-    'consciousness' => ['label' => 'Consciousness', 'sub' => 'verified reflection',  'scarce' => true,  'desc' => 'Depth of reflection and growth. The scarcest dimension — earned only from evaluated reflections, taught sessions, and capstones.'],
-    'community'     => ['label' => 'Community',      'sub' => 'lifting others',       'scarce' => false, 'desc' => 'How you lift the collective — think tanks, research cells, mentoring, and referrals.'],
-    'resource'      => ['label' => 'Resource',       'sub' => 'material support',  'scarce' => false, 'emerge' => 'live for supporters — opens wider soon', 'desc' => 'Materially resourcing the mission — supporter contributions build it. Deliberately adds ZERO governance vote weight: support is recognized, influence is earned.'],
-    'system'        => ['label' => 'System',         'sub' => 'upkeep + review',      'scarce' => false, 'emerge' => 'unlocks at Theorist',        'desc' => 'Maintaining and improving the protocol — reviewing work and shipping projects. Opens at Theorist and above.'],
-];
+// ---- Zone table + gate requirements: SHARED with world.php via
+//      includes/world_consts.php (one definition, zero drift). ----
+require_once __DIR__ . '/includes/world_consts.php';
 
 // ---- Read live progression from the bot DB (guarded; a bad query blanks its
 //      own widget, never the page — same safe-read pattern as index.php). ----
@@ -81,20 +56,31 @@ $credits = (int)($user['total_credits'] ?? 0);
 // Benefactor (top tier) can thus walk every zone — which is how the founder / top-tier
 // members preview the lower boards. ?tier= selects the viewed zone; an invalid or
 // ahead-of-tier value silently falls back to the member's own zone.
-$TIER_ORDER = ['observer', 'theorist', 'architect', 'pioneer', 'benefactor'];
+$TIER_ORDER = TIER_ORDER; // shared const (includes/world_consts.php)
 $memberIdx  = array_search($memberTier, $TIER_ORDER, true);
 $reqIdx     = array_search(strtolower($_GET['tier'] ?? ''), $TIER_ORDER, true);
 $tier       = ($reqIdx !== false && $reqIdx <= $memberIdx) ? $TIER_ORDER[$reqIdx] : $memberTier;
 $isPreview  = ($tier !== $memberTier);   // viewing a zone other than your own
 $isAdmin    = defined('OD9_ADMIN_DISCORD_IDS') && in_array((string)$discordId, array_map('strval', OD9_ADMIN_DISCORD_IDS), true);
 $readOnly   = $isPreview && !$isAdmin;    // members are read-only off-tier; admins stay fully interactive on any zone
+// PRESENT MODE (?present=1): the board as a BROADCAST surface for the 4 PM
+// sermon (docs/SERMON_PIPELINE_SPEC.md) — used ONLY by the OBS browser source.
+// Purely additive: it adds a body class that board.css uses to drop dashboard
+// furniture and keep live content out of the facecam / chyron zones. A member
+// following along on their own machine never carries the flag, so their board
+// is byte-identical to before.
+$present    = !empty($_GET['present']);
 $zone = ZONES[$tier];
 
 $dimRow = $q("SELECT knowledge_score, resource_score, community_score, consciousness_score, system_score FROM user_dimensions WHERE user_id = ?", [$discordId])[0] ?? [];
 $dim = fn(string $d) => (float)($dimRow[$d . '_score'] ?? 0);
 
-$gate = GATE[$tier] ?? null;
-$nextTier = NEXT_TIER[$tier] ?? null;
+// Gate requirements LIVE from the bot's tier_gate_requirements projection —
+// the world_consts hand-mirror died in chunk 4 (od9_gate_tables fail-opens to
+// null and the gate panel blanks itself, never the page).
+[$GATES, $NEXTS] = od9_gate_tables($bot);
+$gate = $GATES[$tier] ?? null;
+$nextTier = $NEXTS[$tier] ?? null;
 $gateCreditPct = $gate ? min(100, $gate['credits'] ? round($credits / $gate['credits'] * 100) : 0) : 0;
 
 // Today's QOTD (latest post + its question) + whether this member already answered.
@@ -152,22 +138,50 @@ $reqPending = (int)($q(
 // content_id, and the dock binds the reflection to the FOCUSED node's id — so the
 // mis-file class stays fixed. Focus = ?focus=<id> (a node click) or the first
 // not-yet-approved REQUIRED doc.
+// The journey is served from the MODULE CATALOG (PROGRESSION_WORLD_SPEC §3,
+// migration 062): stored positions, stable slugs, one row per node. Content
+// facts (title/url/type/credits) still come from content_library — the grant
+// path reads it, so display and grant can never disagree. FAIL-OPEN: zero
+// module rows (pre-062 DB, or a rollback) falls back to the legacy derived
+// query below, which migration-seeding was proven sequence-identical to.
 $journeyRows = $q(
-    "SELECT cl.content_id, cl.title, cl.credit_value, cl.url, cl.content_type,
-            COALESCE(cl.is_required,1) AS is_required,
-            cc.review_status, cc.review_notes
-       FROM content_library cl
-       LEFT JOIN content_completion cc ON cc.content_id = cl.content_id AND cc.user_id = ?
-      WHERE LOWER(COALESCE(cl.tier_requirement,'')) IN (?, '')
-      ORDER BY COALESCE(cl.is_required,1) DESC, COALESCE(cl.display_order,999999), cl.content_id",
-    [$discordId, $tier]
+    "SELECT m.content_id, COALESCE(cl.title, m.title) AS title,
+            COALESCE(cl.credit_value, m.reward_credits) AS credit_value,
+            cl.url, cl.content_type,
+            m.is_required, m.module_id, m.module_type, m.media_key,
+            m.reward_credits,
+            cc.review_status, cc.review_notes,
+            mc.completed_at AS module_completed_at
+       FROM modules m
+       LEFT JOIN content_library cl ON cl.content_id = m.content_id
+       LEFT JOIN content_completion cc ON cc.content_id = m.content_id AND cc.user_id = ?
+       LEFT JOIN module_completions mc ON mc.module_id = m.module_id AND mc.user_id = ?
+      WHERE m.zone IN (?, 'global') AND m.active = 1
+      ORDER BY m.position, m.module_id",
+    [$discordId, $discordId, $tier]
 );
+if (!count($journeyRows)) {
+    $journeyRows = $q(
+        "SELECT cl.content_id, cl.title, cl.credit_value, cl.url, cl.content_type,
+                COALESCE(cl.is_required,1) AS is_required,
+                cc.review_status, cc.review_notes
+           FROM content_library cl
+           LEFT JOIN content_completion cc ON cc.content_id = cl.content_id AND cc.user_id = ?
+          WHERE LOWER(COALESCE(cl.tier_requirement,'')) IN (?, '')
+          ORDER BY COALESCE(cl.is_required,1) DESC, COALESCE(cl.display_order,999999), cl.content_id",
+        [$discordId, $tier]
+    );
+}
 $firstTodoId = 0;
 foreach ($journeyRows as $jr) {
     // Default focus = first required doc that's actually actionable (never-started or rejected).
     // Skip pending_review too: a capstone awaiting human review is submitted, not "your move" —
     // don't bounce the member back onto a re-submit form for it (audit 2026-07-04).
-    if ((int)$jr['is_required'] === 1
+    // PURE modules (content_id NULL — watch, qotd) can never be the content focus:
+    // (int)NULL is 0, which made focus=0 "match" them and rendered a module as a
+    // read+check quest (chunk-5 driver catch; latent since the watch node).
+    if ($jr['content_id'] !== null
+        && (int)$jr['is_required'] === 1
         && !in_array((string)($jr['review_status'] ?? ''), ['approved', 'pending_review'], true)
         && $firstTodoId === 0) {
         $firstTodoId = (int)$jr['content_id'];
@@ -179,16 +193,25 @@ $focusOk = false;
 // already approved — so the post-accept redirect can land on "the very next question even
 // if I already completed it" (founder, 2026-06-30). Default (no ?focus=) still picks the
 // first not-yet-approved required doc.
-foreach ($journeyRows as $jr) { if ((int)$jr['content_id'] === $focusId) { $focusOk = true; break; } }
+foreach ($journeyRows as $jr) { if ($jr['content_id'] !== null && (int)$jr['content_id'] === $focusId) { $focusOk = true; break; } }
 if (!$focusOk) { $focusId = $firstTodoId; }
 // The journey item immediately AFTER the focus — board-action.php redirects here on a
 // PASS (advance to the next question). Last item: stay on it.
 $nextFocusId = 0; $seenFocus = false;
 foreach ($journeyRows as $jr) {
+    if ($jr['content_id'] === null) { continue; }   /* pure modules can't be a content focus */
     if ($seenFocus) { $nextFocusId = (int)$jr['content_id']; break; }
     if ((int)$jr['content_id'] === $focusId) { $seenFocus = true; }
 }
 if ($nextFocusId === 0) { $nextFocusId = $focusId; }
+
+// Watch-module focus (?wmod=<module_id>) — pure modules have no content_id, so
+// cutscene nodes get their own focus channel; a valid wmod shows the watch
+// panel in the dock instead of the reflection form. MUST be derived BEFORE the
+// journey-node loop below, which reads $wmodId to mark the 'current' watch node
+// (it was declared after the loop until 2026-08-13 — an undefined-variable
+// warning on every watch row, caught by the chunk-4 driver screenshot).
+$wmodId = preg_replace('/[^a-z0-9._\-]/i', '', (string)($_GET['wmod'] ?? ''));
 
 // Helix geometry — diagonal bottom-left (12,72) -> top-right (84,30) into the Gate.
 $x0 = 12; $y0 = 72; $x1 = 84; $y1 = 30; $amp = 7.0; $perpX = 0.144; $perpY = 0.990;
@@ -197,15 +220,38 @@ $journey = [];
 foreach ($journeyRows as $i => $jr) {
     $st = (string)($jr['review_status'] ?? ''); $cidJ = (int)$jr['content_id'];
     $opt = ((int)$jr['is_required'] === 0);
-    $state = $st === 'approved' ? 'done' : ($cidJ === $focusId ? 'current'
-           : ($st === 'pending_review' ? 'pending' : ($st === 'rejected' ? 'rejected' : ($opt ? 'optional' : 'locked'))));
+    $isWatchJ = (($jr['module_type'] ?? '') === 'watch');
+    $isQotdJ  = (($jr['module_type'] ?? '') === 'qotd');
+    $isGuideJ = (($jr['module_type'] ?? '') === 'guide_talk');
+    if ($isQotdJ && (!$qrow || $readOnly)) { continue; }   /* no post yet (cooldown) or read-only preview: no beacon */
+    if ($isGuideJ && $readOnly) { continue; }              /* previews don't carry the ask lane */
+    if ($isQotdJ) {
+        // Daily-repeatable node (SPEC §3 chunk 5): state from the QOTD tables
+        // the dock already reads — answered today's post = done; else 'daily'
+        // (its own pulsing class). Clicking opens the QOTD dock (JS below).
+        $state = $qotdAnswered ? 'done' : 'daily';
+    } elseif ($isGuideJ) {
+        // Ask-the-Archivist node (SPEC §4 deep mode): always open — clicking
+        // focuses the guide panel's ask lane. Never a completion state.
+        $state = 'optional';
+    } elseif ($isWatchJ) {
+        // Pure watch node: state from the module_completions ledger; always
+        // clickable until watched (a cutscene is never "locked").
+        $state = !empty($jr['module_completed_at']) ? 'done'
+               : (($wmodId !== '' && (string)$jr['module_id'] === $wmodId) ? 'current' : 'optional');
+    } else {
+        $state = $st === 'approved' ? 'done' : ($cidJ === $focusId ? 'current'
+               : ($st === 'pending_review' ? 'pending' : ($st === 'rejected' ? 'rejected' : ($opt ? 'optional' : 'locked'))));
+    }
     // nodes span 0..0.86 of the helix so the last few stay LEFT of / below the
     // top-right Gate panel (the strands still run the full 0..1 into the gate).
     $t = $jN > 1 ? ($i / ($jN - 1)) * 0.86 : 0;
     $o = $amp * sin($t * $twists * 2 * M_PI); $onA = ($i % 2 === 0);
     $journey[] = [
         'cid' => $cidJ, 'title' => $jr['title'], 'cr' => (int)$jr['credit_value'],
-        'type' => strtolower((string)$jr['content_type']), 'state' => $state, 'opt' => $opt,
+        'mid' => (string)($jr['module_id'] ?? ''), 'watch' => $isWatchJ, 'qotd' => $isQotdJ, 'guide' => $isGuideJ,
+        'type' => $isQotdJ ? 'qotd' : ($isGuideJ ? 'guide' : ($isWatchJ ? 'video' : strtolower((string)$jr['content_type']))),
+        'state' => $state, 'opt' => $opt,
         'x' => round($x0 + ($x1 - $x0) * $t + ($onA ? $o : -$o) * $perpX, 2),
         'y' => round($y0 + ($y1 - $y0) * $t + ($onA ? $o : -$o) * $perpY, 2),
     ];
@@ -219,7 +265,19 @@ for ($s = 0; $s <= $SAMP; $s++) {
 }
 $helixA = 'M ' . implode(' L ', $sA); $helixB = 'M ' . implode(' L ', $sB);
 $focus = null;
-foreach ($journeyRows as $jr) { if ((int)$jr['content_id'] === $focusId) { $focus = $jr; break; } }
+foreach ($journeyRows as $jr) { if ($jr['content_id'] !== null && (int)$jr['content_id'] === $focusId) { $focus = $jr; break; } }
+
+// Resolve the focused watch module (the $wmodId itself is derived above the
+// journey loop — see the note there).
+$wfocus = null;
+if ($wmodId !== '') {
+    foreach ($journeyRows as $jr) {
+        if (($jr['module_type'] ?? '') === 'watch' && (string)($jr['module_id'] ?? '') === $wmodId) {
+            $wfocus = $jr;
+            break;
+        }
+    }
+}
 
 // Flash from a just-completed action (set by board-action.php) — delivered via
 // the session (Post-Redirect-Get) and consumed on read, so a refresh or a
@@ -269,7 +327,9 @@ $RM_ACTIVE = $q(
 );
 $RM_QUEUED = (int)($q("SELECT COUNT(*) c FROM roadmap_triggers WHERE status = 'Approved'")[0]['c'] ?? 0);
 
-$IMG = (($_SERVER['SERVER_NAME'] ?? '') === 'localhost' || strpos(__DIR__, 'xampp') !== false) ? '/od9/public/images/board' : '/images/board';
+/* local mirror serves at /od9 (the /od9/public layout is retired — this path
+   404'd every board image in local QA) */
+$IMG = (($_SERVER['SERVER_NAME'] ?? '') === 'localhost' || strpos(__DIR__, 'xampp') !== false) ? '/od9/images/board' : '/images/board';
 $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
 ?>
 <!DOCTYPE html>
@@ -301,8 +361,13 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
 .od9-welcome-actions .cta-ghost{padding:11px;background:transparent;color:var(--text-faint,#5F6A70);border:1px solid var(--line-strong,#1c242a);border-radius:10px;cursor:pointer;font-size:13px;font-family:var(--font-display,sans-serif)}
 </style>
 </head>
-<body data-tour="board" data-tour-csrf="<?= htmlspecialchars(od9_csrf_token(), ENT_QUOTES) ?>">
+<body data-tour="board"<?= $present ? ' class="present"' : '' ?> data-tour-csrf="<?= htmlspecialchars(od9_csrf_token(), ENT_QUOTES) ?>">
 <?php od9_ztrans_body(); ?>
+<?php if (isset($_GET['ascended'])): ?>
+<!-- arrival cinematic after a PASSED gate check: play the gate clip over the new
+     zone (muted video = autoplay-safe; odZtransPlay fails open if blocked). -->
+<script>(function(){ if (window.odZtransPlay) { window.odZtransPlay('gate'); } })();</script>
+<?php endif; ?>
 <div class="board" style="background: linear-gradient(180deg, rgba(10,10,10,.35), rgba(10,10,10,.55) 45%, rgba(10,10,10,.92)), url('<?= $h($IMG) ?>/<?= $h($zone['img']) ?>') center 38% / cover no-repeat;">
 
   <header class="hud">
@@ -329,6 +394,7 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
              seen, then the subtle "ⓘ Tour" — tour.js toggles .seen
              from localStorage. Born from Law's first-lesson feedback (2026-07-26). */ ?>
     <a class="exit od9-tour-beacon" href="#" id="od9-tour-replay" title="Take the 90-second board tour"><span class="tc-new">&#9654; Start Here</span><span class="tc-seen">&#9432; Tour</span></a>
+    <a class="exit" href="<?= DASHBOARD_BASE_URL ?>/world.php" title="The zoomed-out ascent — all five zones">World Map &rsaquo;</a>
     <a class="exit ztrans-link" data-ztrans="hatch" href="<?= DASHBOARD_BASE_URL ?>/bunker.php">The Bunker &rsaquo;</a>
     <a class="exit ztrans-link<?= $unreadNotif > 0 ? ' has-notif' : '' ?>" data-ztrans="<?= in_array($tier, ['architect','pioneer','benefactor'], true) ? 'hq-door-k1' : 'hq-door' ?>" href="<?= DASHBOARD_BASE_URL ?>/index.php">Dashboard<?php if ($unreadNotif > 0): ?> <span class="notif-dot" title="<?= $unreadNotif ?> new message<?= $unreadNotif === 1 ? '' : 's' ?>"><?= $unreadNotif ?></span><?php endif; ?> &rsaquo;</a>
   </header>
@@ -438,13 +504,18 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
     </svg>
     <?php foreach ($journey as $jn):
       $jicon = $jn['state']==='done' ? '&#10003;' : ($jn['type']==='video' ? '&#9654;' : ($jn['opt'] ? '&#43;' : ($jn['state']==='current' ? '&#9654;' : '&#9670;')));
+      if (!empty($jn['qotd']) && $jn['state'] !== 'done') { $jicon = '&#63;'; }
+      if (!empty($jn['guide'])) { $jicon = '&#128220;'; }
       $jclick = !in_array($jn['state'], ['done','pending'], true);
-      $jhref = '?' . ($isPreview ? 'tier=' . rawurlencode($tier) . '&' : '') . 'focus=' . $jn['cid'];
-      $jcls = 'hnode ' . $jn['state'] . ($jn['opt'] ? ' opt' : ''); ?>
+      $jhref = '?' . ($isPreview ? 'tier=' . rawurlencode($tier) . '&' : '')
+             . (!empty($jn['watch']) ? 'wmod=' . rawurlencode($jn['mid']) : 'focus=' . $jn['cid']);
+      if (!empty($jn['qotd'])) { $jhref = '#qotd'; }   /* JS opens the QOTD dock in place */
+      if (!empty($jn['guide'])) { $jhref = '#guideask'; }   /* JS focuses the ask lane */
+      $jcls = 'hnode ' . $jn['state'] . ($jn['opt'] ? ' opt' : '') . (!empty($jn['qotd']) ? ' qotd' : '') . (!empty($jn['guide']) ? ' gtalk' : ''); ?>
       <?php if ($jclick): ?>
-      <a class="<?= $jcls ?>" style="left:<?= $jn['x'] ?>%;top:<?= $jn['y'] ?>%" href="<?= $h($jhref) ?>" title="<?= $h($jn['title']) ?>"><span class="dot"><?= $jicon ?></span><?php if ($jn['state']==='current'): ?><span class="here">You are here</span><?php endif; ?></a>
+      <a class="<?= $jcls ?>" data-mid="<?= $h($jn['mid']) ?>" style="left:<?= $jn['x'] ?>%;top:<?= $jn['y'] ?>%" href="<?= $h($jhref) ?>" title="<?= $h($jn['title']) ?>"><span class="dot"><?= $jicon ?></span><?php if ($jn['state']==='current'): ?><span class="here">You are here</span><?php endif; ?></a>
       <?php else: ?>
-      <span class="<?= $jcls ?>" style="left:<?= $jn['x'] ?>%;top:<?= $jn['y'] ?>%" title="<?= $h($jn['title']) ?>"><span class="dot"><?= $jicon ?></span></span>
+      <span class="<?= $jcls ?>" data-mid="<?= $h($jn['mid']) ?>" style="left:<?= $jn['x'] ?>%;top:<?= $jn['y'] ?>%" title="<?= $h($jn['title']) ?>"><span class="dot"><?= $jicon ?></span></span>
       <?php endif; ?>
     <?php endforeach; ?>
 
@@ -461,6 +532,16 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
         <div class="lock <?= $kMet ? 'met' : '' ?>"><span class="x"><?= $kMet ? '&#10003;' : '' ?></span><b>Credits <?= number_format($credits) ?> / <?= $gate['credits'] ?></b></div>
         <div class="lock <?= $dimsAllMet ? 'met' : '' ?>"><span class="x"><?= $dimsAllMet ? '&#10003;' : '' ?></span><b>Value dimensions <?= $dimsMet ?> / <?= $dimsTotal ?> met</b></div>
         <div class="lock <?= $reqMet ? 'met' : '' ?>"><span class="x"><?= $reqMet ? '&#10003;' : '' ?></span><b>Required curriculum <?= $reqDone ?> / <?= $reqTotal ?></b></div>
+        <?php if ($tier === $memberTier && !$readOnly): ?>
+        <!-- Face the Gate (chunk 4): member-triggered advancement check — the bot
+             runs the REAL promotion path and answers in the Archivist's voice. -->
+        <form class="gate-face" method="post" action="board-action.php">
+          <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(od9_csrf_token(), ENT_QUOTES) ?>">
+          <input type="hidden" name="action" value="gate_check">
+          <input type="hidden" name="tier" value="<?= $h($tier) ?>">
+          <button class="cta gate-face-btn" type="submit">&#9670; Face the Gate</button>
+        </form>
+        <?php endif; ?>
       </div>
     </div>
     <?php else: ?>
@@ -474,16 +555,36 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
     </div>
     <?php endif; ?>
 
-    <!-- THE GUIDE (bottom-right) -->
+    <!-- THE GUIDE (bottom-right) — the Coach (SPEC §4, chunk 3). The chips are a
+         FIXED intent menu (mirror of utils/coach.py INTENTS): a click asks the bot
+         via coach-ask.php and the live answer lands in the speech bubble. -->
     <div class="guide">
       <div class="portrait"><img src="<?= $h($IMG) ?>/guides/<?= $h($zone['guide_img']) ?>?v=<?= @filemtime(__DIR__ . '/../images/board/guides/' . $zone['guide_img']) ?: '1' ?>" alt="<?= $h($zone['guide']) ?>" onerror="this.parentElement.style.display='none'"></div>
-      <div class="say"><div class="who">Your Guide — <?= $h($zone['guide']) ?></div><div class="vo">&ldquo;<?= $h($zone['vo']) ?>&rdquo;</div></div>
+      <div class="say">
+        <div class="who">Your Guide — <?= $h($zone['guide']) ?></div>
+        <div class="vo">&ldquo;<?= $h($zone['vo']) ?>&rdquo;</div>
+        <div class="coach-chips" role="group" aria-label="Ask your Guide">
+          <button type="button" class="coach-chip" data-intent="next_move">My next move?</button>
+          <button type="button" class="coach-chip" data-intent="the_gate">The Gate?</button>
+          <button type="button" class="coach-chip" data-intent="how_advance">Advancing?</button>
+          <button type="button" class="coach-chip" data-intent="credits">Credits?</button>
+          <button type="button" class="coach-chip" data-intent="reviews">Reviews?</button>
+        </div>
+        <!-- guide_talk deep mode (SPEC §4): freeform lane — the Archivist answers
+             from the manifesto itself, with citations, or says it isn't in there. -->
+        <div class="guide-askrow" id="guideask">
+          <input class="guide-askinput" type="text" maxlength="500"
+                 placeholder="Ask the record anything&hellip;" aria-label="Ask the Archivist about the manifesto">
+          <button type="button" class="guide-askbtn" title="Ask the Archivist">&#10148;</button>
+        </div>
+        <div class="guide-cites" hidden></div>
+      </div>
     </div>
 
     <!-- DOCK (bottom-left): QOTD + the focused quest (read + reflect, bound to content_id) -->
     <div class="dockwrap">
       <?php if ($qrow && !$qotdAnswered && !$readOnly): ?>
-      <details class="questdock qotd">
+      <details class="questdock qotd" id="qotd">
         <summary class="qd-head"><span class="qd-eyebrow">QOTD &middot; Today &middot; +3 CR</span><span class="qd-q"><?= $h($qrow['question_text']) ?></span></summary>
         <form class="qd-form" method="post" action="board-action.php">
           <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(od9_csrf_token(), ENT_QUOTES) ?>">
@@ -496,7 +597,37 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
       </details>
       <?php endif; ?>
 
-      <?php if ($focus):
+      <?php if ($wfocus):
+        // Watch panel (SPEC §3 watch type): play the cutscene, one click to
+        // log it. Media file resolved through the guide-video registry (the
+        // same key->file map the Discord DM player uses).
+        include_once __DIR__ . '/../guide-registry.php';
+        $wKey = (string)($wfocus['media_key'] ?? '');
+        $wFile = isset($VIDEO_MAP[$wKey]) ? (string)$VIDEO_MAP[$wKey][0] : '';
+        $wIsLocal = (($_SERVER['SERVER_NAME'] ?? '') === 'localhost' || strpos(__DIR__, 'xampp') !== false);
+        $wSrc = $wFile !== '' ? ($wIsLocal ? '/od9' : '') . '/guide-videos/' . rawurlencode($wFile) : '';
+        $wDone = !empty($wfocus['module_completed_at']); ?>
+      <div class="questdock">
+        <div class="qd-eyebrow">&#9654; Cutscene &middot; The Archivist</div>
+        <div class="qd-card"><div class="qd-body"><div class="ty">Watch &middot; The Wake</div><div class="ti"><?= $h($wfocus['title']) ?></div></div><div class="qd-rw"><span class="cr">+<?= (int)$wfocus['reward_credits'] ?> CR</span></div></div>
+        <?php if ($wSrc !== ''): ?>
+        <video src="<?= $h($wSrc) ?>" controls playsinline preload="metadata" style="width:100%;border-radius:10px;background:#000;margin:.5rem 0"></video>
+        <?php endif; ?>
+        <?php if ($wDone): ?>
+        <div class="preview-note">&#10003; Watched &mdash; the Archivist remembers.</div>
+        <?php elseif ($readOnly): ?>
+        <div class="preview-note">&#128270; Preview &mdash; return to your own zone to log it.</div>
+        <?php else: ?>
+        <form class="reflect" method="post" action="board-action.php">
+          <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(od9_csrf_token(), ENT_QUOTES) ?>">
+          <input type="hidden" name="action" value="watch_complete">
+          <input type="hidden" name="module_id" value="<?= $h((string)$wfocus['module_id']) ?>">
+          <input type="hidden" name="tier" value="<?= $h($tier) ?>">
+          <div class="row"><span class="hint"><span class="okmsg">+<?= (int)$wfocus['reward_credits'] ?> CR for showing up</span></span><button class="cta" type="submit">I watched it &mdash; continue &rarr;</button></div>
+        </form>
+        <?php endif; ?>
+      </div>
+      <?php elseif ($focus):
         $fcid = (int)$focus['content_id']; $fcurl = trim((string)($focus['url'] ?? '')); $fctype = strtolower((string)$focus['content_type']);
         $frej = ((string)($focus['review_status'] ?? '') === 'rejected');
         $fpending = ((string)($focus['review_status'] ?? '') === 'pending_review');
@@ -582,7 +713,17 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
   function unlock(id){ var f = id ? document.getElementById(id) : null; if (!f) return; f.querySelectorAll('textarea,button[type=submit]').forEach(function(e){ e.disabled = false; }); var k = f.querySelector('.lockmsg'), o = f.querySelector('.okmsg'); if (k) k.hidden = true; if (o) o.hidden = false; }
   window.odUnlock = unlock;
   window.__odClose = function(){ if (!reader) return; reader.setAttribute('hidden', ''); reader.classList.remove('spin'); if (rframe) rframe.src = 'about:blank'; document.body.style.overflow = ''; var u = reader.getAttribute('data-unlock'); if (u) unlock(u); };
-  window.odReader = function(embed, title, unlockId, spin){ if (!reader) return; var fb = reader.querySelector('.reader-iosdoc'); var pop = reader.querySelector('.reader-pop'); var isDoc = (embed || '').indexOf('download.php') !== -1; var ios = /iPad|iPhone|iPod/.test(navigator.userAgent || ''); if (pop) { if (isDoc) { pop.href = embed; pop.removeAttribute('hidden'); } else { pop.setAttribute('hidden',''); } } if (fb && ios && isDoc) { var fa = fb.querySelector('a.cta'); if (fa) fa.href = embed; fb.removeAttribute('hidden'); if (rframe) { rframe.src = 'about:blank'; rframe.style.display = 'none'; } } else { if (fb) fb.setAttribute('hidden',''); if (rframe) { rframe.style.display = ''; rframe.src = embed; } } if (rtitle) rtitle.textContent = title || 'Reading'; reader.setAttribute('data-unlock', unlockId || ''); reader.classList.toggle('spin', !!spin); reader.removeAttribute('hidden'); document.body.style.overflow = 'hidden'; };
+  /* Present mode propagates INTO the reader iframe: the codex document is the
+     surface actually being read aloud during a sermon, and it is a separate
+     document (board.css cannot reach it). Only codex embeds understand the
+     flag — YouTube/download.php URLs are left untouched. One chokepoint here
+     covers every caller (odCodex, odReader, journey nodes). */
+  function presentEmbed(u){
+    if (!document.body.classList.contains('present')) return u;
+    if (!u || u.indexOf('embed=1') === -1) return u;
+    return u + '&present=1';
+  }
+  window.odReader = function(embed, title, unlockId, spin){ if (!reader) return; embed = presentEmbed(embed); var fb = reader.querySelector('.reader-iosdoc'); var pop = reader.querySelector('.reader-pop'); var isDoc = (embed || '').indexOf('download.php') !== -1; var ios = /iPad|iPhone|iPod/.test(navigator.userAgent || ''); if (pop) { if (isDoc) { pop.href = embed; pop.removeAttribute('hidden'); } else { pop.setAttribute('hidden',''); } } if (fb && ios && isDoc) { var fa = fb.querySelector('a.cta'); if (fa) fa.href = embed; fb.removeAttribute('hidden'); if (rframe) { rframe.src = 'about:blank'; rframe.style.display = 'none'; } } else { if (fb) fb.setAttribute('hidden',''); if (rframe) { rframe.style.display = ''; rframe.src = embed; } } if (rtitle) rtitle.textContent = title || 'Reading'; reader.setAttribute('data-unlock', unlockId || ''); reader.classList.toggle('spin', !!spin); reader.removeAttribute('hidden'); document.body.style.overflow = 'hidden'; };
   var cov = document.getElementById('codexTrans'), cv = document.getElementById('codexVid');
   window.odCodex = function(embed, title, unlockId){
     if (!cov || !cv) { window.odReader(embed, title, unlockId, false); return; }
@@ -590,6 +731,163 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
     cv.innerHTML = '<source src="' + VID + '/codex.webm" type="video/webm"><source src="' + VID + '/codex.mp4" type="video/mp4">';
     cov.removeAttribute('hidden'); cv.onended = open; cv.onerror = open; try { cv.load(); } catch (e) {} var p = cv.play(); if (p && p.catch) p.catch(open); setTimeout(open, 8000);
   };
+})();
+(function(){
+  /* Presence pins (SPEC §5): consensual member tokens at their current node.
+     Anchored to the [data-mid] node elements so positions always match the
+     rendered helix; polled from presence.php (~25s). Anonymous tokens carry
+     no name; the payload never carries ids at all. Desktop only — the mobile
+     journey is a static dot track. */
+  var map = document.querySelector('.map.helixmap');
+  if (!map || window.innerWidth <= 760) { return; }
+  var zone = <?= json_encode($tier, JSON_UNESCAPED_SLASHES) ?>;
+  var layer = document.createElement('div');
+  layer.className = 'presence-layer';
+  map.appendChild(layer);
+  function render(data){
+    layer.innerHTML = '';
+    if (!data || !data.ok) { return; }
+    var byNode = {};
+    (data.tokens || []).forEach(function(t){
+      if (!byNode[t.node]) { byNode[t.node] = []; }
+      byNode[t.node].push(t);
+    });
+    Object.keys(byNode).forEach(function(mid){
+      var host = map.querySelector('[data-mid="' + (window.CSS && CSS.escape ? CSS.escape(mid) : mid) + '"]');
+      if (!host) { return; }
+      var list = byNode[mid];
+      var wrap = document.createElement('div');
+      wrap.className = 'ptok-cluster';
+      wrap.style.left = host.style.left;
+      wrap.style.top = host.style.top;
+      var shown = list.slice(0, 4);
+      shown.forEach(function(t, i){
+        var el = document.createElement('span');
+        el.className = 'ptok ' + (t.mode === 'visible' ? 'named' : 'anon');
+        el.style.setProperty('--pi', String(i));
+        if (t.mode === 'visible' && t.name) {
+          el.textContent = t.name.slice(0, 1).toUpperCase();
+          el.title = t.name + ' is on this step';
+        } else {
+          el.title = 'A member is on this step';
+        }
+        wrap.appendChild(el);
+      });
+      if (list.length > shown.length) {
+        var more = document.createElement('span');
+        more.className = 'ptok more';
+        more.textContent = '+' + (list.length - shown.length);
+        more.title = list.length + ' members are on this step';
+        wrap.appendChild(more);
+      }
+      layer.appendChild(wrap);
+    });
+    var gate = map.querySelector('.gate');
+    if (gate && data.gate > 0) {
+      var g = document.createElement('div');
+      g.className = 'ptok-gate';
+      g.textContent = String(data.gate) + ' at the Gate';
+      g.title = String(data.gate) + ' member(s) have met every requirement';
+      layer.appendChild(g);
+    }
+  }
+  function poll(){
+    fetch('presence.php?zone=' + encodeURIComponent(zone), { credentials: 'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(render)
+      .catch(function(){ /* empty room on error; try again next tick */ });
+  }
+  poll();
+  setInterval(poll, 25000);
+})();
+(function(){
+  /* QOTD beacon (chunk 5): the daily node opens the QOTD dock in place. */
+  var qn = document.querySelector('a.hnode.qotd');
+  var qd = document.querySelector('.questdock.qotd');
+  if (qn && qd) {
+    qn.addEventListener('click', function(e){
+      e.preventDefault();
+      qd.setAttribute('open', '');
+      qd.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      var ta = qd.querySelector('textarea');
+      if (ta) { setTimeout(function(){ ta.focus(); }, 450); }
+    });
+  }
+})();
+(function(){
+  var g = document.querySelector('.helixmap .guide'); if (!g) { return; }
+  var vo = g.querySelector('.vo'); var who = g.querySelector('.who'); if (!vo || !who) { return; }
+  var who0 = who.textContent; var vo0 = vo.innerHTML;
+  var csrf = document.body.getAttribute('data-tour-csrf') || '';
+  var timer = null; var busy = false;
+  function chips(){ return g.querySelectorAll('.coach-chip'); }
+  function reveal(text){
+    if (timer) { clearInterval(timer); }
+    var i = 0; vo.textContent = '“…';
+    timer = setInterval(function(){
+      i += 2;
+      if (i >= text.length) { vo.textContent = '“' + text + '”'; clearInterval(timer); timer = null; }
+      else { vo.textContent = '“' + text.slice(0, i) + '…'; }
+    }, 14);
+  }
+  chips().forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if (busy) { return; } busy = true;
+      chips().forEach(function(b){ b.classList.remove('on'); b.disabled = true; });
+      btn.classList.add('on'); vo.textContent = '…';
+      var fd = new FormData();
+      fd.append('intent', btn.getAttribute('data-intent') || '');
+      fd.append('csrf_token', csrf);
+      fetch('coach-ask.php', { method: 'POST', body: fd, credentials: 'same-origin' })
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          if (d && d.ok && d.text) { who.textContent = d.speaker || 'The Archivist'; reveal(d.text); }
+          else { reveal('The record is quiet right now. Try again in a moment.'); }
+        })
+        .catch(function(){ who.textContent = who0; vo.innerHTML = vo0; })
+        .then(function(){ busy = false; chips().forEach(function(b){ b.disabled = false; }); });
+    });
+  });
+  /* guide_talk deep mode: the freeform ask lane shares the bubble, the busy
+     flag, and the reveal — the Archivist is ONE voice, two kinds of question. */
+  var input = g.querySelector('.guide-askinput');
+  var send = g.querySelector('.guide-askbtn');
+  var cites = g.querySelector('.guide-cites');
+  function askGuide(){
+    if (busy || !input) { return; }
+    var q = (input.value || '').trim();
+    if (!q) { return; }
+    busy = true; send.disabled = true; input.disabled = true;
+    if (cites) { cites.hidden = true; cites.textContent = ''; }
+    who.textContent = 'The Archivist'; vo.textContent = '… consulting the record …';
+    var fd = new FormData();
+    fd.append('question', q);
+    fd.append('csrf_token', csrf);
+    fetch('guide-ask.php', { method: 'POST', body: fd, credentials: 'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (d && d.text) {
+          reveal(d.text);
+          if (cites && d.citations && d.citations.length) {
+            cites.textContent = 'From the record: ' + d.citations.slice(0, 3).join(' · ');
+            cites.hidden = false;
+          }
+          if (d.ok && !d.capped) { input.value = ''; }
+        } else { reveal('The record is quiet right now. Try again in a moment.'); }
+      })
+      .catch(function(){ reveal('The record is out of reach — try again in a moment.'); })
+      .then(function(){ busy = false; send.disabled = false; input.disabled = false; });
+  }
+  if (send) { send.addEventListener('click', askGuide); }
+  if (input) { input.addEventListener('keydown', function(e){ if (e.key === 'Enter') { e.preventDefault(); askGuide(); } }); }
+  var gnode = document.querySelector('a.hnode.gtalk');
+  if (gnode && input) {
+    gnode.addEventListener('click', function(e){
+      e.preventDefault();
+      g.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(function(){ input.focus(); }, 450);
+    });
+  }
 })();
 </script>
 <div class="od9-welcome" id="od9-welcome" hidden>
