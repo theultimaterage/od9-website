@@ -559,6 +559,7 @@ body.present .zone-preview-banner,
 body.present .preview-note,
 body.present .od9-tour-beacon,
 body.present .hud .exit,
+body.present .elsewhere,
 body.present .od9-welcome { display: none !important; }
 
 /* 2 — reserve the occluded zones: content lives left of the facecam column
@@ -695,3 +696,21 @@ body.present .reader-panel {
   .map>.dockwrap{ grid-row:auto; }
   .map::before{ display:none; }
 }
+
+/* --- P2 RELOCATION -------------------------------------------------------
+   The scorecard, roadmap and dimension bars moved to the surfaces that already
+   owned them (progress.php / roadmap.php / index.php). This strip is the only
+   thing left in their place: one quiet line so a member can still reach them.
+   Quiet on purpose — it is navigation, not content, and the board's job is the
+   next move. */
+.elsewhere{
+  display:flex; flex-wrap:wrap; gap:var(--sp-4);
+  max-width:1680px; margin:0 auto var(--sp-4);
+  padding:0 var(--sp-5);
+}
+.elsewhere a{
+  font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-dim); text-decoration:none;
+  border-bottom:1px solid transparent; padding-bottom:2px;
+}
+.elsewhere a:hover{ color:var(--world); border-bottom-color:var(--world); }

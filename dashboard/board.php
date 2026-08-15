@@ -441,38 +441,34 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
     <span class="vname"><?= $h($zone['zone']) ?></span>
   </div>
 
-  <?php // World State → State of the Filter (canonical data) + the Live Roadmap panel.
-        // (The old hardcoded rows had a stale CO₂ (426) and an unsourced GPI rank —
-        // replaced by verified, single-source data; GPI can return once verified.) ?>
-  <?php include __DIR__ . '/../includes/filter-scorecard-board.php'; ?>
-
-  <div class="value">
-    <div class="val-eyebrow">Your Verified Value — what your standing is built from</div>
-    <?php foreach (DIMS as $dkey => $dmeta):
-      // "Emerging" = no earning path at this tier yet, so show it muted with an
-      // honest "unlocks" note rather than a value the member can't move. Resource
-      // is the ROT / resource-sharing layer (far-future, scale-gated); System opens
-      // at Theorist+ (evaluating others, project milestones) — an Observer can't
-      // build it yet. The board must never imply a path that isn't there.
-      $emerging = ($dkey === 'resource') || ($dkey === 'system' && $tier === 'observer');
-      $have = (int) round($dim($dkey));
-      $need = $emerging ? 0 : ($gate['dims'][$dkey] ?? 0);
-      $pct  = $need ? min(100, (int) round($have / $need * 100)) : 0; ?>
-    <div class="vd<?= ($dmeta['scarce'] && !$emerging) ? ' scarce' : '' ?><?= $emerging ? ' emerging' : '' ?>">
-      <span class="vinfo" tabindex="0">i<span class="tip"><?= $h($dmeta['desc']) ?></span></span>
-      <span class="vk"><?= $h($dmeta['label']) ?></span>
-      <?php if ($emerging): ?>
-      <span class="vv">&middot;</span>
-      <span class="vsub"><?= $h($dmeta['emerge']) ?></span>
-      <?php else: ?>
-      <span class="vv"><?= $have ?><?php if ($need): ?> <small>/ <?= (int) $need ?></small><?php endif; ?></span>
-      <?php if ($need): ?><div class="vbar"><i style="width: <?= $pct ?>%"></i></div><?php endif; ?>
-      <span class="vsub"><?= $h($dmeta['sub']) ?></span>
-      <?php endif; ?>
-    </div>
-    <?php endforeach; ?>
+  <?php /* P2 RELOCATION (docs/BOARD_REDESIGN_SPEC.md §10). The board answers ONE
+     question — what do I do next, and how far am I from the Gate. Three blocks
+     that answered other questions were carrying the DASHBOARD's job and taking
+     the top half of this surface. None is deleted; each already had a better
+     home, verified before removal:
+       · State of the Filter  -> progress.php (renders the same $SOF_* data via
+                                 includes/filter-scorecard.php — one source,
+                                 two surfaces, and that one is the fuller view)
+       · Live Roadmap         -> roadmap.php (every rmap row already deep-linked
+                                 there: /roadmap.php?id=<trigger_id>)
+       · Verified Value dims  -> dashboard/index.php (all five dimensions as a
+                                 radar chart + the "low by design" explainer)
+     The strip below keeps them one click away so nothing is orphaned. */ ?>
+  <?php /* site root: there is no ROOT_BASE_URL constant, and dirname() of the
+     dashboard base yields it correctly on BOTH environments —
+     https://offda9.com/dashboard -> https://offda9.com, and
+     http://localhost/od9/dashboard -> http://localhost/od9. */
+     $siteRoot = dirname(DASHBOARD_BASE_URL); ?>
+  <div class="elsewhere">
+    <a href="<?= $h($siteRoot) ?>/progress.php">State of the Filter &rsaquo;</a>
+    <a href="<?= $h($siteRoot) ?>/roadmap.php">The live roadmap &rsaquo;</a>
+    <a href="<?= DASHBOARD_BASE_URL ?>/index.php">Your verified value &rsaquo;</a>
   </div>
-  <div class="val-note">&#9670; Every point is <b>verified</b> — earned only from evaluated contributions (reflections, discussions, capstones). Showing up earns recognition; <b>building</b> earns value.</div>
+
+  <?php /* P2: the five Verified Value bars lived here. Removed, not lost —
+     dashboard/index.php renders all five dimensions as a radar chart with
+     the "Resource/System are low BY DESIGN" explainer, which is the fuller
+     treatment. Linked from .elsewhere above. */ ?>
 
   <?php if ($cohort && $cohortMembers): ?>
   <div class="cohort">
