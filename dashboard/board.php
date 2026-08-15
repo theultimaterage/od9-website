@@ -149,7 +149,7 @@ $journeyRows = $q(
             COALESCE(cl.credit_value, m.reward_credits) AS credit_value,
             cl.url, cl.content_type,
             m.is_required, m.module_id, m.module_type, m.media_key,
-            m.reward_credits,
+            m.reward_credits, m.position, m.zone,
             cc.review_status, cc.review_notes,
             mc.completed_at AS module_completed_at
        FROM modules m
@@ -213,9 +213,13 @@ if ($nextFocusId === 0) { $nextFocusId = $focusId; }
 // warning on every watch row, caught by the chunk-4 driver screenshot).
 $wmodId = preg_replace('/[^a-z0-9._\-]/i', '', (string)($_GET['wmod'] ?? ''));
 
-// Helix geometry — diagonal bottom-left (12,72) -> top-right (84,30) into the Gate.
-$x0 = 12; $y0 = 72; $x1 = 84; $y1 = 30; $amp = 7.0; $perpX = 0.144; $perpY = 0.990;
-$jN = count($journeyRows); $twists = max(3.0, round($jN / 5));
+// P3 RETIRED the helix (docs/BOARD_REDESIGN_SPEC §10). The spec said "move it
+// to world.php" — but world.php is already a scroll-scrubbed VIDEO world map,
+// a richer cinematic than an SVG double-helix would be. The helix's job is
+// therefore already done better elsewhere, so it is retired outright rather
+// than relocated, and its geometry (strand sampling, per-node x/y, rungs) is
+// deleted with it instead of left computing into nothing.
+$jN = count($journeyRows);
 $journey = [];
 foreach ($journeyRows as $i => $jr) {
     $st = (string)($jr['review_status'] ?? ''); $cidJ = (int)$jr['content_id'];
@@ -243,27 +247,18 @@ foreach ($journeyRows as $i => $jr) {
         $state = $st === 'approved' ? 'done' : ($cidJ === $focusId ? 'current'
                : ($st === 'pending_review' ? 'pending' : ($st === 'rejected' ? 'rejected' : ($opt ? 'optional' : 'locked'))));
     }
-    // nodes span 0..0.86 of the helix so the last few stay LEFT of / below the
-    // top-right Gate panel (the strands still run the full 0..1 into the gate).
-    $t = $jN > 1 ? ($i / ($jN - 1)) * 0.86 : 0;
-    $o = $amp * sin($t * $twists * 2 * M_PI); $onA = ($i % 2 === 0);
     $journey[] = [
         'cid' => $cidJ, 'title' => $jr['title'], 'cr' => (int)$jr['credit_value'],
         'mid' => (string)($jr['module_id'] ?? ''), 'watch' => $isWatchJ, 'qotd' => $isQotdJ, 'guide' => $isGuideJ,
         'type' => $isQotdJ ? 'qotd' : ($isGuideJ ? 'guide' : ($isWatchJ ? 'video' : strtolower((string)$jr['content_type']))),
         'state' => $state, 'opt' => $opt,
-        'x' => round($x0 + ($x1 - $x0) * $t + ($onA ? $o : -$o) * $perpX, 2),
-        'y' => round($y0 + ($y1 - $y0) * $t + ($onA ? $o : -$o) * $perpY, 2),
+        // P3: the rail needs the module's real position (chapter ranges in
+        // includes/rail-labels.php are keyed to it) and its zone, because the
+        // journey query also pulls 'global' modules whose positions are not
+        // part of this tier's chapter numbering.
+        'pos' => (int)($jr['position'] ?? 0), 'zone' => (string)($jr['zone'] ?? ''),
     ];
 }
-$sA = []; $sB = []; $helixRungs = []; $SAMP = 140;
-for ($s = 0; $s <= $SAMP; $s++) {
-    $t = $s / $SAMP; $cxp = $x0 + ($x1 - $x0) * $t; $cyp = $y0 + ($y1 - $y0) * $t; $o = $amp * sin($t * $twists * 2 * M_PI);
-    $sA[] = round($cxp + $o * $perpX, 2) . ',' . round($cyp + $o * $perpY, 2);
-    $sB[] = round($cxp - $o * $perpX, 2) . ',' . round($cyp - $o * $perpY, 2);
-    if ($s % 7 === 0 && abs($o) >= 1.4) { $helixRungs[] = [round($cxp + $o * $perpX, 2), round($cyp + $o * $perpY, 2), round($cxp - $o * $perpX, 2), round($cyp - $o * $perpY, 2)]; }
-}
-$helixA = 'M ' . implode(' L ', $sA); $helixB = 'M ' . implode(' L ', $sB);
 $focus = null;
 foreach ($journeyRows as $jr) { if ($jr['content_id'] !== null && (int)$jr['content_id'] === $focusId) { $focus = $jr; break; } }
 
@@ -491,42 +486,135 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
 
   <?php if ($flash): ?><div class="flash <?= $h($flashKind) ?>"><?= $h($flash) ?></div><?php endif; ?>
 
-  <div class="map helixmap">
-    <!-- Origin crest (T-WEB-BOARD-HELIX-002): a per-tier illustrated emblem filling the
-         empty lower-left corner the strands rise out of. z-index:2 = above the strands but
-         ALWAYS under the nodes + "YOU ARE HERE" (z-index:3), and pointer-events:none so
-         every node stays clickable. Masked toward the top-right so it CONNECTS to the helix
-         base without a hard edge crossing it. Hidden until the tier's art exists — founder
-         generates in Flow -> scripts/web/images/board/crests/<tier>.png (transparent). -->
-    <img class="origin-crest" src="<?= $h($IMG) ?>/dna/<?= $h($tier) ?>.png?v=<?= @filemtime(__DIR__ . '/../images/board/dna/' . $tier . '.png') ?: '1' ?>" alt="" aria-hidden="true" onerror="this.style.display='none'">
-    <!-- THE DOUBLE HELIX — two strands (Twin Singularities) + base-pair rungs, climbing
-         the diagonal bottom-left -> top-right into the Gate. Each node = a tier doc,
-         clickable to focus it in the dock (the reflection binds to that content_id). -->
-    <svg class="pathsvg" viewBox="0 0 100 100" preserveAspectRatio="none">
-      <?php foreach ($helixRungs as $r): ?>
-      <line x1="<?= $r[0] ?>" y1="<?= $r[1] ?>" x2="<?= $r[2] ?>" y2="<?= $r[3] ?>" stroke="rgba(170,221,255,0.30)" stroke-width="0.55" />
-      <?php endforeach; ?>
-      <path d="<?= $helixA ?>" fill="none" stroke="rgba(0,255,247,0.16)" stroke-width="3" stroke-linecap="round" />
-      <path d="<?= $helixA ?>" fill="none" stroke="rgba(0,255,247,0.85)" stroke-width="0.8" stroke-linecap="round" />
-      <path d="<?= $helixB ?>" fill="none" stroke="rgba(122,0,255,0.18)" stroke-width="3" stroke-linecap="round" />
-      <path d="<?= $helixB ?>" fill="none" stroke="rgba(155,92,255,0.8)" stroke-width="0.8" stroke-linecap="round" />
-    </svg>
-    <?php foreach ($journey as $jn):
-      $jicon = $jn['state']==='done' ? '&#10003;' : ($jn['type']==='video' ? '&#9654;' : ($jn['opt'] ? '&#43;' : ($jn['state']==='current' ? '&#9654;' : '&#9670;')));
-      if (!empty($jn['qotd']) && $jn['state'] !== 'done') { $jicon = '&#63;'; }
-      if (!empty($jn['guide'])) { $jicon = '&#128220;'; }
-      $jclick = !in_array($jn['state'], ['done','pending'], true);
-      $jhref = '?' . ($isPreview ? 'tier=' . rawurlencode($tier) . '&' : '')
+  <?php /* P3 — THE PROGRESS RAIL (docs/BOARD_REDESIGN_SPEC §6.1/§6.1a).
+     Replaces the double helix. The helix was ~40 identical unlabeled dots on a
+     curve eating half the canvas: you could not tell what was next, what you
+     had finished, or what any node WAS. It moves to world.php, where a
+     cinematic visual is the point. Every link target and JS hook from the
+     hnodes is preserved verbatim below — same ?focus=/?wmod= hrefs, same
+     #qotd / #guideask anchors, same .qotd/.gtalk marker classes.
+
+     Two levels because the live curriculum is Observer 33 / Theorist 20 (a
+     flat rail cannot express that): chapters, then the stops inside the
+     CURRENT chapter. Zones at or under RAIL_FLAT_MAX render flat. */
+  require_once __DIR__ . '/includes/rail-labels.php';
+
+  // Chapters are keyed to REQUIRED module positions in this zone; optional
+  // and 'global' modules ride along in the journey but never define a chapter.
+  $railChapters = RAIL_CHAPTERS[$tier] ?? [];
+  // The sequence = this zone's REQUIRED modules.
+  $railStops = array_values(array_filter($journey,
+      fn($j) => !$j['opt'] && $j['zone'] === $tier));
+  // Always-available nodes (QOTD, Ask the Archivist) live in zone 'global' and
+  // belong to no chapter — they must render in EVERY chapter view or the daily
+  // lane disappears and the JS hooks (a.rstop.qotd / a.rstop.gtalk) go dead.
+  $railAlways = array_values(array_filter($journey,
+      fn($j) => !empty($j['qotd']) || !empty($j['guide'])));
+  // Optional enrichment sits past the last chapter's range; give it its own
+  // chapter so it stays reachable instead of falling off the rail.
+  $railOpt = array_values(array_filter($journey,
+      fn($j) => $j['opt'] && empty($j['qotd']) && empty($j['guide'])));
+  if ($railChapters && $railOpt) {
+      $optPos = array_column($railOpt, 'pos');
+      $railChapters[] = ['Going Deeper', min($optPos), max($optPos)];
+      $railStops = array_merge($railStops, $railOpt);
+  }
+  $railFlat = empty($railChapters) || count($railStops) <= RAIL_FLAT_MAX;
+
+  // Which chapter is the member in? The current stop decides; fall back to the
+  // first chapter holding an unfinished stop, then to the last one (all done).
+  $curChapter = null;
+  foreach ($railStops as $j) {
+      if ($j['state'] === 'current' && $j['zone'] === $tier) {
+          $curChapter = rail_chapter_for($tier, $j['pos']); break;
+      }
+  }
+  if ($curChapter === null) {
+      foreach ($railStops as $j) {
+          if (!in_array($j['state'], ['done','pending'], true) && $j['zone'] === $tier) {
+              $curChapter = rail_chapter_for($tier, $j['pos']); break;
+          }
+      }
+  }
+  if ($curChapter === null && $railChapters) { $curChapter = count($railChapters) - 1; }
+  $viewChapter = $curChapter;
+  if (isset($_GET['ch']) && ctype_digit((string)$_GET['ch'])) {
+      $req = (int)$_GET['ch'];
+      if ($req >= 0 && $req < count($railChapters)) { $viewChapter = $req; }
+  }
+
+  // Stops shown: the whole list when flat, else this chapter's slice.
+  $shown = $railStops;
+  if (!$railFlat) {
+      [$clabel, $cfrom, $cto] = $railChapters[$viewChapter];
+      $shown = array_values(array_filter($railStops,
+          fn($j) => $j['pos'] >= $cfrom && $j['pos'] <= $cto));
+  }
+  // the daily lane rides along in every view
+  $shown = array_merge($shown, $railAlways);
+
+  // BROADCAST (spec §6.1a/§8): at ×1.5 type a full chapter overflows the safe
+  // height and bleeds under the chyron. Window around the current stop — never
+  // shrink the marks or the labels, which is the whole point of the rail.
+  if ($present && count($shown) > RAIL_BROADCAST_MAX) {
+      $curIdx = 0;
+      foreach ($shown as $i => $j) {
+          if ($j['state'] === 'current') { $curIdx = $i; break; }
+      }
+      $from = max(0, min($curIdx - 2, count($shown) - RAIL_BROADCAST_MAX));
+      $shown = array_slice($shown, $from, RAIL_BROADCAST_MAX);
+  }
+
+  /** One rail stop: same href/state/JS-hook contract the hnodes had. */
+  $railStop = function(array $jn) use ($h, $isPreview, $tier) {
+      $click = !in_array($jn['state'], ['done','pending'], true);
+      $href  = '?' . ($isPreview ? 'tier=' . rawurlencode($tier) . '&' : '')
              . (!empty($jn['watch']) ? 'wmod=' . rawurlencode($jn['mid']) : 'focus=' . $jn['cid']);
-      if (!empty($jn['qotd'])) { $jhref = '#qotd'; }   /* JS opens the QOTD dock in place */
-      if (!empty($jn['guide'])) { $jhref = '#guideask'; }   /* JS focuses the ask lane */
-      $jcls = 'hnode ' . $jn['state'] . ($jn['opt'] ? ' opt' : '') . (!empty($jn['qotd']) ? ' qotd' : '') . (!empty($jn['guide']) ? ' gtalk' : ''); ?>
-      <?php if ($jclick): ?>
-      <a class="<?= $jcls ?>" data-mid="<?= $h($jn['mid']) ?>" style="left:<?= $jn['x'] ?>%;top:<?= $jn['y'] ?>%" href="<?= $h($jhref) ?>" title="<?= $h($jn['title']) ?>"><span class="dot"><?= $jicon ?></span><?php if ($jn['state']==='current'): ?><span class="here">You are here</span><?php endif; ?></a>
-      <?php else: ?>
-      <span class="<?= $jcls ?>" data-mid="<?= $h($jn['mid']) ?>" style="left:<?= $jn['x'] ?>%;top:<?= $jn['y'] ?>%" title="<?= $h($jn['title']) ?>"><span class="dot"><?= $jicon ?></span></span>
+      if (!empty($jn['qotd']))  { $href = '#qotd'; }
+      if (!empty($jn['guide'])) { $href = '#guideask'; }
+      $cls = 'rstop ' . $jn['state']
+           . (!empty($jn['qotd']) ? ' qotd' : '') . (!empty($jn['guide']) ? ' gtalk' : '');
+      $label = rail_label((string)$jn['mid'], (string)$jn['title']);
+      $tag   = $click ? 'a' : 'span';
+      $attr  = $click ? ' href="' . $h($href) . '"' : '';
+      echo '<' . $tag . ' class="' . $cls . '" data-mid="' . $h($jn['mid']) . '"' . $attr
+         . ' title="' . $h($jn['title']) . '">'
+         . '<span class="rdot"></span><span class="rlbl">' . $h($label) . '</span>'
+         . ($jn['state'] === 'current' ? '<span class="rhere">You are here</span>' : '')
+         . '</' . $tag . '>';
+  }; ?>
+
+  <?php /* `helixmap` is kept as a STYLE HOOK, not a description: a large family
+     of existing rules is written `.helixmap .dockwrap`, `.helixmap .questdock`,
+     `.helixmap .qd-form textarea` … and dropping the class silently orphans
+     every one of them — the move card renders as bare unstyled text with no
+     error anywhere. `railmap` carries the new grid. Renaming the hook and its
+     rules together is P5 cleanup, not a P3 side-quest. */ ?>
+  <div class="map helixmap railmap">
+    <div class="railwrap">
+      <?php if (!$railFlat): ?>
+      <nav class="chapters" aria-label="Chapters in this zone">
+        <?php foreach ($railChapters as $ci => [$clabel, $cfrom, $cto]):
+          $cDone = true; $cAny = false;
+          foreach ($railStops as $j) {
+              if ($j['zone'] !== $tier || $j['pos'] < $cfrom || $j['pos'] > $cto) continue;
+              $cAny = true;
+              if ($j['state'] !== 'done') { $cDone = false; }
+          }
+          $ccls = 'chapter' . ($ci === $viewChapter ? ' viewing' : '')
+                . ($ci === $curChapter ? ' current' : '') . ($cAny && $cDone ? ' done' : ''); ?>
+        <a class="<?= $ccls ?>" href="?<?= $isPreview ? 'tier=' . rawurlencode($tier) . '&amp;' : '' ?>ch=<?= $ci ?>">
+          <span class="cnum"><?= $ci + 1 ?></span><span class="clbl"><?= $h($clabel) ?></span>
+        </a>
+        <?php endforeach; ?>
+        <span class="chapter gate-chapter"><span class="cnum">&#9671;</span><span class="clbl">Gate</span></span>
+      </nav>
       <?php endif; ?>
-    <?php endforeach; ?>
+
+      <div class="rail">
+        <?php foreach ($shown as $jn) { $railStop($jn); } ?>
+      </div>
+    </div>
 
     <!-- THE GATE (top-right) -->
     <?php if ($gate && $nextTier):
@@ -811,7 +899,7 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
 })();
 (function(){
   /* QOTD beacon (chunk 5): the daily node opens the QOTD dock in place. */
-  var qn = document.querySelector('a.hnode.qotd');
+  var qn = document.querySelector('a.rstop.qotd');
   var qd = document.querySelector('.questdock.qotd');
   if (qn && qd) {
     qn.addEventListener('click', function(e){
@@ -889,7 +977,7 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
   }
   if (send) { send.addEventListener('click', askGuide); }
   if (input) { input.addEventListener('keydown', function(e){ if (e.key === 'Enter') { e.preventDefault(); askGuide(); } }); }
-  var gnode = document.querySelector('a.hnode.gtalk');
+  var gnode = document.querySelector('a.rstop.gtalk');
   if (gnode && input) {
     gnode.addEventListener('click', function(e){
       e.preventDefault();

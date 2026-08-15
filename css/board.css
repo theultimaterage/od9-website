@@ -714,3 +714,92 @@ body.present .reader-panel {
   border-bottom:1px solid transparent; padding-bottom:2px;
 }
 .elsewhere a:hover{ color:var(--world); border-bottom-color:var(--world); }
+
+/* ============================================================================
+   P3 — THE PROGRESS RAIL (spec §6.1 / §6.1a). Replaces the helix on the board.
+   Two levels: a chapter rail, then the stops inside the current chapter. Marks
+   never shrink to fit — the rail windows by chapter instead.
+   ========================================================================= */
+.map.railmap{
+  display:grid; grid-template-columns:61.8fr 38.2fr;
+  gap:var(--sp-4); align-items:start;
+  max-width:1680px; margin-inline:auto; padding:0 var(--sp-5) var(--sp-5);
+}
+.railmap>.railwrap{ grid-column:1; grid-row:1 / span 3; min-width:0; }
+.railmap>.dockwrap{ grid-column:2; grid-row:1; }
+.railmap>.gate    { grid-column:2; grid-row:2; margin-top:0 !important; }
+.railmap>.guide   { grid-column:2; grid-row:3; margin-top:0 !important; }
+.railmap>.gate, .railmap>.guide, .railmap>.dockwrap{
+  position:static !important; inset:auto !important;
+  max-width:none !important; width:auto !important;
+  max-height:none !important; overflow:visible !important;
+}
+
+/* --- level 1: chapters --- */
+.chapters{ display:flex; flex-wrap:wrap; gap:var(--sp-2); margin-bottom:var(--sp-4); }
+.chapter{
+  display:flex; align-items:center; gap:var(--sp-2);
+  padding:var(--sp-2) var(--sp-3); border:1px solid var(--line-strong);
+  border-radius:var(--r-pill); background:var(--panel);
+  text-decoration:none; color:var(--ink-dim);
+  font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.08em;
+  text-transform:uppercase; white-space:nowrap;
+}
+.chapter .cnum{ color:var(--ink-faint); }
+.chapter:hover{ border-color:var(--world); color:var(--ink); }
+.chapter.done{ color:var(--ink); }
+.chapter.done .cnum{ color:var(--world); }
+.chapter.current{ border-color:var(--hud); color:var(--hud); }   /* where you are */
+.chapter.viewing{ background:var(--panel-3); color:var(--diamond); }
+.chapter.gate-chapter{ border-color:var(--violet-soft); color:var(--ice); }
+
+/* --- level 2: stops in the current chapter --- */
+.rail{ display:flex; flex-wrap:wrap; gap:var(--sp-3) var(--sp-2); }
+.rstop{
+  position:relative; flex:1 1 128px; max-width:200px; min-width:112px;
+  display:flex; flex-direction:column; align-items:center; gap:var(--sp-2);
+  padding:var(--sp-3) var(--sp-2) var(--sp-2);
+  border:1px solid transparent; border-radius:var(--r-md);
+  text-decoration:none; color:var(--ink-dim); text-align:center;
+}
+a.rstop:hover{ border-color:var(--line-strong); background:var(--panel); color:var(--ink); }
+.rdot{
+  width:22px; height:22px; border-radius:50%; flex:0 0 22px;
+  border:2px solid var(--ink-faint); background:var(--panel);
+}
+.rlbl{ font-size:var(--fs-label); line-height:1.25; }
+/* state marks — spec §6.1 */
+.rstop.done .rdot   { background:var(--world); border-color:var(--world); }
+.rstop.done .rlbl   { color:var(--ink); }
+.rstop.current .rdot{ background:var(--hud); border-color:var(--hud);
+                      box-shadow:0 0 0 5px rgba(212,175,55,.18); }
+.rstop.current .rlbl{ color:var(--hud); }
+.rstop.pending .rdot{ background:linear-gradient(90deg,var(--ink-dim) 50%,transparent 50%);
+                      border-color:var(--ink-dim); }
+.rstop.rejected .rdot{ border-color:var(--err); }
+.rstop.locked .rdot { border-color:var(--ink-faint); opacity:.6; }
+.rstop.locked .rlbl { color:var(--ink-faint); }
+.rstop.daily .rdot  { border-color:var(--hud); }
+.rstop.qotd .rdot::after, .rstop.gtalk .rdot::after{
+  content:""; position:absolute; inset:auto; }
+.rhere{
+  font-family:var(--font-mono); font-size:var(--fs-micro); letter-spacing:.12em;
+  text-transform:uppercase; color:var(--text-on-gold);
+  background:var(--hud); border-radius:var(--r-pill); padding:1px var(--sp-2);
+}
+
+/* broadcast: --ink-faint and --fs-micro are banned (spec §8), and the rail
+   gets fewer, larger stops rather than shrunken ones */
+/* the chapter chips are navigation — present mode drops nav (spec §8), and
+   at ×1.5 they wrap to three rows and crowd the stop rail against the chyron */
+body.present .chapters{ display:none; }
+body.present .rstop{ flex-basis:150px; }
+body.present .rstop.locked .rlbl{ color:var(--ink-dim); }
+body.present .rhere{ font-size:var(--fs-label); }
+
+@media (max-width:1100px){
+  .map.railmap{ grid-template-columns:1fr; }
+  .railmap>.railwrap, .railmap>.gate, .railmap>.guide, .railmap>.dockwrap{
+    grid-column:1; grid-row:auto;
+  }
+}
