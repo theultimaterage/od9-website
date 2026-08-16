@@ -214,8 +214,22 @@ $cssv = fn($p) => @filemtime(__DIR__ . '/../css/' . $p) ?: '1';
         Members</strong>. First-come, capped at 15. See who holds a seat with <code>/firm roster</code>; if you've been
         inducted, claim your sealed badge with <code>/firm reveal</code>.</div></details>
 
-    <details class="faq-q"><summary>What's the Live Roadmap on my board?</summary>
-      <div class="faq-a">OD9's future, in public — as <strong>conditional moves, not promises</strong>. Every trigger
+    <details class="faq-q"><summary>The live lesson is from a tier I haven't reached. Can I follow along?</summary>
+      <div class="faq-a"><strong>Yes.</strong> Every zone on the board is open to <strong>look at</strong>, whatever
+        tier you're on. If the 4 PM live is preaching a Theorist lesson and you joined yesterday, you can open it,
+        read it, and follow the whole thing.
+        <ul>
+          <li>Click the zone in the row at the top of your board — the ones ahead of you are marked <em>ahead</em>.</li>
+          <li>Pick the chapter, then click the lesson on the path. It opens right there.</li>
+          <li>Reading ahead <strong>costs you nothing and earns you nothing</strong>. Credit, reflections and the Gate
+            only count in your own zone — so you can explore freely without breaking your climb.</li>
+          <li>When you're done, hit <strong>Back to &lt;your zone&gt;</strong> and make your move for the day.</li>
+        </ul>
+        There's a <strong>Following a sermon?</strong> button on your board with these same steps.</div></details>
+
+    <details class="faq-q"><summary>What's the Live Roadmap?</summary>
+      <div class="faq-a">OD9's future, in public — as <strong>conditional moves, not promises</strong>.
+        You'll find it at <a href="/roadmap.php">the roadmap</a> (linked from your board). Every trigger
         says: <em>when X benchmark is hit, here's what becomes possible, what it requires, and what it unlocks.</em>
         How to read one:
         <ul>
@@ -231,7 +245,7 @@ $cssv = fn($p) => @filemtime(__DIR__ . '/../css/' . $p) ?: '1';
 
     <details class="faq-q"><summary>What's the State of the Filter?</summary>
       <div class="faq-a">The mission layer. Becoming a Type I civilization isn't a tech metric — it's a
-        <strong>coordination metric</strong>: the panel at the top of your board tracks ten outcomes a society optimized
+        <strong>coordination metric</strong>: <a href="/progress.php">the scorecard</a> tracks ten outcomes a society optimized
         to pass the Great Filter would be clearing (existential-risk accounting, hunger, healthcare, climate, nuclear
         control, and more). Three things make it different from doomscroll content:
         <ul>

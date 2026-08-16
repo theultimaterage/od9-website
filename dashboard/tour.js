@@ -34,12 +34,19 @@
   var CHAPTERS = {
     board: {
       steps: [
-        { element: ".worldstate", popover: { title: "The mission, in numbers",
-          description: "This is the gap we're closing. Humanity sits at Kardashev ~0.73 — we climb to Type I together, one verified contribution at a time." } },
+        /* .worldstate and .value steps were removed 2026-08-16: P2 of the board
+           redesign moved that content to progress.php and index.php, so both
+           selectors matched nothing. The filter in startTour() was silently
+           dropping them, which is graceful but leaves a tour that skips
+           straight past the things that replaced them. */
+        { element: ".viewport", popover: { title: "Where you are",
+          description: "Your zone. Five zones, one per tier — you climb through them from The Wake to The Horizon." } },
         { element: ".zone-nav", popover: { title: "The world map",
-          description: "Five zones, one per tier. Yours is lit; zones you've cleared stay open to revisit, and future zones unlock as you climb." } },
-        { element: ".value", popover: { title: "Your Verified Value",
-          description: "Your standing is built from <b>evaluated</b> contributions — not just showing up. Showing up earns recognition; building earns value." } },
+          description: "Every zone is open to <b>look at</b>, even ones you haven't reached yet — that's how you follow along when a live lesson comes from a higher tier. You can only <b>earn</b> in your own zone." } },
+        { element: ".chapters", popover: { title: "This tier, in chapters",
+          description: "Your tier's curriculum, grouped. Click a chapter to see its lessons — the gold-filled one is what you're looking at, the outlined one is where you actually are." } },
+        { element: ".rail", popover: { title: "Your path",
+          description: "Every stop is one lesson. Filled = done, gold = your move right now, hollow = still ahead. Click any of them to open it." } },
         { element: ".dockwrap", popover: { title: "Your moves this turn",
           description: "Your daily to-do. Start with today's question — it's your fastest first win, and it's right here." } },
         { element: ".gate", popover: { title: "The Gate",
