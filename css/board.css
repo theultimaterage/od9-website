@@ -693,6 +693,11 @@ body.present .qd-form button{ background:var(--gold) !important; }
 }
 .railmap>.railwrap{ grid-column:1; grid-row:1 / span 3; min-width:0; }
 .railmap>.dockwrap{ grid-column:2; grid-row:1; }
+/* At MAX tier the summit replaces the Gate, so it takes the Gate's slot.
+   P5 un-absoluted it without assigning one, which dropped it into the rail's
+   column where the stops drew straight over it (found rendering benefactor —
+   a tier the earlier phases were never checked against). */
+.railmap>.summit{ grid-column:2; grid-row:2; }
 .railmap>.gate    { grid-column:2; grid-row:2; margin-top:0 !important; }
 .railmap>.guide   { grid-column:2; grid-row:3; margin-top:0 !important; }
 
