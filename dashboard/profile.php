@@ -24,7 +24,7 @@ $achievements = [];
 $activity     = [];
 $displayName  = 'OD9 Member';
 $tierName     = 'OBSERVER';
-$tierColor    = '#808080';
+$tierColor    = '#8A9499'; /* iced-ladder observer (includes/tiers.php) */
 
 if (!$requestedId || !preg_match('/^\d{17,20}$/', $requestedId)) {
     http_response_code(404);
@@ -132,7 +132,7 @@ $nav_base            = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'] ?? '/dashbo
 <head>
 <?php include __DIR__ . '/../includes/head.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link rel="stylesheet" href="/css/dashboard.css">
+<link rel="stylesheet" href="/css/dashboard.css?v=<?= @filemtime(__DIR__ . '/../css/dashboard.css') ?: '1' ?>">
 <style>:root { --tier-color: <?= htmlspecialchars($tierColor, ENT_QUOTES) ?>; }</style>
 </head>
 <body>

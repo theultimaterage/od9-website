@@ -25,7 +25,10 @@ if ($loggedIn && ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && ($_POST['conse
     try {
         require_once __DIR__ . '/includes/db.php';
         require_once __DIR__ . '/includes/profile_visibility.php';
-        od9_set_profile_public($discordId, isset($_POST['share_presence']));
+        // The checkbox has always promised "your token appears on the zone map"
+        // — since migration 007 that writes the PRESENCE consent it describes
+        // (is_public stays the profile-page flag, owned by settings.php).
+        od9_set_presence($discordId, isset($_POST['share_presence']) ? 'visible' : 'hidden');
     } catch (Throwable $e) {
         error_log('[welcome] consent save failed: ' . $e->getMessage());
     }
@@ -38,13 +41,13 @@ if (!$loggedIn) {
     $_SESSION['auth_redirect'] = $BASE . '/welcome.php';
 }
 
-// Current visibility, to pre-check the toggle.
+// Current presence consent, to pre-check the toggle.
 $currentPublic = false;
 if ($loggedIn) {
     try {
         require_once __DIR__ . '/includes/db.php';
         require_once __DIR__ . '/includes/profile_visibility.php';
-        $currentPublic = od9_is_profile_public($discordId);
+        $currentPublic = od9_get_presence($discordId) !== 'hidden';
     } catch (Throwable $e) { /* default private */ }
 }
 
@@ -58,7 +61,7 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>Welcome to OD9 — The Wake</title>
-<link rel="stylesheet" href="/css/board.css">
+<link rel="stylesheet" href="/css/board.css?v=<?= @filemtime(__DIR__ . '/../css/board.css') ?: '1' ?>">
 <style>
   .welcome { max-width: 720px; margin: 0 auto; padding: 8vh 26px 60px; }
   .welcome h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 5vw, 48px); color: var(--diamond); line-height: 1.08; margin: 14px 0 14px; }

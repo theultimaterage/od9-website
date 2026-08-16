@@ -431,7 +431,13 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
      guide, same zone name — but contained, so every panel below it can be
      opaque and legible. Decorative: the zone name is already in the HUD. */ ?>
   <div class="viewport" aria-hidden="true">
-    <img src="<?= $h($IMG) ?>/<?= $h($zone['img']) ?>" alt="">
+    <?php /* ?v=<filemtime> is NOT optional. Cloudflare caches images for 31
+       days, so without it a re-rendered plate keeps serving the OLD bytes to
+       every member — the deploy "succeeds" and reaches nobody. Verified
+       2026-08-16: the new plates landed on origin while CF answered
+       cf-cache-status:HIT with the previous file. Every other image on this
+       page already carried the stamp; this one was the exception. */ ?>
+    <img src="<?= $h($IMG) ?>/<?= $h($zone['img']) ?>?v=<?= @filemtime(__DIR__ . '/../images/board/' . $zone['img']) ?: '1' ?>" alt="">
     <span class="vtag">&#9670; <?= $h($zone['guide']) ?></span>
     <span class="vname"><?= $h($zone['zone']) ?></span>
   </div>
