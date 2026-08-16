@@ -71,6 +71,51 @@ const RAIL_LABELS = [
     'observer.capstone.17'   => '2C · Info Control',
     'observer.capstone.18'   => '2D · Impairment',
     'observer.capstone.19'   => '3 · Synthesis',
+
+    // --- Observer: Going Deeper (optional shelf) ---
+    // EXCEPTION to rule 2: this shelf holds three Kardashev explainers and
+    // three Fermi ones, so stripping the publisher would leave three stops
+    // reading "Kardashev Scale". Here the SOURCE is the distinguishing fact
+    // (rule 5 outranks rule 2), so it is kept as the qualifier.
+    'observer.read.57'       => 'Kardashev · PBS',
+    'observer.read.58'       => 'Kardashev · Space.com',
+    'observer.read.60'       => 'Type I · Cool Worlds',
+    'observer.read.59'       => 'Great Filter · Astro',
+    'observer.read.63'       => 'Great Filter · Paper',
+    'observer.read.61'       => 'Fermi · Wait But Why',
+    'observer.read.62'       => 'Fermi · Isaac Arthur',
+    'observer.read.65'       => 'Pale Blue Dot',
+    'observer.read.66'       => 'Evolution of Trust',
+    'observer.read.67'       => 'Optimistic Nihilism',
+    'observer.read.68'       => 'Egoistic Altruism',
+
+    // --- Theorist: Orientation ---
+    'theorist.read.20'       => 'Welcome to Theorist',
+    'theorist.read.21'       => 'Strategic Pessimism',
+    'theorist.read.22'       => 'The Four Barriers',
+    // --- Theorist: The Four Barriers (each barrier = doctrine + diagnosis) ---
+    'theorist.read.23'       => 'The Case Against God',
+    'theorist.read.84'       => 'Religious Institutions',
+    'theorist.read.24'       => 'Economic Exploitation',
+    'theorist.read.85'       => 'Economic Dysfunction',
+    'theorist.read.25'       => 'Information Control',
+    'theorist.read.86'       => 'Media & Info Crisis',
+    'theorist.read.26'       => 'Cognitive Impairment',
+    'theorist.read.87'       => 'Mental Health',
+    // --- Theorist: Synergy ---
+    'theorist.read.27'       => 'Synergy of Barriers',
+    'theorist.read.69'       => 'Meditations on Moloch',
+    // --- Theorist: The Diagnosis ---
+    'theorist.read.88'       => 'Political Corruption',
+    'theorist.read.89'       => 'Science Institutions',
+    'theorist.read.90'       => 'Environmental Damage',
+    'theorist.read.71'       => 'Where Are They?',
+    // --- Theorist: Practice ---
+    'theorist.read.28'       => 'What Theorists Do',
+    'theorist.capstone.29'   => 'Capstone · Landing',
+    'theorist.read.64'       => 'Superforecasting',
+    // --- Theorist: optional ---
+    'theorist.read.70'       => 'Consciousness · Seth',
 ];
 
 /**
@@ -87,6 +132,18 @@ const RAIL_CHAPTERS = [
         ['Crisis & Response', 21, 26],
         ['Capstone',         27, 32],
     ],
+    // Theorist's spine is the Four Barriers, so the chapters follow the
+    // argument rather than the module count: name the barriers, then their
+    // interaction, then the systemic diagnosis, then what a Theorist DOES.
+    // Each barrier is a doctrine lesson paired with its real-world diagnosis,
+    // which is why that chapter holds eight stops (the desktop maximum).
+    'theorist' => [
+        ['Orientation',       0,  2],
+        ['The Four Barriers', 3, 10],
+        ['Synergy',          11, 12],
+        ['The Diagnosis',    13, 16],
+        ['Practice',         17, 19],
+    ],
 ];
 
 /** Above this many required stops, a zone needs chapters (spec §6.1). */
@@ -100,7 +157,7 @@ const RAIL_BROADCAST_MAX = 6;
 const RAIL_STRIP_PREFIXES = [
     'Kurzgesagt:', 'PBS Space Time:', 'The Long Now:', 'Space.com:',
     'Astronomy.com:', 'Cool Worlds:', 'Wait But Why:', 'Isaac Arthur:',
-    'Carl Sagan:',
+    'Carl Sagan:', 'Nick Bostrom:', 'Anil Seth:',
 ];
 
 /**
