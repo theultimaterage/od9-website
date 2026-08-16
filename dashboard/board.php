@@ -59,7 +59,15 @@ $credits = (int)($user['total_credits'] ?? 0);
 $TIER_ORDER = TIER_ORDER; // shared const (includes/world_consts.php)
 $memberIdx  = array_search($memberTier, $TIER_ORDER, true);
 $reqIdx     = array_search(strtolower($_GET['tier'] ?? ''), $TIER_ORDER, true);
-$tier       = ($reqIdx !== false && $reqIdx <= $memberIdx) ? $TIER_ORDER[$reqIdx] : $memberTier;
+// SERMON NAVIGATION (founder, 2026-08-16). Zones used to be visitable only at
+// or below your own tier — a brand-new Observer could not open The Diagnostic
+// at all, so they could not follow along when the 4 PM sermon preaches a
+// Theorist lesson. Every zone is now VISITABLE; only your own is EARNABLE.
+// The progression gate is untouched: $readOnly below still blocks completion,
+// credit and the Gate everywhere except your own zone, so looking ahead costs
+// nothing and earns nothing.
+$tier       = ($reqIdx !== false) ? $TIER_ORDER[$reqIdx] : $memberTier;
+$isAhead    = ($reqIdx !== false && $reqIdx > $memberIdx);
 $isPreview  = ($tier !== $memberTier);   // viewing a zone other than your own
 $isAdmin    = defined('OD9_ADMIN_DISCORD_IDS') && in_array((string)$discordId, array_map('strval', OD9_ADMIN_DISCORD_IDS), true);
 $readOnly   = $isPreview && !$isAdmin;    // members are read-only off-tier; admins stay fully interactive on any zone
@@ -378,12 +386,21 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
       <span class="bzone"><?= $h($zone['zone']) ?></span>
     </div>
     <div class="spacer"></div>
-    <div class="tier-badge"><span class="k">Current Tier</span><span class="v"><?= $h(ucfirst($tier)) ?></span></div>
-    <?php if ($gate && $nextTier): ?>
+    <?php /* The HUD describes the MEMBER, never the zone being viewed. With
+       sermon navigation an Observer can open the Theorist zone, and reading
+       "Current Tier: Theorist" (with that zone's credit gate) told them they
+       were something they are not. $tier is the viewed zone; $memberTier is
+       who you are. The Gate panel further down still shows the VIEWED zone's
+       requirements, which is correct — that panel is about the zone. */
+       $myGate = $GATES[$memberTier] ?? null; $myNext = $NEXTS[$memberTier] ?? null;
+       $myPct  = ($myGate && !empty($myGate['credits']))
+               ? max(0, min(100, ($credits / $myGate['credits']) * 100)) : 0; ?>
+    <div class="tier-badge"><span class="k">Current Tier</span><span class="v"><?= $h(ucfirst($memberTier)) ?></span></div>
+    <?php if ($myGate && $myNext): ?>
     <div class="credits">
-      <div class="num"><?= number_format($credits) ?> / <?= $gate['credits'] ?> CR</div>
-      <div class="meter"><i style="width: <?= $gateCreditPct ?>%"></i></div>
-      <div class="lbl">Progress to <?= $h($nextTier) ?></div>
+      <div class="num"><?= number_format($credits) ?> / <?= $myGate['credits'] ?> CR</div>
+      <div class="meter"><i style="width: <?= round($myPct) ?>%"></i></div>
+      <div class="lbl">Progress to <?= $h($myNext) ?></div>
     </div>
     <?php else: ?>
     <div class="credits maxed"><div class="num"><?= number_format($credits) ?> CR</div><div class="lbl">Max tier</div></div>
@@ -404,27 +421,34 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
   <nav class="zone-nav" aria-label="Zone map — your journey through the tiers">
     <?php foreach ($TIER_ORDER as $i => $tz):
       $z = ZONES[$tz];
-      $unlocked  = ($i <= $memberIdx);
+      $ahead     = ($i > $memberIdx);
       $active    = ($tz === $tier);
       $isCurrent = ($tz === $memberTier);
-      $cls = 'zone-node' . ($active ? ' active' : '') . ($isCurrent ? ' current' : '') . ($unlocked ? '' : ' locked');
-      if ($unlocked): ?>
-    <a class="<?= $cls ?> ztrans-link" data-ztrans="gate" href="?tier=<?= $h($tz) ?>">
+      // 'ahead' replaces the old 'locked': you may LOOK at any zone (sermon
+      // follow-along); earning there still requires reaching it.
+      $cls = 'zone-node' . ($active ? ' active' : '') . ($isCurrent ? ' current' : '') . ($ahead ? ' ahead' : ''); ?>
+    <a class="<?= $cls ?> ztrans-link" data-ztrans="gate" href="?tier=<?= $h($tz) ?>"
+       title="<?= $ahead ? 'Look ahead — read-only until you reach ' . $h(ucfirst($tz)) : 'Open ' . $h($z['zone']) ?>">
       <span class="zn-i"><?= $i + 1 ?></span>
       <span class="zn-name"><?= $h($z['zone']) ?></span>
-      <span class="zn-tier"><?= $h(ucfirst($tz)) ?><?= $isCurrent ? ' &middot; you' : '' ?></span>
+      <span class="zn-tier"><?= $h(ucfirst($tz)) ?><?= $isCurrent ? ' &middot; you' : ($ahead ? ' &middot; ahead' : '') ?></span>
     </a>
-    <?php else: ?>
-    <span class="<?= $cls ?>" title="Unlock at <?= $h(ucfirst($tz)) ?>">
-      <span class="zn-i">&#128274;</span>
-      <span class="zn-name"><?= $h($z['zone']) ?></span>
-      <span class="zn-tier">Unlock at <?= $h(ucfirst($tz)) ?></span>
-    </span>
-    <?php endif; ?>
     <?php endforeach; ?>
   </nav>
   <?php if ($isPreview): ?>
-  <div class="zone-preview-banner"><?php if ($readOnly): ?>&#128270; Previewing <b><?= $h($zone['zone']) ?></b> (<?= $h(ucfirst($tier)) ?>) — read-only.<?php else: ?>&#128296; Admin view — <b><?= $h($zone['zone']) ?></b> (<?= $h(ucfirst($tier)) ?>), fully interactive; anything you complete here applies to your account.<?php endif; ?> <a class="ztrans-link" data-ztrans="gate" href="?tier=<?= $h($memberTier) ?>">Return to <?= $h(ZONES[$memberTier]['zone']) ?> &rsaquo;</a></div>
+  <?php /* Three distinct situations, three messages. The AHEAD case is new
+     (sermon follow-along) and has to answer the question a newcomer will
+     actually have: "am I allowed to be here, and does anything I do count?" */ ?>
+  <div class="zone-preview-banner<?= $isAhead ? ' ahead' : '' ?>">
+    <?php if (!$readOnly): ?>
+      &#128296; Admin view — <b><?= $h($zone['zone']) ?></b> (<?= $h(ucfirst($tier)) ?>), fully interactive; anything you complete here applies to your account.
+    <?php elseif ($isAhead): ?>
+      &#128064; Looking ahead at <b><?= $h($zone['zone']) ?></b> — the <?= $h(ucfirst($tier)) ?> zone. Read anything you like; nothing here can be completed or earn credit until you reach it. <b>Following the sermon?</b> You're in the right place.
+    <?php else: ?>
+      &#128270; Revisiting <b><?= $h($zone['zone']) ?></b> (<?= $h(ucfirst($tier)) ?>) — read-only; you've already cleared this zone.
+    <?php endif; ?>
+    <a class="ztrans-link" data-ztrans="gate" href="?tier=<?= $h($memberTier) ?>">Back to <?= $h(ZONES[$memberTier]['zone']) ?> &rsaquo;</a>
+  </div>
   <?php endif; ?>
 
   <?php /* P1: the world as a framed VIEWPORT, not a wallpaper. Same plate, same
@@ -437,7 +461,8 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
        2026-08-16: the new plates landed on origin while CF answered
        cf-cache-status:HIT with the previous file. Every other image on this
        page already carried the stamp; this one was the exception. */ ?>
-    <img src="<?= $h($IMG) ?>/<?= $h($zone['img']) ?>?v=<?= @filemtime(__DIR__ . '/../images/board/' . $zone['img']) ?: '1' ?>" alt="">
+    <img src="<?= $h($IMG) ?>/<?= $h($zone['img']) ?>?v=<?= @filemtime(__DIR__ . '/../images/board/' . $zone['img']) ?: '1' ?>"
+         style="object-position:center <?= $h($zone['focus'] ?? '38%') ?>" alt="">
     <span class="vtag">&#9670; <?= $h($zone['guide']) ?></span>
     <span class="vname"><?= $h($zone['zone']) ?></span>
   </div>
@@ -461,10 +486,31 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
      http://localhost/od9/dashboard -> http://localhost/od9. */
      $siteRoot = dirname(DASHBOARD_BASE_URL); ?>
   <div class="elsewhere">
+    <button type="button" class="followhelp" id="followHelp" aria-expanded="false">&#127897; Following a sermon?</button>
     <a href="<?= $h($siteRoot) ?>/progress.php">State of the Filter &rsaquo;</a>
     <a href="<?= $h($siteRoot) ?>/roadmap.php">The live roadmap &rsaquo;</a>
     <a href="<?= DASHBOARD_BASE_URL ?>/index.php">Your verified value &rsaquo;</a>
   </div>
+  <div class="followpanel" id="followPanel" hidden>
+    <b>How to follow along with the live lesson</b>
+    <ol>
+      <li>Find the zone being preached in the row above — <b>any zone is open to look at</b>, even ones you haven't reached.</li>
+      <li>Pick the chapter, then click the lesson on the rail. It opens right here.</li>
+      <li>Reading ahead never costs you anything. Credit and the Gate only count in <b>your</b> zone (<?= $h(ZONES[$memberTier]['zone']) ?>).</li>
+      <li>When the sermon ends, hit <b>Back to <?= $h(ZONES[$memberTier]['zone']) ?></b> and make your move for the day.</li>
+    </ol>
+  </div>
+  <script>
+  (function(){
+    var b=document.getElementById('followHelp'), p=document.getElementById('followPanel');
+    if(!b||!p) return;
+    b.addEventListener('click', function(){
+      var open = p.hasAttribute('hidden');
+      if (open) { p.removeAttribute('hidden'); } else { p.setAttribute('hidden',''); }
+      b.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  })();
+  </script>
 
   <?php /* P2: the five Verified Value bars lived here. Removed, not lost —
      dashboard/index.php renders all five dimensions as a radar chart with
@@ -520,10 +566,15 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
   // chapter so it stays reachable instead of falling off the rail.
   $railOpt = array_values(array_filter($journey,
       fn($j) => $j['opt'] && empty($j['qotd']) && empty($j['guide'])));
-  if ($railChapters && $railOpt) {
-      $optPos = array_column($railOpt, 'pos');
-      $railChapters[] = ['Going Deeper', min($optPos), max($optPos)];
+  if ($railOpt) {
+      // Optional stops ALWAYS join the rail. Gating this on $railChapters made
+      // them invisible on every flat tier — Architect/Pioneer/Benefactor each
+      // carry four optional modules that simply never rendered.
       $railStops = array_merge($railStops, $railOpt);
+      if ($railChapters) {
+          $optPos = array_column($railOpt, 'pos');
+          $railChapters[] = ['Going Deeper', min($optPos), max($optPos)];
+      }
   }
   $railFlat = empty($railChapters) || count($railStops) <= RAIL_FLAT_MAX;
 

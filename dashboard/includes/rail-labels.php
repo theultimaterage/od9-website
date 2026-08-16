@@ -27,6 +27,11 @@
  * which is what a ~94px stop fits over two lines at --fs-label.
  *
  * Self-test:  php scripts/web/dashboard/includes/rail-labels.php --selftest
+ *   Run it LOCALLY. Prod's `php` binary is CGI (PHP_SAPI = 'cgi-fcgi'), so the
+ *   `PHP_SAPI === 'cli'` guard below skips the test there — that guard is
+ *   deliberate, not a bug: php-cgi can populate $argv from the QUERY STRING,
+ *   so loosening it would let a web request trigger the test. Verify prod by
+ *   md5-matching the deployed file against the local copy you tested instead.
  */
 
 const RAIL_LABEL_MAX = 22;
@@ -116,6 +121,35 @@ const RAIL_LABELS = [
     'theorist.read.64'       => 'Superforecasting',
     // --- Theorist: optional ---
     'theorist.read.70'       => 'Consciousness · Seth',
+    // --- Architect (flat rail: 5 required) ---
+    'architect.read.30'      => 'Mechanism Design',
+    'architect.read.31'      => 'Information Resilience',
+    'architect.read.32'      => 'Metaworld Theory',
+    'architect.read.33'      => 'Succession Planning',
+    'architect.capstone.34'  => 'Capstone · Threshold',
+    'architect.read.72'      => 'Ostrom · Commons',
+    'architect.read.73'      => 'Energy · OWID',
+    'architect.read.74'      => 'Quadratic Payments',
+    'architect.read.75'      => 'Stellar Engines',
+    // --- Pioneer (flat rail: 5 required) ---
+    'pioneer.read.35'        => 'Welcome to Pioneer',
+    'pioneer.read.36'        => 'Governance as Research',
+    'pioneer.read.37'        => 'The Five Pioneer Roles',
+    'pioneer.read.38'        => 'Strategic Stewardship',
+    'pioneer.capstone.39'    => 'Capstone · Vow',
+    'pioneer.read.76'        => 'The Precipice · Ord',
+    'pioneer.read.77'        => 'The 3.5% Rule',
+    'pioneer.read.78'        => 'The World Is Better',
+    'pioneer.read.79'        => 'Sapolsky · Behavior',
+    // --- Benefactor (flat rail: 4 required) ---
+    'benefactor.read.40'     => 'Immortal Institutions',
+    'benefactor.read.41'     => 'Legacy Systems',
+    'benefactor.read.42'     => '5-Year Sustainability',
+    'benefactor.capstone.43' => 'Capstone · Vow',
+    'benefactor.read.80'     => 'Doomsday Clock · 85s',
+    'benefactor.read.81'     => 'Beginning of Infinity',
+    'benefactor.read.82'     => 'Galactic-Scale Energy',
+    'benefactor.read.83'     => 'Astronomical Waste',
 ];
 
 /**
@@ -157,7 +191,9 @@ const RAIL_BROADCAST_MAX = 6;
 const RAIL_STRIP_PREFIXES = [
     'Kurzgesagt:', 'PBS Space Time:', 'The Long Now:', 'Space.com:',
     'Astronomy.com:', 'Cool Worlds:', 'Wait But Why:', 'Isaac Arthur:',
-    'Carl Sagan:', 'Nick Bostrom:', 'Anil Seth:',
+    'Carl Sagan:', 'Nick Bostrom:', 'Anil Seth:', 'Our World in Data:',
+    'Toby Ord:', 'Erica Chenoweth:', 'Robert Sapolsky:', 'David Deutsch:',
+    'Tom Murphy:', 'Vitalik Buterin:', 'Bulletin of the Atomic Scientists:',
 ];
 
 /**

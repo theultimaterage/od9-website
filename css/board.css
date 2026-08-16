@@ -716,8 +716,21 @@ body.present .qd-form button{ background:var(--gold) !important; }
 .chapter:hover{ border-color:var(--world); color:var(--ink); }
 .chapter.done{ color:var(--ink); }
 .chapter.done .cnum{ color:var(--world); }
-.chapter.current{ border-color:var(--hud); color:var(--hud); }   /* where you are */
-.chapter.viewing{ background:var(--panel-3); color:var(--diamond); }
+/* TWO different facts, so two clearly different treatments (founder, 2026-08-16:
+   the selected chip filled dark grey was near-invisible against the others):
+     current  = the chapter you are actually IN      -> gold OUTLINE
+     viewing  = the chapter you are LOOKING AT       -> gold FILL
+   Filled gold reads as "selected" at a glance and from across a room on
+   stream. Near-black on gold is 9.4:1; white on gold would be 2.1:1, which is
+   why the brand rule exists. */
+.chapter.current{ border-color:var(--hud); color:var(--hud); }
+.chapter.viewing{
+  background:var(--hud); border-color:var(--hud);
+  color:var(--text-on-gold); font-weight:700;
+  box-shadow:0 0 18px rgba(212,175,55,.35);
+}
+.chapter.viewing .cnum{ color:var(--text-on-gold); opacity:.72; }
+.chapter.viewing:hover{ color:var(--text-on-gold); }
 .chapter.gate-chapter{ border-color:var(--violet-soft); color:var(--ice); }
 
 /* --- level 2: stops in the current chapter --- */
@@ -773,3 +786,30 @@ body.present .rhere{ font-size:var(--fs-label); }
     grid-column:1; grid-row:auto;
   }
 }
+
+/* --- SERMON NAVIGATION (2026-08-16) --------------------------------------
+   Every zone is visitable so a member can follow the 4 PM lesson wherever it
+   lives. 'ahead' replaces the old locked state: visibly not-yours, but open. */
+.zone-node.ahead{ opacity:.72; border-style:dashed; }
+.zone-node.ahead:hover{ opacity:1; border-style:solid; }
+.zone-node.ahead .zn-tier{ color:var(--ink-dim); }
+.zone-preview-banner.ahead{ border-left:3px solid var(--world); }
+
+.followhelp{
+  font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.1em;
+  text-transform:uppercase; color:var(--world); background:none;
+  border:1px solid var(--line-strong); border-radius:var(--r-pill);
+  padding:var(--sp-1) var(--sp-3); cursor:pointer;
+}
+.followhelp:hover{ border-color:var(--world); }
+.followpanel{
+  max-width:1680px; margin:0 auto var(--sp-4); padding:var(--sp-4);
+  background:var(--panel); border:1px solid var(--world);
+  border-radius:var(--r-lg); color:var(--ink);
+}
+.followpanel[hidden]{ display:none; }
+.followpanel b{ color:var(--diamond); }
+.followpanel ol{ margin:var(--sp-3) 0 0 var(--sp-4); display:grid; gap:var(--sp-2); }
+.followpanel li{ font-size:var(--fs-body); line-height:1.5; }
+/* on stream this is member-facing help, not part of the sermon */
+body.present .followhelp, body.present .followpanel{ display:none !important; }
