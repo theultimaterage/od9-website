@@ -584,13 +584,10 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
          . '</' . $tag . '>';
   }; ?>
 
-  <?php /* `helixmap` is kept as a STYLE HOOK, not a description: a large family
-     of existing rules is written `.helixmap .dockwrap`, `.helixmap .questdock`,
-     `.helixmap .qd-form textarea` … and dropping the class silently orphans
-     every one of them — the move card renders as bare unstyled text with no
-     error anywhere. `railmap` carries the new grid. Renaming the hook and its
-     rules together is P5 cleanup, not a P3 side-quest. */ ?>
-  <div class="map helixmap railmap">
+  <?php /* P5: `helixmap` retired. The hook and every `.helixmap .foo` rule
+     were renamed together — renaming only one silently orphans the other and
+     the move card renders as bare unstyled text with no error anywhere. */ ?>
+  <div class="map railmap">
     <div class="railwrap">
       <?php if (!$railFlat): ?>
       <nav class="chapters" aria-label="Chapters in this zone">
@@ -835,7 +832,7 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
      rendered helix; polled from presence.php (~25s). Anonymous tokens carry
      no name; the payload never carries ids at all. Desktop only — the mobile
      journey is a static dot track. */
-  var map = document.querySelector('.map.helixmap');
+  var map = document.querySelector('.map.railmap');
   if (!map || window.innerWidth <= 760) { return; }
   var zone = <?= json_encode($tier, JSON_UNESCAPED_SLASHES) ?>;
   var layer = document.createElement('div');
@@ -912,7 +909,7 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
   }
 })();
 (function(){
-  var g = document.querySelector('.helixmap .guide'); if (!g) { return; }
+  var g = document.querySelector('.railmap .guide'); if (!g) { return; }
   var vo = g.querySelector('.vo'); var who = g.querySelector('.who'); if (!vo || !who) { return; }
   var who0 = who.textContent; var vo0 = vo.innerHTML;
   var csrf = document.body.getAttribute('data-tour-csrf') || '';

@@ -105,36 +105,20 @@ a { color: inherit; }
    the verified value YOU'VE built here. Each point is verification-earned, never
    from presence — the note makes that explicit (this is value, not XP). */
 .value { display: flex; gap: 10px; padding: 16px 26px 0; flex-wrap: wrap; align-items: stretch; }
-.val-eyebrow { width: 100%; font-family: var(--font-mono); font-size: 11px; letter-spacing: .26em; color: var(--gold-hi); text-transform: uppercase; margin-bottom: 2px; display: flex; align-items: center; gap: 8px; }
-.val-eyebrow::before { content: ""; width: 16px; height: 1px; background: var(--gold); box-shadow: var(--glow-gold); }
 .vd { position: relative; display: flex; flex-direction: column; gap: 2px; padding: 9px 14px; min-width: 124px; flex: 1; background: rgba(13,13,13,.62); border: 1px solid var(--line); border-left: 2px solid var(--gold-deep); backdrop-filter: blur(4px); }
 .vd .vk { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .12em; color: var(--ice); text-transform: uppercase; }
 .vd .vv { font-family: var(--font-display); font-weight: 600; font-size: 22px; color: var(--diamond); line-height: 1.1; }
 .vd .vv small { font-size: 11.5px; color: var(--ink); font-family: var(--font-mono); font-weight: 400; }
-.vd .vbar { height: 4px; border-radius: 999px; background: rgba(0,0,0,.5); border: 1px solid var(--line-strong); overflow: hidden; margin-top: 6px; }
-.vd .vbar > i { display: block; height: 100%; background: var(--grad-meter); }
-.vd .vsub { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .04em; color: var(--ice); margin-top: 5px; }
 .vd.scarce { border-left-color: var(--gold-bright); }
 .vd.scarce .vk { color: var(--gold-deep); }
 .vd.scarce .vv { color: var(--gold-bright); }
-.vd.scarce .vbar > i { background: var(--grad-diamond); }
-.val-note { padding: 9px 26px 0; font-family: var(--font-mono); font-size: 13px; letter-spacing: .03em; color: var(--ice); max-width: 760px; line-height: 1.6; }
-.val-note b { color: var(--edge); font-weight: 400; }
 /* "emerging" dims — real but not yet earnable at this tier (Resource = the
    far-future ROT layer; System opens at Theorist+). Muted, no bar, honest
    "unlocks" sub, so the board never implies a path that isn't there. */
-.vd.emerging { border-left-color: var(--ice); background: rgba(13,13,13,.4); }
-.vd.emerging .vk { color: var(--ice); }
-.vd.emerging .vv { color: var(--ice); font-size: 18px; }
-.vd.emerging .vsub { color: var(--ice); }
 .lock .ref { font-family: var(--font-mono); font-size: 8px; letter-spacing: .02em; color: var(--ice); margin-left: 8px; }
 /* per-dimension info tooltip — a small (i) in each value cell; hover/focus reveals
    a one-line "what this measures". Positioned below + within .board (whose
    overflow:hidden won't clip an interior tip); high z-index over siblings. */
-.vinfo { position: absolute; top: 8px; right: 9px; width: 15px; height: 15px; border-radius: 50%; border: 1px solid var(--border-strong); color: var(--ink); font-family: var(--font-mono); font-style: normal; font-weight: 700; font-size: 9px; line-height: 1; display: grid; place-items: center; cursor: help; user-select: none; z-index: 3; }
-.vinfo:hover, .vinfo:focus { color: var(--ice); border-color: var(--ice); outline: none; }
-.vinfo .tip { position: absolute; top: 23px; right: -7px; width: 212px; padding: 10px 12px; background: rgba(7,9,11,.98); border: 1px solid var(--border-hud); border-radius: var(--r-md); color: var(--ink); font-family: var(--font-body); font-weight: 400; font-size: 11px; line-height: 1.5; letter-spacing: .01em; text-transform: none; box-shadow: var(--shadow-md); opacity: 0; transform: translateY(-4px); pointer-events: none; transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); z-index: 30; }
-.vinfo:hover .tip, .vinfo:focus .tip { opacity: 1; transform: translateY(0); }
 
 /* COHORT — "your crew" (cohort-lite v1). Read-only panel; the cyan --world accent
    marks it as the community/together layer (vs gold value, violet world-state).
@@ -156,12 +140,9 @@ a { color: inherit; }
 
 /* MAP */
 .map { position: relative; margin-top: 18px; padding: 0 26px 40px; }
-.pathsvg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .9; }
 
 /* moves list (quest cards) — the live, interactive layer */
 .moves { max-width: 720px; }
-.moves-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; color: var(--ice); text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-.moves-eyebrow::before { content: ""; width: 18px; height: 1px; background: var(--world); box-shadow: var(--glow-cyan); }
 .q { display: grid; grid-template-columns: 46px 1fr auto; gap: 16px; align-items: center; border: 1px solid var(--border); background: rgba(13,13,13,.72); border-radius: var(--r-lg); padding: 18px 20px; margin-bottom: 14px; backdrop-filter: blur(6px); transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
 .q:hover { border-color: var(--border-strong); }
 .q.live { border-color: var(--border-hud); box-shadow: var(--glow-gold); }
@@ -201,7 +182,7 @@ a { color: inherit; }
 .cta.muted { background: transparent; color: var(--ok); border: 1px solid rgba(63,185,80,.4); box-shadow: none; cursor: default; }
 
 /* THE GATE */
-.gate { max-width: 720px; margin-top: 8px; border: 1px solid rgba(122,0,255,.32); background: linear-gradient(180deg, rgba(122,0,255,.06), transparent); padding: 16px 20px; backdrop-filter: blur(4px); }
+.gate { border: 1px solid rgba(122,0,255,.32); background: linear-gradient(180deg, rgba(122,0,255,.06), transparent); padding: 16px 20px; backdrop-filter: blur(4px); }
 .gate h4 { font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; color: var(--violet); text-transform: uppercase; margin-bottom: 12px; }
 .lock { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; font-size: 12.5px; color: var(--ink); }
 .lock:last-child { margin-bottom: 0; }
@@ -210,7 +191,7 @@ a { color: inherit; }
 .lock b { color: var(--diamond); font-weight: 400; font-family: var(--font-mono); font-size: 12px; }
 
 /* THE GUIDE */
-.guide { max-width: 720px; margin-top: 18px; display: flex; gap: 14px; align-items: center; border: 1px solid var(--line); background: rgba(13,13,13,.6); padding: 16px 18px; backdrop-filter: blur(4px); }
+.guide { display: flex; gap: 14px; align-items: center; border: 1px solid var(--line); background: rgba(13,13,13,.6); padding: 16px 18px; backdrop-filter: blur(4px); }
 .guide .portrait { position: relative; width: 76px; height: 90px; flex: 0 0 76px; overflow: hidden; border: 1px solid var(--line-strong); }
 .guide .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
 .guide .who { font-family: var(--font-mono); font-size: 9px; letter-spacing: .16em; color: var(--world); text-transform: uppercase; }
@@ -262,8 +243,6 @@ a { color: inherit; }
 .move.rejected .ic.world { color: var(--err); }
 .reject-note { background: rgba(229,72,58,0.10); border: 1px solid rgba(229,72,58,0.35); border-radius: var(--r-sm); padding: 8px 12px; margin-bottom: 12px; font-size: 13px; color: var(--ice); }
 .reject-note b { color: var(--err); }
-.optional-eyebrow { margin-top: 22px; color: var(--ice); }
-.optional-eyebrow::before { background: var(--ink-faint); box-shadow: none; }
 
 /* Zone Navigator (T-WEB-ZONE-NAV-001): the world-map strip of tier-zones. Travel to
    any zone at/below your tier (ztrans "gate" transition); future zones = locked teasers. */
@@ -294,129 +273,104 @@ a { color: inherit; }
 .hud .brand .bsep { font-family: var(--font-display); font-weight: 700; font-size: 26px; line-height: 1; color: var(--ice); }
 .hud .brand .bzone { font-family: var(--font-mono); font-weight: 700; font-size: 30px; letter-spacing: .12em; line-height: 1; color: var(--world); text-transform: uppercase; }
 
-.helixmap { position: relative; height: 640px; margin: 14px 18px 0; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden;
+.railmap { position: relative; height: 640px; margin: 14px 18px 0; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden;
   background: linear-gradient(180deg, rgba(10,12,14,.4), rgba(10,10,10,.72)), radial-gradient(1100px 460px at 70% -8%, rgba(122,0,255,.06), transparent); }
-.helixmap .pathsvg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 /* Per-tier origin crest (illustrated, founder-generated) filling the empty lower-left
    corner the strands rise out of. z-index:2 = above the strands, below the nodes (z-index:3);
    pointer-events:none so nodes stay clickable; masked toward the top-right so it connects to
    the helix base without crossing it. Conservative size keeps it clear of the first node's
    "YOU ARE HERE"; tune left/bottom/max-height once real art lands (visual-verify). */
-.helixmap .origin-crest { position: absolute; left: -84px; bottom: -36px; height: 82%; width: auto; z-index: 2; pointer-events: none; opacity: .9;
-  -webkit-mask-image: linear-gradient(to top right, #000 38%, rgba(0,0,0,.6) 60%, transparent 82%);
-  mask-image: linear-gradient(to top right, #000 38%, rgba(0,0,0,.6) 60%, transparent 82%); }
-.helixmap .hnode { position: absolute; transform: translate(-50%,-50%); z-index: 3; text-decoration: none; display: block; }
-.helixmap .hnode .dot { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; background: rgba(13,13,13,.92);
-  border: 2px solid var(--world); color: var(--world); font-family: var(--font-mono); font-size: 10px; box-shadow: var(--glow-cyan); transition: transform .15s; }
-.helixmap a.hnode:hover .dot { transform: scale(1.3); }
-.helixmap .hnode.done .dot { border-color: var(--ok); color: var(--ok); box-shadow: 0 0 9px rgba(63,185,80,.5); }
-.helixmap .hnode.current .dot { width: 32px; height: 32px; font-size: 13px; border-color: var(--gold); color: var(--gold-bright); box-shadow: var(--glow-gold); animation: hpulse 2.4s ease-in-out infinite; }
-.helixmap .hnode.locked .dot { border-color: var(--ice); color: var(--ice); box-shadow: none; opacity: .85; }
-.helixmap .hnode.pending .dot { border-color: var(--warn); color: var(--warn); box-shadow: 0 0 8px rgba(224,144,15,.4); }
-.helixmap .hnode.opt .dot { border-color: var(--violet); color: var(--violet-soft); box-shadow: 0 0 8px rgba(122,0,255,.4); }
 @keyframes hpulse { 0%,100%{ box-shadow: 0 0 14px rgba(212,175,55,.5);} 50%{ box-shadow: 0 0 26px rgba(212,175,55,.95);} }
-.helixmap .hnode .here { position: absolute; left: 50%; top: 100%; transform: translateX(-50%); margin-top: 5px; white-space: nowrap;
-  padding: 3px 8px; background: rgba(13,13,13,.88); border: 1px solid rgba(212,175,55,.6); border-radius: var(--r-sm);
-  font-family: var(--font-mono); font-size: 8px; letter-spacing: .16em; color: var(--gold-bright); text-transform: uppercase; }
-.helixmap a.hnode::after { content: attr(title); position: absolute; left: 50%; bottom: 100%; transform: translateX(-50%); margin-bottom: 6px;
-  white-space: nowrap; max-width: 210px; overflow: hidden; text-overflow: ellipsis; padding: 3px 8px; background: rgba(13,13,13,.96);
-  border: 1px solid var(--line-strong); border-radius: var(--r-sm); font-size: 10px; color: var(--diamond); opacity: 0; pointer-events: none; transition: opacity .15s; z-index: 30; }
-.helixmap a.hnode:hover::after { opacity: 1; }
 
-.helixmap .gate { position: absolute; top: 18px; right: 20px; width: 248px; z-index: 5; }
-.helixmap .gate .gate-frame { position: relative; height: 94px; border: 1px solid rgba(122,0,255,.5); border-radius: var(--r-md); overflow: hidden; box-shadow: 0 0 24px rgba(122,0,255,.3); background: linear-gradient(135deg, rgba(122,0,255,.3), rgba(13,13,13,.9)); }
-.helixmap .gate .gate-frame img { width: 100%; height: 100%; object-fit: cover; }
-.helixmap .gate .gtag { position: absolute; left: 9px; bottom: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; color: var(--violet-soft); background: rgba(11,11,11,.82); border: 1px solid rgba(122,0,255,.5); padding: 4px 8px; text-transform: uppercase; }
-.helixmap .gate .gate-locks { margin-top: 9px; background: rgba(13,13,13,.78); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 11px 13px; backdrop-filter: blur(4px); }
-.helixmap .gate .gate-locks h4 { font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; color: var(--ice); text-transform: uppercase; margin: 0 0 8px; }
-.helixmap .gate .gate-face { margin: 11px 0 2px; }
-.helixmap .gate .gate-face-btn { width: 100%; font-size: 11.5px; letter-spacing: .12em; }
+.railmap .gate .gate-frame { position: relative; height: 94px; border: 1px solid rgba(122,0,255,.5); border-radius: var(--r-md); overflow: hidden; box-shadow: 0 0 24px rgba(122,0,255,.3); background: linear-gradient(135deg, rgba(122,0,255,.3), rgba(13,13,13,.9)); }
+.railmap .gate .gate-frame img { width: 100%; height: 100%; object-fit: cover; }
+.railmap .gate .gtag { position: absolute; left: 9px; bottom: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; color: var(--violet-soft); background: rgba(11,11,11,.82); border: 1px solid rgba(122,0,255,.5); padding: 4px 8px; text-transform: uppercase; }
+.railmap .gate .gate-locks { margin-top: 9px; background: rgba(13,13,13,.78); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 11px 13px; backdrop-filter: blur(4px); }
+.railmap .gate .gate-locks h4 { font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; color: var(--ice); text-transform: uppercase; margin: 0 0 8px; }
+.railmap .gate .gate-face { margin: 11px 0 2px; }
+.railmap .gate .gate-face-btn { width: 100%; font-size: 11.5px; letter-spacing: .12em; }
 /* presence pins (SPEC §5) — consensual member tokens clustered at their current node */
-.helixmap .presence-layer { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
-.helixmap .ptok-cluster { position: absolute; transform: translate(10px, -22px); display: flex; gap: 2px; pointer-events: auto; }
-.helixmap .ptok { width: 15px; height: 15px; border-radius: 50%; display: grid; place-items: center;
+.railmap .presence-layer { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.railmap .ptok-cluster { position: absolute; transform: translate(10px, -22px); display: flex; gap: 2px; pointer-events: auto; }
+.railmap .ptok { width: 15px; height: 15px; border-radius: 50%; display: grid; place-items: center;
   font-family: var(--font-mono); font-size: 8px; font-weight: 700; color: var(--diamond);
   background: rgba(13,13,13,.9); border: 1px solid var(--world);
   box-shadow: 0 0 6px rgba(0,255,247,.35); transform: translateY(calc(var(--pi, 0) * -2px)); }
-.helixmap .ptok.anon { border-color: var(--ice); color: transparent;
+.railmap .ptok.anon { border-color: var(--ice); color: transparent;
   background: radial-gradient(circle at 50% 42%, rgba(170,221,255,.75) 0 3px, rgba(13,13,13,.9) 4px); }
-.helixmap .ptok.more { border-color: var(--line-strong); color: var(--ice); box-shadow: none; }
-.helixmap .ptok-gate { position: absolute; top: 218px; right: 24px; pointer-events: auto;
+.railmap .ptok.more { border-color: var(--line-strong); color: var(--ice); box-shadow: none; }
+.railmap .ptok-gate { position: absolute; top: 218px; right: 24px; pointer-events: auto;
   font-family: var(--font-mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
   color: var(--gold-bright); background: rgba(11,11,11,.78); border: 1px solid rgba(212,175,55,.5);
   border-radius: 999px; padding: 4px 10px; backdrop-filter: blur(4px); }
-@media (max-width: 760px) { .helixmap .presence-layer { display: none; } }
+@media (max-width: 760px) { .railmap .presence-layer { display: none; } }
 
 /* the QOTD daily beacon (chunk 5) — gold pulse until today's question is answered */
-.helixmap .hnode.qotd:not(.done) .dot { border-color: var(--gold); color: var(--gold-bright); }
-.helixmap .hnode.daily .dot { box-shadow: 0 0 12px rgba(212,175,55,.55); animation: qotdPulse 2.2s ease-in-out infinite; }
 @keyframes qotdPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.22); } }
-.helixmap .gate .lock { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 11px; color: var(--ink); }
-.helixmap .gate .lock:last-child { margin-bottom: 0; }
-.helixmap .gate .lock .x { width: 13px; height: 13px; border-radius: 3px; border: 1px solid var(--ink-faint); flex: 0 0 13px; display: grid; place-items: center; font-size: 9px; }
-.helixmap .gate .lock.met .x { border-color: var(--ok); color: var(--ok); }
-.helixmap .gate .lock b { color: var(--diamond); font-weight: 400; font-family: var(--font-mono); font-size: 11px; }
+.railmap .gate .lock { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 11px; color: var(--ink); }
+.railmap .gate .lock:last-child { margin-bottom: 0; }
+.railmap .gate .lock .x { width: 13px; height: 13px; border-radius: 3px; border: 1px solid var(--ink-faint); flex: 0 0 13px; display: grid; place-items: center; font-size: 9px; }
+.railmap .gate .lock.met .x { border-color: var(--ok); color: var(--ok); }
+.railmap .gate .lock b { color: var(--diamond); font-weight: 400; font-family: var(--font-mono); font-size: 11px; }
 
 /* Max-tier SUMMIT terminus (T-WEB-BOARD-SUMMIT-001): benefactor has no gate, so the helix
    lands on a "mastery" emblem (founder's Flow art) instead of empty space. Sits at the
    top-right where the gate would be; pointer-events:none keeps any nodes clickable. The
    .summit-art auto-hides if the PNG is missing, leaving the gold label to hold the spot. */
-.helixmap .summit { position: absolute; top: 14px; right: 20px; width: 400px; z-index: 5; display: flex; flex-direction: column; align-items: center; text-align: center; pointer-events: none; }
+.railmap .summit { width: 100%; max-width: 400px; margin-inline: auto; display: flex; flex-direction: column; align-items: center; text-align: center; pointer-events: none; }
 /* the art is a full black-bg JPEG scene — mix-blend-mode:screen drops the black so only
    the glowing helix/planet/ship composite onto the board's starfield (no boxy rectangle). */
-.helixmap .summit .summit-art { width: 100%; height: auto; mix-blend-mode: screen;
+.railmap .summit .summit-art { width: 100%; height: auto; mix-blend-mode: screen;
   -webkit-mask-image: radial-gradient(86% 82% at 50% 48%, #000 56%, transparent 100%); mask-image: radial-gradient(86% 82% at 50% 48%, #000 56%, transparent 100%);
   animation: summitFloat 6s ease-in-out infinite; }
-.helixmap .summit .summit-tag { margin-top: 10px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--gold-bright); text-shadow: 0 0 12px rgba(212,175,55,.55); background: rgba(11,11,11,.72); border: 1px solid rgba(212,175,55,.5); border-radius: var(--r-sm); padding: 6px 11px; backdrop-filter: blur(4px); }
+.railmap .summit .summit-tag { margin-top: 10px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--gold-bright); text-shadow: 0 0 12px rgba(212,175,55,.55); background: rgba(11,11,11,.72); border: 1px solid rgba(212,175,55,.5); border-radius: var(--r-sm); padding: 6px 11px; backdrop-filter: blur(4px); }
 @keyframes summitFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
-.helixmap .guide { position: absolute; right: 20px; bottom: 18px; width: 322px; display: flex; gap: 12px; align-items: flex-end; z-index: 6; }
-.helixmap .guide .portrait { width: 120px; height: 84px; flex: 0 0 120px; border: 1px solid var(--gold); border-radius: var(--r-md); overflow: hidden; box-shadow: var(--glow-gold); }
-.helixmap .guide .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center 26%; }
-.helixmap .guide .say { min-width: 0; }
-.helixmap .guide .say .who { font-family: var(--font-mono); font-size: 9px; letter-spacing: .16em; color: var(--world); text-transform: uppercase; }
-.helixmap .guide .say .vo { font-family: var(--font-display); font-size: 12.5px; color: var(--diamond); font-style: italic; line-height: 1.35; margin-top: 5px; max-height: 170px; overflow: auto; }
+.railmap .guide { display: flex; gap: 12px; align-items: flex-end; }
+.railmap .guide .portrait { width: 120px; height: 84px; flex: 0 0 120px; border: 1px solid var(--gold); border-radius: var(--r-md); overflow: hidden; box-shadow: var(--glow-gold); }
+.railmap .guide .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center 26%; }
+.railmap .guide .say { min-width: 0; }
+.railmap .guide .say .who { font-family: var(--font-mono); font-size: 9px; letter-spacing: .16em; color: var(--world); text-transform: uppercase; }
+.railmap .guide .say .vo { font-family: var(--font-display); font-size: 12.5px; color: var(--diamond); font-style: italic; line-height: 1.35; margin-top: 5px; max-height: 170px; overflow: auto; }
 /* the Coach's fixed intent menu (chunk 3) — chips ask coach-ask.php, answer lands in .vo */
-.helixmap .coach-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
-.helixmap .coach-chip { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ice); background: rgba(11,11,11,.72); border: 1px solid var(--line-strong); border-radius: 999px; padding: 4px 9px; cursor: pointer; }
-.helixmap .coach-chip:hover { color: var(--diamond); border-color: var(--world); }
-.helixmap .coach-chip:disabled { opacity: .45; cursor: default; }
-.helixmap .coach-chip.on { color: var(--text-on-gold); background: var(--grad-gold); border-color: transparent; box-shadow: var(--glow-gold); }
+.railmap .coach-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+.railmap .coach-chip { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ice); background: rgba(11,11,11,.72); border: 1px solid var(--line-strong); border-radius: 999px; padding: 4px 9px; cursor: pointer; }
+.railmap .coach-chip:hover { color: var(--diamond); border-color: var(--world); }
+.railmap .coach-chip:disabled { opacity: .45; cursor: default; }
+.railmap .coach-chip.on { color: var(--text-on-gold); background: var(--grad-gold); border-color: transparent; box-shadow: var(--glow-gold); }
 /* guide_talk ask lane (SPEC §4 deep mode) + citations + the map node */
-.helixmap .guide-askrow { display: flex; gap: 5px; margin-top: 8px; }
-.helixmap .guide-askinput { flex: 1; min-width: 0; background: var(--surface-inset); border: 1px solid var(--line-strong); border-radius: 999px; color: var(--ink); padding: 5px 11px; font-family: var(--font-body); font-size: 11.5px; }
-.helixmap .guide-askinput:focus { outline: none; border-color: var(--world); box-shadow: 0 0 0 1px var(--world); }
-.helixmap .guide-askbtn { flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--world); background: rgba(13,13,13,.8); color: var(--world); cursor: pointer; font-size: 12px; line-height: 1; }
-.helixmap .guide-askbtn:hover { background: rgba(0,255,247,.12); }
-.helixmap .guide-askbtn:disabled { opacity: .45; cursor: default; }
-.helixmap .guide-cites { margin-top: 7px; font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .04em; color: var(--ice); line-height: 1.5; }
-.helixmap .hnode.gtalk .dot { border-color: var(--zone-violet, #9B5CFF); box-shadow: 0 0 9px rgba(155,92,255,.5); }
+.railmap .guide-askrow { display: flex; gap: 5px; margin-top: 8px; }
+.railmap .guide-askinput { flex: 1; min-width: 0; background: var(--surface-inset); border: 1px solid var(--line-strong); border-radius: 999px; color: var(--ink); padding: 5px 11px; font-family: var(--font-body); font-size: 11.5px; }
+.railmap .guide-askinput:focus { outline: none; border-color: var(--world); box-shadow: 0 0 0 1px var(--world); }
+.railmap .guide-askbtn { flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--world); background: rgba(13,13,13,.8); color: var(--world); cursor: pointer; font-size: 12px; line-height: 1; }
+.railmap .guide-askbtn:hover { background: rgba(0,255,247,.12); }
+.railmap .guide-askbtn:disabled { opacity: .45; cursor: default; }
+.railmap .guide-cites { margin-top: 7px; font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .04em; color: var(--ice); line-height: 1.5; }
 
-.helixmap .dockwrap { position: absolute; left: 20px; top: 18px; width: 360px; max-width: 42%; max-height: calc(100% - 36px); overflow: auto; display: flex; flex-direction: column; gap: 10px; z-index: 6; }
+.railmap .dockwrap { display: flex; flex-direction: column; gap: 10px; z-index: 6; }
 /* polished lesson-quest panel (the dock) — was falling back to unstyled .read-link/.reflect */
-.helixmap .questdock .read-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 11px; padding: 10px 16px; background: var(--grad-gold); color: var(--text-on-gold); font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: .03em; border-radius: var(--r-sm); text-decoration: none; box-shadow: var(--glow-gold); border: none; cursor: pointer; }
-.helixmap .questdock .read-link:hover { filter: brightness(1.08); }
-.helixmap .questdock .reflect { margin-top: 12px; }
-.helixmap .questdock .reflect textarea { width: 100%; min-height: 72px; background: var(--surface-inset); border: 1px solid var(--line-strong); border-radius: var(--r-sm); color: var(--ink); padding: 9px 11px; font-family: var(--font-body); font-size: 13px; box-sizing: border-box; resize: vertical; }
-.helixmap .questdock .reflect textarea:focus { outline: none; border-color: var(--world); box-shadow: 0 0 0 1px var(--world); }
-.helixmap .questdock .reflect .row { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-top: 11px; }
-.helixmap .questdock .reflect .hint { font-family: var(--font-mono); font-size: 10px; color: var(--ice); margin-right: auto; }
-.helixmap .questdock .reflect .hint .lockmsg { color: var(--warn); }
-.helixmap .questdock .reflect .cta { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--text-on-gold); background: var(--grad-gold); border: none; border-radius: var(--r-sm); padding: 9px 16px; box-shadow: var(--glow-gold); cursor: pointer; }
-.helixmap .questdock .reflect .cta:disabled { opacity: .5; cursor: default; box-shadow: none; }
-.helixmap .questdock .reject-note { margin-top: 9px; } .helixmap .questdock .preview-note { margin-top: 11px; }
-.helixmap .questdock { background: rgba(13,13,13,.86); border: 1px solid var(--border-hud); border-radius: var(--r-lg); box-shadow: var(--glow-gold); backdrop-filter: blur(8px); padding: 14px 16px; }
-.helixmap .questdock.qotd { border-color: var(--line-strong); box-shadow: none; }
-.helixmap .questdock .qd-eyebrow { font-family: var(--font-mono); font-size: 9px; letter-spacing: .2em; color: var(--ice); text-transform: uppercase; margin-bottom: 9px; display: block; }
-.helixmap .questdock .qd-card { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-.helixmap .questdock .qd-card .ty { font-family: var(--font-mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--ice); }
-.helixmap .questdock .qd-card .ti { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--diamond); margin-top: 3px; }
-.helixmap .questdock .qd-card .cr { font-family: var(--font-mono); font-size: 12px; color: var(--hud-bright); white-space: nowrap; }
-.helixmap .questdock .qd-head { cursor: pointer; list-style: none; }
-.helixmap .questdock.qotd .qd-q { display: block; font-family: var(--font-display); font-size: 13px; color: var(--diamond); margin-top: 4px; }
-.helixmap .questdock .qd-form { margin-top: 10px; }
-.helixmap .questdock .qd-form textarea { width: 100%; min-height: 54px; background: var(--surface-inset); border: 1px solid var(--line-strong); border-radius: var(--r-sm); color: var(--ink); padding: 8px; font-family: var(--font-body); font-size: 13px; box-sizing: border-box; }
-.helixmap .tagline-h { position: absolute; left: 50%; bottom: 5px; transform: translateX(-50%); font-family: var(--font-mono); font-size: 9px; letter-spacing: .26em; color: var(--ice); text-transform: uppercase; z-index: 2; }
+.railmap .questdock .read-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 11px; padding: 10px 16px; background: var(--grad-gold); color: var(--text-on-gold); font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: .03em; border-radius: var(--r-sm); text-decoration: none; box-shadow: var(--glow-gold); border: none; cursor: pointer; }
+.railmap .questdock .read-link:hover { filter: brightness(1.08); }
+.railmap .questdock .reflect { margin-top: 12px; }
+.railmap .questdock .reflect textarea { width: 100%; min-height: 72px; background: var(--surface-inset); border: 1px solid var(--line-strong); border-radius: var(--r-sm); color: var(--ink); padding: 9px 11px; font-family: var(--font-body); font-size: 13px; box-sizing: border-box; resize: vertical; }
+.railmap .questdock .reflect textarea:focus { outline: none; border-color: var(--world); box-shadow: 0 0 0 1px var(--world); }
+.railmap .questdock .reflect .row { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-top: 11px; }
+.railmap .questdock .reflect .hint { font-family: var(--font-mono); font-size: 10px; color: var(--ice); margin-right: auto; }
+.railmap .questdock .reflect .hint .lockmsg { color: var(--warn); }
+.railmap .questdock .reflect .cta { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--text-on-gold); background: var(--grad-gold); border: none; border-radius: var(--r-sm); padding: 9px 16px; box-shadow: var(--glow-gold); cursor: pointer; }
+.railmap .questdock .reflect .cta:disabled { opacity: .5; cursor: default; box-shadow: none; }
+.railmap .questdock .reject-note { margin-top: 9px; } .railmap .questdock .preview-note { margin-top: 11px; }
+.railmap .questdock { background: rgba(13,13,13,.86); border: 1px solid var(--border-hud); border-radius: var(--r-lg); box-shadow: var(--glow-gold); backdrop-filter: blur(8px); padding: 14px 16px; }
+.railmap .questdock.qotd { border-color: var(--line-strong); box-shadow: none; }
+.railmap .questdock .qd-eyebrow { font-family: var(--font-mono); font-size: 9px; letter-spacing: .2em; color: var(--ice); text-transform: uppercase; margin-bottom: 9px; display: block; }
+.railmap .questdock .qd-card { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.railmap .questdock .qd-card .ty { font-family: var(--font-mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--ice); }
+.railmap .questdock .qd-card .ti { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--diamond); margin-top: 3px; }
+.railmap .questdock .qd-card .cr { font-family: var(--font-mono); font-size: 12px; color: var(--hud-bright); white-space: nowrap; }
+.railmap .questdock .qd-head { cursor: pointer; list-style: none; }
+.railmap .questdock.qotd .qd-q { display: block; font-family: var(--font-display); font-size: 13px; color: var(--diamond); margin-top: 4px; }
+.railmap .questdock .qd-form { margin-top: 10px; }
+.railmap .questdock .qd-form textarea { width: 100%; min-height: 54px; background: var(--surface-inset); border: 1px solid var(--line-strong); border-radius: var(--r-sm); color: var(--ink); padding: 8px; font-family: var(--font-body); font-size: 13px; box-sizing: border-box; }
 /* ── Mobile (<=760px): the board's top half reflows fine, but the HUD headline
    wordmark and the DNA-helix canvas do not. Scale the oversized brand so the zone
    name can't get clipped, and drop the spatial helix metaphor for a clean linear
@@ -434,33 +388,27 @@ a { color: inherit; }
   /* helix MAP -> linear, stacked mobile journey. Flex-wrap with full-width panels
      (dock/gate/guide/crest at flex:0 0 100%) forces each onto its own row, while the
      journey nodes stay auto-width and flow into a centered progress-dot track. */
-  .map.helixmap { height: auto; overflow: visible; margin: 14px 12px 0; padding: 14px;
+  .map.railmap { height: auto; overflow: visible; margin: 14px 12px 0; padding: 14px;
     display: flex; flex-flow: row wrap; justify-content: center; align-content: flex-start; gap: 12px 8px; }
-  .helixmap .pathsvg { display: none; }                 /* strands distort at a narrow aspect ratio */
+  .railmap .pathsvg { display: none; }                 /* strands distort at a narrow aspect ratio */
 
   /* dock = "your move this turn" — the functional core: first + full width */
-  .helixmap .dockwrap { position: static; order: 1; flex: 0 0 100%; width: auto; max-width: none;
+  .railmap .dockwrap { position: static; order: 1; flex: 0 0 100%; width: auto; max-width: none;
     max-height: none; overflow: visible; margin: 0; }
 
   /* the 24 journey nodes -> a compact, centered progress track. Dots only: the
      current lesson is named in the dock, and hover tooltips are dead weight on touch. */
-  .helixmap .hnode { position: static !important; transform: none; order: 2; margin: 0; }
-  .helixmap .hnode .here { display: none; }
-  .helixmap a.hnode::after { display: none; }
 
-  .helixmap .gate { position: static; order: 3; flex: 0 0 100%; width: auto; top: auto; right: auto; margin: 0; }
-  .helixmap .guide { position: static; order: 4; flex: 0 0 100%; width: auto; right: auto; bottom: auto;
+  .railmap .gate { position: static; order: 3; flex: 0 0 100%; width: auto; top: auto; right: auto; margin: 0; }
+  .railmap .guide { position: static; order: 4; flex: 0 0 100%; width: auto; right: auto; bottom: auto;
     margin: 0; align-items: center; }
 
   /* the Flow-generated origin crest: not needed inline on mobile — drop it to the very
      bottom as a small centered emblem (per founder's suggestion). */
   /* max-tier summit -> top of the mobile map as a centered "mastery" banner */
-  .helixmap .summit { position: static; order: 1; flex: 0 0 100%; width: auto; top: auto; right: auto; margin: 0; }
-  .helixmap .summit .summit-art { max-width: 190px; }
+  .railmap .summit { position: static; order: 1; flex: 0 0 100%; width: auto; top: auto; right: auto; margin: 0; }
+  .railmap .summit .summit-art { max-width: 190px; }
 
-  .helixmap .origin-crest { position: static !important; order: 5; flex: 0 0 100%; height: auto; width: auto;
-    max-width: 150px; margin: 4px auto 0; left: auto; bottom: auto; opacity: .8;
-    -webkit-mask-image: none; mask-image: none; }
 }
 
 /* Newspaper "special bulletin" spin-in for the reader (PDFs + OD9 codex docs). The
@@ -493,14 +441,10 @@ a { color: inherit; }
 .sofb-rows { display: flex; flex-direction: column; gap: 5px; padding: 8px 0 2px; }
 .sofb-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; padding: 7px 12px; background: rgba(13,13,13,.62); border: 1px solid var(--line); border-left: 2px solid #E24632; }
 .sofb-row.st-at_risk { border-left-color: var(--gold, #FFD700); }
-.sofb-row.st-unmeasured { border-left-color: #b388ff; }
 .sofb-badge { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .12em; color: #E24632; flex: none; width: 34px; }
 .st-at_risk .sofb-badge { color: var(--gold, #FFD700); }
-.st-unmeasured .sofb-badge { color: #b388ff; }
 .sofb-t { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--diamond); }
 .sofb-t small { margin-left: 7px; font-size: 9px; letter-spacing: .08em; color: var(--ink); text-transform: lowercase; }
-.sofb-t small.tr-improving { color: #2ECC71; }
-.sofb-t small.tr-worsening { color: #E24632; }
 .sofb-v { font-family: var(--font-display); font-weight: 600; font-size: 13.5px; color: var(--diamond); margin-left: auto; }
 .sofb-o { font-family: var(--font-mono); font-size: 10.5px; color: var(--ice); }
 .sofb-o b { color: var(--world, #00FFF7); font-weight: 400; }
@@ -694,21 +638,9 @@ body.present .qd-form button{ background:var(--gold) !important; }
 .map>.dockwrap{ grid-column:2; grid-row:1; }
 .map>.gate    { grid-column:2; grid-row:2; margin-top:0 !important; }
 .map>.guide   { grid-column:2; grid-row:3; margin-top:0 !important; }
-/* THE defect from spec §1.2, in code: these three were position:absolute,
-   placed over the helix by coordinate rather than laid out. An absolutely
-   positioned element ignores grid placement entirely, so the grid cannot
-   exist until they return to normal flow. */
-.map>.gate, .map>.guide, .map>.dockwrap{
-  position:static !important; inset:auto !important;
-  max-width:none !important; width:auto !important;
-  /* the dock also carried max-height:calc(100% - 36px) + overflow:auto from
-     its absolute days — inside a grid cell that silently clips the reflection
-     field and the submit button off the bottom of the card. */
-  max-height:none !important; overflow:visible !important;
-}
-/* keep the helix backdrop in the primary column instead of spanning under
-   the action panels (it is retired outright in P3) */
-.map>.pathsvg, .map>.presence-layer{ right:38.2% !important; }
+/* P5: the dock/gate/guide are laid out by the grid now — the coordinate
+   positioning they used to carry was removed at SOURCE above, so the
+   !important overrides that fought it are gone with it. */
 
 /* P1 reserved 420px here for the helix to live in. P3 RETIRED the helix and
    this spacer outlived it — 420px of empty column on every board, and at
@@ -763,11 +695,7 @@ body.present .qd-form button{ background:var(--gold) !important; }
 .railmap>.dockwrap{ grid-column:2; grid-row:1; }
 .railmap>.gate    { grid-column:2; grid-row:2; margin-top:0 !important; }
 .railmap>.guide   { grid-column:2; grid-row:3; margin-top:0 !important; }
-.railmap>.gate, .railmap>.guide, .railmap>.dockwrap{
-  position:static !important; inset:auto !important;
-  max-width:none !important; width:auto !important;
-  max-height:none !important; overflow:visible !important;
-}
+
 
 /* --- level 1: chapters --- */
 .chapters{ display:flex; flex-wrap:wrap; gap:var(--sp-2); margin-bottom:var(--sp-4); }
