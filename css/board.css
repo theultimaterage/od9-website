@@ -521,67 +521,99 @@ a { color: inherit; }
 @media (max-width: 860px) { .rmap { padding-left: 16px; padding-right: 16px; } .sofb-v { margin-left: 0; width: 100%; } }
 
 /* ============================================================================
-   PRESENT MODE — ?present=1 : the board as a BROADCAST surface
+   P4 — BROADCAST IS A LAYOUT, NOT A SUBTRACTION  (?present=1, spec §8)
    ----------------------------------------------------------------------------
-   The 4 PM sermon puts this page on screen while the founder preaches one
-   lesson off it (docs/SERMON_PIPELINE_SPEC.md). Two facts drive every rule:
+   Present mode v1 worked by HIDING whatever the facecam covered. That is
+   backwards: it makes the camera's position a styling concern and leaves the
+   board drawing pixels nobody can see. The φ grid already implies the fix —
 
-     1. OBS occludes two zones — the facecam PiP (right ~26%, below ~69% of
-        frame height) and the chyron bar (bottom ~8%). Anything live under
-        either is invisible to the audience.
-     2. A dashboard built for one member at a desk is NOISE mid-sermon. The
-        planet metrics, roadmap, dimension bars and cohort roster all compete
-        with the one thing being taught.
+       the secondary column (38.2%) IS THE PRESENTER COLUMN.
 
-   TYPE SIZE is deliberately NOT set here: magnification is a display concern
-   owned by the OBS browser source's own zoom (source 3840x2160 + body{zoom:3}
-   => a 1280px layout viewport rendered 1.5x on a 1080p stream). This block
-   owns LAYOUT only, so the two concerns can be tuned independently.
+   The board simply does not draw there, so nothing can be occluded. The
+   facecam fills that column in OBS; the bottom 89px (Fibonacci) is the
+   chyron's. Everything the sermon needs — viewport, rail, the move card —
+   stacks in the primary 61.8%.
 
-   Members never carry ?present — their board is untouched.
+   What still gets hidden is CHROME (navigation, tour, modals), which is a
+   presentation decision, not an occlusion workaround. P2 already removed the
+   metrics/roadmap/dimension furniture from this surface outright, so five
+   selectors from v1's hide-list are now dead and have been deleted with it.
+
+   Type SIZE is not set here — magnification is the OBS source's zoom
+   (3840×2160 @ body{zoom:3} = a 1280×720 layout rendered 1.5× at 1080p).
    ========================================================================= */
-:root { --present-cam: 26.6%; --present-chyron: 8%; }
+:root{ --present-column:38.2%; --present-chyron:89px; }
 
-/* 1 — drop the furniture a sermon does not use */
+/* 1 — chrome a sermon does not use (NOT an occlusion workaround) */
 body.present .zone-nav,
-body.present .ws,
-body.present .worldstate,
-body.present .sofb-rows,
-body.present .sofb-x,
-body.present .rmap,
-body.present .value,
-body.present .val-eyebrow,
-body.present .val-note,
+body.present .zone-preview-banner,
+body.present .preview-note,
 body.present .cohort,
 body.present .gate,
 body.present .guide,
-body.present .zone-preview-banner,
-body.present .preview-note,
+body.present .elsewhere,
 body.present .od9-tour-beacon,
 body.present .hud .exit,
-body.present .elsewhere,
-body.present .od9-welcome { display: none !important; }
+body.present .od9-welcome{ display:none !important; }
 
-/* 2 — reserve the occluded zones: content lives left of the facecam column
-       and above the chyron bar. The background art still fills the frame. */
-body.present .board {
-  padding-right: var(--present-cam);
-  padding-bottom: var(--present-chyron);
+/* 2 — the presenter column: the board never draws in the right 38.2%, and
+       never in the chyron's 89px. No dodging, no hiding — it isn't there. */
+body.present .board{
+  padding-right:var(--present-column);
+  padding-bottom:var(--present-chyron);
 }
 
-/* 3 — the reader is the sermon's main surface (the lesson text itself).
-       Off the centre line, filling the safe rectangle instead of straddling
-       the facecam corner the way the centred desk layout does. */
-body.present .reader {
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 2vh var(--present-cam) var(--present-chyron) 2vw;
+/* 3 — inside that primary column everything stacks: the grid's own secondary
+       column has been given away to the presenter. */
+/* plain flow, not a one-column grid: P3's row spans (grid-row:1/span 3) leave
+   phantom rows behind when the second column is given away, opening a ~97px
+   hole between the rail and the move card. Nothing here needs grid. */
+body.present .map.railmap{ display:block; }
+body.present .railmap>.railwrap{ margin-bottom:var(--sp-3); }
+/* the reflection textarea is dead weight on stream — nobody types a reflection
+   while preaching — and it is the single tallest thing in the primary column. */
+body.present .qd-form{ display:none !important; }
+
+/* 3b — FIT. The broadcast viewport is 720px tall and the chyron takes 89 of
+       them, so the whole board must live in ~631px. Measured at 1280×720 the
+       naive stack ran to ~1333px and pushed the rail and the move card below
+       the fold — invisible on stream, which is worse than ugly. Two fixes:
+
+       · the HUD escapes the presenter column (negative margin cancels the
+         padding) so it spans full width instead of wrapping to ~154px tall.
+         The facecam starts below it — a brand bar across the top reads
+         better than a squeezed one anyway.
+       · the zone band gives up height it does not need at this size. */
+body.present .hud{
+  margin-right:calc(-1 * var(--present-column));
+  padding-block:var(--sp-2);
 }
-body.present .reader-panel {
-  width: 100%;
-  height: 100%;
-  max-height: none;
+/* ...but the HUD's RIGHT-hand items would then sit under the facecam, which
+   is the exact defect this phase exists to remove. On stream the founder's own
+   tier and credit balance are not the audience's business, so the bar becomes
+   pure identity: marks + zone. Everything else is the member's own view. */
+body.present .hud .tier-badge,
+body.present .hud .credits{ display:none !important; }
+body.present .viewport{ height:clamp(96px, 15vh, 130px); margin-bottom:var(--sp-3); }
+body.present .map.railmap{ padding-bottom:var(--sp-3); gap:var(--sp-3); }
+body.present .rail{ gap:var(--sp-2); }
+
+/* 4 — the reader fills the primary column (it is the sermon's main surface) */
+body.present .reader{
+  align-items:flex-start; justify-content:flex-start;
+  padding:2vh var(--present-column) var(--present-chyron) 2vw;
 }
+body.present .reader-panel{ width:100%; height:100%; max-height:none; }
+
+/* 5 — broadcast bans (spec §5/§8): --ink-faint is 3.3:1 and --fs-micro is
+       10px; neither survives streaming compression on a phone. Gradients band
+       badly under the encoder, so fills go flat where text sits on them. */
+body.present .rstop.locked .rlbl,
+body.present .hud .lbl,
+body.present .qd-eyebrow{ color:var(--ink-dim) !important; }
+body.present .cta,
+body.present .read-link,
+body.present .qd-form button{ background:var(--gold) !important; }
 
 /* ============================================================================
    P1 — "CONSOLE" REDESIGN, phase 1: surfaces + grid
@@ -678,8 +710,10 @@ body.present .reader-panel {
    the action panels (it is retired outright in P3) */
 .map>.pathsvg, .map>.presence-layer{ right:38.2% !important; }
 
-/* the primary column needs height for the helix to live in until P3 */
-.map::before{ content:""; grid-column:1; grid-row:1 / span 3; min-height:420px; pointer-events:none; }
+/* P1 reserved 420px here for the helix to live in. P3 RETIRED the helix and
+   this spacer outlived it — 420px of empty column on every board, and at
+   broadcast it pushed the rail and move card clean off the bottom of frame.
+   Dead scaffolding removed with the thing it was scaffolding. */
 
 /* --- 4. TYPE + accent budget (spec §4/§5) --------------------------------- */
 .hud .bzone{ font-size:calc(var(--hud-mk-h,26px) / .72); line-height:1; }
@@ -793,7 +827,10 @@ a.rstop:hover{ border-color:var(--line-strong); background:var(--panel); color:v
 /* the chapter chips are navigation — present mode drops nav (spec §8), and
    at ×1.5 they wrap to three rows and crowd the stop rail against the chyron */
 body.present .chapters{ display:none; }
-body.present .rstop{ flex-basis:150px; }
+/* one row of six: 721px of primary column / 6 = ~120px each. Two rows cost
+   ~90px the 631px budget does not have. */
+body.present .rail{ flex-wrap:nowrap; }
+body.present .rstop{ flex:1 1 0; min-width:0; max-width:none; }
 body.present .rstop.locked .rlbl{ color:var(--ink-dim); }
 body.present .rhere{ font-size:var(--fs-label); }
 
