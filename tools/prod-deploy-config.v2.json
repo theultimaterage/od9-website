@@ -103,7 +103,9 @@
     { "url": "https://offda9.com/music.php",   "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] },
     { "url": "https://offda9.com/join.php",    "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] },
     { "url": "https://offda9.com/library.php", "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] },
-    { "url": "https://offda9.com/support.php", "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] }
+    { "url": "https://offda9.com/support.php", "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] },
+    { "url": "https://offda9.com/atlas",       "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"], "must_contain": ["Atlas"],
+      "_note": "CLEAN-URL PIN, not a page pin: /atlas works only through the .htaccess RewriteRule, and this URL is printed in a published YouTube description. The 2026-08-27 catch-up deploy shipped a rule-less .htaccess over prod's hotfixed one and this link 404'd for ~20 minutes while smoke passed 6/6 — because every test pinned a real file and none pinned a REWRITE. An .htaccess regression must fail the deploy, not be discovered by a viewer." }
   ],
   "_smoke_note": "must_contain 'Off Da Nine' on the apex proves we reached OD9 and not a parked domain or a misrouted edge — status+200 alone cannot tell those apart.",
 
