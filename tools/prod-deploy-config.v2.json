@@ -105,7 +105,9 @@
     { "url": "https://offda9.com/library.php", "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] },
     { "url": "https://offda9.com/support.php", "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] },
     { "url": "https://offda9.com/atlas",       "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"], "must_contain": ["Atlas"],
-      "_note": "CLEAN-URL PIN, not a page pin: /atlas works only through the .htaccess RewriteRule, and this URL is printed in a published YouTube description. The 2026-08-27 catch-up deploy shipped a rule-less .htaccess over prod's hotfixed one and this link 404'd for ~20 minutes while smoke passed 6/6 — because every test pinned a real file and none pinned a REWRITE. An .htaccess regression must fail the deploy, not be discovered by a viewer." }
+      "_note": "CLEAN-URL PIN, not a page pin: /atlas works only through the .htaccess RewriteRule, and this URL is printed in a published YouTube description. The 2026-08-27 catch-up deploy shipped a rule-less .htaccess over prod's hotfixed one and this link 404'd for ~20 minutes while smoke passed 6/6 — because every test pinned a real file and none pinned a REWRITE. An .htaccess regression must fail the deploy, not be discovered by a viewer." },
+    { "url": "https://offda9.com/epk",         "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"], "must_contain": ["Press Kit"],
+      "_note": "REDIRECT PIN, followed end-to-end: /epk on the brand domain 302s to od9.freshthaplatform.com/epk, the platform-rendered press kit (Phase 24B). follow_redirects is the default, so this asserts the WHOLE chain — the .htaccess rule exists AND the redirect target actually renders a press kit. Both custom domains 404'd on /epk until 2026-08-27 while the platform subdomains served fine; a brand-domain URL someone puts on a flyer must not depend on nobody testing it." }
   ],
   "_smoke_note": "must_contain 'Off Da Nine' on the apex proves we reached OD9 and not a parked domain or a misrouted edge — status+200 alone cannot tell those apart.",
 

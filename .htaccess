@@ -47,6 +47,15 @@ RewriteRule ^subscribe$ subscribe.php [L,QSA]
 # YouTube description.
 RewriteRule ^atlas$ atlas.php [L,QSA]
 
+# /epk -> the platform-served press kit. A REDIRECT this time, not an internal
+# rewrite like /atlas: the press kit is not a file in this docroot at all — it
+# is rendered by the F.R.E.S.H. platform from the od9 tenant's epk_profiles row
+# (Phase 24B), and od9.freshthaplatform.com/epk is its one canonical home.
+# 302, not 301: when OD9 becomes a full FTP tenant (the consolidation plan) or
+# the EPK moves under this domain, a cached 301 in every browser and crawler
+# that ever followed it would fight the change. Trailing-slash tolerant.
+RewriteRule ^epk/?$ https://od9.freshthaplatform.com/epk [R=302,L]
+
 # php -- BEGIN cPanel-generated handler, do not edit
 # Set the “ea-php82” package as the default “PHP” programming language.
 <IfModule mime_module>
