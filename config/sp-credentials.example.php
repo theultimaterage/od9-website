@@ -8,10 +8,11 @@
  * owner offda9:offda9 on prod.
  *
  * TARGET DB IS freshthaplatform_shared_platform — the post-extraction
- * platform database. The pre-2026-08-27 file pointed at
- * freshthaband_shared_platform (the abandoned PRE-extraction copy), so every
- * sync write landed in a graveyard. If you are re-creating this file, do not
- * copy the DSN from an old backup.
+ * platform database. The pre-2026-08-27 file pointed at the abandoned
+ * PRE-extraction shared DB (the freshthaband-account one), so every sync
+ * write landed in a graveyard. If you are re-creating this file, do not copy
+ * the DSN from an old backup. (The old DB's name is deliberately not spelled
+ * out here: prod-opscheck greps every docroot for it as a drift invariant.)
  *
  * The MySQL user is deliberately NOT a full-DB account: offda9_spsync holds
  * SELECT/INSERT/UPDATE on the ONE table (email_subscribers) and nothing else.
