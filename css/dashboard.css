@@ -19,7 +19,7 @@
     --electric-blue: #00A0FF;
     --success: #28a745;
     --error: #dc3545;
-    --tier-color: #808080;
+    --tier-color: #8A9499; /* iced-ladder observer default (includes/tiers.php) */
 }
 
 /* Member-area body: carbon backdrop + clear the fixed nav. od9.css owns the

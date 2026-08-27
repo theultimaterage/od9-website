@@ -1,0 +1,1562 @@
+{
+ "skeleton_version": "2026-08-20",
+ "generated_at": "2026-08-21T04:10:04Z",
+ "world": {
+  "w": 1600,
+  "h": 1000
+ },
+ "volumes": [
+  {
+   "vol": 0,
+   "name": "Preface",
+   "sub": "The front door",
+   "region": [
+    30,
+    40,
+    170,
+    130
+   ]
+  },
+  {
+   "vol": 1,
+   "name": "Volume 1 · Foundation and Vision",
+   "sub": "The thesis",
+   "region": [
+    30,
+    210,
+    320,
+    330
+   ]
+  },
+  {
+   "vol": 2,
+   "name": "Volume 2 · Diagnostic Analysis",
+   "sub": "The spine",
+   "region": [
+    400,
+    60,
+    470,
+    460
+   ]
+  },
+  {
+   "vol": 3,
+   "name": "Volume 3 · Technical Foundations",
+   "sub": "The far tools",
+   "region": [
+    920,
+    50,
+    330,
+    300
+   ]
+  },
+  {
+   "vol": 4,
+   "name": "Volume 4 · Social Transformation",
+   "sub": "The build-answers",
+   "region": [
+    920,
+    390,
+    330,
+    400
+   ]
+  },
+  {
+   "vol": 5,
+   "name": "Volume 5 · ASCEND Implementation",
+   "sub": "The shipped world",
+   "region": [
+    50,
+    590,
+    330,
+    330
+   ]
+  },
+  {
+   "vol": 6,
+   "name": "Volume 6 · The Path Forward",
+   "sub": "The charge",
+   "region": [
+    430,
+    590,
+    440,
+    250
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "id": "preface",
+   "num": "P",
+   "title": "The Paradox of Transformation",
+   "vol": 0,
+   "legacy": [],
+   "state": "canon",
+   "forge": false,
+   "tier": "",
+   "verdict": "",
+   "bullets": [
+    "The Ship of Theseus as civilizational metaphor",
+    "Philosophical foundations of identity through transformation",
+    "Eastern and Western perspectives on continuity and change",
+    "Transformation without destruction: The Thesean approach",
+    "Setting the stage for conscious evolution"
+   ],
+   "canon": [
+    {
+     "content_id": 45,
+     "title": "The Thesean Method",
+     "url": "https://offda9.com/curriculum/observer/the-thesean-method.php"
+    }
+   ],
+   "note": "",
+   "x": 115.0,
+   "y": 105.0
+  },
+  {
+   "id": "ch1",
+   "num": "1",
+   "title": "The OD9 Creed",
+   "vol": 1,
+   "legacy": [
+    1
+   ],
+   "state": "canon",
+   "forge": false,
+   "tier": "S1",
+   "verdict": "KEEP",
+   "bullets": [
+    "Foundational principles guiding individual consciousness enhancement",
+    "Core values for collective civilization advancement",
+    "Integration of Western transhumanist and Eastern contemplative traditions",
+    "The Hedonistic Imperative and beyond: Multidimensional consciousness development",
+    "Ethical frameworks for transformation: Integrating diverse perspectives"
+   ],
+   "canon": [
+    {
+     "content_id": 44,
+     "title": "The OD9 Creed",
+     "url": "https://offda9.com/curriculum/observer/the-creed.php"
+    }
+   ],
+   "note": "",
+   "x": 110.0,
+   "y": 265.0
+  },
+  {
+   "id": "ch3",
+   "num": "3",
+   "title": "A Labor of Love",
+   "vol": 1,
+   "legacy": [
+    3
+   ],
+   "state": "canon",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "KEEP",
+   "bullets": [
+    "Personal dedication revealing how individual awakening connects to species evolution",
+    "Integrating emotional resonance with rational analysis",
+    "Love as transformative force: Neurological foundations and evolutionary significance",
+    "Eastern perspectives on compassion as evolutionary catalyst",
+    "Beyond individualism: Relational ethics and collective transformation"
+   ],
+   "canon": [
+    {
+     "content_id": 48,
+     "title": "Love as Infrastructure",
+     "url": "https://offda9.com/curriculum/observer/love-as-infrastructure.php"
+    }
+   ],
+   "note": "",
+   "x": 270.0,
+   "y": 265.0
+  },
+  {
+   "id": "ch4",
+   "num": "4",
+   "title": "The Great Awakening",
+   "vol": 1,
+   "legacy": [
+    4
+   ],
+   "state": "canon",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "CONVERT (p)",
+   "bullets": [
+    "Humanity's cosmic context and the Fermi Paradox",
+    "The Twin Singularities: Technological and Consciousness Evolution",
+    "Kardashev Scale and civilization development metrics",
+    "Eastern and Western perspectives on consciousness expansion",
+    "The narrowing window for civilization advancement"
+   ],
+   "canon": [
+    {
+     "content_id": 46,
+     "title": "The Twin Singularities",
+     "url": "https://offda9.com/curriculum/observer/the-twin-singularities.php"
+    }
+   ],
+   "note": "",
+   "x": 110.0,
+   "y": 375.0
+  },
+  {
+   "id": "ch5",
+   "num": "5",
+   "title": "The System In Crisis",
+   "vol": 1,
+   "legacy": [
+    5
+   ],
+   "state": "canon",
+   "forge": false,
+   "tier": "S1",
+   "verdict": "CONVERT",
+   "bullets": [
+    "Convergence of existential threats: Multidimensional analysis",
+    "Systems dynamics modeling of interconnected crises",
+    "Eastern and Western perspectives on systemic dysfunction",
+    "The psychology of crisis response: Individual and collective dimensions",
+    "Transformation opportunities within systemic breakdown"
+   ],
+   "canon": [
+    {
+     "content_id": 49,
+     "title": "The System in Crisis",
+     "url": "https://offda9.com/curriculum/observer/the-system-in-crisis.php"
+    }
+   ],
+   "note": "",
+   "x": 270.0,
+   "y": 375.0
+  },
+  {
+   "id": "ch7",
+   "num": "7",
+   "title": "The Solution Framework",
+   "vol": 1,
+   "legacy": [
+    7,
+    6,
+    8
+   ],
+   "state": "canon",
+   "forge": false,
+   "tier": "S1",
+   "verdict": "CONVERT+COMPRESS",
+   "bullets": [
+    "Introduction to the ASCEND platform",
+    "Integration of technological enhancement and consciousness development",
+    "Eastern and Western approaches to systematic transformation",
+    "Implementation science and diffusion of innovations",
+    "Practical pathways toward Type 1 civilization capabilities"
+   ],
+   "canon": [
+    {
+     "content_id": 50,
+     "title": "Responsible Transformation",
+     "url": "https://offda9.com/curriculum/observer/responsible-transformation.php"
+    },
+    {
+     "content_id": 51,
+     "title": "The Solution Framework",
+     "url": "https://offda9.com/curriculum/observer/the-solution-framework.php"
+    },
+    {
+     "content_id": 52,
+     "title": "From Vision to Action",
+     "url": "https://offda9.com/curriculum/observer/from-vision-to-action.php"
+    }
+   ],
+   "note": "Absorbs ch6 (ethics & safety front-matter) and ch8 (implementation pathways) — decided 2026-08-20.",
+   "x": 110.0,
+   "y": 485.0
+  },
+  {
+   "id": "appendix-a",
+   "num": "A",
+   "title": "Appendix A — Methods & the Evidence Standard",
+   "vol": 1,
+   "legacy": [
+    2
+   ],
+   "state": "canon",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "CONVERT",
+   "bullets": [
+    "Epistemological framework and knowledge synthesis",
+    "Systems of evidence: From established fact to reasoned speculation",
+    "Integrating Western analytical and Eastern contemplative methodologies",
+    "Complex systems theory and emergent transformation",
+    "Non-dualistic approaches to consciousness development"
+   ],
+   "canon": [
+    {
+     "content_id": 47,
+     "title": "The Evidence Standard",
+     "url": "https://offda9.com/curriculum/observer/the-evidence-standard.php"
+    }
+   ],
+   "note": "ch2 demoted to reference infrastructure; the evidence ladder stays in-line in the chapters.",
+   "x": 270.0,
+   "y": 485.0
+  },
+  {
+   "id": "ch9",
+   "num": "9",
+   "title": "Media and Information Crisis",
+   "vol": 2,
+   "legacy": [
+    9
+   ],
+   "state": "canon",
+   "forge": false,
+   "tier": "S1",
+   "verdict": "KEEP",
+   "bullets": [
+    "Evolution from information transmission to reality construction",
+    "Misinformation spread and reality fragmentation mechanisms",
+    "Algorithmic amplification of division and conspiracy",
+    "Attention exploitation and cognitive degradation",
+    "How information dysfunction prevents collective intelligence emergence"
+   ],
+   "canon": [
+    {
+     "content_id": 86,
+     "title": "Media and Information Crisis",
+     "url": "https://offda9.com/curriculum/theorist/the-information-crisis.php"
+    }
+   ],
+   "note": "",
+   "x": 458.8,
+   "y": 117.5
+  },
+  {
+   "id": "ch10",
+   "num": "10",
+   "title": "Mental Health",
+   "vol": 2,
+   "legacy": [
+    10
+   ],
+   "state": "canon",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "KEEP+sweep",
+   "bullets": [
+    "Statistical evidence of psychological crisis acceleration",
+    "Systemic barriers to effective treatment and development",
+    "Leadership dysfunction through psychological limitations",
+    "How mental health challenges impede civilization advancement",
+    "Connection between individual and collective consciousness development"
+   ],
+   "canon": [
+    {
+     "content_id": 87,
+     "title": "Mental Health and Collective Psyche",
+     "url": "https://offda9.com/curriculum/theorist/the-collective-psyche.php"
+    }
+   ],
+   "note": "",
+   "x": 576.2,
+   "y": 117.5
+  },
+  {
+   "id": "ch11",
+   "num": "11",
+   "title": "Educational System Collapse",
+   "vol": 2,
+   "legacy": [
+    11
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "KEEP+sweep",
+   "bullets": [
+    "Learning opportunity disparities across populations",
+    "Teacher burnout crisis and its implications",
+    "Curriculum inadequacies for Type 1 capability development",
+    "Failure to prepare for future challenges and opportunities",
+    "How educational limitations create evolutionary bottlenecks"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 693.8,
+   "y": 117.5
+  },
+  {
+   "id": "ch12",
+   "num": "12",
+   "title": "Family and Community Breakdown",
+   "vol": 2,
+   "legacy": [
+    12
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "KEEP+sweep",
+   "bullets": [
+    "Support system erosion across social structures",
+    "Intergenerational trauma perpetuation mechanisms",
+    "Cultural fragmentation and identity division",
+    "Social cohesion loss and trust degradation",
+    "How relationship dysfunction limits collective advancement"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 811.2,
+   "y": 117.5
+  },
+  {
+   "id": "ch13",
+   "num": "13",
+   "title": "Scientific Institution Analysis",
+   "vol": 2,
+   "legacy": [
+    13
+   ],
+   "state": "canon",
+   "forge": false,
+   "tier": "S1",
+   "verdict": "KEEP+sweep",
+   "bullets": [
+    "Research funding distortions and priority misalignment",
+    "Publication system failures and knowledge dissemination barriers",
+    "Replication crisis and methodological limitations",
+    "Career incentive misalignment with discovery imperatives",
+    "How scientific institution failures impede technological advancement"
+   ],
+   "canon": [
+    {
+     "content_id": 89,
+     "title": "Scientific Institution Analysis",
+     "url": "https://offda9.com/curriculum/theorist/scientific-institutions.php"
+    }
+   ],
+   "note": "",
+   "x": 458.8,
+   "y": 232.5
+  },
+  {
+   "id": "ch14",
+   "num": "14",
+   "title": "Technological Ecosystem Dysfunction",
+   "vol": 2,
+   "legacy": [
+    14
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S1",
+   "verdict": "KEEP+sweep (p)",
+   "bullets": [
+    "Innovation capture by narrow interests and financial extraction",
+    "Misalignment between technological development and human needs",
+    "Surveillance capitalism and autonomy reduction mechanisms",
+    "Planned obsolescence and resource waste systems",
+    "How technological ecosystem failures inhibit Type 1 advancement"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 576.2,
+   "y": 232.5
+  },
+  {
+   "id": "ch15",
+   "num": "15",
+   "title": "Infrastructure & Resource Distribution",
+   "vol": 2,
+   "legacy": [
+    15
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "KEEP+sweep (p)",
+   "bullets": [
+    "Physical infrastructure deterioration and investment deficits",
+    "Energy system limitations and transition barriers",
+    "Transportation network inefficiencies and environmental impacts",
+    "Communication infrastructure access disparities",
+    "How physical system limitations constrain civilization development"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 693.8,
+   "y": 232.5
+  },
+  {
+   "id": "ch16",
+   "num": "16",
+   "title": "Economic Dysfunction",
+   "vol": 2,
+   "legacy": [
+    16
+   ],
+   "state": "canon",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "KEEP+sweep",
+   "bullets": [
+    "Wealth concentration analysis and implications",
+    "How artificial scarcity constrains civilization advancement",
+    "Financial system failures preventing optimal resource allocation",
+    "Misalignment between economic incentives and evolutionary needs",
+    "How pre-Type 1 economic structures impede advancement"
+   ],
+   "canon": [
+    {
+     "content_id": 85,
+     "title": "Economic Dysfunction",
+     "url": "https://offda9.com/curriculum/theorist/economic-dysfunction.php"
+    }
+   ],
+   "note": "",
+   "x": 811.2,
+   "y": 232.5
+  },
+  {
+   "id": "ch17",
+   "num": "17",
+   "title": "Crime and Social Disorder",
+   "vol": 2,
+   "legacy": [
+    17
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "KEEP+sweep (p)",
+   "bullets": [
+    "Evolution and impact of criminal behaviors on social advancement",
+    "Global criminal enterprise networks and their systemic impacts",
+    "Organized crime as parallel governance structures",
+    "Black market economies and their resource diversion effects",
+    "Corruption proliferation through criminal institutional capture"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 458.8,
+   "y": 347.5
+  },
+  {
+   "id": "ch18",
+   "num": "18",
+   "title": "Criminal Justice Failures",
+   "vol": 2,
+   "legacy": [
+    18
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "KEEP+sweep (p)",
+   "bullets": [
+    "Systemic inequities in justice administration",
+    "Prison industrial complex as resource misallocation",
+    "Rehabilitation failure and its societal costs",
+    "Connections between justice dysfunction and other system failures",
+    "How punitive rather than developmental approaches limit advancement"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 576.2,
+   "y": 347.5
+  },
+  {
+   "id": "ch19",
+   "num": "19",
+   "title": "Political System Corruption",
+   "vol": 2,
+   "legacy": [
+    19
+   ],
+   "state": "canon",
+   "forge": false,
+   "tier": "S1",
+   "verdict": "KEEP+sweep",
+   "bullets": [
+    "Analysis of democratic dysfunction mechanisms",
+    "Corporate capture of governance structures",
+    "Policy paralysis preventing systemic transformation",
+    "Leadership selection failure and its consequences",
+    "How political limitations constrain civilization advancement"
+   ],
+   "canon": [
+    {
+     "content_id": 88,
+     "title": "Political System Corruption",
+     "url": "https://offda9.com/curriculum/theorist/political-corruption.php"
+    }
+   ],
+   "note": "",
+   "x": 693.8,
+   "y": 347.5
+  },
+  {
+   "id": "ch20",
+   "num": "20",
+   "title": "Healthcare System Failures",
+   "vol": 2,
+   "legacy": [
+    20
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "KEEP+sweep",
+   "bullets": [
+    "Access barriers to optimal health development",
+    "Cost exploitation and resource misallocation",
+    "Treatment inadequacies and technological limitations",
+    "Systemic inequities in health outcome distribution",
+    "How health limitations constrain human capability development"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 811.2,
+   "y": 347.5
+  },
+  {
+   "id": "ch21",
+   "num": "21",
+   "title": "Environmental Degradation",
+   "vol": 2,
+   "legacy": [
+    21
+   ],
+   "state": "canon",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "KEEP+sweep",
+   "bullets": [
+    "Climate crisis acceleration and tipping points",
+    "Resource depletion and carrying capacity limitations",
+    "Ecosystem collapse and biodiversity loss",
+    "How environmental constraints threaten civilization trajectory",
+    "Connections between ecological and social system failures"
+   ],
+   "canon": [
+    {
+     "content_id": 90,
+     "title": "Environmental Degradation",
+     "url": "https://offda9.com/curriculum/theorist/environmental-degradation.php"
+    }
+   ],
+   "note": "",
+   "x": 458.8,
+   "y": 462.5
+  },
+  {
+   "id": "ch22",
+   "num": "22",
+   "title": "Religious Institutions & Pseudoscience",
+   "vol": 2,
+   "legacy": [
+    22
+   ],
+   "state": "canon",
+   "forge": true,
+   "tier": "S1",
+   "verdict": "KEEP+sweep",
+   "bullets": [
+    "Analysis of religious institutions as evolutionary bottlenecks",
+    "Impact of evidence-resistant belief systems on progress",
+    "Psychological manipulation mechanisms and their effects",
+    "Trillion-dollar industries built on unverifiable claims",
+    "Paths toward more advanced epistemological frameworks"
+   ],
+   "canon": [
+    {
+     "content_id": 84,
+     "title": "Religious Institutions and Pseudoscience",
+     "url": "https://offda9.com/curriculum/theorist/religious-institutions.php"
+    }
+   ],
+   "note": "",
+   "x": 576.2,
+   "y": 462.5
+  },
+  {
+   "id": "v3-mind",
+   "num": "III·1",
+   "title": "Engineering the Mind: Enhancement, Learning, Longevity",
+   "vol": 3,
+   "legacy": [
+    23,
+    29,
+    30
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "REFRAME+COMPRESS",
+   "bullets": [
+    "Technical frameworks for consciousness development",
+    "Neural integration systems and brain-computer interfaces",
+    "Consciousness measurement and development metrics",
+    "Cognitive enhancement technologies and approaches",
+    "Integration of technological and contemplative techniques"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 975.0,
+   "y": 100.0
+  },
+  {
+   "id": "v3-commons",
+   "num": "III·2",
+   "title": "The Information Commons",
+   "vol": 3,
+   "legacy": [
+    25,
+    24
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "CONVERT",
+   "bullets": [
+    "Technological systems for reality construction optimization",
+    "Algorithmic design for understanding rather than engagement",
+    "Open source intelligence platforms and verification systems",
+    "Technical architecture for resonance-based distribution",
+    "How transformed information systems enable collective wisdom"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 1085.0,
+   "y": 100.0
+  },
+  {
+   "id": "v3-energy",
+   "num": "III·3",
+   "title": "Energy, Resources & Planetary Infrastructure",
+   "vol": 3,
+   "legacy": [
+    26,
+    27
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "REFRAME (p)",
+   "bullets": [
+    "Comprehensive frameworks for global energy capture and utilization",
+    "Renewable energy technologies and distributed generation systems",
+    "Energy storage solutions at planetary scale",
+    "Smart grid technologies for optimal distribution and utilization",
+    "Advanced materials for infrastructure resilience and efficiency"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 1195.0,
+   "y": 100.0
+  },
+  {
+   "id": "v3-space",
+   "num": "III·4",
+   "title": "The Space Frontier",
+   "vol": 3,
+   "legacy": [
+    28
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "REFRAME (p)",
+   "bullets": [
+    "Near-Earth resource utilization systems",
+    "Space-based energy generation and transmission",
+    "Orbital manufacturing capabilities and frameworks",
+    "Lunar and asteroid mining technologies",
+    "Space habitation systems as civilization resilience"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 975.0,
+   "y": 200.0
+  },
+  {
+   "id": "v3-quantum",
+   "num": "III·5",
+   "title": "Quantum Technologies",
+   "vol": 3,
+   "legacy": [
+    31
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "REFRAME (p)",
+   "bullets": [
+    "Quantum computing: algorithms, error correction, and the fault-tolerance gap",
+    "Quantum sensing and timing: atomic clocks, gravimeters, magnetometry",
+    "Quantum communication and post-quantum cryptography",
+    "Superposition, entanglement, and decoherence as engineering realities",
+    "Why quantum technology is information technology, not a theory of mind"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 1085.0,
+   "y": 200.0
+  },
+  {
+   "id": "v3-ai",
+   "num": "III·6",
+   "title": "AI Integration",
+   "vol": 3,
+   "legacy": [
+    32
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "REFRAME",
+   "bullets": [
+    "Human-AI collaboration architectures",
+    "Consciousness-aligned AGI development",
+    "Distributed intelligence systems and safeguards",
+    "Intelligence enhancement without replacement",
+    "How advanced AI enables civilization advancement"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 1195.0,
+   "y": 200.0
+  },
+  {
+   "id": "v3-safety",
+   "num": "III·7",
+   "title": "Getting There Safely: Integration & Security",
+   "vol": 3,
+   "legacy": [
+    35,
+    34
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "REFRAME (p)",
+   "bullets": [
+    "Protection frameworks ensuring safe enhancement",
+    "Defense against hostile intervention and manipulation",
+    "Privacy-preserving advancement technologies",
+    "Distributed security without centralized control",
+    "How security enables rather than restricts transformation"
+   ],
+   "canon": [],
+   "note": "ch33 retired — its transition remit already lives in every chapter's roadmap and in Volume 5.",
+   "x": 975.0,
+   "y": 300.0
+  },
+  {
+   "id": "ch36",
+   "num": "36",
+   "title": "Breaking All Chains",
+   "vol": 4,
+   "legacy": [
+    36
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "KEEP (p)",
+   "bullets": [
+    "Liberation from systems binding human potential",
+    "Transcendence of artificial limitations and constraints",
+    "Psychological framework for freedom expansion",
+    "Cultural evolution beyond limiting paradigms",
+    "How consciousness development enables genuine freedom"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 975.0,
+   "y": 440.0
+  },
+  {
+   "id": "ch37",
+   "num": "37",
+   "title": "Economic System Evolution",
+   "vol": 4,
+   "legacy": [
+    37,
+    40
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "CONVERT+COMPRESS",
+   "bullets": [
+    "Frameworks for transcending artificial scarcity",
+    "Post-scarcity economic structures and mechanisms",
+    "Resource abundance through technological advancement",
+    "Beyond monetary exchange: multidimensional value systems",
+    "How consciousness evolution transforms economic reality"
+   ],
+   "canon": [],
+   "note": "Absorbs ch40 — one economy, one chapter.",
+   "x": 1085.0,
+   "y": 440.0
+  },
+  {
+   "id": "ch38",
+   "num": "38",
+   "title": "Governance Transformation",
+   "vol": 4,
+   "legacy": [
+    38,
+    47
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "CONVERT",
+   "bullets": [
+    "Enhanced forms of collective decision-making",
+    "Consciousness-based political structures",
+    "Evolution of democracy through awareness expansion",
+    "Distributed governance without centralized control",
+    "How enhanced consciousness enables optimal governance"
+   ],
+   "canon": [],
+   "note": "Absorbs ch47 — its scale dimension.",
+   "x": 1195.0,
+   "y": 440.0
+  },
+  {
+   "id": "ch39",
+   "num": "39",
+   "title": "Media & Information System Transformation",
+   "vol": 4,
+   "legacy": [
+    39
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S1",
+   "verdict": "CONVERT",
+   "bullets": [
+    "Redesigning information ecosystems for truth and understanding",
+    "Evolving media structures beyond addiction and division",
+    "Consciousness-aware information environments",
+    "Reality construction systems promoting collective wisdom",
+    "Technological frameworks for information integrity"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 975.0,
+   "y": 540.0
+  },
+  {
+   "id": "ch41",
+   "num": "41",
+   "title": "Healthcare Transformation",
+   "vol": 4,
+   "legacy": [
+    41
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "CONVERT (p)",
+   "bullets": [
+    "Evolution from disease treatment to holistic wellbeing",
+    "Prevention-centered approaches to health optimization",
+    "Consciousness-based healing modalities and frameworks",
+    "Integration of technological and awareness-based interventions",
+    "Accessible systems for universal health enhancement"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 1085.0,
+   "y": 540.0
+  },
+  {
+   "id": "ch42",
+   "num": "42",
+   "title": "Community Evolution",
+   "vol": 4,
+   "legacy": [
+    42
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "CONVERT+COMPRESS",
+   "bullets": [
+    "Transformation of human relationships and social structures",
+    "New forms of connection beyond traditional limitations",
+    "Enhanced communication through consciousness development",
+    "Balancing individuality and collective harmony",
+    "Integration of physical and digital community spaces"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 1195.0,
+   "y": 540.0
+  },
+  {
+   "id": "ch43",
+   "num": "43",
+   "title": "Education Reimagined",
+   "vol": 4,
+   "legacy": [
+    43
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "CONVERT",
+   "bullets": [
+    "Learning systems for consciousness and capability development",
+    "Knowledge integration beyond disciplinary boundaries",
+    "Technology-enabled personalized development",
+    "Lifelong learning architectures and frameworks",
+    "Experiential knowledge transfer methodologies"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 975.0,
+   "y": 640.0
+  },
+  {
+   "id": "ch44",
+   "num": "44",
+   "title": "Justice System Transformation",
+   "vol": 4,
+   "legacy": [
+    44
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "CONVERT (p)",
+   "bullets": [
+    "Developmental rather than punitive approaches",
+    "Harm prevention through consciousness expansion",
+    "Restorative frameworks for genuine healing",
+    "Community-based conflict resolution systems",
+    "Evolution beyond retribution toward genuine rehabilitation"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 1085.0,
+   "y": 640.0
+  },
+  {
+   "id": "ch45",
+   "num": "45",
+   "title": "Arts and Cultural Expression",
+   "vol": 4,
+   "legacy": [
+    45
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "CONVERT+COMPRESS",
+   "bullets": [
+    "Consciousness evolution through creative expression",
+    "Transformation of artistic mediums and modalities",
+    "Expanded awareness through aesthetic experience",
+    "Cultural co-creation beyond passive consumption",
+    "Integration of technology and human creativity"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 1195.0,
+   "y": 640.0
+  },
+  {
+   "id": "ch46",
+   "num": "46",
+   "title": "Consciousness Practice Evolution",
+   "vol": 4,
+   "legacy": [
+    46
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "CONVERT",
+   "bullets": [
+    "Naturalistic frameworks replacing religious traditions",
+    "Evidence-based approaches to meaning and purpose",
+    "Secular rituals for social cohesion and connection",
+    "Neurological foundations of transcendent experience",
+    "Community practices for consciousness development"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 975.0,
+   "y": 740.0
+  },
+  {
+   "id": "ch48",
+   "num": "48",
+   "title": "Environmental Restoration",
+   "vol": 4,
+   "legacy": [
+    48
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "CONVERT (p)",
+   "bullets": [
+    "Frameworks for planetary health enhancement",
+    "Technological systems for ecosystem regeneration",
+    "Consciousness-based approaches to human-nature integration",
+    "Beyond sustainability: thriving environmental systems",
+    "Regenerative practices for biodiversity expansion"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 1085.0,
+   "y": 740.0
+  },
+  {
+   "id": "ch50",
+   "num": "50",
+   "title": "Core Technology Platform Deployment",
+   "vol": 5,
+   "legacy": [
+    50
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "ALIGN",
+   "bullets": [
+    "Data infrastructure and systems integration",
+    "AI-driven matching engine implementation",
+    "Knowledge exchange platform deployment",
+    "Capability marketplace technical implementation",
+    "ValueExchangeCore implementation architecture"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 132.5,
+   "y": 645.0
+  },
+  {
+   "id": "ch52",
+   "num": "52",
+   "title": "Governance Architecture Implementation",
+   "vol": 5,
+   "legacy": [
+    52
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "ALIGN (p)",
+   "bullets": [
+    "Deploying consciousness-weighted decision frameworks",
+    "Implementing conflict resolution protocols",
+    "Establishing adaptive governance evolution mechanisms",
+    "Practical approaches to decentralized authority",
+    "Transparent decision execution systems"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 297.5,
+   "y": 645.0
+  },
+  {
+   "id": "ch54",
+   "num": "54",
+   "title": "The Progression Economy",
+   "vol": 5,
+   "legacy": [
+    54,
+    49
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "ALIGN",
+   "bullets": [
+    "Mechanics recognizing genuine evolutionary contribution",
+    "Multidimensional advancement tracking frameworks",
+    "Beyond gamification: authentic progress measurement",
+    "Individual and collective achievement integration",
+    "How proper metrics accelerate transformation"
+   ],
+   "canon": [],
+   "note": "Absorbs ch49's shipped credit-economy content.",
+   "x": 132.5,
+   "y": 755.0
+  },
+  {
+   "id": "ch55",
+   "num": "55",
+   "title": "Community Integration Systems",
+   "vol": 5,
+   "legacy": [
+    55
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "ALIGN",
+   "bullets": [
+    "Tools for coordinating local transformation initiatives",
+    "Bioregional implementation frameworks and approaches",
+    "Cross-community knowledge sharing mechanisms",
+    "Cultural evolution through conscious community development",
+    "How community transformation catalyzes broader advancement"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 297.5,
+   "y": 755.0
+  },
+  {
+   "id": "ch58",
+   "num": "58",
+   "title": "Development Pathways Implementation",
+   "vol": 5,
+   "legacy": [
+    58,
+    56
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "ALIGN (p)",
+   "bullets": [
+    "Clear trajectories from current state to transformed potential",
+    "Staged approaches for practical advancement",
+    "Individual and collective development integration",
+    "Transformation sequencing for optimal progress",
+    "How systematic pathways ensure stable advancement"
+   ],
+   "canon": [],
+   "note": "Absorbs ch56's learning-acceleration content.",
+   "x": 132.5,
+   "y": 865.0
+  },
+  {
+   "id": "v5-future",
+   "num": "V·6",
+   "title": "Future Deployments",
+   "vol": 5,
+   "legacy": [
+    51,
+    53,
+    57
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "ALIGN (p)",
+   "bullets": [
+    "Implementing distributed production networks",
+    "Deploying critical resource systems (energy, food, water)",
+    "Physical infrastructure for community resilience",
+    "Resource circulation and optimization systems",
+    "Establishing distributed fabrication nodes"
+   ],
+   "canon": [],
+   "note": "The honest quarantine: unbuilt systems (physical deployment, advanced cryptography, neural interfaces) held as a research agenda under the volume's design-fiction preface.",
+   "x": 297.5,
+   "y": 865.0
+  },
+  {
+   "id": "ch59",
+   "num": "59",
+   "title": "The Revolution Begins with Music",
+   "vol": 6,
+   "legacy": [
+    59
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "KEEP",
+   "bullets": [
+    "Introduction to the OD9 musical project as consciousness catalyst",
+    "How artistic expression accelerates awareness evolution",
+    "Musical entrainment for collective consciousness development",
+    "Volume 1: Supreme Elevation EP as transformation initiation",
+    "Emotional and intellectual integration through artistic expression"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 485.0,
+   "y": 631.7
+  },
+  {
+   "id": "ch60",
+   "num": "60",
+   "title": "Cultural Renaissance & Consciousness Shift",
+   "vol": 6,
+   "legacy": [
+    60
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "CONVERT (p)",
+   "bullets": [
+    "Comprehensive cultural transformation beyond artistic expression",
+    "Evolution of language, symbols, and meaning-making systems",
+    "Transformation of media narratives and collective stories",
+    "Cultural practices that support consciousness development",
+    "Integration of art, science, and wisdom in cultural evolution"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 595.0,
+   "y": 631.7
+  },
+  {
+   "id": "ch61",
+   "num": "61",
+   "title": "Personal Implementation Guide",
+   "vol": 6,
+   "legacy": [
+    61
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S1",
+   "verdict": "KEEP+CONVERT-light",
+   "bullets": [
+    "Individual practices for consciousness enhancement",
+    "How personal transformation contributes to collective advancement",
+    "Practical approaches for immediate implementation",
+    "Daily routines and practices for evolutionary development",
+    "Community engagement and contribution frameworks"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 705.0,
+   "y": 631.7
+  },
+  {
+   "id": "ch62",
+   "num": "62",
+   "title": "Network Building & Community Catalysis",
+   "vol": 6,
+   "legacy": [
+    62
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "CONVERT (p)",
+   "bullets": [
+    "Practical frameworks for building transformation networks",
+    "Community organizing principles for consciousness evolution",
+    "Creating local nodes of transformation",
+    "Connecting individual practitioners into effective networks",
+    "Communication protocols for network coordination"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 815.0,
+   "y": 631.7
+  },
+  {
+   "id": "ch63",
+   "num": "63",
+   "title": "Movement Evolution Strategy",
+   "vol": 6,
+   "legacy": [
+    63
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "CONVERT (p)",
+   "bullets": [
+    "Practical frameworks for transformation movement growth",
+    "Communication strategies for evolutionary discourse",
+    "Building momentum through demonstration projects",
+    "How distributed initiatives create systemic transformation",
+    "Strategic messaging for different audiences and contexts"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 485.0,
+   "y": 715.0
+  },
+  {
+   "id": "ch64",
+   "num": "64",
+   "title": "Navigating Opposition & Setbacks",
+   "vol": 6,
+   "legacy": [
+    64
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "KEEP (p)",
+   "bullets": [
+    "Understanding sources and patterns of resistance",
+    "Countering misinformation and manipulation effectively",
+    "Psychological strategies for dealing with opposition",
+    "Institutional resistance mitigation approaches",
+    "Learning from setbacks and adaptation strategies"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 595.0,
+   "y": 715.0
+  },
+  {
+   "id": "ch65",
+   "num": "65",
+   "title": "Timing, Sequencing & Critical Mass",
+   "vol": 6,
+   "legacy": [
+    65
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "CONVERT (p)",
+   "bullets": [
+    "Understanding transformation timing and readiness indicators",
+    "Sequencing initiatives for maximum impact",
+    "Recognizing and leveraging tipping points",
+    "Critical mass theory applied to consciousness evolution",
+    "Windows of opportunity identification and utilization"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 705.0,
+   "y": 715.0
+  },
+  {
+   "id": "ch66",
+   "num": "66",
+   "title": "Resource Generation Framework",
+   "vol": 6,
+   "legacy": [
+    66
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S3",
+   "verdict": "CONVERT (p)",
+   "bullets": [
+    "Practical approaches for transformation funding",
+    "Self-sustaining economic models for advancement",
+    "Beyond traditional funding: multidimensional resourcing",
+    "Implementation prioritization based on resource constraints",
+    "How resource coordination enables effective transformation"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 815.0,
+   "y": 715.0
+  },
+  {
+   "id": "ch67",
+   "num": "67",
+   "title": "Beyond Type 1 — Ultimate Potential",
+   "vol": 6,
+   "legacy": [
+    67
+   ],
+   "state": "raw",
+   "forge": false,
+   "tier": "S2",
+   "verdict": "KEEP (p)",
+   "bullets": [
+    "Exploration of humanity's long-term evolutionary trajectory",
+    "Type 2 and Type 3 civilization capabilities and implications",
+    "Consciousness possibilities beyond current limitations",
+    "Cosmic perspective on human transformation",
+    "How current transformation enables ultimate potential"
+   ],
+   "canon": [],
+   "note": "",
+   "x": 485.0,
+   "y": 798.3
+  }
+ ],
+ "arcs": [
+  {
+   "id": "arc1",
+   "num": 1,
+   "name": "The Information Problem",
+   "route": [
+    "ch9",
+    "ch13",
+    "ch14",
+    "ch19",
+    "ch22",
+    "ch39"
+   ]
+  },
+  {
+   "id": "arc2",
+   "num": 2,
+   "name": "The Creed and the Frame",
+   "route": [
+    "ch1",
+    "ch5",
+    "ch7",
+    "ch3"
+   ]
+  },
+  {
+   "id": "arc3",
+   "num": 3,
+   "name": "What We'd Build Instead",
+   "route": [
+    "ch38",
+    "ch42",
+    "ch37",
+    "ch43"
+   ]
+  },
+  {
+   "id": "arc4",
+   "num": 4,
+   "name": "The Path",
+   "route": [
+    "ch61",
+    "ch59",
+    "ch63",
+    "ch65",
+    "ch67"
+   ]
+  }
+ ],
+ "retired": [
+  33
+ ],
+ "schedule": [
+  {
+   "sermon": "001",
+   "title": "The 62% Engine",
+   "ch": 22,
+   "date": "2026-08-23"
+  },
+  {
+   "sermon": "002",
+   "title": "They Hired Lawyers",
+   "ch": 22,
+   "date": "2026-08-30"
+  }
+ ],
+ "counts": {
+  "nodes": 54,
+  "chapters_target": 52,
+  "legacy_accounted": 67,
+  "canon_lessons": 16
+ }
+}

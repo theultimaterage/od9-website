@@ -62,7 +62,7 @@ $action = $_POST['action'] ?? '';
 
 // CSRF (security audit #2): protect the value-bearing, credit-granting actions.
 // notifications_read is idempotent + posted via AJAX (separate path), so it's exempt.
-if (in_array($action, ['qotd_answer', 'content_read_check', 'sotw_reflect'], true)) {
+if (in_array($action, ['qotd_answer', 'content_read_check', 'sotw_reflect', 'watch_complete', 'gate_check'], true)) {
     $sessTok = (string)($_SESSION['csrf_token'] ?? '');
     if ($sessTok === '' || !hash_equals($sessTok, (string)($_POST['csrf_token'] ?? ''))) {
         board_back('Security check failed — refresh the page and try again.', 'err');
@@ -90,6 +90,20 @@ if ($action === 'qotd_answer') {
     if (mb_strlen($reflection) < 50) board_back('Your reflection needs to be at least 50 characters.', 'err');
     $idem = "sotw:$trackId:$discordId";
     $payload = ['track_id' => $trackId, 'track_title' => $trackTitle, 'reflection' => $reflection];
+} elseif ($action === 'watch_complete') {
+    // SPEC §3 watch type (chunk 2) — module-addressed: the payload names the
+    // modules row; reward + validity come from its config bot-side.
+    $moduleId = preg_replace('/[^a-z0-9._\-]/i', '', (string)($_POST['module_id'] ?? ''));
+    if ($moduleId === '') board_back('No cutscene selected.', 'err');
+    $idem = "watch:$moduleId:$discordId";
+    $payload = ['module_id' => $moduleId];
+} elseif ($action === 'gate_check') {
+    // Face the Gate (SPEC §4 chunk 4): the member asks to be checked NOW. The
+    // bot runs the REAL advancement path; a hold is released bot-side so the
+    // member can face it again — the minute bucket in the key is only an
+    // anti-hammer (a replay inside the same minute returns the stored result).
+    $idem = 'gate:' . $discordId . ':' . intdiv(time(), 60);
+    $payload = (object)[];
 } elseif ($action === 'notifications_read') {
     // Mark notification(s) read (AJAX). A numeric notification_id marks just that
     // one (per-item dismiss from the inbox); absent = mark all (legacy sweep).
@@ -188,6 +202,35 @@ if ($action === 'sotw_reflect') {
         board_back('Not quite — ' . ($fb !== '' ? $fb : 'tell her what it\'s really saying.') . ' Run it back.', 'err');
     }
     board_back('Reflection recorded.', 'pending');
+}
+
+if ($action === 'watch_complete') {
+    if (!empty($data['already_watched']) || $idempotent) {
+        board_back('Already logged — the Archivist remembers.', 'pending');
+    }
+    board_back("Watched — +$credits CR. The Wake opens ahead of you.", 'ok');
+}
+
+if ($action === 'gate_check') {
+    $txt = trim((string)($data['text'] ?? ''));
+    if ($idempotent && empty($data['advanced'])) {
+        // Same-minute replay: the stored result carries no gate detail.
+        board_back('The Gate has already answered — give it a breath, then face it again.', 'pending');
+    }
+    if (!empty($data['advanced'])) {
+        // THE moment. Land the member in their NEW zone with the gate cinematic
+        // + a gold flash (roles/celebration/DM already fired bot-side).
+        $newTier = strtolower((string)($data['new_tier'] ?? ''));
+        $_SESSION['board_flash'] = ['kind' => 'ascend',
+            'msg' => $txt !== '' ? $txt : 'The Gate recognizes your record. The world just got wider.'];
+        $qs = ['ascended' => 1];
+        if (in_array($newTier, ['observer', 'theorist', 'architect', 'pioneer', 'benefactor'], true)) {
+            $qs['tier'] = $newTier;
+        }
+        header('Location: ' . DASHBOARD_BASE_URL . '/board.php?' . http_build_query($qs));
+        exit;
+    }
+    board_back($txt !== '' ? $txt : 'The Gate holds — your record is not yet complete.', 'pending');
 }
 
 // qotd_answer

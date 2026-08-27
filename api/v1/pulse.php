@@ -13,12 +13,10 @@
  *   ?token=<secret>      REQUIRED - constant-time compared
  *   ?format=json|markdown  default json. markdown = pre-formatted Discord-ready text
  *
- * Data sources:
- *   - MySQL od9_bot_users mirror (kept fresh by sync_to_mysql.py every 15min)
- *   - Direct SQLite read of /home/ultimaterage/od9-discord-bot/data/od9.db
- *     (offda9 has world-readable access to that file). Used for tables that
- *     aren't in the MySQL mirror: content_completion, qotd_answer_streak,
- *     think_tank_attendance.
+ * Data source: direct SQLite read of /home/ultimaterage/od9-discord-bot/data/od9.db
+ *   (offda9 has world-readable access). ALL metrics read the bot's live DB —
+ *   members + Patreon from `users`, plus content_completion / qotd_answer_streaks /
+ *   think_tank_attendance. The od9_bot_* MySQL mirror was retired 2026-06-28.
  */
 
 declare(strict_types=1);
@@ -75,11 +73,9 @@ function safe_int(callable $fn): int {
     }
 }
 
-$mysql = null;
+// All metrics now read the bot's live SQLite directly — the od9_bot_* MySQL mirror
+// was retired 2026-06-28.
 $sqlite = null;
-try { $mysql = getDatabaseConnection(); $mysql->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); }
-catch (Throwable $e) { pulse_log('mysql connect failed: ' . $e->getMessage()); }
-
 try {
     $sqlite = new PDO('sqlite:' . SQLITE_PATH);
     $sqlite->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -126,30 +122,33 @@ $pulse['reflections_pending'] = safe_int(function() use ($sqlite) {
     return $s->fetchColumn();
 });
 
-// 2) New Discord members this week (MySQL)
-$pulse['new_members_7d'] = safe_int(function() use ($mysql) {
-    if (!$mysql) return -1;
-    $s = $mysql->query(
-        "SELECT COUNT(*) FROM od9_bot_users
-         WHERE join_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)"
+// 2) New Discord members this week (SQLite — the od9_bot_users mirror was retired)
+$pulse['new_members_7d'] = safe_int(function() use ($sqlite) {
+    if (!$sqlite) return -1;
+    $s = $sqlite->query(
+        "SELECT COUNT(*) FROM users
+         WHERE join_date >= date('now', '-7 days')"
     );
     return $s->fetchColumn();
 });
 
-$pulse['total_members'] = safe_int(function() use ($mysql) {
-    if (!$mysql) return -1;
-    return $mysql->query("SELECT COUNT(*) FROM od9_bot_users")->fetchColumn();
+// Lifetime throughput, NOT current membership: users rows survive leaves,
+// kicks, and bans (founder correction 2026-07-26). The bot cog injects
+// current_discord_members from the live guild before analysis.
+$pulse['lifetime_registered_members'] = safe_int(function() use ($sqlite) {
+    if (!$sqlite) return -1;
+    return $sqlite->query("SELECT COUNT(*) FROM users")->fetchColumn();
 });
 
-// 3) Patreon tier breakdown (MySQL)
+// 3) Patreon tier breakdown (SQLite)
 $tier_counts = [];
 $founding_filled = 0;
 $mrr_dollars = 0;
 $tier_prices = ['theorist'=>5, 'architect'=>15, 'pioneer'=>30, 'benefactor'=>50, 'founding'=>100];
 try {
-    if ($mysql) {
-        $rows = $mysql->query(
-            "SELECT LOWER(patreon_tier) AS tier, COUNT(*) AS n FROM od9_bot_users
+    if ($sqlite) {
+        $rows = $sqlite->query(
+            "SELECT LOWER(patreon_tier) AS tier, COUNT(*) AS n FROM users
              WHERE is_patreon_supporter = 1 AND patreon_tier IS NOT NULL AND patreon_tier != ''
              GROUP BY LOWER(patreon_tier)"
         )->fetchAll(PDO::FETCH_ASSOC);
@@ -172,16 +171,63 @@ $pulse['qotd_streaks_7plus'] = safe_int(function() use ($sqlite) {
     return $s->fetchColumn();
 });
 
-// 5) Think Tank attendance this week (SQLite). Schema uses rsvp_date + attended bool,
-//    not an attended_at timestamp. Count distinct attendees who actually showed up.
-$pulse['think_tank_attendees_7d'] = safe_int(function() use ($sqlite) {
+// 5) Think Tank / room participation this week (SQLite). "In the room" uses the
+//    system's canonical definition — marked attendance UNION voice_presence
+//    activity — mirroring db/think_tanks.py tt_room_happened() and
+//    cogs/activation.py. The manual /thinktank attendance ledger alone reads 0
+//    forever (zero rows ever written; 2026-07-26 founder report: a week of
+//    nightly Think Tanks showed as 0), while the bot already logs
+//    voice_presence for everyone actually in voice. Keep the three
+//    definitions in sync — guarded by tests/test_pulse_room_definition.py.
+$pulse['think_tank_sessions_7d'] = safe_int(function() use ($sqlite) {
     if (!$sqlite) return -1;
     $s = $sqlite->query(
-        "SELECT COUNT(DISTINCT user_id) FROM think_tank_attendance
-         WHERE attended = 1 AND date(rsvp_date) >= date('now', '-7 days')"
+        "SELECT COUNT(*) FROM think_tank_sessions
+         WHERE date(scheduled_date) >= date('now', '-7 days')"
     );
     return $s->fetchColumn();
 });
+
+$pulse['think_tank_attendees_7d'] = safe_int(function() use ($sqlite) {
+    if (!$sqlite) return -1;
+    $s = $sqlite->query(
+        "SELECT COUNT(DISTINCT user_id) FROM (
+            SELECT ta.user_id
+            FROM think_tank_attendance ta
+            JOIN think_tank_sessions ts ON ts.session_id = ta.session_id
+            WHERE ta.attended = 1
+              AND date(ts.scheduled_date) >= date('now', '-7 days')
+            UNION
+            SELECT user_id
+            FROM activity_log
+            WHERE activity_type = 'voice_presence'
+              AND activity_date >= datetime('now', '-7 days')
+         )"
+    );
+    return $s->fetchColumn();
+});
+
+// 5b) Room depth by day — distinct members in voice per UTC day, so the weekly
+//     analysis sees the actual distribution instead of inferring per-session
+//     averages from two aggregate numbers.
+$pulse['room_by_day_7d'] = (function() use ($sqlite) {
+    if (!$sqlite) return [];
+    try {
+        $rows = $sqlite->query(
+            "SELECT date(activity_date) AS d, COUNT(DISTINCT user_id) AS users
+             FROM activity_log
+             WHERE activity_type = 'voice_presence'
+               AND activity_date >= datetime('now', '-7 days')
+             GROUP BY date(activity_date) ORDER BY d"
+        )->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(
+            fn($r) => ['date' => $r['d'], 'in_room' => (int)$r['users']], $rows
+        );
+    } catch (Throwable $e) {
+        pulse_log('room_by_day query failed: ' . $e->getMessage());
+        return [];
+    }
+})();
 
 // ---------------------------------------------------------------------------
 // Output
@@ -206,9 +252,10 @@ function render_markdown(array $p): string {
     $human = $p['reflections_human_approved_7d'];
     $pending = $p['reflections_pending'];
     $new_members = $p['new_members_7d'];
-    $total_members = $p['total_members'];
+    $total_members = $p['lifetime_registered_members'];
     $streaks = $p['qotd_streaks_7plus'];
     $tt = $p['think_tank_attendees_7d'];
+    $tt_sessions = $p['think_tank_sessions_7d'] ?? -1;
     $founding_left = $p['founding_slots_remaining'];
     $mrr = $p['mrr_dollars_estimate'];
     $target = $p['mrr_dollars_target'];
@@ -228,7 +275,7 @@ function render_markdown(array $p): string {
     $flags_block = empty($flags) ? '_All clear._' : implode("\n", array_map(fn($f) => "- $f", $flags));
 
     $md = "**OD9 Weekly Pulse — {$week}**\n\n";
-    $md .= "**Members:** {$total_members} total ({$new_members} new this week)\n";
+    $md .= "**Members:** {$total_members} lifetime through the door ({$new_members} new this week)\n";
     $md .= "**Patrons:** {$tier_line}\n";
     $md .= "**MRR:** \${$mrr} / \${$target} ({$mrr_pct}% to annual-billing unlock)\n";
     $md .= "**Founding Patron slots remaining:** {$founding_left} / 25\n\n";
@@ -236,7 +283,7 @@ function render_markdown(array $p): string {
     $fmt = fn($n) => $n < 0 ? 'n/a' : (string)$n;
     $md .= "- Reflections approved this week: " . $fmt($human) . " by humans, " . $fmt($auto) . " auto-approved, " . $fmt($pending) . " still pending\n";
     $md .= "- QOTD streaks ≥ 7 days: " . $fmt($streaks) . "\n";
-    $md .= "- Think Tank attendees this week: " . $fmt($tt) . "\n\n";
+    $md .= "- Think Tanks held this week: " . $fmt($tt_sessions) . "; distinct members in the room (voice or marked attended): " . $fmt($tt) . "\n\n";
     $md .= "**Flags:**\n{$flags_block}\n\n";
     $md .= "_Generated " . $p['generated_at'] . "_\n";
     return $md;

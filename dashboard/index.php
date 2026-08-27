@@ -160,12 +160,13 @@ if ($isLoggedIn) {
 // brighter K1 tiers get a darker overlay so the header + cards stay readable; each
 // tier also carries its accent color (tint) + a "clearance" label.
 $hqTier = strtolower($progression['current_tier'] ?? 'observer');
+/* tints = the iced tier ladder as RGB (includes/tiers.php, 2026-08-13 flip) */
 $HQ_ENV = [
-    'observer'   => ['bg' => 'hq-observer.jpg',   'o' => ['.64', '.84', '.93'], 'tint' => '150,160,170', 'label' => 'Sub-Level Bunker'],
-    'theorist'   => ['bg' => 'hq-theorist.jpg',   'o' => ['.64', '.84', '.93'], 'tint' => '80,150,235',  'label' => 'Bunker &middot; Powered Up'],
-    'architect'  => ['bg' => 'hq-architect.jpg',  'o' => ['.78', '.86', '.93'], 'tint' => '150,90,235',  'label' => 'Command Center &middot; Online'],
-    'pioneer'    => ['bg' => 'hq-pioneer.jpg',    'o' => ['.78', '.86', '.93'], 'tint' => '212,175,55',  'label' => 'Command Nexus'],
-    'benefactor' => ['bg' => 'hq-benefactor.jpg', 'o' => ['.80', '.87', '.94'], 'tint' => '220,60,70',   'label' => 'Type-I Command'],
+    'observer'   => ['bg' => 'hq-observer.jpg',   'o' => ['.64', '.84', '.93'], 'tint' => '138,148,153', 'label' => 'Sub-Level Bunker'],
+    'theorist'   => ['bg' => 'hq-theorist.jpg',   'o' => ['.64', '.84', '.93'], 'tint' => '46,139,255',  'label' => 'Bunker &middot; Powered Up'],
+    'architect'  => ['bg' => 'hq-architect.jpg',  'o' => ['.78', '.86', '.93'], 'tint' => '155,92,255',  'label' => 'Command Center &middot; Online'],
+    'pioneer'    => ['bg' => 'hq-pioneer.jpg',    'o' => ['.78', '.86', '.93'], 'tint' => '229,181,58',  'label' => 'Command Nexus'],
+    'benefactor' => ['bg' => 'hq-benefactor.jpg', 'o' => ['.80', '.87', '.94'], 'tint' => '229,72,58',   'label' => 'Type-I Command'],
 ];
 $hq = $HQ_ENV[$hqTier] ?? $HQ_ENV['observer'];
 ?>
@@ -331,11 +332,13 @@ a.notif-watch { text-decoration:none; display:inline-flex; align-items:center; }
     text-transform: uppercase;
 }
 
-.tier-observer { background: linear-gradient(135deg, #808080, #606060); color: #fff; }
-.tier-theorist { background: linear-gradient(135deg, #4169E1, #3050B0); color: #fff; }
-.tier-architect { background: linear-gradient(135deg, #9932CC, #7020A0); color: #fff; }
-.tier-pioneer { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; }
-.tier-benefactor { background: linear-gradient(135deg, #FF4500, #DC143C); color: #fff; }
+/* Tier badges — the iced design-system ladder (2026-08-13 flip; these were a
+   drifted third variant that matched neither Discord nor the design system) */
+.tier-observer { background: linear-gradient(135deg, #8A9499, #6A737A); color: #fff; }
+.tier-theorist { background: linear-gradient(135deg, #2E8BFF, #1F64C0); color: #fff; }
+.tier-architect { background: linear-gradient(135deg, #9B5CFF, #7A3FD0); color: #fff; }
+.tier-pioneer { background: linear-gradient(135deg, #E5B53A, #B8962B); color: #0A0A0A; }
+.tier-benefactor { background: linear-gradient(135deg, #E5483A, #B03028); color: #fff; }
 
 /* Progress bar */
 .progress-container {
@@ -610,6 +613,9 @@ $journeyLabel = $journeyNext ? 'Continue Your Journey' : 'Explore the Library';
             </a>
             <a href="/dashboard/bunker.php" class="ztrans-link" data-ztrans="hatch" style="color: #D4AF37; text-decoration: none; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px; margin-left: 1.5rem;">
                 <i class="fas fa-box-open"></i> The Bunker
+            </a>
+            <a href="/dashboard/world.php" style="color: var(--zone-cyan, #00FFF7); text-decoration: none; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px; margin-left: 1.5rem;">
+                <i class="fas fa-map"></i> World Map
             </a>
             <a href="/dashboard/faq.php" style="color: #b388ff; text-decoration: none; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px; margin-left: 1.5rem;">
                 <i class="fas fa-circle-question"></i> How It Works

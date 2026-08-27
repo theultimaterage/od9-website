@@ -77,6 +77,48 @@ $page_og_description = 'You are not crazy. You are awake. This is where the ones
   .lp .brandmark img{height:clamp(30px,4.2vw,44px);width:auto;display:block;filter:drop-shadow(0 2px 14px rgba(0,0,0,.65));opacity:.92;transition:opacity .2s ease}
   .lp .brandmark:hover img{opacity:1}
 
+  /* ---- scroll-scrub hero (JS adds body.scrub on capable desktops ONLY:
+     min-width 760px + motion ok + no data-saver. Without .scrub none of this
+     applies and the hero is the original autoplay loop — mobile, no-JS, and
+     reduced-motion visitors see exactly the page that shipped before). ---- */
+  .lp .hero-track{position:relative}
+  .lp.scrub .hero-track{height:230vh}
+  .lp.scrub .hero{position:sticky;top:0;min-height:0;height:100vh;height:100svh}
+  /* The loop hero is a TALL narrow column (content-driven, ~1.5 viewports at
+     1440x900 — the page scrolls past it, so that layout works). The scrub
+     stage clamps to one viewport and clips, which would bury the CTA — so in
+     scrub mode the column is re-fit to FIT the stage: wider measure, tighter
+     type, slimmer padding. Non-scrub layout is untouched. */
+  .lp.scrub .hero .wrap{padding-block:clamp(2.2rem,6vh,4.5rem)}
+  .lp.scrub .hero .hero-inner{max-width:min(580px,54vw);gap:clamp(.9rem,2vh,1.4rem)}
+  .lp.scrub .hero h1{font-size:clamp(2.4rem,1rem + 6.8vw,5.8rem);max-width:none}
+  .lp.scrub .hero .hero-sub{font-size:clamp(.98rem,.8rem + .5vw,1.18rem);max-width:46ch}
+  .lp .hero h1 .w{display:inline-block;white-space:nowrap;transform-style:preserve-3d}
+  .lp .hero h1 .ch{display:inline-block}
+  .lp.scrub .hero h1{perspective:640px}
+  .lp.scrub .hero h1 .ch{transform-origin:50% 100%;
+    --k:clamp(0, calc((var(--p,0) - var(--i,0)) * 4), 1);
+    transform:rotateX(calc(var(--k) * -86deg)) translateY(calc(var(--k) * .14em));
+    opacity:calc(1 - var(--k) * .95)}
+  .lp.scrub .hero .kicker,.lp.scrub .hero .hero-sub{opacity:calc(1 - clamp(0, var(--p,0) * 4.5, 1))}
+  .lp.scrub .hero .hero-inner{opacity:calc(1 - clamp(0, (var(--p,0) - .55) * 2.8, 1))}
+  .lp .hero-cue{display:none}
+  .lp.scrub .hero-cue{position:absolute;left:50%;bottom:1.2rem;transform:translateX(-50%);z-index:5;
+    display:flex;flex-direction:column;align-items:center;gap:.4rem;color:var(--bone-dim);
+    font-family:var(--f-mono);font-weight:700;font-size:.6rem;letter-spacing:.34em;text-transform:uppercase;
+    transition:opacity .4s ease}
+  .lp.scrub .hero-cue.off{opacity:0}
+  .lp.scrub .hero-cue .vee{width:11px;height:11px;border-right:2px solid var(--blue);border-bottom:2px solid var(--blue);
+    transform:rotate(45deg);animation:awBob 1.6s ease-in-out infinite}
+  @keyframes awBob{0%,100%{transform:rotate(45deg) translate(0,0);opacity:.9}50%{transform:rotate(45deg) translate(4px,4px);opacity:.45}}
+
+  /* ---- five-zones teaser (official zone tokens from od9.css) ---- */
+  .lp .zline{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:2.2rem}
+  .lp .zstop{flex:1 1 150px;border-left:3px solid var(--zc,var(--blue));background:var(--void-2);
+    border-radius:0 4px 4px 0;padding:.8rem .9rem;display:flex;flex-direction:column;gap:.25rem}
+  .lp .zstop b{font-family:var(--f-display);font-weight:700;text-transform:uppercase;font-size:.95rem;color:var(--bone);letter-spacing:.03em}
+  .lp .zstop i{font-style:normal;font-family:var(--f-mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--zc,var(--ash))}
+
   .lp .band{padding-block:clamp(4.5rem,11vh,8rem);position:relative}
   .lp .band--line{border-top:1px solid var(--line-2)}
   .lp .eyebrow-row{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
@@ -160,9 +202,26 @@ $page_og_description = 'You are not crazy. You are awake. This is where the ones
 </style>
 </head>
 <body class="lp">
+<script>
+(function(){
+  /* Scrub-mode gate — synchronous so the sticky hero lays out before first
+     paint. Capable desktops only; everyone else keeps the autoplay loop
+     untouched. MINIFY-SAFE: block comments only, statements semicolon'd. */
+  try {
+    var mm = window.matchMedia;
+    var ok = !!mm && mm('(min-width: 760px)').matches && !mm('(prefers-reduced-motion: reduce)').matches;
+    var c = navigator.connection;
+    if (c && c.saveData) { ok = false; }
+    if (ok) { document.body.className += ' scrub'; }
+  } catch (e) {}
+})();
+</script>
 <main>
+  <div class="hero-track" id="heroTrack">
   <section class="hero">
-    <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="<?= $_bp ?>/images/landing/hero-poster.jpg">
+    <video class="hero-video" id="heroVid" autoplay muted loop playsinline preload="metadata"
+           poster="<?= $_bp ?>/images/landing/hero-poster.jpg"
+           data-scrub-src="<?= $_bp ?>/videos/od9-hero-scrub.mp4?v=<?= @filemtime(__DIR__ . '/videos/od9-hero-scrub.mp4') ?: '1' ?>">
       <source src="<?= $_bp ?>/videos/od9-hero.mp4" type="video/mp4">
     </video>
     <div class="hero-scrim"></div>
@@ -170,7 +229,21 @@ $page_og_description = 'You are not crazy. You are awake. This is where the ones
     <div class="wrap">
       <div class="hero-inner stagger">
         <p class="kicker">Off Da Nine &nbsp;//&nbsp; A signal from the real world</p>
-        <h1>Grow up before we blow up.</h1>
+        <h1 id="heroH1" aria-label="Grow up before we blow up."><?php
+          /* per-char spans so the headline can fold under scrub mode; renders
+             identically when .scrub never engages */
+          $aw_ci = 0;
+          $aw_words = ['Grow', 'up', 'before', 'we', 'blow', 'up.'];
+          foreach ($aw_words as $aw_wi => $aw_w) {
+              echo '<span class="w" aria-hidden="true">';
+              foreach (str_split($aw_w) as $aw_ch) {
+                  printf('<span class="ch" style="--i:%.3f">%s</span>', $aw_ci * 0.012, $aw_ch);
+                  $aw_ci++;
+              }
+              echo '</span>';
+              if ($aw_wi < count($aw_words) - 1) { echo ' '; }
+          }
+        ?></h1>
         <p class="hero-sub lede">You've felt it your whole life — the splinter in your mind that says something is deeply, structurally <em>wrong</em> with the world, and almost nobody around you notices. You're not crazy. You're awake.</p>
         <div class="cta-row">
           <a class="btn btn-primary" href="https://offda9.com" rel="noopener">Enter the real world <span class="arrow">&rarr;</span></a>
@@ -178,7 +251,9 @@ $page_og_description = 'You are not crazy. You are awake. This is where the ones
         </div>
       </div>
     </div>
+    <div class="hero-cue" id="heroCue" aria-hidden="true"><span>Scroll</span><span class="vee"></span></div>
   </section>
+  </div>
 
   <section class="band stakes">
     <div class="wrap stakes-grid">
@@ -239,6 +314,29 @@ $page_og_description = 'You are not crazy. You are awake. This is where the ones
       <p class="body rise">Where the ones who unplugged stop complaining about the machine and start building the way out — a community engineering humanity's path to a <strong>Type-1 civilization:</strong> one that can finally coordinate to solve what's killing us instead of pretending it isn't happening. You don't just watch here. You <strong>ASCEND</strong> — leveling from <em>seeing</em> the crisis to <em>building</em> the fix.</p>
       <div class="creed rise">
         <span class="chip">No woo</span><span class="chip">No doom</span><span class="chip">Every claim sourced</span><span class="chip">You progress, you build</span>
+      </div>
+    </div>
+  </section>
+
+  <?php /* Five-zones teaser — canon zone names (PROGRESSION_WORLD_SPEC §2),
+           tier colors = the official od9.css --t-* tokens; links the zones
+           scroll experience so the funnel reads awaken -> zones -> join. */ ?>
+  <section class="band band--line zones-tease">
+    <div class="wrap">
+      <div class="rise">
+        <div class="eyebrow-row"><span class="rule"></span><p class="kicker">The world</p></div>
+        <h2>Five zones. <span class="blue">One climb.</span></h2>
+        <p class="body">ASCEND renders progression as a world — every tier is a place, and the Gate at the end of each one checks real work. No shortcuts. No purchased rank.</p>
+      </div>
+      <div class="zline stagger">
+        <span class="zstop" style="--zc:var(--t-observer)"><b>The Wake</b><i>Observer</i></span>
+        <span class="zstop" style="--zc:var(--t-theorist)"><b>The Diagnostic</b><i>Theorist</i></span>
+        <span class="zstop" style="--zc:var(--t-architect)"><b>The Forge</b><i>Architect</i></span>
+        <span class="zstop" style="--zc:var(--t-pioneer)"><b>The Bridge</b><i>Pioneer</i></span>
+        <span class="zstop" style="--zc:var(--t-benefactor)"><b>The Horizon</b><i>Benefactor</i></span>
+      </div>
+      <div class="rise" style="margin-top:2.2rem">
+        <a class="btn btn-primary" href="<?= $_bp ?>/zones.php">Walk the Five Zones <span class="arrow">&rarr;</span></a>
       </div>
     </div>
   </section>
@@ -355,6 +453,79 @@ $page_og_description = 'You are not crazy. You are awake. This is where the ones
   if(!('IntersectionObserver'in window)){els.forEach(function(e){e.classList.add('in')});return;}
   var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.16,rootMargin:'0px 0px -8% 0px'});
   els.forEach(function(e){io.observe(e)});
+})();
+(function(){
+  /* Scroll-scrub hero mechanics — runs only when the synchronous gate set
+     body.scrub (capable desktops). Fail-open: any scrub-video error restores
+     the original autoplay loop and removes scrub mode entirely. Duration is
+     read LIVE each frame (a loadedmetadata listener can attach after the
+     event on fast connections — cached 0 = silently dead scrub). MINIFY-SAFE:
+     block comments only; every statement semicolon-terminated. */
+  var body = document.body;
+  if (body.className.indexOf('scrub') === -1) { return; }
+  var track = document.getElementById('heroTrack');
+  var vid = document.getElementById('heroVid');
+  var cue = document.getElementById('heroCue');
+  var hero = track ? track.querySelector('.hero') : null;
+  if (!track || !vid || !hero) { return; }
+  var last = -1, unlocked = false;
+
+  function unscrub(){
+    body.className = body.className.replace(/\s*\bscrub\b/, '');
+    try {
+      vid.removeAttribute('src');
+      vid.setAttribute('autoplay', '');
+      vid.setAttribute('loop', '');
+      vid.load();
+      var p = vid.play();
+      if (p && p.catch) { p.catch(function(){}); }
+    } catch (e) {}
+  }
+  vid.addEventListener('error', unscrub);
+
+  vid.removeAttribute('autoplay');
+  vid.removeAttribute('loop');
+  try { vid.pause(); } catch (e) {}
+  vid.src = vid.getAttribute('data-scrub-src') || '';
+  try { vid.load(); } catch (e) {}
+
+  function unlock(){
+    if (unlocked) { return; }
+    unlocked = true;
+    var p = vid.play();
+    if (p && p.then) { p.then(function(){ vid.pause(); }).catch(function(){}); }
+  }
+  window.addEventListener('touchstart', unlock, { once: true, passive: true });
+  window.addEventListener('scroll',     unlock, { once: true, passive: true });
+
+  function getDur(){
+    var d = vid.duration;
+    return (typeof d === 'number' && isFinite(d) && d > 0) ? d : 0;
+  }
+  function prog(){
+    var r = track.getBoundingClientRect();
+    var total = r.height - window.innerHeight;
+    var p = total > 0 ? (-r.top) / total : 0;
+    return p < 0 ? 0 : (p > 1 ? 1 : p);
+  }
+  function frame(){
+    if (body.className.indexOf('scrub') === -1) { return; }
+    var p = prog();
+    if (Math.abs(p - last) > 0.0004) {
+      last = p;
+      var dur = getDur();
+      if (dur > 0 && vid.readyState > 1) {
+        var t = p * Math.max(0, dur - 0.05);
+        if (Math.abs((vid.currentTime || 0) - t) > 0.02) {
+          try { vid.currentTime = t; } catch (e) {}
+        }
+      }
+      hero.style.setProperty('--p', p.toFixed(4));
+      if (cue) { cue.classList.toggle('off', p > 0.04); }
+    }
+    window.requestAnimationFrame(frame);
+  }
+  window.requestAnimationFrame(frame);
 })();
 </script>
 </body>

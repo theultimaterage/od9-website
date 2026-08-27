@@ -230,9 +230,47 @@ body{background:var(--carbon);background-image:linear-gradient(45deg,#111 25%,tr
     text-shadow: var(--glow);
 }
 
-.hero h1 span {
+/* the blue accent rides the marked chars (h1 is span-split for the scrub
+   fold; a bare `h1 span` rule would paint the whole wordmark blue) */
+.hero h1 .ch[data-b] {
     color: var(--primary-blue);
 }
+
+/* ---- scroll-scrub hero (JS adds body.scrub on capable desktops ONLY:
+   >=760px + motion-ok + no data-saver. Without .scrub the stage layers stay
+   display:none, the video src is never set (zero extra bytes fetched), and
+   the hero is exactly the shipped brand hero.) ---- */
+.hero-track{position:relative}
+.scrub .hero-track{height:200vh}
+.scrub .hero{position:sticky;top:var(--nav-height);height:calc(100vh - var(--nav-height));min-height:0}
+.hero-still,.hero-bgvid,.hero-veil{display:none}
+.scrub .hero-still{display:block;position:absolute;inset:0;z-index:0;background:url('images/landing/hero-poster.jpg') center/cover no-repeat}
+.scrub .hero-bgvid{display:block;position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover}
+.scrub.ix-dead .hero-bgvid{display:none}
+.scrub .hero-veil{display:block;position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(13,13,13,.62),rgba(13,13,13,.3) 42%,rgba(13,13,13,.86))}
+.hero h1 .w{display:inline-block;white-space:nowrap;transform-style:preserve-3d}
+.hero h1 .ch{display:inline-block}
+.scrub .hero h1{perspective:640px}
+.scrub .hero h1 .ch{transform-origin:50% 100%;
+  --k:clamp(0, calc((var(--p,0) - var(--i,0)) * 4), 1);
+  transform:rotateX(calc(var(--k) * -86deg)) translateY(calc(var(--k) * .14em));
+  opacity:calc(1 - var(--k) * .95)}
+.scrub .hero-content{opacity:calc(1 - clamp(0, (var(--p,0) - .55) * 2.8, 1))}
+.ix-cue{display:none}
+.scrub .ix-cue{position:absolute;left:50%;bottom:1.2rem;transform:translateX(-50%);z-index:2;
+  display:flex;flex-direction:column;align-items:center;gap:.4rem;color:#888;
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.68rem;letter-spacing:.34em;text-transform:uppercase;
+  transition:opacity .4s ease}
+.scrub .ix-cue.off{opacity:0}
+.scrub .ix-cue .vee{width:11px;height:11px;border-right:2px solid var(--primary-blue);border-bottom:2px solid var(--primary-blue);
+  transform:rotate(45deg);animation:ixBob 1.6s ease-in-out infinite}
+@keyframes ixBob{0%,100%{transform:rotate(45deg) translate(0,0);opacity:.9}50%{transform:rotate(45deg) translate(4px,4px);opacity:.45}}
+
+/* ---- scroll reveals (classes applied BY JS — no-JS renders everything
+   visible; od9.css reduced-motion kill neutralizes the transitions) ---- */
+.rise{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.rise.in{opacity:1;transform:none}
+.rise.d1{transition-delay:.08s}.rise.d2{transition-delay:.16s}.rise.d3{transition-delay:.24s}.rise.d4{transition-delay:.32s}
 
 .hero-tagline {
     font-family: 'Rajdhani', sans-serif;
@@ -477,11 +515,47 @@ body{background:var(--carbon);background-image:linear-gradient(45deg,#111 25%,tr
 <body>
 <?php $current_page = 'index'; include('includes/nav.php'); ?>
 
+<script>
+(function(){
+  /* Scrub-mode gate — synchronous so the sticky hero lays out before first
+     paint. Capable desktops only; everyone else gets the shipped brand hero
+     with zero extra bytes. MINIFY-SAFE: block comments, semicolons. */
+  try {
+    var mm = window.matchMedia;
+    var ok = !!mm && mm('(min-width: 760px)').matches && !mm('(prefers-reduced-motion: reduce)').matches;
+    var c = navigator.connection;
+    if (c && c.saveData) { ok = false; }
+    if (ok) { document.body.className += ' scrub'; }
+  } catch (e) {}
+})();
+</script>
 <!-- Hero Section -->
+<div class="hero-track" id="ixTrack">
 <section class="hero">
+    <div class="hero-still" aria-hidden="true"></div>
+    <?php /* no src in markup — JS sets it ONLY in scrub mode, so non-scrub
+             visitors never fetch the 5.3MB scrub asset */ ?>
+    <video class="hero-bgvid" id="ixVid" muted playsinline preload="none" aria-hidden="true"
+           poster="images/landing/hero-poster.jpg"
+           data-scrub-src="videos/od9-hero-scrub.mp4?v=<?= @filemtime(__DIR__ . '/videos/od9-hero-scrub.mp4') ?: '1' ?>"></video>
+    <div class="hero-veil" aria-hidden="true"></div>
     <div class="hero-content">
         <video src="images/logos/od9-animated-logo.mp4" class="hero-logo" autoplay loop muted playsinline></video>
-        <h1>OFF DA <span>NINE</span></h1>
+        <h1 id="ixH1" aria-label="OFF DA NINE"><?php
+            /* per-char spans so the wordmark folds under scrub; renders
+               identically when scrub never engages (NINE keeps its blue) */
+            $ix_ci = 0;
+            foreach ([['OFF', ''], ['DA', ''], ['NINE', 'b']] as $ix_wi => $ix_w) {
+                echo '<span class="w" aria-hidden="true">';
+                foreach (str_split($ix_w[0]) as $ix_ch) {
+                    printf('<span class="ch"%s style="--i:%.3f">%s</span>',
+                        $ix_w[1] === 'b' ? ' data-b="1"' : '', $ix_ci * 0.03, $ix_ch);
+                    $ix_ci++;
+                }
+                echo '</span>';
+                if ($ix_wi < 2) { echo ' '; }
+            }
+        ?></h1>
         <p class="hero-tagline">Advancing Humanity Toward Type I Civilization</p>
         <p class="hero-description">
             A framework for accelerating human progress through STEAM optimization,
@@ -500,7 +574,9 @@ body{background:var(--carbon);background-image:linear-gradient(45deg,#111 25%,tr
             </a>
         </div>
     </div>
+    <div class="ix-cue" id="ixCue" aria-hidden="true"><span>Scroll</span><span class="vee"></span></div>
 </section>
+</div>
 
 <!-- Cold-Traffic Scaffolding: What is OD9, in plain language -->
 <section style="padding:4rem 2rem;border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a;background:linear-gradient(180deg,transparent,rgba(0,191,255,0.025))">
@@ -608,6 +684,86 @@ body{background:var(--carbon);background-image:linear-gradient(45deg,#111 25%,tr
 
 
 
+<script>
+(function(){
+  /* Scroll reveals — classes applied BY JS so no-JS renders everything
+     visible (fail-open). MINIFY-SAFE: block comments, semicolons. */
+  var targets = [].slice.call(document.querySelectorAll(
+    '.feature-card, .tiers-preview .tier-card, .cta, .section-title, .section-subtitle'));
+  targets.forEach(function(el, i){
+    el.classList.add('rise');
+    var d = i % 5;
+    if (d > 0) { el.classList.add('d' + Math.min(d, 4)); }
+  });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(en){
+      en.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.16, rootMargin: '0px 0px -8% 0px' });
+    targets.forEach(function(el){ io.observe(el); });
+  } else {
+    targets.forEach(function(el){ el.classList.add('in'); });
+  }
+})();
+(function(){
+  /* Scroll-scrub hero mechanics — only when the synchronous gate set
+     body.scrub. Src is set HERE so non-scrub visitors never fetch the asset.
+     Fail-open: video error drops scrub visuals back to the brand hero.
+     Duration read LIVE each frame (attach-after-event race). */
+  var body = document.body;
+  if (body.className.indexOf('scrub') === -1) { return; }
+  var track = document.getElementById('ixTrack');
+  var vid = document.getElementById('ixVid');
+  var hero = track ? track.querySelector('.hero') : null;
+  var cue = document.getElementById('ixCue');
+  if (!track || !vid || !hero) { return; }
+  var last = -1, unlocked = false;
+
+  function dead(){ body.className += ' ix-dead'; }
+  vid.addEventListener('error', dead);
+  vid.src = vid.getAttribute('data-scrub-src') || '';
+  vid.preload = 'auto';
+  try { vid.load(); } catch (e) {}
+
+  function unlock(){
+    if (unlocked) { return; }
+    unlocked = true;
+    var p = vid.play();
+    if (p && p.then) { p.then(function(){ vid.pause(); }).catch(function(){}); }
+  }
+  window.addEventListener('touchstart', unlock, { once: true, passive: true });
+  window.addEventListener('scroll',     unlock, { once: true, passive: true });
+
+  function getDur(){
+    var d = vid.duration;
+    return (typeof d === 'number' && isFinite(d) && d > 0) ? d : 0;
+  }
+  function prog(){
+    var r = track.getBoundingClientRect();
+    var total = r.height - window.innerHeight;
+    var p = total > 0 ? (-r.top) / total : 0;
+    return p < 0 ? 0 : (p > 1 ? 1 : p);
+  }
+  function frame(){
+    var p = prog();
+    if (Math.abs(p - last) > 0.0004) {
+      last = p;
+      var dur = getDur();
+      if (dur > 0 && vid.readyState > 1) {
+        var t = p * Math.max(0, dur - 0.05);
+        if (Math.abs((vid.currentTime || 0) - t) > 0.02) {
+          try { vid.currentTime = t; } catch (e) {}
+        }
+      }
+      hero.style.setProperty('--p', p.toFixed(4));
+      if (cue) { cue.classList.toggle('off', p > 0.04); }
+    }
+    window.requestAnimationFrame(frame);
+  }
+  window.requestAnimationFrame(frame);
+})();
+</script>
 <?php include('includes/footer.php'); ?>
 </body>
 </html>
