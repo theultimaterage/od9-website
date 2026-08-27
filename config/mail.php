@@ -2,14 +2,19 @@
 /**
  * OD9 Mail Configuration — environment-aware.
  *
- *  - PROD: authenticated SMTP via the host mailserver (noreply@offda9.com),
- *    which DKIM-signs outbound with offda9.com's published key. Falls back to
- *    PHP mail() only if SMTP creds are absent.
- *  - LOCAL (XAMPP): Mailtrap Sandbox HTTP API — captures mail without delivering.
+ *  - PROD: F.R.E.S.H. platform (Brevo) primary, then authenticated SMTP via the
+ *    host mailserver (noreply@offda9.com, DKIM-signed by exim), then PHP mail()
+ *    as last resort. (The platform route is enabled in config/platform.config.php
+ *    and handled in includes/mail.php; the SMTP fallback uses the creds below.)
+ *  - LOCAL (XAMPP): the 'file' sink — writes the rendered .eml to logs/mail-outbox/
+ *    instead of sending. No external service, no quota, no network hang; inspect
+ *    captured mail on disk (logs/mail-outbox/_latest.eml is always the newest).
+ *    This REPLACED the Mailtrap sandbox (2026-06-26): its free-tier cap kept being
+ *    exhausted by smoke runs, and an over-quota Mailtrap hung the deploy gate.
  *
- * Secrets (SMTP password, Mailtrap token) live in the gitignored sibling
- * config/mail.config.php (see config/mail.config.example.php). On prod that file
- * must be mode 600 + owner offda9:offda9.
+ * Secrets (the SMTP password) live in the gitignored sibling config/mail.config.php
+ * (see config/mail.config.example.php). On prod that file must be mode 600 +
+ * owner offda9:offda9.
  */
 
 $_od9_mail_is_local = (
@@ -22,7 +27,7 @@ define('MAIL_FROM_EMAIL', 'noreply@offda9.com');
 define('MAIL_FROM_NAME',  'The OD9 Movement');
 define('MAIL_REPLY_TO',   'contact@offda9.com');
 
-// Load secrets (defines SMTP_* and/or MAILTRAP_* if present).
+// Load secrets (defines SMTP_* if present).
 $_secretsPath = __DIR__ . '/mail.config.php';
 if (file_exists($_secretsPath)) {
     require $_secretsPath;
@@ -35,9 +40,5 @@ $_hasSmtp = defined('SMTP_USER') && SMTP_USER !== ''
 
 define('MAIL_ENVIRONMENT', $_od9_mail_is_local ? 'local' : 'production');
 define('MAIL_DRIVER',
-    $_od9_mail_is_local ? 'mailtrap_sandbox'
+    $_od9_mail_is_local ? 'file'
                         : ($_hasSmtp ? 'smtp' : 'mail_function'));
-
-if (MAIL_DRIVER === 'mailtrap_sandbox') {
-    define('MAILTRAP_API_BASE', 'https://sandbox.api.mailtrap.io/api/send');
-}
