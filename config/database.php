@@ -31,20 +31,17 @@ if ($_od9_is_local) {
     define('DB_PASS', '');
     define('DB_PORT', 3306);
 } else {
-    // Production cPanel — credentials live in the gitignored sibling
-    // config/database.config.php (see config/database.config.example.php).
-    // Rotate the MySQL password in cPanel, then update that file + redeploy.
-    $_prodDb = __DIR__ . '/database.config.php';
-    if (!is_file($_prodDb)) {
-        error_log('[database.php] production config/database.config.php missing');
-        throw new RuntimeException('Database configuration missing on production');
-    }
-    $_db = require $_prodDb;
-    define('DB_HOST', $_db['host'] ?? 'localhost');
-    define('DB_NAME', $_db['name'] ?? 'offda9_od9_tickets');
-    define('DB_USER', $_db['user'] ?? '');
-    define('DB_PASS', $_db['pass'] ?? '');
-    define('DB_PORT', (int)($_db['port'] ?? 3306));
+    // Production cPanel. The LIVE password is NOT here — it lives in the OUTER
+    // config (/home/offda9/config/database.php, above the webroot, gitignored),
+    // which me.php / the dashboard / patron_gate resolve FIRST. This repo-tracked
+    // inner/fallback copy must NEVER hold a literal credential — it reads from the
+    // environment. (Was a hardcoded stale password: the 2026-06-13 tier-drift bug,
+    // and the reason scripts/scan_secrets.py now blocks this class at commit time.)
+    define('DB_HOST', 'localhost');
+    define('DB_NAME', 'offda9_od9_tickets');
+    define('DB_USER', 'offda9_od9admin');
+    define('DB_PASS', getenv('OD9_DB_PASS') ?: '');
+    define('DB_PORT', 3306);
 }
 
 define('DB_CHARSET', 'utf8mb4');

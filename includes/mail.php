@@ -9,7 +9,8 @@
  *                                  with offda9.com's published key. Sends a
  *                                  multipart/alternative body (text + html) and
  *                                  a List-Unsubscribe header.
- *   - 'mailtrap_sandbox' (local): POST to Mailtrap Sandbox HTTP API (capture).
+ *   - 'file'             (local): write the rendered .eml to logs/mail-outbox/
+ *                                  (capture only — no send, no quota, no network).
  *   - 'mail_function'    (fallback): PHP mail() / exim.
  *
  * Secrets live in config/mail.config.php (gitignored, mode 600 on prod).
@@ -37,12 +38,45 @@ function od9_send_mail(string $to, string $subject, string $html, array $opts = 
     $listUnsub  = $opts['list_unsubscribe'] ?? null;
     $extra      = $opts['headers'] ?? [];
 
+    // ---- Platform-primary route (transitional cutover, 2026-06-14) ----
+    // Send the fully-rendered, already-branded HTML through the F.R.E.S.H. platform
+    // engine via the 'passthrough' template (echoes body_html verbatim — no double
+    // shell), so EVERY OD9 sender is centralized in the platform email_queue with a
+    // single change here (zero per-sender surgery). Tracking is OFF until the
+    // per-tenant tracking domain is aligned to offda9.com — otherwise Gmail silently
+    // drops the freshthaplatform.com link/pixel mismatch (proven 2026-06-14). ANY
+    // failure falls through to the SMTP/transport driver below, so a platform hiccup
+    // never drops mail mid-cutover. Enabled by MAIL_USE_PLATFORM in
+    // config/platform.config.php (loaded by platform_mail.php); absent locally =>
+    // skipped, so dev keeps using Mailtrap. Pass $opts['_no_platform']=true to force
+    // the legacy path for one send.
+    if (empty($opts['_no_platform'])) {
+        $_pm = __DIR__ . '/platform_mail.php';
+        if (is_file($_pm)) {
+            require_once $_pm;
+            if (defined('MAIL_USE_PLATFORM') && MAIL_USE_PLATFORM
+                && function_exists('od9_send_via_platform')) {
+                $_r = od9_send_via_platform($to, $subject, $html, [
+                    'template' => 'passthrough',
+                    'track'    => true,   // ON via offda9.com/t/ tracking domain (2026-06-14)
+                    'title'    => $opts['title'] ?? $subject,
+                ]);
+                if (!empty($_r['success'])) {
+                    return true;
+                }
+                error_log('[od9_send_mail] platform route failed (to=' . $to
+                    . ', http=' . ($_r['http'] ?? '?') . ', err=' . ($_r['error'] ?? '?')
+                    . ') — falling back to ' . (defined('MAIL_DRIVER') ? MAIL_DRIVER : 'mail_function'));
+            }
+        }
+    }
+
     $driver = defined('MAIL_DRIVER') ? MAIL_DRIVER : 'mail_function';
     switch ($driver) {
         case 'smtp':
             return _od9_mail_via_smtp($to, $subject, $html, $text, $from_email, $from_name, $reply_to, $listUnsub, $extra);
-        case 'mailtrap_sandbox':
-            return _od9_mail_via_mailtrap($to, $subject, $html, $from_email, $from_name, $reply_to, $listUnsub, $extra);
+        case 'file':
+            return _od9_mail_via_file($to, $subject, $html, $text, $from_email, $from_name, $reply_to, $listUnsub, $extra);
         default:
             return _od9_mail_via_mailfunc($to, $subject, $html, $text, $from_email, $from_name, $reply_to, $listUnsub, $extra);
     }
@@ -189,41 +223,28 @@ function _od9_mail_via_smtp(string $to, string $subject, string $html, string $t
 }
 
 
-/** Mailtrap Sandbox HTTP API (local capture only — never delivers). */
-function _od9_mail_via_mailtrap(string $to, string $subject, string $html,
-                               string $from_email, string $from_name,
-                               ?string $reply_to, ?string $listUnsub, array $extra): bool
+/** Local dev sink — write the fully rendered .eml to logs/mail-outbox/ instead of
+ *  sending. No external service, no quota, no network hang; the captured message is
+ *  inspectable on disk (and `_latest.eml` always points at the newest, which the
+ *  smoke test reads to verify the email actually rendered). Replaced the Mailtrap
+ *  sandbox driver 2026-06-26. */
+function _od9_mail_via_file(string $to, string $subject, string $html, string $text,
+                           string $from_email, string $from_name, string $reply_to,
+                           ?string $listUnsub, array $extra): bool
 {
-    if (!defined('MAILTRAP_INBOX_ID') || !defined('MAILTRAP_API_TOKEN')
-        || MAILTRAP_INBOX_ID === 'REPLACE_WITH_INBOX_ID' || MAILTRAP_API_TOKEN === 'REPLACE_WITH_API_TOKEN') {
-        error_log('[od9_send_mail] mailtrap config missing — install config/mail.config.php');
+    $dir = __DIR__ . '/../logs/mail-outbox';
+    if (!is_dir($dir) && !@mkdir($dir, 0775, true) && !is_dir($dir)) {
+        error_log("[od9_send_mail] file-sink: cannot create {$dir}");
         return false;
     }
-    $headers = $extra;
-    if ($reply_to)  $headers['Reply-To'] = $reply_to;
-    if ($listUnsub) $headers['List-Unsubscribe'] = $listUnsub;
-    $payload = [
-        'from'    => ['email' => $from_email, 'name' => $from_name],
-        'to'      => [['email' => $to]],
-        'subject' => $subject,
-        'html'    => $html,
-        'text'    => od9_html_to_text($html),
-    ];
-    if ($headers) $payload['headers'] = $headers;
-    $ch = curl_init(MAILTRAP_API_BASE . '/' . MAILTRAP_INBOX_ID);
-    curl_setopt_array($ch, [
-        CURLOPT_POST           => true,
-        CURLOPT_POSTFIELDS     => json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HTTPHEADER     => ['Authorization: Bearer ' . MAILTRAP_API_TOKEN, 'Content-Type: application/json'],
-        CURLOPT_TIMEOUT        => 10,
-    ]);
-    $resp = curl_exec($ch);
-    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    if ($code >= 200 && $code < 300) return true;
-    error_log("[od9_send_mail] mailtrap send failed: HTTP {$code} — " . substr((string) $resp, 0, 300));
-    return false;
+    $msg = _od9_build_message($to, $subject, $html, $text, $from_email, $from_name, $reply_to, $listUnsub, $extra);
+    $safeTo = preg_replace('/[^A-Za-z0-9._@-]/', '_', $to);
+    $file = $dir . '/' . date('Ymd-His') . '-' . substr(bin2hex(random_bytes(4)), 0, 6) . '-' . $safeTo . '.eml';
+    $ok = @file_put_contents($file, $msg) !== false;
+    @file_put_contents($dir . '/_latest.eml', $msg);   // deterministic pointer for the smoke test
+    error_log($ok ? "[od9_send_mail] file-sink wrote {$file}"
+                  : "[od9_send_mail] file-sink FAILED to write {$file}");
+    return $ok;
 }
 
 
