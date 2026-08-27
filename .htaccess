@@ -40,6 +40,13 @@ RewriteRule ^join$ join.php [L,QSA]
 # Clean URL: /subscribe -> subscribe.php (API endpoint)
 RewriteRule ^subscribe$ subscribe.php [L,QSA]
 
+# Clean URL: /atlas -> atlas.php (the living manifesto map)
+# An internal rewrite, not a redirect, so the clean URL stays in the address
+# bar and QSA preserves ?live=1 (the follow-along door fired by go-live
+# announces). Added 2026-08-22 after the bare /atlas 404'd in a published
+# YouTube description.
+RewriteRule ^atlas$ atlas.php [L,QSA]
+
 # php -- BEGIN cPanel-generated handler, do not edit
 # Set the “ea-php82” package as the default “PHP” programming language.
 <IfModule mime_module>
