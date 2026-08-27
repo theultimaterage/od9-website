@@ -134,7 +134,7 @@ if (!function_exists('od9_platform_email_post')) {
         $resp = curl_exec($ch);
         $code = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         $err  = curl_error($ch);
-        curl_close($ch);
+        unset($ch); // curl_close() deprecated on PHP 8.5 (no-op since 8.0)
 
         if ($resp === false) {
             $r = ['success' => false, 'http' => $code, 'error' => "curl: {$err}"];
