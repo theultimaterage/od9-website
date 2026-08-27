@@ -93,15 +93,96 @@ h1{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#fff;text-align:cent
 .cta p{color:#888;margin-bottom:1.25rem;font-size:0.95rem}
 .btn{display:inline-block;background:linear-gradient(135deg,var(--primary-blue),var(--electric-blue));color:var(--carbon);padding:0.8rem 2rem;border-radius:4px;text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:2px;transition:all 0.3s}
 .btn:hover{transform:translateY(-3px);box-shadow:var(--glow)}
+
+/* ---- compact scrub header (JS adds body.scrub on capable desktops only:
+   the five-zones flythrough scrubs behind the title on a short 150vh track.
+   Non-scrub (mobile / no-JS / reduced-motion): a static gradient header —
+   the video layers stay display:none and the src is never set. ---- */
+.tz-track{position:relative}
+.scrub .tz-track{height:150vh}
+.tz-hero{position:relative;overflow:hidden;isolation:isolate;display:flex;align-items:flex-end;justify-content:center;
+  min-height:38vh;padding:3.2rem 2rem 2rem;text-align:center;
+  background:linear-gradient(180deg,rgba(0,191,255,.07),transparent 65%),var(--carbon-dark)}
+.scrub .tz-hero{position:sticky;top:var(--nav-height);height:calc(100vh - var(--nav-height));min-height:0;align-items:center}
+.tz-still,.tz-vid,.tz-veil{display:none}
+.scrub .tz-still{display:block;position:absolute;inset:0;z-index:-3;background:url('video/zones/five-zones-scrub.jpg') center/cover no-repeat}
+.scrub .tz-vid{display:block;position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover}
+.scrub.tz-dead .tz-vid{display:none}
+.scrub .tz-veil{display:block;position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(13,13,13,.6),rgba(13,13,13,.28) 42%,rgba(13,13,13,.9))}
+.tz-inner{max-width:1000px;width:100%}
+.tz-hero h1 .w{display:inline-block;white-space:nowrap;transform-style:preserve-3d}
+.tz-hero h1 .ch{display:inline-block}
+.scrub .tz-hero h1{perspective:640px;font-size:clamp(2.6rem,6vw,4.4rem)}
+.scrub .tz-hero h1 .ch{transform-origin:50% 100%;
+  --k:clamp(0, calc((var(--p,0) - var(--i,0)) * 4), 1);
+  transform:rotateX(calc(var(--k) * -86deg)) translateY(calc(var(--k) * .14em));
+  opacity:calc(1 - var(--k) * .95)}
+.scrub .tz-hero .subtitle{opacity:calc(1 - clamp(0, var(--p,0) * 4.5, 1))}
+.tz-cue{display:none}
+.scrub .tz-cue{position:absolute;left:50%;bottom:1.1rem;transform:translateX(-50%);z-index:2;
+  display:flex;flex-direction:column;align-items:center;gap:.4rem;color:#888;
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.68rem;letter-spacing:.34em;text-transform:uppercase;
+  transition:opacity .4s ease}
+.scrub .tz-cue.off{opacity:0}
+.scrub .tz-cue .vee{width:11px;height:11px;border-right:2px solid var(--primary-blue);border-bottom:2px solid var(--primary-blue);
+  transform:rotate(45deg);animation:tzBob 1.6s ease-in-out infinite}
+@keyframes tzBob{0%,100%{transform:rotate(45deg) translate(0,0);opacity:.9}50%{transform:rotate(45deg) translate(4px,4px);opacity:.45}}
+
+/* scroll reveals — classes applied BY JS (no-JS renders everything visible) */
+.rise{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.rise.in{opacity:1;transform:none}
+.rise.d1{transition-delay:.08s}.rise.d2{transition-delay:.16s}.rise.d3{transition-delay:.24s}.rise.d4{transition-delay:.32s}
 @media(max-width:768px){.detail-grid,.credit-grid{grid-template-columns:1fr}.rubric{grid-template-columns:repeat(2,1fr)}.tier-flow{flex-direction:column}.tier-flow .arrow{transform:rotate(90deg)}}
 </style>
 </head>
 <body>
 <?php $current_page = 'tiers'; include('includes/nav.php'); ?>
+<script>
+(function(){
+  /* Scrub-mode gate — synchronous, capable desktops only; everyone else gets
+     the static header with zero extra bytes. MINIFY-SAFE: block comments. */
+  try {
+    var mm = window.matchMedia;
+    var ok = !!mm && mm('(min-width: 760px)').matches && !mm('(prefers-reduced-motion: reduce)').matches;
+    var c = navigator.connection;
+    if (c && c.saveData) { ok = false; }
+    if (ok) { document.body.className += ' scrub'; }
+  } catch (e) {}
+})();
+</script>
+
+<div class="tz-track" id="tzTrack">
+<header class="tz-hero">
+  <div class="tz-still" aria-hidden="true"></div>
+  <?php /* no src in markup — JS sets it ONLY in scrub mode (the five-zones
+           asset already serves for zones.php; browsers that walked the zones
+           have it cached) */ ?>
+  <video class="tz-vid" id="tzVid" muted playsinline preload="none" aria-hidden="true"
+         poster="video/zones/five-zones-scrub.jpg"
+         data-scrub-src="video/zones/five-zones-scrub.mp4?v=<?= @filemtime(__DIR__ . '/video/zones/five-zones-scrub.mp4') ?: '1' ?>"></video>
+  <div class="tz-veil" aria-hidden="true"></div>
+  <div class="tz-inner">
+    <h1 id="tzH1" aria-label="PROGRESSION TIERS"><?php
+      /* per-char spans for the scrub fold; identical render when static */
+      $tz_ci = 0;
+      foreach (['PROGRESSION', 'TIERS'] as $tz_wi => $tz_w) {
+          echo '<span class="w" aria-hidden="true">';
+          foreach (str_split($tz_w) as $tz_ch) {
+              printf('<span class="ch" style="--i:%.3f">%s</span>', $tz_ci * 0.022, $tz_ch);
+              $tz_ci++;
+          }
+          echo '</span>';
+          if ($tz_wi === 0) { echo ' '; }
+      }
+    ?></h1>
+    <p class="subtitle">The Path from Understanding to Action</p>
+  </div>
+  <div class="tz-cue" id="tzCue" aria-hidden="true"><span>Scroll</span><span class="vee"></span></div>
+</header>
+</div>
 
 <div class="container">
-<h1>PROGRESSION TIERS</h1>
-<p class="subtitle">The Path from Understanding to Action</p>
 <p class="intro">OD9 uses a credit-based progression system designed to build genuine understanding, not just surface engagement. Each tier represents a deeper level of capability in solving coordination problems at civilizational scale.</p>
 
 <div class="tier-flow">
@@ -288,11 +369,90 @@ h1{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#fff;text-align:cent
 <h3>Ready to Begin?</h3>
 <p>Join the Discord, start as an Observer, and begin understanding why coordination is humanity's bottleneck.</p>
 <a href="https://discord.gg/spgmrXVMWq" target="_blank" class="btn"><i class="fab fa-discord"></i> Join Discord</a>
+<a href="zones.php" class="btn" style="margin-left:.6rem;background:transparent;color:var(--primary-blue);border:1px solid var(--primary-blue)">Walk the Five Zones</a>
 </div>
 </div>
 
 <?php include('includes/footer.php'); ?>
 <script>function toggleTier(header){header.parentElement.classList.toggle('open')}</script>
+<script>
+(function(){
+  /* Scroll reveals — JS-applied so no-JS renders everything visible. */
+  var targets = [].slice.call(document.querySelectorAll(
+    '.tier-flow, .tier-card, .credit-section, .rubric-item, .cta'));
+  targets.forEach(function(el, i){
+    el.classList.add('rise');
+    var d = i % 5;
+    if (d > 0) { el.classList.add('d' + Math.min(d, 4)); }
+  });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(en){
+      en.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    targets.forEach(function(el){ io.observe(el); });
+  } else {
+    targets.forEach(function(el){ el.classList.add('in'); });
+  }
+})();
+(function(){
+  /* Compact scrub-header mechanics — scrub mode only; src set here so
+     non-scrub visitors never fetch the asset. Fail-open to the static
+     header. Duration read LIVE each frame (attach-after-event race). */
+  var body = document.body;
+  if (body.className.indexOf('scrub') === -1) { return; }
+  var track = document.getElementById('tzTrack');
+  var vid = document.getElementById('tzVid');
+  var hero = track ? track.querySelector('.tz-hero') : null;
+  var cue = document.getElementById('tzCue');
+  if (!track || !vid || !hero) { return; }
+  var last = -1, unlocked = false;
+
+  function dead(){ body.className += ' tz-dead'; }
+  vid.addEventListener('error', dead);
+  vid.src = vid.getAttribute('data-scrub-src') || '';
+  vid.preload = 'auto';
+  try { vid.load(); } catch (e) {}
+
+  function unlock(){
+    if (unlocked) { return; }
+    unlocked = true;
+    var p = vid.play();
+    if (p && p.then) { p.then(function(){ vid.pause(); }).catch(function(){}); }
+  }
+  window.addEventListener('touchstart', unlock, { once: true, passive: true });
+  window.addEventListener('scroll',     unlock, { once: true, passive: true });
+
+  function getDur(){
+    var d = vid.duration;
+    return (typeof d === 'number' && isFinite(d) && d > 0) ? d : 0;
+  }
+  function prog(){
+    var r = track.getBoundingClientRect();
+    var total = r.height - window.innerHeight;
+    var p = total > 0 ? (-r.top) / total : 0;
+    return p < 0 ? 0 : (p > 1 ? 1 : p);
+  }
+  function frame(){
+    var p = prog();
+    if (Math.abs(p - last) > 0.0004) {
+      last = p;
+      var dur = getDur();
+      if (dur > 0 && vid.readyState > 1) {
+        var t = p * Math.max(0, dur - 0.05);
+        if (Math.abs((vid.currentTime || 0) - t) > 0.02) {
+          try { vid.currentTime = t; } catch (e) {}
+        }
+      }
+      hero.style.setProperty('--p', p.toFixed(4));
+      if (cue) { cue.classList.toggle('off', p > 0.04); }
+    }
+    window.requestAnimationFrame(frame);
+  }
+  window.requestAnimationFrame(frame);
+})();
+</script>
 </body>
 </html>
 

@@ -13,6 +13,22 @@
   --b:#00BFFF; --eb:#00A0FF; --c:#C0C0C0; --d:#0D0D0D; --dd:#1A1A1A;
   --g:0 0 20px rgba(0,191,255,.45); --gold:#FFD700; --rg:#B76E79;
 }
+
+/* ---- Zone / metaworld palette (founder-locked 2026-08-12) ----------------
+ * MASTER: design-system/tokens/colors.css — the "iced-out world" hybrid
+ * (reconciled 2026-06-16): WORLD = cinematic cyan + violet, BASE = deep
+ * black, tier ladder climbs to gold at the peak. These site tokens MIRROR
+ * that file; if either side changes, change both in the same commit or the
+ * palette drift the sanctioning was meant to kill comes straight back.
+ * Zone-world pages (zones.php + future scroll surfaces) reference ONLY
+ * these — never page-local hex copies. The PHP-side mirror for server-emitted
+ * tier colors is scripts/web/includes/tiers.php (iced everywhere since the
+ * 2026-08-13 founder flip) — the mirror-set is three files, change together. */
+:root{
+  --zone-cyan:#00FFF7; --zone-violet:#7A00FF; --zone-void:#0A0A0A;
+  --t-observer:#8A9499; --t-theorist:#2E8BFF; --t-architect:#9B5CFF;
+  --t-pioneer:#E5B53A; --t-benefactor:#E5483A;
+}
 *{margin:0;padding:0;box-sizing:border-box}
 
 /* Single source of truth for the fixed-header offset. The nav is position:fixed,

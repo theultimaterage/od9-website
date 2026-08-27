@@ -47,14 +47,79 @@ const TIER_ORDER = [
 const PATREON_TIERS = ['theorist', 'architect', 'pioneer', 'benefactor', 'founding'];
 
 function current_user(): ?array {
-    return $_SESSION['bot_user'] ?? null;
+    if (!empty($_SESSION['bot_user'])) return $_SESSION['bot_user'];
+    // Remember-token logins (dashboard/includes/auth.php) set only
+    // $_SESSION['discord_id'], NOT bot_user — so a returning member whose
+    // server-side session was GC'd reads as "not logged in" HERE even though the
+    // dashboard logs them in fine. Treat a discord_id as logged-in; current_tier()
+    // resolves the LIVE tier from the mirror by discord_id regardless. Fixes the
+    // in-board PDF reader's spurious "not logged in" gate (2026-06-17).
+    if (!empty($_SESSION['discord_id'])) {
+        return ['discord_id' => (string) $_SESSION['discord_id']];
+    }
+    return null;
 }
 
+/**
+ * Resolve the visitor's tier — LIVE from the bot mirror, not the login cache.
+ *
+ * $_SESSION['bot_user']['current_tier'] is a snapshot taken at OAuth login from
+ * the od9_members table; it lags a tier change until the member logs out and
+ * back in. That caused the 2026-06-13 "I'm a Benefactor but the library only
+ * unlocks Architect" bug: the dashboard reads the live tier, the gate read a
+ * stale snapshot. The dashboard + me.php both read the live tier from
+ * od9_bot_users (refreshed every 15 min from the bot's SQLite by
+ * sync_to_mysql.py), so read the SAME source here and the gate always agrees
+ * with what the member sees. Cached per-request (library.php calls
+ * tier_at_least once per tier section).
+ */
 function current_tier(): string {
-    $u = current_user();
-    if (!$u) return 'guest';
-    $t = strtolower((string)($u['current_tier'] ?? 'observer'));
-    return $t !== '' ? $t : 'observer';
+    if (!current_user()) return 'guest';
+    static $resolved = null;
+    if ($resolved !== null) return $resolved;
+
+    $live = _live_tier_from_mirror((string)($_SESSION['discord_id'] ?? ''));
+    if ($live !== null) {
+        return $resolved = $live;
+    }
+    // Fallback: the login-time session snapshot (DB unreachable / no row yet).
+    $t = strtolower((string)(current_user()['current_tier'] ?? 'observer'));
+    return $resolved = ($t !== '' ? $t : 'observer');
+}
+
+/**
+ * Look up the live tier by Discord ID. Reads the bot's LIVE SQLite when reachable
+ * (no 15-min mirror lag, no DB credentials needed), else the od9_bot_users MySQL
+ * mirror as a bake-period fallback — see includes/od9_sqlite.php. Returns a valid
+ * lowercase tier slug, or null if unavailable/unknown so current_tier() can fall
+ * back to the session snapshot. Never throws — a gate must fail safe.
+ */
+function _live_tier_from_mirror(string $discord_id): ?string {
+    if ($discord_id === '' || !ctype_digit($discord_id)) return null;
+    require_once __DIR__ . '/od9_sqlite.php';
+    // Ensure getDatabaseConnection() exists for the MySQL-mirror FALLBACK only.
+    // Prefer the OUTER config (current offda9_od9admin password); the INNER config
+    // has a drifted/stale password that caused the 2026-06-13 "Benefactor sees
+    // only Architect" bug. The SQLite path needs no creds, so it sidesteps that
+    // drift entirely — this resolution now matters only if SQLite is unreachable.
+    if (!function_exists('getDatabaseConnection')) {
+        foreach ([__DIR__ . '/../../config/database.php', __DIR__ . '/../config/database.php'] as $cand) {
+            if (is_file($cand)) { require_once $cand; break; }
+        }
+    }
+    try {
+        [$conn, $ut, ] = od9_member_source();
+        if (!$conn) return null;
+        $stmt = $conn->prepare("SELECT current_tier FROM $ut WHERE user_id = ? LIMIT 1");
+        $stmt->execute([$discord_id]);
+        $t = $stmt->fetchColumn();
+        if ($t === false || $t === null) return null;
+        $t = strtolower(trim((string)$t));
+        return isset(TIER_ORDER[$t]) ? $t : null;
+    } catch (Throwable $e) {
+        error_log('[patron_gate] live tier lookup failed: ' . $e->getMessage());
+        return null;
+    }
 }
 
 function is_patron(): bool {
@@ -127,7 +192,7 @@ p{color:#bbb;font-size:1rem;margin-bottom:1.25rem}
     <?php if (!$is_logged_in): ?>
       <a href="/dashboard/auth/discord.php" class="btn btn-primary"><i class="fab fa-discord"></i>&nbsp; Log In with Discord</a>
     <?php endif; ?>
-    <a href="/support.php" class="btn btn-secondary">View Tiers</a>
+    <a href="/why-patreon.php" class="btn btn-secondary">View Tiers</a>
   </div>
   <a href="javascript:history.back()" class="back">← Go back</a>
 </div>

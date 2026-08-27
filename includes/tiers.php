@@ -1,25 +1,22 @@
 <?php
 /**
- * Canonical web tier colors — MIRROR of config.TIER_COLORS (keep in sync).
+ * Canonical web tier colors — the ICED design-system ladder (founder decision
+ * 2026-08-13: "flip the tier colors to the iced ladder everywhere" — the
+ * one-place change this file's original header anticipated).
  *
  * Single source of truth for tier colors across the OD9 web surface:
- *   me.php / dashboard/profile.php / library.php / tiers.php.
+ *   me.php / dashboard/profile.php / library.php / tiers.php / framework.php
+ *   / index.php (tiers-preview).
  *
- * These hexes MIRROR the bot's `config.TIER_COLORS` (config.py) so the website
- * matches the live Discord role colors. If config.TIER_COLORS changes, update
- * the values here too — same "mirror of config.X — keep in sync" convention
- * used by dashboard/board.php (GATE / NEXT_TIER consts).
+ * MIRROR-SET (change all in the same commit or drift returns):
+ *   - design-system/tokens/colors.css  (--t-* — the MASTER, locked 2026-06-16)
+ *   - scripts/web/css/od9.css          (--t-* site tokens)
+ *   - THIS FILE                        (PHP-side values for od9_tier_color())
  *
- * Canonical values (config.py:163):
- *   observer   #808080  Gray
- *   theorist   #3498DB  Blue
- *   architect  #9B59B6  Purple
- *   pioneer    #F1C40F  Gold
- *   benefactor #E74C3C  Crimson
- *
- * Future: these can later be refined to the iced-out `--t-*` ladder in
- * design-system/tokens/colors.css as a one-place change here — but for now they
- * deliberately use the config values so web == Discord.
+ * The ladder climbs to gold at Pioneer — the "iced out" tier — deliberately
+ * NOT the saturated #F1C40F. The bot's config.TIER_COLORS (Discord role
+ * colors) now INTENTIONALLY differs: web went iced by founder decision;
+ * Discord keeps its role colors until that surface is separately flipped.
  *
  * Guarded so multiple includes in one request are safe (same convention as
  * includes/env.php), since some pages already require several includes.
@@ -28,13 +25,13 @@
 if (!defined('OD9_TIER_COLORS_LOADED')) {
     define('OD9_TIER_COLORS_LOADED', true);
 
-    /** Lowercase tier slug => canonical hex string (mirror of config.TIER_COLORS). */
+    /** Lowercase tier slug => canonical hex (the iced design-system ladder). */
     $GLOBALS['OD9_TIER_COLORS'] = [
-        'observer'   => '#808080',  // Gray
-        'theorist'   => '#3498DB',  // Blue
-        'architect'  => '#9B59B6',  // Purple
-        'pioneer'    => '#F1C40F',  // Gold
-        'benefactor' => '#E74C3C',  // Crimson
+        'observer'   => '#8A9499',  // Gray
+        'theorist'   => '#2E8BFF',  // Blue
+        'architect'  => '#9B5CFF',  // Violet (soft)
+        'pioneer'    => '#E5B53A',  // Iced gold — the ladder's arrival
+        'benefactor' => '#E5483A',  // Crimson
     ];
 
     /** Progression order (mirror of config.TIER_ORDER). */
@@ -67,7 +64,7 @@ if (!function_exists('od9_tier_css_vars')) {
     /**
      * Emit the canonical tier colors as `--tier-<slug>` CSS custom properties,
      * for inline <style> blocks to reference via var(--tier-benefactor) etc.
-     * Returns a string of `--tier-observer:#808080;...` (no selector wrapper) so
+     * Returns a string of `--tier-observer:#8A9499;...` (no selector wrapper) so
      * the caller controls the scope (e.g. inside `:root{ ... }`).
      */
     function od9_tier_css_vars(): string

@@ -75,6 +75,7 @@ $tier_name = null;
 $credits = null;
 $dimensions = null;  // ['knowledge_score' => N, 'resource_score' => N, ...]
 $username = null;
+$achievements = [];  // [['achievement_id','name','category','rarity','icon','badge_image','is_hidden','earned'], ...]
 $db_unavailable = false;
 
 if ($invalid_reason === null) {
@@ -83,15 +84,19 @@ if ($invalid_reason === null) {
         $configPath = __DIR__ . '/config/database.php';
     }
     require_once $configPath;
+    require_once __DIR__ . '/includes/od9_sqlite.php';
 
     try {
-        $pdo = getDatabaseConnection();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        // Read the bot's LIVE data (SQLite), falling back to the od9_bot_* MySQL
+        // mirror during the bake period. $ut/$dt are the source-appropriate table
+        // names (fixed strings from od9_member_source — never user input).
+        [$pdo, $ut, $dt] = od9_member_source();
+        if (!$pdo) throw new RuntimeException('no member data source');
 
-        // Tier slug + credits + username from the cron-mirrored bot users table
+        // Tier slug + credits + username
         $stmt = $pdo->prepare(
             "SELECT username, current_tier, total_credits
-             FROM od9_bot_users WHERE user_id = ? LIMIT 1"
+             FROM $ut WHERE user_id = ? LIMIT 1"
         );
         $stmt->execute([$discord_user_id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -102,16 +107,34 @@ if ($invalid_reason === null) {
             $credits = (int)$row['total_credits'];
         }
 
-        // Dimensions from bot mirror
+        // Dimensions
         try {
             $stmt = $pdo->prepare(
                 "SELECT knowledge_score, resource_score, community_score, consciousness_score, system_score
-                 FROM od9_bot_dimensions WHERE user_id = ? LIMIT 1"
+                 FROM $dt WHERE user_id = ? LIMIT 1"
             );
             $stmt->execute([$discord_user_id]);
             $r3 = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($r3) $dimensions = $r3;
         } catch (Throwable $e) { /* dimensions table missing on this env — tolerate */ }
+
+        // Achievements — for the badge grid. Earned (LEFT JOIN hit) vs locked;
+        // hidden + unearned are dropped in the render so secret badges stay secret.
+        try {
+            $astmt = $pdo->prepare(
+                "SELECT ad.achievement_id, ad.name, ad.category, ad.rarity, ad.icon,
+                        ad.badge_image, ad.is_hidden,
+                        (ua.user_id IS NOT NULL) AS earned, ua.revealed AS revealed
+                 FROM achievement_definitions ad
+                 LEFT JOIN user_achievements ua
+                   ON ua.achievement_id = ad.achievement_id
+                  AND ua.guild_id = ad.guild_id AND ua.user_id = ?
+                 WHERE ad.guild_id != 'global'
+                 ORDER BY ad.sort_order"
+            );
+            $astmt->execute([$discord_user_id]);
+            $achievements = $astmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Throwable $e) { /* achievements table absent on this env — tolerate */ }
     } catch (Throwable $e) {
         error_log('[me.php] DB query failed: ' . $e->getMessage());
         $db_unavailable = true;
@@ -123,14 +146,11 @@ if ($invalid_reason === null) {
 }
 
 // ------------------------------ Tier visual mapping --------------------------
-$TIER_COLORS = [
-    'observer'   => '#808080',
-    'theorist'   => '#3498DB',
-    'architect'  => '#9B59B6',
-    'pioneer'    => '#F1C40F',
-    'benefactor' => '#E74C3C',
-];
-$tier_color = $TIER_COLORS[$tier_slug ?? 'observer'] ?? '#808080';
+// Canonical tier colors (mirror of config.TIER_COLORS) — single source shared
+// with profile.php / library.php / tiers.php.
+require_once __DIR__ . '/includes/tiers.php';
+$TIER_COLORS = $GLOBALS['OD9_TIER_COLORS'];
+$tier_color = od9_tier_color($tier_slug ?? 'observer');
 
 // ------------------------------ Output ---------------------------------------
 ?>
@@ -162,9 +182,27 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,4vw,2rem);font-weigh
 .dim-bar{height:6px;background:#222;border-radius:999px;overflow:hidden;margin:0.4rem 0 0.3rem}
 .dim-fill{height:100%;background:var(--b);transition:width 0.4s}
 .dim-val{font-family:'Orbitron',sans-serif;color:#fff;font-size:0.95rem}
+.ach-count{color:var(--b);font-family:'Orbitron',sans-serif;letter-spacing:2px;font-size:0.95rem;margin:0 0 0.5rem}
+.ach-cat{color:#888;text-transform:uppercase;letter-spacing:2px;font-size:0.72rem;margin:1.3rem 0 0.7rem;border-bottom:1px solid #222;padding-bottom:0.3rem}
+.badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:1rem}
+.badge{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.45rem}
+.badge img{width:84px;height:84px;object-fit:contain;border-radius:12px}
+.badge.locked img{filter:grayscale(1) brightness(0.35);opacity:0.5}
+.badge.locked{opacity:0.75}
+.badge-emoji{width:84px;height:84px;display:flex;align-items:center;justify-content:center;font-size:2.4rem;background:#141414;border-radius:12px;border:1px solid #222}
+.badge-sealed{background:#1a0f2e;border:1px solid #7A00FF;box-shadow:0 0 16px #7A00FF55}
+.badge.sealed .badge-name{color:#b388ff}
+.badge.locked .badge-emoji{filter:grayscale(1);opacity:0.45}
+.badge-name{font-size:0.7rem;color:#ccc;line-height:1.2}
+.badge.locked .badge-name{color:#777}
 .cta{text-align:center;margin-top:2rem;color:#777;font-size:0.9rem}
 .cta a{color:var(--b);text-decoration:none}
 .cta a:hover{text-decoration:underline}
+.topnav{display:flex;justify-content:center;gap:1.25rem;flex-wrap:wrap;margin-bottom:1.75rem;font-family:'Rajdhani',sans-serif;font-size:0.85rem;letter-spacing:1px;text-transform:uppercase}
+.topnav a{color:var(--b);text-decoration:none}
+.topnav a:hover{text-decoration:underline}
+.dash-btn{display:inline-flex;align-items:center;gap:0.5rem;margin-top:1.25rem;padding:0.85rem 1.7rem;background:linear-gradient(135deg,#00FFF7,#00BFFF);color:#06121a;font-family:'Orbitron',sans-serif;font-weight:700;font-size:0.8rem;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;border-radius:8px;box-shadow:0 0 18px rgba(0,255,247,.4)}
+.dash-btn:hover{box-shadow:0 0 26px rgba(0,255,247,.6)}
 .error{text-align:center;padding:3rem 1rem;color:#ccc}
 .error h2{font-family:'Orbitron',sans-serif;color:#fff;margin-bottom:1rem;letter-spacing:1px}
 .error code{background:#1a1a1a;padding:0.2rem 0.5rem;border-radius:4px;color:var(--b);font-family:'Courier New',monospace}
@@ -172,6 +210,12 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,4vw,2rem);font-weigh
 </head>
 <body>
 <div class="wrap">
+
+<nav class="topnav">
+  <a href="https://offda9.com/">OD9 Home</a>
+  <a href="https://offda9.com/dashboard/">Your Dashboard</a>
+  <a href="https://discord.gg/spgmrXVMWq" target="_blank" rel="noopener">Discord</a>
+</nav>
 
 <?php if ($invalid_reason !== null): ?>
   <div class="error">
@@ -236,13 +280,55 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,4vw,2rem);font-weigh
   </div>
   <?php endif; ?>
 
+  <?php if (!empty($achievements)):
+      $by_cat = []; $earned_n = 0; $total_n = 0;
+      foreach ($achievements as $a) {
+          if ($a['is_hidden'] && !$a['earned']) continue;   // secret badges stay secret until earned
+          $by_cat[$a['category']][] = $a;
+          $total_n++; if ($a['earned']) $earned_n++;
+      }
+      $CAT_LABELS = ['progression'=>'Progression','content'=>'Content','community'=>'Community',
+                     'contribution'=>'Contribution','projects'=>'Projects','governance'=>'Governance','special'=>'Special'];
+  ?>
+  <div class="card">
+    <h2>Achievements</h2>
+    <p class="ach-count"><?= $earned_n ?> / <?= $total_n ?> unlocked</p>
+    <?php foreach ($by_cat as $cat => $list): ?>
+      <div class="ach-cat"><?= htmlspecialchars($CAT_LABELS[$cat] ?? ucfirst($cat)) ?></div>
+      <div class="badge-grid">
+        <?php foreach ($list as $a):
+            $earned = (bool)$a['earned'];
+            $sealed = $earned && empty($a['revealed']);   // earned but unrevealed — the Firm ceremony
+            $img = ($a['badge_image'] ?? '') !== '' ? '/assets/badges/' . rawurlencode($a['badge_image']) : '';
+            $cls = $sealed ? 'sealed' : ($earned ? 'earned' : 'locked');
+        ?>
+          <div class="badge <?= $cls ?>"
+               title="<?= htmlspecialchars($sealed ? $a['name'] . ' — sealed; run /firm reveal in Discord' : ($a['name'] . ($earned ? '' : ' — locked')), ENT_QUOTES) ?>">
+            <?php if ($sealed): ?>
+              <div class="badge-emoji badge-sealed">&#x1F381;</div>
+            <?php elseif ($img): ?>
+              <img src="<?= htmlspecialchars($img, ENT_QUOTES) ?>" alt="<?= htmlspecialchars($a['name'], ENT_QUOTES) ?>"
+                   loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="badge-emoji" style="display:none"><?= htmlspecialchars($a['icon']) ?></div>
+            <?php else: ?>
+              <div class="badge-emoji"><?= htmlspecialchars($a['icon']) ?></div>
+            <?php endif; ?>
+            <div class="badge-name"><?= htmlspecialchars($sealed ? 'Sealed — reveal in Discord' : $a['name']) ?></div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    <?php endforeach; ?>
+  </div>
+  <?php endif; ?>
+
   <div class="card">
     <h2>Tier Demonstrations</h2>
     <p style="color:#bbb;line-height:1.6;font-size:0.95rem">For the full breakdown of what milestones you've shipped + what's needed for the next tier (Architect: 1 contribution project; Pioneer: facilitate a Think Tank + complete a mentorship; Benefactor: Patreon supporter + governance proposal), run <code style="background:#1a1a1a;padding:0.15rem 0.5rem;border-radius:4px;color:var(--b);font-family:'Courier New',monospace">/my_demonstrations</code> in the OD9 Discord.</p>
   </div>
 
   <div class="cta">
-    Want a richer view? Run <code style="background:#1a1a1a;padding:0.15rem 0.5rem;border-radius:4px;color:var(--b);font-family:'Courier New',monospace">/profile</code> in <a href="https://discord.gg/od9">the OD9 Discord</a> for the full ASCEND profile.
+    <a href="https://offda9.com/dashboard/" class="dash-btn">Open Your Dashboard &rarr;</a>
+    <p style="margin-top:1.25rem">Want a richer view? Run <code style="background:#1a1a1a;padding:0.15rem 0.5rem;border-radius:4px;color:var(--b);font-family:'Courier New',monospace">/profile</code> in <a href="https://discord.gg/spgmrXVMWq" target="_blank" rel="noopener">the OD9 Discord</a> for the full ASCEND profile.</p>
   </div>
 <?php endif; ?>
 

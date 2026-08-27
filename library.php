@@ -42,16 +42,18 @@ if ($gatePath !== null) {
 // Tiers below this index are public; tiers >= this index require login + tier match
 const FIRST_GATED_TIER = 'architect';
 
-// Canonical tier colors (mirror of config.TIER_COLORS) — single source shared
-// with me.php / profile.php / tiers.php. Defensive dual-path like patron_gate.
+// Canonical tier colors (the iced design-system ladder — includes/tiers.php)
+// — single source shared with me.php / profile.php / tiers.php. Defensive
+// dual-path like patron_gate.
 foreach ([__DIR__ . '/includes/tiers.php', __DIR__ . '/../includes/tiers.php'] as $cand) {
     if (is_file($cand)) { require_once $cand; break; }
 }
 if (!function_exists('od9_tier_color')) {
-    // local-only fallback so the page still renders if includes/ is missing
+    // local-only fallback so the page still renders if includes/ is missing —
+    // values MIRROR includes/tiers.php (iced ladder, 2026-08-13 flip)
     function od9_tier_color(?string $s): string {
-        $m = ['observer'=>'#808080','theorist'=>'#3498DB','architect'=>'#9B59B6','pioneer'=>'#F1C40F','benefactor'=>'#E74C3C'];
-        return $m[strtolower(trim((string)$s))] ?? '#808080';
+        $m = ['observer'=>'#8A9499','theorist'=>'#2E8BFF','architect'=>'#9B5CFF','pioneer'=>'#E5B53A','benefactor'=>'#E5483A'];
+        return $m[strtolower(trim((string)$s))] ?? '#8A9499';
     }
 }
 
