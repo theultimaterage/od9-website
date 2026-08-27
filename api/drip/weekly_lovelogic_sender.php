@@ -14,6 +14,13 @@
  *   --week=N           Override calculated week number (1..33)
  *   --dry-run          Print plan, don't send
  *   --test-email=ADDR  Send only to ADDR (skips subscriber list, skips idempotency log)
+ *   --preview=PATH     With --dry-run: write the rendered HTML to PATH and exit.
+ *                      Lets a template change be inspected as the SUBSCRIBER will
+ *                      receive it — through the real mdToHtml() + layout — instead
+ *                      of being eyeballed as markdown. Combine with --test-email to
+ *                      render with no database:
+ *                        php weekly_lovelogic_sender.php --dry-run \
+ *                            --test-email=preview@invalid --week=1 --preview=/tmp/w1.html
  *
  * The body renders through od9_email_layout() — the same branded shell the drip
  * sender uses — and ships via the unified od9_send_mail() (SMTP+DKIM on prod,
@@ -58,10 +65,15 @@ if (!file_exists($_layoutLib)) $_layoutLib = __DIR__ . '/includes/email_layout.p
 require_once $_layoutLib;
 
 // ---- CLI args ----
-$opts = getopt('', ['week::', 'dry-run', 'test-email::']);
+$opts = getopt('', ['week::', 'dry-run', 'test-email::', 'preview::']);
 $forceWeek = isset($opts['week']) && $opts['week'] !== false ? (int)$opts['week'] : null;
 $dryRun    = isset($opts['dry-run']);
 $testEmail = $opts['test-email'] ?? null;
+$preview   = ($opts['preview'] ?? null) ?: null;   // --preview with no value = ignore
+if ($preview !== null && !$dryRun) {
+    fwrite(STDERR, "[broadcast] --preview requires --dry-run; refusing to run.\n");
+    exit(2);
+}
 
 // ---- Compute current week ----
 $launch = new DateTime(LAUNCH_DATE);
@@ -89,6 +101,20 @@ $pattern = sprintf('email-week-%02d-*.md', $week);
 $matches = glob(TEMPLATE_DIR . $pattern);
 if (empty($matches)) {
     fwrite(STDERR, "[broadcast] No template found for week $week (pattern: $pattern)\n");
+    exit(2);
+}
+// Taking $matches[0] silently picks a winner when a week has more than one
+// template, and glob() sorts by byte value — so a stale duplicate whose name
+// sorts earlier wins forever, invisibly. Prod had exactly that: an April copy
+// of week 27 named ...optional-'answer-this-like-a-brief'-prompts.md sorting
+// ahead of the current one, so edits to the real template would never have
+// reached a subscriber. Refuse instead of guessing.
+if (count($matches) > 1) {
+    fwrite(STDERR, "[broadcast] AMBIGUOUS: " . count($matches) . " templates match $pattern:\n");
+    foreach ($matches as $m) {
+        fwrite(STDERR, "  - " . basename($m) . "\n");
+    }
+    fwrite(STDERR, "[broadcast] Refusing to guess which one subscribers get. Remove the stale file.\n");
     exit(2);
 }
 $templateFile = $matches[0];
@@ -125,6 +151,13 @@ if ($dryRun) {
     echo "[broadcast] DRY-RUN: subject={$subject}\n";
     echo "[broadcast] DRY-RUN: html_chars=" . strlen($html) . "\n";
     echo "[broadcast] DRY-RUN: recipients=" . count($recipients) . "\n";
+    if ($preview !== null) {
+        if (file_put_contents($preview, $html) === false) {
+            fwrite(STDERR, "[broadcast] DRY-RUN: could not write preview to {$preview}\n");
+            exit(1);
+        }
+        echo "[broadcast] DRY-RUN: preview written to {$preview}\n";
+    }
     exit(0);
 }
 
