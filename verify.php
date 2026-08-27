@@ -34,7 +34,7 @@ if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL) || !$token || strlen($
     try {
         $pdo = getDatabaseConnection();
         $stmt = $pdo->prepare(
-            "SELECT id, is_verified, status, verification_token
+            "SELECT id, is_verified, status, verification_token, first_name, last_name
              FROM email_signups WHERE email = ? LIMIT 1"
         );
         $stmt->execute([$email]);
@@ -63,6 +63,13 @@ if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL) || !$token || strlen($
             );
             $up->execute([$row['id']]);
             $state = 'verified';
+
+            // Verification IS the consent event: mirror 'active' to the
+            // platform audience. Upsert, so a fan whose signup-time sync was
+            // missed still gets a complete platform row here (self-healing).
+            require_once __DIR__ . '/includes/sp_audience_sync.php';
+            od9_sp_audience_sync($email, $row['first_name'] ?? null, $row['last_name'] ?? null, 'active');
+
             require_once __DIR__ . '/includes/next_event.php';
             $nextRoom = od9_next_event_label();
             $message = "$email is confirmed. You're in. Next thing on the calendar: $nextRoom — pull up in the Discord, free to join. (The weekly email lands Mondays 9 AM CT.)";

@@ -21,9 +21,10 @@
  * tell the user they're already on the list. If they previously
  * unsubscribed, we resend a fresh verification email.
  *
- * Best-effort sync to a shared_platform.email_subscribers table is kept
- * (catches PDOException quietly) for forward compatibility with the
- * cross-tenant platform.
+ * Every subscription state change is mirrored (best-effort, never blocking
+ * the fan-facing flow) to the F.R.E.S.H. platform's email_subscribers table
+ * through includes/sp_audience_sync.php — signup as 'pending', verification
+ * as 'active', unsubscribe as 'unsubscribed'.
  */
 
 $configPath = __DIR__ . '/../config/database.php';
@@ -160,32 +161,17 @@ try {
         }
     }
 
-    // ---- Best-effort sync to shared_platform (kept from prior impl) ----
-    try {
-        $spConfigPath = __DIR__ . '/../config/sp-credentials.php';
-        if (!file_exists($spConfigPath)) $spConfigPath = __DIR__ . '/config/sp-credentials.php';
-        if (file_exists($spConfigPath)) {
-            $spCreds = require $spConfigPath;
-            $spPdo = new PDO($spCreds['dsn'], $spCreds['user'], $spCreds['pass'], [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            ]);
-            $spCheck = $spPdo->prepare("SELECT id, status FROM email_subscribers WHERE site_id = 'od9' AND email = ?");
-            $spCheck->execute([$email]);
-            $spExisting = $spCheck->fetch();
-            if (!$spExisting) {
-                $customFields = !empty($context) ? json_encode(['context' => $context]) : null;
-                $spIns = $spPdo->prepare(
-                    "INSERT INTO email_subscribers
-                        (site_id, email, first_name, last_name, status, source, custom_fields, subscribed_at)
-                     VALUES ('od9', ?, ?, ?, 'pending_verification', 'signup', ?, NOW())"
-                );
-                $spIns->execute([$email, $firstName, $lastName, $customFields]);
-            }
-        }
-    } catch (PDOException $e) {
-        error_log("[subscribe] shared-platform sync failed: " . $e->getMessage());
-    }
+    // ---- Best-effort sync to the F.R.E.S.H. platform audience mirror ----
+    // One transport for all three state-changing flows (subscribe/verify/
+    // unsubscribe): includes/sp_audience_sync.php. An unverified signup
+    // mirrors as 'pending' — the platform's send paths select only
+    // status='active', so a fan becomes platform-mailable ONLY through
+    // verify.php's 'active' upsert. (The old inline block here hardcoded
+    // 'pending_verification', a value the platform enum never contained,
+    // and silently lost 12 of 13 signups.)
+    require_once __DIR__ . '/includes/sp_audience_sync.php';
+    od9_sp_audience_sync($email, $firstName, $lastName, 'pending',
+        !empty($context) ? ['context' => $context] : null);
 
     // ---- Record rate limit hit ----
     $rateData[] = $now;

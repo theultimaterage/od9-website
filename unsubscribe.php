@@ -46,6 +46,12 @@ if ($email && filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $up->execute([$row['id']]);
             $message = "$email has been unsubscribed. We're sorry to see you go.";
             $ok = true;
+
+            // Consent revocation must reach the platform mirror too — before
+            // 2026-08-27 an od9 unsubscribe left the platform row 'active',
+            // which a future platform campaign would happily mail.
+            require_once __DIR__ . '/includes/sp_audience_sync.php';
+            od9_sp_audience_sync($email, null, null, 'unsubscribed');
         }
     } catch (Exception $e) {
         $message = "Sorry - something went wrong on our end. Please reply to the most recent OD9 email and we'll handle it manually.";
