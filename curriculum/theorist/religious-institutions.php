@@ -21,7 +21,7 @@ $lesson = [
   "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 22",
   "subtitle"  => "The first of the Four Barriers at institutional scale: structures that began as scaffolding for early civilizations calcified into machinery that holds wisdom static while technology accelerates &mdash; and, at the extreme, teaches billions to read catastrophe as prophecy.",
   "sigil"     => "XXII",
-  "cover"     => "codex-vol2.jpg",
+  "cover"     => "atlas-vol2.jpg",
   "archivist" => "&ldquo;You already made the case against God as an idea &mdash; that work is behind you. This chapter is colder: it audits the <em>institutions</em>. Not whether the claims are true, but what the machinery built on those claims does to a civilization&rsquo;s ability to steer. And it ends on the hardest question in the volume: what happens when the people holding world-ending tools believe the ending is the point?&rdquo;",
   "canon" => [
     ["p" => "However, this historical utility has evolved into a profound liability as civilization has advanced. While these institutions once filled knowledge gaps when empirical explanations were unavailable, they now actively work against the integration of empirical knowledge into social decision-making frameworks. What began as compensatory scaffolding for early civilizations has calcified into rigid structures that actively prevent advancement beyond pre-scientific epistemologies.", "lead" => true],

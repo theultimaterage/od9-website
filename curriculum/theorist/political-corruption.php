@@ -20,7 +20,7 @@ $lesson = [
   "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 19",
   "subtitle"  => "Not a fifth barrier &mdash; the enforcement layer. The machinery that takes everything the Four Barriers extract and converts it into one product: a society structurally unable to act on problems it already understands.",
   "sigil"     => "XIX",
-  "cover"     => "codex-vol2.jpg",
+  "cover"     => "atlas-vol2.jpg",
   "archivist" => "&ldquo;You&rsquo;ve now seen all four barriers. The natural question is: why doesn&rsquo;t anyone just <em>fix</em> them? This chapter is the answer. The fixing apparatus itself &mdash; the political system &mdash; has been captured, and captured so thoroughly that its famous dysfunction is not a malfunction. Watch for the chapter&rsquo;s coldest move: it stops asking whether the system is broken and starts asking who the &lsquo;brokenness&rsquo; works for.&rdquo;",
   "canon" => [
     ["p" => "Political systems represent perhaps the most critical evolutionary bottleneck preventing advancement toward Type 1 civilization capabilities. While technological development has accelerated exponentially, our collective decision-making systems remain locked in pre-modern frameworks&mdash;creating a dangerous imbalance between our technological power and governance wisdom. This gap continues to widen, with political systems increasingly functioning not as vehicles for collective intelligence but as sophisticated mechanisms for preventing the very transformation needed for civilizational advancement.", "lead" => true],

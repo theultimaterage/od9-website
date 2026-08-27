@@ -46,7 +46,7 @@ The "should they measure instead" half is the design work. If you can answer tha
 ## Three things to do this week
 
 1. **Name your metric and the gaming behavior it produces.** Specific examples beat abstract critique.
-2. **Read Manifesto Ch.24 + Ch.48.** They're some of the more practical chapters in the book. Together they're the metric-design playbook.
+2. **Read [The Evidence Standard](https://offda9.com/curriculum/observer/the-evidence-standard.php) in the Codex.** It's the published lesson on the difference between a measurement and a proxy — the whole metric-design problem in one place.
 3. **Drop your "what to measure instead" in Discord.** This is the kind of question where the wisdom of the community spread *is* the answer — no single member is going to nail it, but 30 imperfect attempts together start to map the design space.
 
 We're 24 weeks in. 9 more to go. Next week: rule hierarchy. When two OD9 principles are in tension, which one wins?

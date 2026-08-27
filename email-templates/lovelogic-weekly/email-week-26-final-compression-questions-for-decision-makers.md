@@ -33,7 +33,7 @@ None of those are right. None of them are wrong. The work is finding the one *yo
 
 ## What the Manifesto pushes on
 
-**Ch.5** (*The System in Crisis*) and **Ch.55** of the Manifesto take a position you don't see in many big-tent movements: **a project's identity is what it WON'T trade away under pressure.** Everything else is negotiable — strategy, tactics, branding, even most policies. But the one or two non-negotiables determine what the project is.
+[**Ch.5**](https://offda9.com/curriculum/observer/the-system-in-crisis.php) (*The System in Crisis*) and **Ch.55** of the Manifesto take a position you don't see in many big-tent movements: **a project's identity is what it WON'T trade away under pressure.** Everything else is negotiable — strategy, tactics, branding, even most policies. But the one or two non-negotiables determine what the project is.
 
 Most movements get this wrong by trying to make EVERYTHING non-negotiable, which means in practice nothing is — when the pressure comes, something has to give, and without a hierarchy it's whatever's most expedient.
 
@@ -50,7 +50,7 @@ Be willing to commit to your sentence in front of strangers.
 ## Three things to do this week
 
 1. **Write the sentence.** Iterate. The first draft is almost always wrong.
-2. **Read Manifesto Ch.5 + Ch.55.** Both shorter than they look. The framework on non-negotiables lands.
+2. **Read [The System in Crisis](https://offda9.com/curriculum/observer/the-system-in-crisis.php) in the Codex.** It's the clearest published statement of what OD9 thinks is actually broken — useful raw material for a one-sentence answer.
 3. **Drop your sentence in Discord.** The collected community list IS one of the most useful artifacts we'll generate this year. It's a snapshot of what *we* think OD9's identity is, before any future pressure forces a definition on us.
 
 Next week: the city-briefing scenario. 30 minutes with the founders. Three rules.

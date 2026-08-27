@@ -19,7 +19,7 @@ $lesson = [
   "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 7",
   "subtitle"  => "Diagnosis and caution aren&rsquo;t a plan. ASCEND is the plan &mdash; a coordination system you upgrade while it runs, built around meaning instead of metrics.",
   "sigil"     => "VII",
-  "cover"     => "codex-vol1.jpg",
+  "cover"     => "atlas-vol1.jpg",
   "archivist" => "&ldquo;You&rsquo;ve seen the disease and read the warning label. Now the prescription &mdash; and it isn&rsquo;t a manifesto to admire, it&rsquo;s a <em>system to run</em>. ASCEND doesn&rsquo;t fight the broken world or wait for permission to rebuild it; it upgrades the pieces while they&rsquo;re still load-bearing, and it aligns what&rsquo;s good for you with what&rsquo;s good for everyone. You&rsquo;re not reading about it &mdash; you&rsquo;re standing inside the prototype.&rdquo;",
   "canon" => [
     ["p" => "The ASCEND framework represents our comprehensive approach to this transformation challenge. Drawing on decades of research across multiple disciplines, ASCEND integrates technological innovation with consciousness development, creating practical pathways toward Type I civilization capability.", "lead" => true],

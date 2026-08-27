@@ -31,7 +31,7 @@ None of these are paranoid speculation. All of them have happened to comparable 
 
 ## What the Manifesto pushes on
 
-**Ch.49** of the Manifesto (*ASCEND Implementation*) — which is the chapter that this entire bot is the implementation of — takes a position most reform movements skip: **adoption strategy and capture-resistance design are co-equal with the design of the thing being adopted.** A coordination mechanism that scales without thinking about who's going to try to capture it will be captured. Always. By the most resourceful actor whose interests are best served by capture.
+**Volume 5** of the Manifesto (*ASCEND Implementation*) — the volume that this entire bot is the implementation of — takes a position most reform movements skip: **adoption strategy and capture-resistance design are co-equal with the design of the thing being adopted.** A coordination mechanism that scales without thinking about who's going to try to capture it will be captured. Always. By the most resourceful actor whose interests are best served by capture.
 
 So the work is: design assuming capture attempts WILL happen, name the most likely vectors in advance, and build the institutional habits that make each vector harder than the next-best alternative for the would-be capturer. Not "stop them from trying" — "make trying not worth it."
 
@@ -46,7 +46,7 @@ The collected community list is essentially a threat model. Worth treating it th
 ## Three things to do this week
 
 1. **Pick your most-plausible capture scenario.** Specific actor, specific mechanism. Write it out.
-2. **Read Manifesto Ch.49.** Pay attention to the explicit capture-resistance design moves — and where they might already be insufficient.
+2. **Read [Political System Corruption](https://offda9.com/curriculum/theorist/political-corruption.php) in the Codex** — the published lesson on how capture actually happens. Pay attention to the capture-resistance moves, and where they might already be insufficient.
 3. **Drop your capture scenario in Discord.** The variety of community answers IS the threat model. Long-term it's one of the most defensively-useful artifacts we'll have.
 
 Next week: the related question. The most dangerous person to OD9 long-term isn't an enemy. Describe them.

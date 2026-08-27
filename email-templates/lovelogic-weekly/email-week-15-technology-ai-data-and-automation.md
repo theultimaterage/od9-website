@@ -41,7 +41,7 @@ Pick. Defend. Don't dodge by saying "it's complicated."
 ## Three things to do this week
 
 1. **Make the pick.** Write your reasoning down. The argument with yourself is the point.
-2. **Read Manifesto Ch.15 + Ch.41.** Pay attention to where the manifesto refuses the false choice between "AI everywhere" and "AI nowhere."
+2. **Make the strongest honest case for the future you did *not* pick.** Five sentences. If you can't get to five, that tells you something about how well you understand your own choice.
 3. **Bring your pick to Discord.** The community vote on this question is one of the most useful data points we'll have on where OD9 members actually stand.
 
 Next week: embodiment. If "health" meant "your body's capacity to do what you actually want to do with your life" — instead of "absence of disease" — what would change about your week?

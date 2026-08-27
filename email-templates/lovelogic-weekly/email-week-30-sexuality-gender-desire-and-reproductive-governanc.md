@@ -56,7 +56,7 @@ Sunday's deep-dive QOTD:
 ## Three things to do this week
 
 1. **Name your version honestly.** What you actually think — not what your tribe expects.
-2. **Read Manifesto Ch.12 + Ch.43.** Pay attention to where the framework deliberately refuses to take a side. The refusal is itself a design move.
+2. **Read [Love as Infrastructure](https://offda9.com/curriculum/observer/love-as-infrastructure.php) in the Codex.** It's the published lesson on treating relationships as designed systems rather than private accidents — the frame this week's question sits inside.
 3. **Bring your answer to Discord.** This is the QOTD with the highest variance in answers. The collected community spread is, deliberately, a cross-section of where members actually are — not where Twitter is.
 
 Next week: belonging. Where you're "from" — and who decides.

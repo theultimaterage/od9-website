@@ -11,7 +11,7 @@ $lesson = [
   "eyebrow"   => "Preface &middot; The Paradox of Transformation",
   "subtitle"  => "How do you change an entire civilization&mdash;without collapsing it? OD9's answer, and the method behind everything we build.",
   "sigil"     => "↻",  /* renewal — the ship rebuilt plank by plank */
-  "cover"     => "codex-thesean.jpg",
+  "cover"     => "atlas-preface.jpg",
   "archivist" => "&ldquo;Every revolution you were taught to admire ate its own children. Every reform too timid left the rot exactly where it was. There's a third way&mdash;older than both&mdash;and it's how we actually pull this off. Watch.&rdquo;",
   "canon" => [
     ["p" => "The philosophical foundations and consciousness-based perspective explored in the preceding sections converge toward a practical methodology for civilizational transformation&mdash;what we call the Thesean approach. This approach systematically replaces components of our social systems while maintaining functional continuity throughout the process.", "lead" => true],

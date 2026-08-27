@@ -32,7 +32,7 @@ None of those are obviously right. All of them have failure modes. That's the po
 
 ## What the Manifesto pushes on
 
-**Ch.7** (*Power, Legibility, and Governance*) and **Ch.65** of the Manifesto take a position that most political theory dodges: **the *texture* of civic rules — whether enforcement is automatic or discretionary, whether transparency is default or opt-in, whether decisions are reviewable or final — matters more than the rules' specific content.** Two cities with identical rules but different enforcement texture end up living in completely different worlds.
+[**Ch.7** of the Manifesto](https://offda9.com/curriculum/observer/the-solution-framework.php) (*The Solution Framework*) takes a position that most political theory dodges: **the *texture* of civic rules — whether enforcement is automatic or discretionary, whether transparency is default or opt-in, whether decisions are reviewable or final — matters more than the rules' specific content.** Two cities with identical rules but different enforcement texture end up living in completely different worlds.
 
 So the work isn't picking the "right" three rules. It's picking three rules whose *texture* is right — that self-enforce, that're hard to capture, that survive bad actors. That's the actual founding-team conversation worth having.
 
@@ -47,7 +47,7 @@ The "fight hardest to install" framing matters. It's not "what would be nice." I
 ## Three things to do this week
 
 1. **Pick your three.** Specific, operational, enforceable. Defend the omissions as much as the inclusions.
-2. **Read Manifesto Ch.7 + Ch.65.** They're some of the most operationally-useful chapters. Together they're a draft civic-design framework.
+2. **Read [The Solution Framework](https://offda9.com/curriculum/observer/the-solution-framework.php) in the Codex** — the most operationally-useful published lesson, and the closest thing we have to a draft civic-design framework.
 3. **Drop your three in Discord.** Collectively this is one of the most generative weeks in the campaign — a community-wide draft of OD9 civic minimums.
 
 Next week: the elevator pitch. 90 seconds. Someone who's never heard of OD9. What do you actually say?

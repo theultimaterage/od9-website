@@ -27,7 +27,7 @@ Both of those are honest reactions. Designing around them is hard.
 
 ## What the Manifesto actually argues
 
-**Ch.18** and **Ch.22** of the Manifesto take a position most political conversations dodge: **most modern justice systems are optimized for punishment, when what people actually want — when you ask them about people they know — is some combination of repair, truth, and conditional reintegration.**
+**Ch.18** and [**Ch.22**](https://offda9.com/curriculum/theorist/religious-institutions.php) of the Manifesto take a position most political conversations dodge: **most modern justice systems are optimized for punishment, when what people actually want — when you ask them about people they know — is some combination of repair, truth, and conditional reintegration.**
 
 The mismatch is structural. Punishment is easy to administer at scale. Repair is hard. Truth-telling is hard. Conditional reintegration is hard. So the cheap option (punishment) wins — even though almost no individual would order it first if asked about someone they cared about.
 
@@ -46,7 +46,7 @@ Order matters. Be specific.
 ## Three things to do this week
 
 1. **Do the exercise twice.** Once with a minor harm in mind, once with a serious one. Notice how the order shifts.
-2. **Read Manifesto Ch.18 + Ch.22.** Ch.18 is the longer one — worth the time.
+2. **Read [Religious Institutions and Pseudoscience](https://offda9.com/curriculum/theorist/religious-institutions.php) in the Codex** — the published lesson of the two chapters this week draws on.
 3. **Bring one observation to the Discord.** Not a debate, an observation. *"When I did the exercise, I was surprised that ___."*
 
 Next week: information ecology. The thing you believed last month and updated this month — what actually caused the update?

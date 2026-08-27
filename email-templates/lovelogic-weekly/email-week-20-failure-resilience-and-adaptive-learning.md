@@ -23,7 +23,7 @@ This is the part most people skip. The instinct after a failure is to either (a)
 
 ## What the Manifesto pushes on
 
-**Ch.6** (*Responsible Transformation Frameworks*) and **Ch.54** of the Manifesto make a position that's honestly rare in ambitious movements: **a system that can't fail safely cannot improve.** Failure has to be *expected*, *visible*, *survivable*, and *learnable* from — or the system locks in its first wrong guess and dies optimizing for it.
+[**Ch.6**](https://offda9.com/curriculum/observer/responsible-transformation.php) (*Responsible Transformation Frameworks*) and **Ch.54** of the Manifesto make a position that's honestly rare in ambitious movements: **a system that can't fail safely cannot improve.** Failure has to be *expected*, *visible*, *survivable*, and *learnable* from — or the system locks in its first wrong guess and dies optimizing for it.
 
 Most institutions punish visible failure so reliably that the rational move for anyone inside them is to hide it. That's the death loop: hidden failure means no learning, which means more failure, which means more hiding. Universities, corporations, governments, churches — all run this loop, in different cadences. Breaking it requires institutional design that explicitly rewards naming what didn't work.
 
@@ -40,7 +40,7 @@ The "wouldn't have" half is where the actual lesson lives.
 ## Three things to do this week
 
 1. **Name one failure.** Not the worst one. Not the most embarrassing. One specific, OD9-adjacent one. Write it down.
-2. **Read Manifesto Ch.6 + Ch.54.** Both shorter than they look. The framework on safe failure lands fast.
+2. **Read [Responsible Transformation](https://offda9.com/curriculum/observer/responsible-transformation.php) in the Codex.** Shorter than it looks, and the framework on safe failure lands fast.
 3. **Drop your failure in Discord.** This is the email that requires the most courage to engage with — and the one where the community gets the most useful from each individual answer.
 
 Next week: scale. The decision that's currently being made at the wrong layer — too local, too global — and where it actually belongs.

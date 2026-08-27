@@ -43,7 +43,7 @@ The hard-to-push-back-on half is where the actual diagnostic lives. If you can p
 ## Three things to do this week
 
 1. **Describe the person.** Try not to default to "someone I disagree with politically." The really dangerous ones are insiders.
-2. **Read Manifesto Ch.30 + Ch.52.** Both are short. Together they're the manifesto's most direct treatment of internal-corruption-resistance.
+2. **Read [Political System Corruption](https://offda9.com/curriculum/theorist/political-corruption.php) in the Codex.** It's the published lesson closest to internal-corruption resistance — capture by people who are certain they're helping.
 3. **Bring your archetype to Discord.** Hard to do without feeling like a snitch — but the collected list is a real diagnostic asset.
 
 Next week: measurement. The metric your job, school, or city tracks that's actively making things worse — because tracking it changes behavior.

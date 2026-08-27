@@ -24,7 +24,7 @@ When the words people use to think with get hollowed out, **the thinking itself 
 
 ## Why this matters
 
-**Ch.9** of the Manifesto (*Information Ecology*) and **Ch.11** make the case directly: **language is the substrate of coordination**. Capture the language, capture the thinking. Capture the thinking, capture the coordination. Capture the coordination, capture the future.
+[**Ch.9** of the Manifesto](https://offda9.com/curriculum/theorist/the-information-crisis.php) (*Media and Information Crisis*) makes the case directly: **language is the substrate of coordination**. Capture the language, capture the thinking. Capture the thinking, capture the coordination. Capture the coordination, capture the future.
 
 This is why authoritarian movements always invest heavily in redefining basic vocabulary, why advertising campaigns try to *own* words ("just do it," "think different"), why platforms redefine "engagement" to mean things that aren't engagement, why every regime in history has had a cleanup crew for inconvenient terminology.
 
@@ -43,7 +43,7 @@ Rewriting a definition forces you to take a position. That's the point.
 ## Three things to do this week
 
 1. **Pick your weaponized word and try to rewrite it.** Two sentences max. The constraint is the point.
-2. **Read Manifesto Ch.9 + Ch.11.** Pay attention to how OD9 defines its own key terms. Is the precision better than what you see elsewhere?
+2. **Read [Media and Information Crisis](https://offda9.com/curriculum/theorist/the-information-crisis.php) in the Codex.** Pay attention to how OD9 defines its own key terms. Is the precision better than what you see elsewhere?
 3. **Bring your rewritten definition to Discord.** The disagreements about which words even *belong* on the list are usually more interesting than the rewrites themselves.
 
 This is the end of the first eight weeks. The campaign continues weekly through Week 33 — needs, agency, work, justice, technology, embodiment, environment, identity, and 17 other categories. Stay with us.

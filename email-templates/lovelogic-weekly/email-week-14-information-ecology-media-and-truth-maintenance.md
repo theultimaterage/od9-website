@@ -49,7 +49,7 @@ The last sentence is the work.
 ## Three things to do this week
 
 1. **Do the audit.** One belief, one cause, one observation about your own mechanism. Write it down — externalizing it changes how you read the next round of information.
-2. **Read Manifesto Ch.14 + Ch.39.** They give vocabulary for the primary-vs-secondary-target distinction in information design.
+2. **Read [Media and Information Crisis](https://offda9.com/curriculum/theorist/the-information-crisis.php) in the Codex** — the published lesson closest to this week. It gives you vocabulary for the primary-vs-secondary-target distinction in information design.
 3. **Bring your audit to Discord.** Hearing how *other* people actually update is one of the most useful things this campaign generates.
 
 Next week: AI. Two futures. Pick one — and be honest about why.

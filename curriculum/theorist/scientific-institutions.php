@@ -20,7 +20,7 @@ $lesson = [
   "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 13",
   "subtitle"  => "The hardest audit in the volume, because it points at our own side: the method that built the modern world is being run through institutions that reward publishing over truth &mdash; and loving science means fixing its plumbing.",
   "sigil"     => "XIII",
-  "cover"     => "codex-vol2.jpg",
+  "cover"     => "atlas-vol2.jpg",
   "archivist" => "&ldquo;Careful with this one. Every crank who ever lost an argument to evidence loves to quote science&rsquo;s problems back at it. That is not what this chapter is. The method &mdash; conjecture, test, correction &mdash; remains the only reliable path to knowledge our species has found. The audit here is of the <em>buildings around the method</em>: the journals, the funding bodies, the career ladders. We critique them the way an engineer critiques a refinery leaking its own fuel &mdash; because the fuel is precious, not because it isn&rsquo;t.&rdquo;",
   "canon" => [
     ["p" => "This growing gap between scientific potential and implementation reveals fundamental limitations in current scientific institutions that constrain civilizational development. The dysfunction is not primarily in scientists&rsquo; ability to discover or innovate, but in the institutional structures that govern how scientific knowledge is produced, validated, disseminated, and implemented.", "lead" => true],

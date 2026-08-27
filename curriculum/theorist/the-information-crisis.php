@@ -19,7 +19,7 @@ $lesson = [
   "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 9",
   "subtitle"  => "The third barrier is the one you&rsquo;re soaking in: an information system that stopped describing reality and started manufacturing it &mdash; optimized to harvest your attention, not to help you see.",
   "sigil"     => "IX",
-  "cover"     => "codex-vol2.jpg",
+  "cover"     => "atlas-vol2.jpg",
   "archivist" => "&ldquo;A civilization is an information-processing system before it is anything else. Its media are its senses. This chapter documents what happens when the senses stop reporting the world and start selling it &mdash; and why that failure outranks every other, because a society that cannot see clearly cannot fix <em>anything</em>, including its sight. Read this one slowly. The machinery it describes is running on the device you&rsquo;re reading it with.&rdquo;",
   "canon" => [
     ["p" => "This evolution from information transmission to reality construction represents the foundation of our media and information crisis. Contemporary media systems no longer primarily inform audiences about external reality but actively construct the perceived reality within which those audiences operate &ndash; often with incentives fundamentally misaligned with truth, understanding development, or civilization advancement potential.", "lead" => true],

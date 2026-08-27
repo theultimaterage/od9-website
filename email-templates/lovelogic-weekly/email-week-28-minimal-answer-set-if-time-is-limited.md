@@ -37,7 +37,7 @@ None of those are right for you. The point is to write yours.
 
 ## What the Manifesto pushes on
 
-**Ch.5** and **Ch.67** of the Manifesto take a position about communication that's worth treating seriously: **a movement that can't compress itself into a sentence isn't a movement, it's a manifesto.** Manifestos die. Movements survive precisely because their members can carry them in their heads, articulate them on demand, defend them in 90 seconds.
+[**Ch.5** of the Manifesto](https://offda9.com/curriculum/observer/the-system-in-crisis.php) takes a position about communication that's worth treating seriously: **a movement that can't compress itself into a sentence isn't a movement, it's a manifesto.** Manifestos die. Movements survive precisely because their members can carry them in their heads, articulate them on demand, defend them in 90 seconds.
 
 That doesn't mean dumb-down. It means do the cognitive work yourself, in advance, so you don't fumble in the moment. Every member who can pitch OD9 in 90 seconds is a node. Every member who can't is a bottleneck.
 
@@ -52,7 +52,7 @@ Real text. The point isn't to copy from the manifesto. The point is YOUR words, 
 ## Three things to do this week
 
 1. **Write your 90 seconds.** Then read it out loud. Time it. Cut what doesn't survive being spoken.
-2. **Read Manifesto Ch.5 + Ch.67.** They're the most useful chapters for compression. Notice where the manifesto compresses itself, and where it deliberately doesn't.
+2. **Read [The System in Crisis](https://offda9.com/curriculum/observer/the-system-in-crisis.php) in the Codex.** Notice where it compresses itself, and where it deliberately doesn't.
 3. **Drop your pitch in Discord.** Reading 30 different versions from 30 different members is one of the best ways to test your own — you'll steal what's better than yours and notice what you got right.
 
 Next week: spirituality. The thing you treat as sacred — in practice, not in word.

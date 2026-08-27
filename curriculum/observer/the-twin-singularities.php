@@ -13,7 +13,7 @@ $lesson = [
   "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 4",
   "subtitle"  => "We just gained the power to end ourselves. The real question is whether our <em>wisdom</em> can grow fast enough to match it.",
   "sigil"     => "IV",
-  "cover"     => "codex-vol1.jpg",
+  "cover"     => "atlas-vol1.jpg",
   "archivist" => "&ldquo;You&rsquo;ve seen where we sit on the ladder, and what tends to kill civilizations at exactly this rung. Here&rsquo;s the part most people miss: the danger isn&rsquo;t the power. It&rsquo;s the <em>gap</em> between the power and the wisdom to wield it. Mind the gap.&rdquo;",
   "canon" => [
     ["p" => "The necessity of integrating technological and consciousness evolution creates what we term the Twin Singularities&mdash;complementary developmental trajectories that must converge for successful navigation of our evolutionary bottleneck.", "lead" => true],

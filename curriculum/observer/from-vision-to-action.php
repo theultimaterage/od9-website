@@ -18,7 +18,7 @@ $lesson = [
   "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 8",
   "subtitle"  => "The hardest gap isn&rsquo;t understanding &mdash; it&rsquo;s doing. Volume&nbsp;I ends here, where theory becomes practice and you stop reading and start climbing.",
   "sigil"     => "VIII",
-  "cover"     => "codex-vol1.jpg",
+  "cover"     => "atlas-vol1.jpg",
   "archivist" => "&ldquo;Everything before this was the map &mdash; the creed, the method, the diagnosis, the solution. A map you only read is just paper; this chapter is where it becomes a journey. The knowing&ndash;doing gap is the real bottleneck: nearly everyone <em>knows</em>; almost no one <em>acts</em>. You don&rsquo;t cross it by understanding more. You cross it by moving &mdash; now, imperfectly, from exactly where you stand.&rdquo;",
   "canon" => [
     ["p" => "As we stand at the threshold between vision and manifestation, between theoretical frameworks and practical transformation, a crucial truth emerges: understanding without implementation remains mere intellectual exercise. The preceding chapters have established comprehensive foundations for conscious evolution&mdash;from the OD9 Creed&rsquo;s core principles to theoretical methodologies, from diagnostic analysis to solution frameworks. Yet the most sophisticated understanding proves meaningless without translation into lived reality.", "lead" => true],

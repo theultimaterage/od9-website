@@ -25,7 +25,7 @@ The point isn't to land on one answer. The point is to do the exercise without n
 
 ## What the Manifesto actually pushes on
 
-**Ch.12** and **Ch.22** of the Manifesto don't prescribe a "right" structure for family or community — they argue something subtler: **the structures we inherit are usually optimized for conditions that no longer exist**. The nuclear family solved problems specific to the 1950s industrial economy. Religious community structures solved problems specific to pre-secular medieval life. Both still get treated as eternal because changing them requires admitting we're not in the conditions they solved.
+**Ch.12** and [**Ch.22**](https://offda9.com/curriculum/theorist/religious-institutions.php) of the Manifesto don't prescribe a "right" structure for family or community — they argue something subtler: **the structures we inherit are usually optimized for conditions that no longer exist**. The nuclear family solved problems specific to the 1950s industrial economy. Religious community structures solved problems specific to pre-secular medieval life. Both still get treated as eternal because changing them requires admitting we're not in the conditions they solved.
 
 That doesn't mean blow them up. It means **understand what they actually do for us, what they fail at, and what the next iteration looks like** — instead of treating any deviation as decline.
 
@@ -40,7 +40,7 @@ There's no shame in answering "the current shape still holds, here's why." There
 ## Three things to do this week
 
 1. **Do the no-nostalgia exercise.** What survives in your version? Be specific about who's in the unit, who's responsible for what, and who picks up the slack when something breaks.
-2. **Read Manifesto Ch.12 + Ch.22.** Pay attention to where the manifesto refuses to prescribe — it's deliberate.
+2. **Read [Religious Institutions and Pseudoscience](https://offda9.com/curriculum/theorist/religious-institutions.php) in the Codex.** Pay attention to where it refuses to prescribe — that's deliberate.
 3. **Compare with one person whose family situation is very different from yours.** The disagreements are usually where the design tension lives.
 
 Next week: education. What it's actually for, what it's currently optimizing for, and the difference.

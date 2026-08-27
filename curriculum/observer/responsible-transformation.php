@@ -18,7 +18,7 @@ $lesson = [
   "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 6",
   "subtitle"  => "Godlike tools don&rsquo;t make a wise civilization &mdash; new power without new wisdom magnifies the crisis. This is the discipline of changing things without making them worse.",
   "sigil"     => "VI",
-  "cover"     => "codex-vol1.jpg",
+  "cover"     => "atlas-vol1.jpg",
   "archivist" => "&ldquo;The diagnosis is in: a species with godlike tools and obsolete wiring. The reflex is to reach for bigger tools &mdash; and that reflex is the trap. New capability without new wisdom doesn&rsquo;t close the gap; it widens it, faster. This chapter is the part nobody romanticizes: how to change a civilization without recreating the very failures you set out to fix.&rdquo;",
   "canon" => [
     ["p" => "Why must responsible frameworks precede implementation? The answer lies in what systems theorist Donella Meadows (2008) called &ldquo;the trap of technology as savior&rdquo;&mdash;the mistaken belief that technical solutions alone can resolve complex systemic problems. As our previous analysis of interconnected crises demonstrates, technological advancement without corresponding wisdom magnifies rather than resolves systemic dysfunction.", "lead" => true],

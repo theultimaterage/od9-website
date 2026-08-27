@@ -17,7 +17,7 @@ $lesson = [
   "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 5",
   "subtitle"  => "The crises aren&rsquo;t separate emergencies &mdash; they&rsquo;re one coordination failure wearing many masks, and from the inside it looks exactly like a civilization meeting its Great Filter.",
   "sigil"     => "V",
-  "cover"     => "codex-vol1.jpg",
+  "cover"     => "atlas-vol1.jpg",
   "archivist" => "&ldquo;They hand you the crises one at a time &mdash; climate here, politics there, your own splintered attention somewhere else &mdash; so each one looks survivable alone. The manifesto&rsquo;s diagnosis is colder and far more useful: these are not separate problems. They&rsquo;re one failure wearing many masks &mdash; a species handed godlike tools while still running on obsolete wiring. Name it correctly and a hundred hopeless fights collapse into one solvable problem.&rdquo;",
   "canon" => [
     ["p" => "Let us begin by considering what a civilization on the brink of either transcendence or catastrophe might look like. If we were approaching a Great Filter&mdash;that evolutionary hurdle proposed by economist Robin Hanson (1998) that may have ended countless civilizations before they could make their presence known in the cosmos&mdash;what signs would we expect to see?", "lead" => true],

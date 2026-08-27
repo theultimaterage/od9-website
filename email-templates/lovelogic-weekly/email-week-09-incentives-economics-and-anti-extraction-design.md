@@ -19,7 +19,7 @@ This isn't a personal failing. It's a *system property*: when the optimization t
 
 ## Why this is THE economics question
 
-**Ch.13** of the Manifesto (*Power, Legibility, and Governance*) and **Ch.20** make a claim a lot of mainstream economic thinking dances around: **most "extraction" in the modern world is the mathematically predictable result of measuring the wrong thing**.
+[**Ch.13** of the Manifesto](https://offda9.com/curriculum/theorist/scientific-institutions.php) (*Scientific Institution Analysis*) makes a claim a lot of mainstream economic thinking dances around: **most "extraction" in the modern world is the mathematically predictable result of measuring the wrong thing**.
 
 When you measure something, you create the incentive to optimize for *that thing* — even if it's a poor proxy for the actual goal. Schools measure test scores → kids learn to game tests, not to think. Hospitals measure procedure billing codes → doctors learn to optimize for billing, not health. Apps measure engagement → engineers learn to maximize compulsion, not value. Cops measure arrests → policing optimizes for arrest counts, not safety.
 
@@ -36,7 +36,7 @@ The "structural change" half is the hard half. Most of us can name the gap — c
 ## Three things to do this week
 
 1. **Pick the job, name the gap.** Be specific. Not "corporate America" — *which job*, *which metric*, *which behavior*.
-2. **Read Manifesto Ch.13 + Ch.20.** They give vocabulary for the design move (closing the proxy-vs-substance gap) so you have something to point at when you propose changes.
+2. **Read [Scientific Institution Analysis](https://offda9.com/curriculum/theorist/scientific-institutions.php) in the Codex.** It gives you vocabulary for the design move — closing the proxy-vs-substance gap — so you have something to point at when you propose changes.
 3. **Bring your one structural fix to the Discord.** The community's collected list of "fixes that would close the gap" is one of the most useful artifacts we'll generate this year.
 
 Next week: relationship architecture. The structures we treat as eternal — *family*, *intimacy*, *community* — and which of them are actually load-bearing vs. just inherited.

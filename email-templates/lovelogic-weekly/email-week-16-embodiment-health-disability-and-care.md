@@ -23,7 +23,7 @@ The gap between **medical-system health** and **actual capacity-for-life** is wh
 
 ## What the Manifesto pushes on
 
-**Ch.10** and **Ch.42** of the Manifesto don't argue against modern medicine. (Modern medicine is one of humanity's greatest achievements. It saved most of us reading this.) The argument is more specific: **a Type-I civilization needs to define health in capacity terms, not absence terms** — because absence-of-disease optimizes for treatment, not for human flourishing.
+[**Ch.10**](https://offda9.com/curriculum/theorist/the-collective-psyche.php) and **Ch.42** of the Manifesto don't argue against modern medicine. (Modern medicine is one of humanity's greatest achievements. It saved most of us reading this.) The argument is more specific: **a Type-I civilization needs to define health in capacity terms, not absence terms** — because absence-of-disease optimizes for treatment, not for human flourishing.
 
 This shows up everywhere once you see it. Cities designed around car infrastructure — *technically* "no disease," literally physically incapable of supporting healthy bodies. Work cultures designed for industrial-era extraction — *technically* "no diagnosis," predictably destroying decades of life. Food systems optimized for shelf life — *technically* "safe," delivering chronic micronutrient deficiency at population scale.
 
@@ -40,7 +40,7 @@ Be specific. What's the *first* thing you'd change?
 ## Three things to do this week
 
 1. **Do the audit.** What would your week look like if you were optimizing for capacity instead of absence? List 3 specific changes.
-2. **Read Manifesto Ch.10 + Ch.42.** Pay attention to where the manifesto separates "what the medical system can fix" from "what the medical system can't even see."
+2. **Read [Mental Health and Collective Psyche](https://offda9.com/curriculum/theorist/the-collective-psyche.php) in the Codex.** Pay attention to where it separates "what the medical system can fix" from "what the medical system can't even see."
 3. **Bring one of your changes to Discord.** Not a complaint about the medical system — a single concrete thing you'd run differently. Those are useful to compare across the community.
 
 Next week: environment. A river, a forest, or a non-human species you've actually been near. What do you owe it?

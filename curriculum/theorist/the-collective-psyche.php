@@ -21,7 +21,7 @@ $lesson = [
   "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 10",
   "subtitle"  => "The fourth barrier lives between your ears: a civilization&rsquo;s exterior power racing ahead of its interior development &mdash; minds systematically depleted, distracted, and stalled by the very systems the other three barriers built.",
   "sigil"     => "X",
-  "cover"     => "codex-vol2.jpg",
+  "cover"     => "atlas-vol2.jpg",
   "archivist" => "&ldquo;The other barriers are out there &mdash; institutions, markets, feeds. This one is in here. The chapter&rsquo;s claim is uncomfortable and precise: psychological capacity is <em>infrastructure</em>, as load-bearing as any power grid, and ours is failing under engineered load. Read it without flinching and without mysticism &mdash; the &lsquo;collective psyche&rsquo; is not a spirit hovering over us; it is what millions of individual minds, wired together, measurably do to each other.&rdquo;",
   "canon" => [
     ["p" => "The implications for civilizational development are profound. A civilization cannot progress beyond the psychological capacity of its collective consciousness: the exterior development of a society cannot long exceed its interior development without creating severe social pathologies. This principle establishes mental health as prerequisite infrastructure for higher civilization capabilities.", "lead" => true],

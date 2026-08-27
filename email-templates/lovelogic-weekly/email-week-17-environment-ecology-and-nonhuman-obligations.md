@@ -36,7 +36,7 @@ The cost question is the work. Anyone can list obligations they don't have to ac
 ## Three things to do this week
 
 1. **Walk to your nearest natural place.** Just be there for 10 minutes. Then write down what you owe it. Specific is better than abstract.
-2. **Read Manifesto Ch.26 + Ch.40.** Pay attention to where the framework refuses the human-as-only-subject default.
+2. **Read [Environmental Degradation](https://offda9.com/curriculum/theorist/environmental-degradation.php) in the Codex** — the published lesson closest to this week. Notice where the framework refuses the human-as-only-subject default.
 3. **Bring your "actual cost" answer to the Discord** when Sunday's QOTD lands. That's the part most members will skip; the ones who don't are doing the actual work.
 
 Next week: identity and pluralism. The group you find genuinely hard to coordinate with — and whether OD9 can be built without one of you losing.

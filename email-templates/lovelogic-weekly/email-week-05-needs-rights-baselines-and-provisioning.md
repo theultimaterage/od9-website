@@ -25,7 +25,7 @@ The real list is hard to write. Try it.
 
 ## Why this matters
 
-**Ch.7** of the Manifesto (*Power, Legibility, and Governance*) makes a sharp claim: **a "right" that can't be delivered by infrastructure is a sentiment, not a right**. Rights without delivery mechanisms are how regimes get away with putting beautiful language in their constitutions and then doing whatever they want.
+[**Ch.7** of the Manifesto](https://offda9.com/curriculum/observer/the-solution-framework.php) (*The Solution Framework*) makes a sharp claim: **a "right" that can't be delivered by infrastructure is a sentiment, not a right**. Rights without delivery mechanisms are how regimes get away with putting beautiful language in their constitutions and then doing whatever they want.
 
 That's not cynicism. That's design. If we're going to build something that actually produces flourishing across billions of people, we have to be operational. Five things. Specific. Buildable.
 

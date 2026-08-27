@@ -19,7 +19,7 @@ Because here's the thing: most "systems we hate" are stacks of nested systems. A
 
 ## Why this matters
 
-**Ch.4** of the Manifesto runs through this in detail (it's called *The Great Awakening* and it's worth the hour). The argument is that humanity keeps trying to fix problems at the wrong layer. We try to fix climate at the level of individual consumer habits when the levers are at the regulatory and infrastructure layer. We try to fix loneliness at the individual therapy layer when the levers are in zoning law and labor scheduling. We try to fix misinformation at the individual fact-check layer when the levers are in the recommendation algorithms.
+[**Ch.4**](https://offda9.com/curriculum/observer/the-twin-singularities.php) of the Manifesto runs through this in detail (it's called *The Great Awakening*). The argument is that humanity keeps trying to fix problems at the wrong layer. We try to fix climate at the level of individual consumer habits when the levers are at the regulatory and infrastructure layer. We try to fix loneliness at the individual therapy layer when the levers are in zoning law and labor scheduling. We try to fix misinformation at the individual fact-check layer when the levers are in the recommendation algorithms.
 
 The mismatch isn't accidental. It's the *easiest layer to organize people at* — which is the individual — almost never matches the *layer where the actual leverage lives*.
 
@@ -36,7 +36,7 @@ Most people have never named which layer they actually trust. The answer is more
 ## Three things to do this week
 
 1. **Map one system you're inside.** Pick the system you opened this email thinking about. Sketch out the layers — write them down. Where does the leverage actually live?
-2. **Read Manifesto Ch.4 (The Great Awakening) + Ch.5 (The System in Crisis).** Yes, they're long. Skim if you have to. The framework lands.
+2. **Read [The Twin Singularities](https://offda9.com/curriculum/observer/the-twin-singularities.php) and [The System in Crisis](https://offda9.com/curriculum/observer/the-system-in-crisis.php) in the Codex** — the published lessons on Ch.4 and Ch.5. The framework lands even if you skim.
 3. **Drop your "trusted unit" answer in #question-of-the-day** Sunday. The mix of answers across our community is the most honest snapshot we have of how members actually think about coordination.
 
 Next week: foundational axioms. The assumptions you don't realize you're making — and the ones the manifesto might be wrong about.

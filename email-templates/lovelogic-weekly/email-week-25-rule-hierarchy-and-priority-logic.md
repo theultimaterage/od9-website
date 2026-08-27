@@ -25,7 +25,7 @@ This is the hardest design question in any ethical framework. Most belief system
 
 ## What the Manifesto pushes on
 
-**Ch.6** of the Manifesto and **Ch.25** take a position that's unusually honest for an ethics-adjacent project: **principles WILL conflict, in concrete cases, predictably.** A system that doesn't tell you which principle wins WHEN — and HOW the priority gets re-evaluated as new evidence arrives — is a system that just dumps the decision on whoever's holding the bag.
+[**Ch.6**](https://offda9.com/curriculum/observer/responsible-transformation.php) of the Manifesto and **Ch.25** take a position that's unusually honest for an ethics-adjacent project: **principles WILL conflict, in concrete cases, predictably.** A system that doesn't tell you which principle wins WHEN — and HOW the priority gets re-evaluated as new evidence arrives — is a system that just dumps the decision on whoever's holding the bag.
 
 The actual design move isn't to remove the conflict. It's to **make the priority logic explicit, defendable, and updateable.** "We protect agency by default. The threshold for overriding is X. Here's who decides. Here's how the decision gets reviewed." That's an institutional design choice, not a vibe.
 
@@ -42,7 +42,7 @@ The "what's your rule" half is the work. Most people can answer "yes" or "no" fo
 ## Three things to do this week
 
 1. **Pick the case.** Real one, from your life. Then write the rule you'd actually want to apply — including the threshold for switching from "respect their call" to "pressure them" to "actually intervene."
-2. **Read Manifesto Ch.6 + Ch.25.** Pay attention to where the framework refuses to claim either principle wins absolutely.
+2. **Read [Responsible Transformation](https://offda9.com/curriculum/observer/responsible-transformation.php) in the Codex.** Pay attention to where the framework refuses to claim either principle wins absolutely.
 3. **Bring your rule to Discord.** The collected community spread is a real working draft of OD9's intervention ethics.
 
 Next week: the compression test. One sentence. What is the thing OD9 must NEVER fail at?

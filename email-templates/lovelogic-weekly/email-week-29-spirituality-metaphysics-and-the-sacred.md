@@ -29,7 +29,7 @@ Now here's the harder question. The dominant culture tends to treat almost nothi
 
 ## What the Manifesto pushes on
 
-**Ch.3** of the Manifesto and **Ch.46** take a position that may surprise people who came to OD9 expecting pure rationalism: **the sacred is not optional infrastructure for human civilization.** Even fully secular societies have sacred categories — they just often refuse to admit which ones, which means the sacred categories drift unconsciously and end up serving whoever has cultural power that decade.
+[**Ch.3**](https://offda9.com/curriculum/observer/love-as-infrastructure.php) of the Manifesto and **Ch.46** take a position that may surprise people who came to OD9 expecting pure rationalism: **the sacred is not optional infrastructure for human civilization.** Even fully secular societies have sacred categories — they just often refuse to admit which ones, which means the sacred categories drift unconsciously and end up serving whoever has cultural power that decade.
 
 A Type-I civilization that doesn't deliberately curate its sacred categories ends up with the sacred categories chosen for it by markets, algorithms, or ambient politics. None of those are good at this. All of them produce sacred categories that serve their own optimization, not human flourishing.
 
@@ -46,7 +46,7 @@ The "in practice, not just in word" part is the test. Anyone can claim to value 
 ## Three things to do this week
 
 1. **Name one sacred thing.** Be honest. The point isn't to impress anyone — it's to clarify your own architecture.
-2. **Read Manifesto Ch.3 + Ch.46.** Both quieter chapters than the diagnostics; together they're one of the manifesto's most quietly radical positions.
+2. **Read [Love as Infrastructure](https://offda9.com/curriculum/observer/love-as-infrastructure.php) in the Codex.** A quieter lesson than the diagnostics, and one of the most quietly radical positions in the corpus.
 3. **Bring your sacred thing to Discord.** This is one of the few weeks where the answers will be deeply varied without being divisive — the collected list is genuinely interesting.
 
 Next week: the most charged question of the campaign. Sex, gender, desire, reproduction. What does the mainstream get so wrong that we'll laugh at it in 100 years?

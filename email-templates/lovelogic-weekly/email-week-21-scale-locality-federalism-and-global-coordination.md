@@ -46,7 +46,7 @@ The "OR too global" half is the part most local-control purists skip. Don't.
 ## Three things to do this week
 
 1. **Pick the decision.** Specific. Then write your answer for *which layer it should live at* — and what would break if you moved it.
-2. **Read Manifesto Ch.24 + Ch.47.** They give vocabulary for subsidiarity that doesn't carry the political baggage the term usually does.
+2. **Name what you'd have to give up to move that decision to the right layer.** Every relocation costs something — speed, accountability, or local knowledge. Name the cost, not just the fix.
 3. **Drop your "wrong layer" in Discord.** The collected community spread is one of the more useful coordination-design artifacts we'll generate.
 
 Next week: transition strategy. If OD9 ever actually scales — what's the FIRST institution that tries to co-opt it?

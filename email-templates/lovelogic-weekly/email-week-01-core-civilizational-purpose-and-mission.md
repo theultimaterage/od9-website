@@ -21,7 +21,7 @@ If you can answer that, you've answered the only question that actually matters:
 
 Most movements organize against something. Easier to mobilize against a thing than around an absence. They spend years fighting, win some battles, then collapse — because being against something doesn't tell you what to build.
 
-OD9 is supposed to be the opposite. **Ch.1** of the Manifesto puts it like this: humanity needs to consciously evolve toward Type 1 Kardashev civilization, navigating the Great Filter through systematic transformation of technology, social systems, and consciousness.
+OD9 is supposed to be the opposite. [**Ch.1**](https://offda9.com/curriculum/observer/the-creed.php) of the Manifesto puts it like this: humanity needs to consciously evolve toward Type 1 Kardashev civilization, navigating the Great Filter through systematic transformation of technology, social systems, and consciousness.
 
 Translated: we're not running from the dumpster fire. We're trying to build what comes after.
 
@@ -29,7 +29,7 @@ That's a much harder pitch. "We're against extraction" packs into a tweet. "We'r
 
 ## This week's question
 
-Sunday's deep-dive QOTD in [#question-of-the-day](https://discord.gg/spgmrXVMWq):
+Sunday's deep-dive QOTD in [#question-of-the-day](https://discord.gg/od9):
 
 > *Suppose OD9 disappears in 100 years and all that survives is ONE artifact. What should it be, and what does that artifact prove we got right?*
 
@@ -40,11 +40,11 @@ What's yours?
 ## Three things to do this week
 
 1. **Drop your one-artifact answer in #question-of-the-day** when Sunday's QOTD lands. It seeds the conversation we'll have for months.
-2. **Read Manifesto Ch.1 + Ch.5.** ~30 min. They set up everything else this campaign builds on.
+2. **Read the two Codex lessons this week is built on** — [The OD9 Creed](https://offda9.com/curriculum/observer/the-creed.php) and [The System in Crisis](https://offda9.com/curriculum/observer/the-system-in-crisis.php). ~30 min, no login needed. They set up everything else this campaign builds on.
 3. **Tell one person what OD9 is in your own words.** If you can't yet, that's the homework.
 
 Next week: how to map a system you're already inside — and why the leverage point is almost never where you'd guess.
 
 — The OD9 team
 
-P.S. If you got this email and you're not already in the Discord: [come hang](https://discord.gg/spgmrXVMWq). The community is small but sharp, and the QOTD threads are where most of the actual thinking happens.
+P.S. If you got this email and you're not already in the Discord: [come hang](https://discord.gg/od9). The community is small but sharp, and the QOTD threads are where most of the actual thinking happens.

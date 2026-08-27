@@ -46,7 +46,7 @@ The "barely" part is the test. Anyone can name extreme cases where force is obvi
 ## Three things to do this week
 
 1. **Pick a case from your own life where you've thought about this.** Not abstractly. A real moment when force was on the table — used, considered, or refused. What's your honest read of whether the call was right?
-2. **Read Manifesto Ch.17 + Ch.44.** Both shorter than they look. The framework on accountability-of-force lands fast.
+2. **Write the rule you'd accept being applied to you.** Same standard, same circumstances, you on the receiving end. A rule that only works while you're the one holding it isn't a rule.
 3. **Bring your case to Discord.** This is one of the weeks where the community will sort itself by how seriously it engages — not by political tribe. Useful diagnostic.
 
 Next week: the closer. We're at the end of the campaign. Time to look at what changed.

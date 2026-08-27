@@ -337,7 +337,7 @@ assets/
 
 ### Usage Pattern
 - Bootstrap loads database configuration
-- Custom Database class (location TBD)
+- DB access lives in `includes/od9_sqlite.php` (bot SQLite, live read-only) + `dashboard/includes/db.php` (MySQL PDO) — resolved 2026-07-17
 - Connection verification scripts in root directory
 - Migration system in private/migrations/
 

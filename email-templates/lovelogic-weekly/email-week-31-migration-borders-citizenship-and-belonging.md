@@ -25,7 +25,7 @@ When the two answers agree, belonging is easy. When they conflict, it's one of t
 
 ## What the Manifesto pushes on
 
-**Ch.36, Ch.38, Ch.42, Ch.47** of the Manifesto, plus **Ch.1**, take a position on belonging that doesn't fit either standard political camp:
+**Ch.36, Ch.38, Ch.42, Ch.47** of the Manifesto, plus [**Ch.1**](https://offda9.com/curriculum/observer/the-creed.php), take a position on belonging that doesn't fit either standard political camp:
 
 - **Open-borders maximalism is wrong** because it ignores the fact that high-trust communities take generations to build, can be dissolved by faster inflow than the community can absorb, and replacement communities don't always emerge.
 - **Closed-borders restrictionism is wrong** because it pretends that geographically-bounded "belonging" is the only legitimate kind, ignoring that humans have always migrated, mixed, and reconstituted communities in ways that create more capability than they destroy.
@@ -45,7 +45,7 @@ Personal-stake answers tend to land hardest here. The conceptual stuff comes aft
 ## Three things to do this week
 
 1. **Answer the two-questions exercise honestly.** Where do you feel you belong? Who has the standing to decide whether you do?
-2. **Read Manifesto Ch.36 + Ch.42.** Both are mid-length; together they're the manifesto's most direct treatment of the coherence-vs-porosity design problem.
+2. **Ask the same question about a group you're already inside.** Who decides whether someone belongs to it — and would you defend that mechanism to someone it excluded?
 3. **Bring your story to Discord.** This is one of the categories where personal experience is the most useful contribution — far more than abstract argument.
 
 Next week: violence and the legitimate use of force. When is force the right answer? Be honest.

@@ -19,7 +19,7 @@ $lesson = [
   "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 16",
   "subtitle"  => "The second barrier under the hood: an economy that rewards capturing value over creating it, manufactures scarcity amid technical abundance, and measures success with an instrument that can&rsquo;t see most of what matters.",
   "sigil"     => "XVI",
-  "cover"     => "codex-vol2.jpg",
+  "cover"     => "atlas-vol2.jpg",
   "archivist" => "&ldquo;Your study doc showed you the extraction machine in plain language &mdash; the cured patient as lost revenue, the annuity logic. This chapter is the formal audit behind that anger. Read it the way an engineer reads a failure report: not <em>who is evil</em>, but <em>which incentive, pointed which direction, produces this wreckage every time</em>. Machines can be redesigned. That&rsquo;s the whole point of diagnosing one.&rdquo;",
   "canon" => [
     ["p" => "As economist Amartya Sen&rsquo;s capabilities approach (Development as Freedom, 1999) argues, the ultimate test of an economic system is not the goods produced but the lives people are able to lead. By this metric, current wealth concentration patterns fail not merely distributionally but functionally&mdash;limiting collective human potential below what is both possible and necessary for addressing planetary-scale challenges.", "lead" => true],

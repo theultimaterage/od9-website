@@ -29,7 +29,7 @@ This is the most fundamental design question facing any civilization-scale proje
 
 ## What the Manifesto pushes on
 
-**Ch.22** of the Manifesto and **Ch.25** take a position that's honestly uncomfortable for everyone, regardless of where they sit politically: **a successful Type-I civilization will have to coordinate across kinds of difference that we don't currently know how to coordinate across — including kinds of difference that the present moment treats as zero-sum.**
+[**Ch.22**](https://offda9.com/curriculum/theorist/religious-institutions.php) of the Manifesto and **Ch.25** take a position that's honestly uncomfortable for everyone, regardless of where they sit politically: **a successful Type-I civilization will have to coordinate across kinds of difference that we don't currently know how to coordinate across — including kinds of difference that the present moment treats as zero-sum.**
 
 Not "tolerance" in the soft sense. Not "agree to disagree" while continuing to fight. Something harder: institutions and habits that let people who'd never share a meal still share a working coordination mechanism on a specific shared interest. Federalism is one design move toward this. Subsidiarity is another. Pluralist constitutional design is another. None of them solve it. All of them are necessary infrastructure.
 
@@ -46,7 +46,7 @@ The "without one of you losing" half is where most people quietly bail. Try not 
 ## Three things to do this week
 
 1. **Name your group.** Specific is better than abstract. "Conservatives" is too broad; "evangelical Christians" is closer; "evangelical Christians in your extended family who voted differently than you in the last election" is the real exercise.
-2. **Read Manifesto Ch.22 + Ch.25.** Pay attention to where the framework explicitly rejects the win/lose zero-sum default.
+2. **Read [Religious Institutions and Pseudoscience](https://offda9.com/curriculum/theorist/religious-institutions.php) in the Codex.** Pay attention to where the framework explicitly rejects the win/lose zero-sum default.
 3. **Bring your "one shared thing" to Discord.** The collected community list is one of the most useful artifacts we'll generate this year — it's a map of where coalitions are actually possible.
 
 Next week: ritual. The thing you keep doing that nobody asked you to keep doing — and what it would mean to have a Type-I version of it.

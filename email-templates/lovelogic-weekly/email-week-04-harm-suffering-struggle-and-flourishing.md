@@ -21,7 +21,7 @@ But here's the harder part: a few of those things you named are *actually fine*.
 
 ## Why this matters more than usual
 
-**Ch.5** of the Manifesto (*The System in Crisis*) makes a claim a lot of comfortable people don't want to hear: **most institutional harm in the modern world isn't intent — it's the byproduct of systems optimizing for things other than human flourishing**. Schools optimize for measurable test outcomes. Hospitals optimize for billing codes. Cities optimize for property tax base. Apps optimize for engagement.
+[**Ch.5**](https://offda9.com/curriculum/observer/the-system-in-crisis.php) of the Manifesto (*The System in Crisis*) makes a claim a lot of comfortable people don't want to hear: **most institutional harm in the modern world isn't intent — it's the byproduct of systems optimizing for things other than human flourishing**. Schools optimize for measurable test outcomes. Hospitals optimize for billing codes. Cities optimize for property tax base. Apps optimize for engagement.
 
 When the optimization target isn't "humans flourish," harm becomes background. Invisible. Normal. And then nobody is responsible because nobody chose it.
 
@@ -38,7 +38,7 @@ The line between those two is where every adult conversation about kids breaks d
 ## Three things to do this week
 
 1. **Do the high school exercise honestly.** Don't fake it. Three things, named specifically. Then test the line — which side is each on, and why?
-2. **Read Manifesto Ch.5 + Ch.10.** Ch.10 gets into harm operationally — how to talk about it without moralizing. Useful framework.
+2. **Read [The System in Crisis](https://offda9.com/curriculum/observer/the-system-in-crisis.php) and [Mental Health and Collective Psyche](https://offda9.com/curriculum/theorist/the-collective-psyche.php) in the Codex.** The second one gets into harm operationally — how to talk about it without moralizing.
 3. **Share your three in the Discord thread that drops Sunday.** The collective list will be one of the most honest things we publish all year.
 
 Next week: needs vs. rights vs. wishes. Five things every human alive in 2050 should be guaranteed — and your list has to be deliverable by infrastructure, not by sentiment.

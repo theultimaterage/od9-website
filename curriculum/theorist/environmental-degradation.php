@@ -19,7 +19,7 @@ $lesson = [
   "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 21",
   "subtitle"  => "The stakes pillar of the diagnosis: the barriers aren&rsquo;t failing us in the abstract &mdash; they&rsquo;re failing us against a clock, on the one infrastructure no civilization gets to replace.",
   "sigil"     => "XXI",
-  "cover"     => "codex-vol2.jpg",
+  "cover"     => "atlas-vol2.jpg",
   "archivist" => "&ldquo;As an Observer you learned the window is closing. This chapter is the gear-work behind that sentence &mdash; carbon arithmetic, tipping cascades, extinction&rsquo;s one-way door. Read it as an engineer, not a doomer: every number here is the well-evidenced kind, and the difference matters, because false alarm and false comfort are the same failure. The environment is not one issue on the list. It is the table the list is sitting on.&rdquo;",
   "canon" => [
     ["p" => "This transgression represents not merely an environmental crisis but a fundamental constraint on civilizational potential. As Lenton (2020) argues, the stability of Earth systems provides the necessary conditions for complex society to exist and evolve. When these systems destabilize, they create cascading disruptions across human systems from agriculture to economics to governance. Thus, environmental integrity is not an optional component of advancement but a prerequisite condition.", "lead" => true],

@@ -14,7 +14,7 @@ $lesson = [
   "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 2",
   "subtitle"  => "How OD9 weighs every claim&mdash;including its own. The rule that separates us from both dogma and woo.",
   "sigil"     => "II",
-  "cover"     => "codex-vol1.jpg",
+  "cover"     => "atlas-vol1.jpg",
   "archivist" => "&ldquo;You know who we are, and how we mean to change things. Here&rsquo;s the rule that keeps us honest while we do it&mdash;the cleanest line there is between a movement and a cult: we say out loud how sure we&rsquo;re allowed to be, on every claim, <em>including our own</em>.&rdquo;",
   "canon" => [
     ["p" => "The challenge lies not in seeking absolute certainty&mdash;which philosopher Karl Popper (1963) demonstrated to be both impossible and unnecessary for scientific progress&mdash;but in developing sophisticated frameworks for assessing and utilizing knowledge across a spectrum of certainty levels.", "lead" => true],

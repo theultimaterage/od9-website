@@ -29,7 +29,7 @@ The truth is some decisions absolutely should move to community vote. Some absol
 
 ## What the Manifesto actually argues
 
-**Ch.7** (*Power, Legibility, and Governance*) and **Ch.13** of the Manifesto don't pretend governance is a solved problem. They lay out the actual tradeoffs:
+[**Ch.7**](https://offda9.com/curriculum/observer/the-solution-framework.php) (*The Solution Framework*) and [**Ch.13**](https://offda9.com/curriculum/theorist/scientific-institutions.php) (*Scientific Institution Analysis*) of the Manifesto don't pretend governance is a solved problem. They lay out the actual tradeoffs:
 
 - **Speed vs. legitimacy.** One person can decide in minutes. A community vote takes weeks. For a fire emergency, the community vote loses. For a 50-year zoning policy, the one-person decision is the disaster.
 - **Domain expertise vs. lived experience.** The cardiologist knows medicine. The patient knows their life. Most decisions need both — and most existing structures privilege only one.
@@ -48,7 +48,7 @@ The "what breaks" half is the part most people skip. Don't skip it.
 ## Three things to do this week
 
 1. **Do the move-one-decision exercise.** Write it out. Both sides — what gets better, what breaks. Then sit with whether you'd actually pull the lever.
-2. **Read Manifesto Ch.7 + Ch.13.** The frameworks for thinking about authority placement land best after you've done the exercise above.
+2. **Read [The Solution Framework](https://offda9.com/curriculum/observer/the-solution-framework.php) and [Scientific Institution Analysis](https://offda9.com/curriculum/theorist/scientific-institutions.php) in the Codex.** The frameworks for thinking about authority placement land best after you've done the exercise above.
 3. **Drop your "moved decision" in Sunday's QOTD thread.** The mix of answers across our community will be the closest thing we have to a real-time governance design workshop.
 
 Next week: language. The words that get weaponized so often they're almost unusable — and what to do about it.

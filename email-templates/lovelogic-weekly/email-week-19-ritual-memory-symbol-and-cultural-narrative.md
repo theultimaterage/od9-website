@@ -42,7 +42,7 @@ The "equivalent" question is harder than it looks. Don't reach for an obvious an
 ## Three things to do this week
 
 1. **Name your ritual.** Specifically. Then sit with the "why does it survive" question for a day before answering.
-2. **Read Manifesto Ch.45 + Ch.46.** They're some of the warmer chapters in a book that's mostly diagnostic. Notice where the framework treats ritual as architecture.
+2. **Read [Religious Institutions and Pseudoscience](https://offda9.com/curriculum/theorist/religious-institutions.php) in the Codex.** It's the published lesson on what religion got structurally right and where the content failed — which is the ritual-as-architecture question.
 3. **Drop your ritual + your guess at the Type-I equivalent in Discord.** This is one of the categories where the community spread will be most varied — and most interesting.
 
 Next week: failure. The thing you tried that didn't work — and what it taught you that success couldn't have.
