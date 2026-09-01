@@ -56,6 +56,44 @@ RewriteRule ^atlas$ atlas.php [L,QSA]
 # that ever followed it would fight the change. Trailing-slash tolerant.
 RewriteRule ^epk/?$ https://od9.freshthaplatform.com/epk [R=302,L]
 
+# Dotfiles - nothing whose NAME starts with a dot may be served. Covers the
+# eight .htaccess files in this tree and .user.ini. ACME is unaffected: the
+# challenge files inside .well-known/ have ordinary names, and this matches on
+# the basename.
+<FilesMatch "^\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Deny,Allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Backup and editor droppings, matched by SHAPE not by name.
+#
+# On 2026-08-31 this docroot held 23 of them and had no rule at all. Four were
+# confirmed serving 200 with their PHP source to anyone who asked - including
+# dashboard/includes/auth.php.bak-20260615-012330 - and a dummy file proved
+# api/drip/webhook.php.bak-pre-patch-20260501-025438 had been fetchable since
+# May. The seven secrets.config.php.bak-* copies did NOT leak, but only because
+# they happened to be mode 600 and Apache could not read them; that is luck,
+# not a control. All 23 are archived outside the webroot and deleted.
+#
+# Deliberately NARROW: .md, .txt and .json are NOT blocked, because this site
+# publishes 70, 33 and 10 of them respectively. Validated against the real
+# 1,014-file docroot listing - 10 files match, all .htaccess/.user.ini/error_log,
+# and no content of any kind.
+<FilesMatch "(?i)^error_log$|\.(bak|backup|old|orig|save|swp|swo|tmp|dist|inc)([._-][^/]*)?$|~$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Deny,Allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
 # php -- BEGIN cPanel-generated handler, do not edit
 # Set the “ea-php82” package as the default “PHP” programming language.
 <IfModule mime_module>
