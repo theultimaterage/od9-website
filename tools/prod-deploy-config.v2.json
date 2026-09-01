@@ -103,6 +103,7 @@
     "guardrail_lint": true,
     "deploy_coverage": true,
     "schema_usage": true,
+    "release_warden": true,
 
     "_first_run_findings": "guardrail_lint reported 20 errors: five 6-line customer/ wrappers require_once-ing files from /home/freshthaband — another cPanel account offda9 cannot read, so all four reachable URLs returned HTTP 500. Deleted (see remove_remote). schema_usage found 5 phantom columns, every one in api/drip/processor.php: od9_drip_log had no step_id/email_to, od9_drip_enrollments had no completed_at, both its UPDATEs keyed on a non-existent `id` instead of enrollment_id, and the customers fallback filtered on a discord_user_id that table does not have. The drip mailer could not log a send, advance a step, or complete a sequence. All fixed in the same change.",
 
