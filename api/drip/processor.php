@@ -89,15 +89,13 @@ function getMemberData(string $discordUserId): ?array {
     $stmt->execute([$discordUserId]);
     $member = $stmt->fetch();
 
-    if ($member) {
-        return $member;
-    }
-
-    // Fallback: try customers table if od9_members doesn't have the user
-    $stmt = $pdo->prepare("SELECT id, email, first_name, last_name, 'observer' as tier_name
-        FROM customers WHERE discord_user_id = ? LIMIT 1");
-    $stmt->execute([$discordUserId]);
-    return $stmt->fetch() ?: null;
+    // No customers fallback: that table has no Discord linkage at all (its
+    // columns are id, site_id, name, email, first_name, last_name, phone,
+    // square_customer_id, …), so `WHERE discord_user_id = ?` raised "Unknown
+    // column" every time od9_members missed — turning a plain miss into a
+    // throw. od9_members.discord_user_id is the only Discord→member mapping
+    // that exists, and it is already queried above.
+    return $member ?: null;
 }
 
 /**
@@ -174,8 +172,10 @@ function sendEmail(string $to, string $subject, string $htmlBody): bool {
  */
 function logDripEmail(int $enrollmentId, int $stepId, string $email, string $subject, string $status, ?string $error = null): void {
     $pdo = getDripDB();
+    // step_number / email, not step_id / email_to — od9_drip_log has never had
+    // those two columns, so every send attempt threw here instead of being logged.
     $stmt = $pdo->prepare("INSERT INTO od9_drip_log
-        (enrollment_id, step_id, email_to, subject, status, error_message)
+        (enrollment_id, step_number, email, subject, status, error_message)
         VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->execute([$enrollmentId, $stepId, $email, $subject, $status, $error]);
 }
@@ -186,17 +186,22 @@ function logDripEmail(int $enrollmentId, int $stepId, string $email, string $sub
 function updateEnrollment(int $enrollmentId, int $currentStep, int $totalSteps, int $nextDelayHours): void {
     $pdo = getDripDB();
 
+    // The key is enrollment_id; there is no `id` column on this table, so both
+    // branches threw "Unknown column 'id'" and no enrollment ever advanced or
+    // completed. `completed_at` does not exist either — `updated_at` is already
+    // ON UPDATE current_timestamp(), and status='completed' records the state,
+    // so the timestamp needs no column of its own.
     if ($currentStep >= $totalSteps) {
         // Sequence completed
         $stmt = $pdo->prepare("UPDATE od9_drip_enrollments
-            SET status = 'completed', current_step = ?, completed_at = NOW(), next_send_at = NULL
-            WHERE id = ?");
+            SET status = 'completed', current_step = ?, next_send_at = NULL
+            WHERE enrollment_id = ?");
         $stmt->execute([$currentStep, $enrollmentId]);
     } else {
         // Move to next step
         $stmt = $pdo->prepare("UPDATE od9_drip_enrollments
             SET current_step = ?, next_send_at = DATE_ADD(NOW(), INTERVAL ? HOUR)
-            WHERE id = ?");
+            WHERE enrollment_id = ?");
         $stmt->execute([$currentStep + 1, $nextDelayHours, $enrollmentId]);
     }
 }
