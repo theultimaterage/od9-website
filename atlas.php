@@ -32,6 +32,13 @@ $atlas_map_path = __DIR__ . '/data/manifesto-map.json';
 $atlas_map_raw  = is_readable($atlas_map_path) ? file_get_contents($atlas_map_path) : '';
 $atlas_map      = $atlas_map_raw !== '' ? json_decode($atlas_map_raw, true) : null;
 
+/* Chapter-object registry (what each sprite IS + which chapter it lands on),
+   written by tools/build_atlas_sprites.py from tools/atlas_objects.py. The
+   renderer holds no mapping of its own, so the two cannot drift. Absent or
+   unreadable => atlas.js falls back to plain glow-dots, never an error. */
+$atlas_obj_path = __DIR__ . '/data/atlas-objects.json';
+$atlas_obj_raw  = is_readable($atlas_obj_path) ? file_get_contents($atlas_obj_path) : '';
+
 /* Social share card — shot FROM the living map itself via ?og=1 (the card
    evolves as stars ignite; re-shoot + redeploy after each sermon week).
    Absolute URL + mtime version so crawlers and the CF edge always pull the
@@ -85,6 +92,13 @@ $atlas_og_mode  = isset($_GET['og']);
   .atlas-canon-label{font-family:'Rajdhani',sans-serif;letter-spacing:2px;font-size:0.75rem;color:var(--gold);text-transform:uppercase;margin-bottom:0.3rem}
   .atlas-canon-link{display:block;color:var(--zone-cyan);text-decoration:none;font-size:0.92rem;padding:0.22rem 0;border-bottom:1px solid rgba(122,0,255,0.25)}
   .atlas-canon-link:hover{color:var(--gold)}
+  .atlas-chip-beyond{color:var(--zone-violet);border-color:var(--zone-violet)}
+  .atlas-object{border:1px solid rgba(122,0,255,0.3);border-radius:3px;padding:0.6rem 0.7rem;margin:0 0 0.8rem;background:rgba(122,0,255,0.05)}
+  .atlas-object-head{display:flex;align-items:baseline;gap:0.55rem;flex-wrap:wrap;margin-bottom:0.3rem}
+  .atlas-object-name{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.98rem;color:var(--chrome)}
+  .atlas-object-kind{font-family:'Rajdhani',sans-serif;letter-spacing:1.4px;font-size:0.68rem;text-transform:uppercase;color:var(--zone-cyan)}
+  .atlas-object-kind.is-speculative{color:var(--t-pioneer)}
+  .atlas-object-blurb{margin:0;font-size:0.85rem;line-height:1.5;color:var(--t-observer)}
   .atlas-await{color:var(--t-observer);font-size:0.88rem;font-style:italic}
   .atlas-route{margin-top:0.8rem;font-family:'Rajdhani',sans-serif;letter-spacing:1px;font-size:0.8rem;color:var(--zone-violet)}
   #atlas-reader{position:absolute;inset:0;z-index:6}
@@ -136,7 +150,7 @@ $atlas_og_mode  = isset($_GET['og']);
   .atlas-og-lockup .u{display:inline-block;margin-top:12px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:3px;font-size:15px;color:var(--gold);border:1px solid var(--gold);border-radius:3px;padding:3px 12px}
 </style>
 <?php endif; ?>
-<div id="atlas-stage" role="application" aria-label="Zoomable map of the OD9 Manifesto" data-plates-v="<?= @max(array_map('filemtime', glob(__DIR__ . '/images/atlas/plates/*.webp') ?: [])) ?: 1 ?>">
+<div id="atlas-stage" role="application" aria-label="Zoomable map of the OD9 Manifesto" data-plates-v="<?= @max(array_map('filemtime', glob(__DIR__ . '/images/atlas/plates/*.webp') ?: [])) ?: 1 ?>" data-sprites-v="<?= @max(array_map('filemtime', glob(__DIR__ . '/images/atlas/sprites/*.webp') ?: [])) ?: 1 ?>">
   <canvas id="atlas-canvas"></canvas>
 <?php if ($atlas_og_mode): ?>
   <div class="atlas-og-lockup">
@@ -167,6 +181,9 @@ $atlas_og_mode  = isset($_GET['og']);
 
 <?php if ($atlas_map_raw !== ''): ?>
 <script id="atlas-data" type="application/json"><?= $atlas_map_raw ?></script>
+<?php if ($atlas_obj_raw !== ''): ?>
+<script id="atlas-objects" type="application/json"><?= $atlas_obj_raw ?></script>
+<?php endif; ?>
 <?php /* mtime-versioned so every deploy busts the CF asset cache (2026-08-21:
          an unversioned URL served the previous build for minutes post-deploy) */ ?>
 <script src="js/atlas.js?v=<?= @filemtime(__DIR__ . '/js/atlas.js') ?: 1 ?>" defer></script>

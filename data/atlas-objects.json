@@ -1,0 +1,448 @@
+{
+ "objects": {
+  "protostar": {
+   "name": "Protostar",
+   "kind": "Forming star",
+   "real": true,
+   "blurb": "A star still gathering itself inside a cocoon of dust and gas, collapsing under its own weight but not yet hot enough at the core to ignite fusion."
+  },
+  "gold-star": {
+   "name": "Main-sequence star",
+   "kind": "Star",
+   "real": true,
+   "blurb": "A star in its long stable adulthood, fusing hydrogen into helium in its core. The Sun has been doing this for about 4.6 billion years and has roughly that long to go."
+  },
+  "ignition": {
+   "name": "First ignition",
+   "kind": "Star, forming",
+   "real": true,
+   "blurb": "The threshold moment fusion catches and a protostar becomes a star, its new light blowing back the cloud that built it."
+  },
+  "pulsar": {
+   "name": "Pulsar",
+   "kind": "Neutron star",
+   "real": true,
+   "blurb": "A neutron star spinning up to hundreds of times a second, sweeping beams from its magnetic poles past us like a lighthouse. The pulses keep time well enough to rival atomic clocks."
+  },
+  "neutron-star": {
+   "name": "Neutron star",
+   "kind": "Stellar remnant",
+   "real": true,
+   "blurb": "The collapsed core a supernova leaves behind: about the width of a city, so dense that a sugar-cube of it would outweigh a mountain, wrapped in a magnetic field trillions of times Earth's."
+  },
+  "white-dwarf": {
+   "name": "White dwarf",
+   "kind": "Stellar remnant",
+   "real": true,
+   "blurb": "What a Sun-like star leaves when its fuel runs out — an Earth-sized ember of spent core, no longer fusing anything, cooling quietly for billions of years."
+  },
+  "quasar": {
+   "name": "Quasar",
+   "kind": "Active galactic nucleus",
+   "real": true,
+   "blurb": "The blazing centre of a young galaxy: matter spiralling into a supermassive black hole, outshining every star around it and firing jets across thousands of light-years."
+  },
+  "black-hole-star": {
+   "name": "Black hole star",
+   "kind": "Black hole, enshrouded",
+   "real": true,
+   "blurb": "A supermassive black hole buried in gas so dense the whole system glows like one enormous red star. It looks like a star and shines by devouring. Reported 2026 as MoM-BH*-1."
+  },
+  "horizon-star": {
+   "name": "The horizon star",
+   "kind": "Not a catalogued object",
+   "real": false,
+   "blurb": "Not a classification — a star met head-on, close enough that its light fills everything. The Atlas uses it as a threshold rather than a destination."
+  },
+  "telescope": {
+   "name": "Space telescope",
+   "kind": "Spacecraft",
+   "real": true,
+   "blurb": "A segmented-mirror observatory that folds to fit a rocket and unfolds in vacuum, shielded from the Sun so it can see faint infrared light from the first galaxies."
+  },
+  "probe": {
+   "name": "Interstellar probe",
+   "kind": "Spacecraft",
+   "real": true,
+   "blurb": "A small craft on a one-way trip out of the solar system, calling home across widening light-hours. Voyager 1 has been flying since 1977 and is still answering."
+  },
+  "dyson-swarm": {
+   "name": "Dyson swarm",
+   "kind": "Megastructure · proposed",
+   "real": false,
+   "blurb": "Not a solid shell but a swarm of countless independent collectors orbiting a star, capturing a growing share of its output. Proposed by Freeman Dyson in 1960."
+  },
+  "oneill-cylinder": {
+   "name": "O'Neill cylinder",
+   "kind": "Habitat · proposed",
+   "real": false,
+   "blurb": "A pair of counter-rotating cylinders whose spin presses inhabitants to the inner surface, giving gravity without a planet. Gerard O'Neill worked out the engineering in 1976."
+  },
+  "stanford-torus": {
+   "name": "Stanford torus",
+   "kind": "Habitat · proposed",
+   "real": false,
+   "blurb": "A wheel spun for gravity, with mirrors feeding sunlight to farmland along its inner rim and spokes running to a central hub. From a 1975 NASA Ames study."
+  },
+  "orbital-ring": {
+   "name": "Orbital ring",
+   "kind": "Megastructure · proposed",
+   "real": false,
+   "blurb": "A ring circling the planet above the atmosphere, held up by its own orbital momentum, so cargo can climb a tether to space instead of burning its way there."
+  },
+  "matrioshka-brain": {
+   "name": "Matrioshka brain",
+   "kind": "Megastructure · hypothetical",
+   "real": false,
+   "blurb": "Nested Dyson shells, each computing on the waste heat of the shell inside it, wringing thought out of a star until the last usable joule is gone. Named for the stacking dolls."
+  },
+  "ringworld": {
+   "name": "Ringworld",
+   "kind": "Megastructure · fiction",
+   "real": false,
+   "blurb": "A band looped all the way around a star, spun for gravity, its inner surface offering millions of times the living area of a planet. Larry Niven, 1970."
+  },
+  "topopolis": {
+   "name": "Topopolis",
+   "kind": "Megastructure · hypothetical",
+   "real": false,
+   "blurb": "A habitable tube grown so long it loops the whole way around its star and closes on itself — a cylinder with no end to walk to."
+  },
+  "mckendree": {
+   "name": "McKendree cylinder",
+   "kind": "Habitat · proposed",
+   "real": false,
+   "blurb": "An O'Neill cylinder rebuilt in carbon nanotube, which lets the walls hold at thousands of kilometres across instead of tens. Tom McKendree, 1995."
+  },
+  "globus-cassus": {
+   "name": "Globus Cassus",
+   "kind": "Megastructure · concept",
+   "real": false,
+   "blurb": "Earth turned inside out: the planet's own material rebuilt into a hollow shell many times its width, inhabited on the inner face. Christian Waldvogel's 2004 art project."
+  },
+  "alderson-disk": {
+   "name": "Alderson disk",
+   "kind": "Megastructure · hypothetical",
+   "real": false,
+   "blurb": "A single solid disc reaching out past the orbit of Jupiter with its star bobbing through a hole at the centre, habitable on both faces. Dan Alderson."
+  },
+  "shkadov": {
+   "name": "Shkadov thruster",
+   "kind": "Stellar engine · hypothetical",
+   "real": false,
+   "blurb": "A mirror parked on one side of a star, balanced between gravity and light pressure, so the star's own glare pushes the entire system somewhere else. Leonid Shkadov, 1987."
+  },
+  "stellar-engine": {
+   "name": "Stellar engine",
+   "kind": "Stellar engine · hypothetical",
+   "real": false,
+   "blurb": "Any machine built to harness a whole star — for power, for propulsion, or both. The class of thing a civilisation builds when a planet's energy budget stops being enough."
+  },
+  "boltzmann-brain": {
+   "name": "Boltzmann brain",
+   "kind": "Thought experiment",
+   "real": false,
+   "blurb": "A mind assembled for an instant by sheer random fluctuation, memories and all, then gone. Not a prediction — a test: any cosmology implying more of these than real observers has refuted itself."
+  },
+  "planetary-nebula": {
+   "name": "Planetary nebula",
+   "kind": "Stellar remnant",
+   "real": true,
+   "blurb": "A dying Sun-like star throwing off its outer layers, lit from inside by the exposed core. Nothing to do with planets — early observers just thought the discs looked like them."
+  },
+  "globular-cluster": {
+   "name": "Globular cluster",
+   "kind": "Star cluster",
+   "real": true,
+   "blurb": "Hundreds of thousands of ancient stars bound so tightly they hold a sphere. The Milky Way's are around 12 billion years old — nearly as old as the universe."
+  },
+  "stellar-nursery": {
+   "name": "Stellar nursery",
+   "kind": "Star-forming region",
+   "real": true,
+   "blurb": "A cold molecular cloud collapsing into new stars, the newborns lighting the gas that made them from within."
+  },
+  "orbital-resonance": {
+   "name": "Orbital resonance",
+   "kind": "Orbital mechanics",
+   "real": true,
+   "blurb": "Bodies whose orbital periods form whole-number ratios, tugging each other on the same beat every lap. Io, Europa and Ganymede run a 1:2:4 that has held for billions of years."
+  },
+  "cepheid": {
+   "name": "Cepheid variable",
+   "kind": "Variable star",
+   "real": true,
+   "blurb": "A star that swells and shrinks on a fixed cycle. The period reveals its true brightness, which is how Hubble measured the distance to other galaxies and proved the universe is bigger than ours."
+  },
+  "brown-dwarf": {
+   "name": "Brown dwarf",
+   "kind": "Substellar object",
+   "real": true,
+   "blurb": "Too big to be a planet, too small to fuse hydrogen. It never reached the roughly 80 Jupiter masses ignition needs, so it just radiates leftover formation heat and slowly fades."
+  },
+  "dissolving-cluster": {
+   "name": "Dissolving open cluster",
+   "kind": "Star cluster",
+   "real": true,
+   "blurb": "Stars born from one cloud, loosely bound and pulled apart by the galaxy over a few hundred million years. The Sun had siblings; they are long scattered."
+  },
+  "debris-cascade": {
+   "name": "Orbital debris cascade",
+   "kind": "Orbital hazard",
+   "real": true,
+   "blurb": "Kessler syndrome: collisions make fragments, fragments cause collisions, and past a density threshold the cascade sustains itself and can close an orbit for generations."
+  },
+  "ring-system": {
+   "name": "Ring system with shepherd moons",
+   "kind": "Planetary rings",
+   "real": true,
+   "blurb": "Tiny moons whose gravity confines ring particles into sharp bands and swept gaps. Prometheus and Pandora hold Saturn's F ring between them."
+  },
+  "mass-transfer-binary": {
+   "name": "Mass-transfer binary",
+   "kind": "Binary star system",
+   "real": true,
+   "blurb": "One star swollen past the point where its own gravity wins, spilling matter onto a denser companion through a bright accretion stream."
+  },
+  "asteroid-collision": {
+   "name": "Colliding asteroids",
+   "kind": "Small bodies",
+   "real": true,
+   "blurb": "Rocky bodies on crossing orbits. Real belt collisions are rare and violent, and the dust families they leave behind are still traceable today."
+  },
+  "decaying-orbit": {
+   "name": "Moon on a decaying orbit",
+   "kind": "Tidal decay",
+   "real": true,
+   "blurb": "Phobos spirals about 2cm closer to Mars each year, its surface already grooved by the tidal stress. In perhaps 50 million years it breaks apart."
+  },
+  "red-giant": {
+   "name": "Red giant",
+   "kind": "Star, late stage",
+   "real": true,
+   "blurb": "A star that exhausted the hydrogen in its core, swelling enormous and cool. The Sun will reach this and likely swallow Mercury and Venus."
+  },
+  "greenhouse-world": {
+   "name": "Runaway greenhouse world",
+   "kind": "Planetary atmosphere",
+   "real": true,
+   "blurb": "Venus: nearly Earth's twin in size, with a thick CO2 atmosphere that trapped heat until the surface reached about 465°C — hot enough to melt lead."
+  },
+  "laser-guide-star": {
+   "name": "Laser guide star",
+   "kind": "Telescope instrument",
+   "real": true,
+   "blurb": "A laser fired into the sodium layer 90km up creates an artificial star. Measuring how the atmosphere smears it lets the mirror deform hundreds of times a second to cancel the blur."
+  },
+  "cosmic-web": {
+   "name": "The cosmic web",
+   "kind": "Large-scale structure",
+   "real": true,
+   "blurb": "The largest known structure: galaxies strung along filaments of dark matter around vast near-empty voids. Nothing in the universe sits truly alone."
+  },
+  "solar-granulation": {
+   "name": "Solar granulation",
+   "kind": "Stellar surface",
+   "real": true,
+   "blurb": "The Sun's visible surface is a boiling field of convection cells, each about 1,000km across, rising and sinking on a roughly ten-minute cycle."
+  },
+  "exoplanet": {
+   "name": "Exoplanet",
+   "kind": "Planet",
+   "real": true,
+   "blurb": "A planet orbiting another star. The first was confirmed in 1992; the catalogue now runs past 5,000 and keeps growing."
+  },
+  "einstein-ring": {
+   "name": "Einstein ring",
+   "kind": "Gravitational lens",
+   "real": true,
+   "blurb": "Mass bends spacetime, so a galaxy sitting exactly behind another has its light wrapped into a complete ring. Predicted by general relativity, then actually photographed."
+  },
+  "telescope-array": {
+   "name": "Radio telescope array",
+   "kind": "Observatory",
+   "real": true,
+   "blurb": "Separate dishes combined by interferometry act as one instrument as wide as the distance between them — the trick that resolved a black hole's shadow."
+  },
+  "magnetosphere": {
+   "name": "Magnetosphere",
+   "kind": "Planetary shield",
+   "real": true,
+   "blurb": "A planet's magnetic field deflecting the solar wind. Mars lost most of its field, and then most of its atmosphere; Earth kept both."
+  },
+  "hypervelocity-star": {
+   "name": "Hypervelocity star",
+   "kind": "Star, unbound",
+   "real": true,
+   "blurb": "A star flung by a close encounter with the galactic centre's black hole, moving fast enough to escape the galaxy entirely and never return."
+  },
+  "protoplanetary-disk": {
+   "name": "Protoplanetary disk",
+   "kind": "Star-forming region",
+   "real": true,
+   "blurb": "The disc of gas and dust around a young star, where dark gaps mark the orbits of planets sweeping their lanes clear."
+  },
+  "lagrange-point": {
+   "name": "Lagrange point",
+   "kind": "Orbital mechanics",
+   "real": true,
+   "blurb": "Five positions where two bodies' gravity and orbital motion balance, so a third object can hold station. JWST works from one; Jupiter's Trojan asteroids crowd two others."
+  },
+  "habitable-zone": {
+   "name": "Habitable zone",
+   "kind": "Orbital region",
+   "real": true,
+   "blurb": "The band around a star where a planet could hold liquid surface water — closer and it boils away, further and it freezes."
+  },
+  "young-cluster": {
+   "name": "Young star cluster",
+   "kind": "Star cluster",
+   "real": true,
+   "blurb": "Hot blue stars newly lit together, still lighting the cloud that formed them. Blue stars burn fast, so seeing them means the cluster is young."
+  },
+  "pleiades": {
+   "name": "The Pleiades",
+   "kind": "Open cluster",
+   "real": true,
+   "blurb": "About 100 million years old and 440 light-years away — a whole generation of stars lit at once, and one of the few clusters visible to the naked eye."
+  },
+  "barycentre": {
+   "name": "Shared barycentre",
+   "kind": "Orbital mechanics",
+   "real": true,
+   "blurb": "Two bodies both orbit their common centre of mass. Pluto and Charon's sits in open space between them, so neither one is the centre."
+  },
+  "aurora": {
+   "name": "Aurora",
+   "kind": "Atmospheric phenomenon",
+   "real": true,
+   "blurb": "Charged particles funnelled down the magnetic field collide with the upper atmosphere and make it glow — oxygen green, nitrogen violet."
+  },
+  "comet": {
+   "name": "Comet",
+   "kind": "Small body",
+   "real": true,
+   "blurb": "Dark and inert for most of a long orbit; near the Sun its ice turns straight to gas and grows tails that can stretch further than the Earth-Sun distance."
+  },
+  "living-earth": {
+   "name": "Earth from space",
+   "kind": "Planet",
+   "real": true,
+   "blurb": "The only place life is known to exist, and the only biosphere anyone has ever had to repair."
+  }
+ },
+ "byChapter": {
+  "ch5": "black-hole-star",
+  "ch4": "neutron-star",
+  "appendix-a": "white-dwarf",
+  "ch9": "quasar",
+  "ch13": "quasar",
+  "ch19": "quasar",
+  "ch22": "quasar",
+  "ch39": "quasar",
+  "ch50": "telescope",
+  "ch52": "stanford-torus",
+  "ch54": "dyson-swarm",
+  "ch55": "oneill-cylinder",
+  "ch58": "orbital-ring",
+  "v5-future": "matrioshka-brain",
+  "ch67": "horizon-star",
+  "preface": "planetary-nebula",
+  "ch1": "globular-cluster",
+  "ch3": "stellar-nursery",
+  "ch7": "orbital-resonance",
+  "ch10": "cepheid",
+  "ch11": "brown-dwarf",
+  "ch12": "dissolving-cluster",
+  "ch14": "debris-cascade",
+  "ch15": "ring-system",
+  "ch16": "mass-transfer-binary",
+  "ch17": "asteroid-collision",
+  "ch18": "decaying-orbit",
+  "ch20": "red-giant",
+  "ch21": "greenhouse-world",
+  "v3-mind": "laser-guide-star",
+  "v3-commons": "cosmic-web",
+  "v3-energy": "solar-granulation",
+  "v3-space": "exoplanet",
+  "v3-quantum": "einstein-ring",
+  "v3-ai": "telescope-array",
+  "v3-safety": "magnetosphere",
+  "ch36": "hypervelocity-star",
+  "ch37": "protoplanetary-disk",
+  "ch38": "lagrange-point",
+  "ch41": "habitable-zone",
+  "ch42": "young-cluster",
+  "ch43": "pleiades",
+  "ch44": "barycentre",
+  "ch45": "aurora",
+  "ch46": "comet",
+  "ch48": "living-earth"
+ },
+ "byVolume": {
+  "6": "probe"
+ },
+ "byState": {
+  "forge": "ignition",
+  "preached": "pulsar",
+  "canon": "gold-star",
+  "raw": "protostar"
+ },
+ "beyond": [
+  {
+   "id": "beyond-topopolis",
+   "sprite": "topopolis",
+   "x": 1620,
+   "y": 470
+  },
+  {
+   "id": "beyond-alderson",
+   "sprite": "alderson-disk",
+   "x": 1810,
+   "y": 530
+  },
+  {
+   "id": "beyond-ringworld",
+   "sprite": "ringworld",
+   "x": 1500,
+   "y": 590
+  },
+  {
+   "id": "beyond-globus",
+   "sprite": "globus-cassus",
+   "x": 1650,
+   "y": 700
+  },
+  {
+   "id": "beyond-stellar",
+   "sprite": "stellar-engine",
+   "x": 1840,
+   "y": 760
+  },
+  {
+   "id": "beyond-mckendree",
+   "sprite": "mckendree",
+   "x": 1490,
+   "y": 800
+  },
+  {
+   "id": "beyond-shkadov",
+   "sprite": "shkadov",
+   "x": 1680,
+   "y": 880
+  },
+  {
+   "id": "beyond-boltzmann",
+   "sprite": "boltzmann-brain",
+   "x": 2060,
+   "y": 900
+  }
+ ],
+ "beyondLabel": "BEYOND TYPE 1",
+ "beyondLabelAt": [
+  1440,
+  340
+ ],
+ "beyondTrailFrom": "ch67",
+ "beyondTrailTo": "beyond-mckendree"
+}

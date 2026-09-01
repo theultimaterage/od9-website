@@ -106,8 +106,43 @@
   var STATE_LABEL = { raw: "RAW — awaiting its forge", preached: "PREACHED",
     canon: "CANON — read it now" };
 
+  /* What the object IS, in its own words — the astronomy, kept separate from
+     what the chapter means. `real` is load-bearing, not decoration: anything
+     proposed, hypothetical or fictional says so on its face, because half
+     this set is engineering that has never been built. */
+  function objectBlock(n, hideName) {
+    var o = objectInfo(n);
+    if (!o) return "";
+    return '<div class="atlas-object">' +
+      '<div class="atlas-object-head">' +
+      (hideName ? "" :
+        '<span class="atlas-object-name">' + esc(o.name) + "</span>") +
+      '<span class="atlas-object-kind' + (o.real ? "" : " is-speculative") +
+      '">' + esc(o.kind) + "</span></div>" +
+      '<p class="atlas-object-blurb">' + esc(o.blurb) + "</p></div>";
+  }
+
+  function openBeyondCard(n) {
+    if (!card) return;
+    var o = objectInfo(n);
+    var h = '<button class="atlas-card-close" id="atlas-card-close" aria-label="Close">&times;</button>';
+    h += '<div class="atlas-card-eyebrow">Beyond Type 1</div>';
+    h += "<h2>" + esc(o ? o.name : n.title) + "</h2>";
+    h += '<div class="atlas-chips"><span class="atlas-chip atlas-chip-beyond">' +
+      (o && o.real ? "OBSERVED" : "NOT BUILT") + "</span></div>";
+    h += objectBlock(n, true);   /* the heading already IS the object name */
+    h += '<p class="atlas-await">Past the last chapter. Volume 6 ends at ' +
+      "&ldquo;Beyond Type 1&rdquo; &mdash; this is the shape of what that " +
+      "means, drawn honestly: none of it exists yet.</p>";
+    card.innerHTML = h;
+    card.classList.add("open");
+    var btn = document.getElementById("atlas-card-close");
+    if (btn) btn.addEventListener("click", closeCard);
+  }
+
   function openCard(n) {
     if (!card) return;
+    if (n.beyond) { openBeyondCard(n); return; }
     var arcs = DATA.arcs.filter(function (a) {
       return a.route.indexOf(n.id) !== -1;
     });
@@ -136,6 +171,7 @@
       n.bullets.forEach(function (b) { h += "<li>" + esc(b) + "</li>"; });
       h += "</ul>";
     }
+    h += objectBlock(n);
     if (n.canon && n.canon.length) {
       h += '<div class="atlas-canon"><div class="atlas-canon-label">In the Codex:</div>';
       n.canon.forEach(function (c) {
@@ -189,7 +225,10 @@
     var n = nodeById[id];
     if (!n) return;
     focusedId = id;
-    target.x = n.x; target.y = n.y; target.z = Math.max(2.1, fitZ * 3);
+    /* land PAST ZR_FULL so opening a chapter shows the object it resolves
+       into — the old 2.1 sat just under the threshold and a click would
+       have zoomed to a glow-dot and stopped there */
+    target.x = n.x; target.y = n.y; target.z = Math.max(3.6, fitZ * 3);
     if (reducedMotion) snap();
     if (withCard !== false) openCard(n);
     if (history.replaceState) history.replaceState(null, "", "#" + id);
@@ -300,7 +339,7 @@
     var rect = canvas.getBoundingClientRect();
     var p = toWorld(e.clientX - rect.left, e.clientY - rect.top);
     var best = null, bestD = 1e9;
-    DATA.nodes.forEach(function (n) {
+    DATA.nodes.concat(BEYOND).forEach(function (n) {
       var d = Math.hypot(n.x - p[0], n.y - p[1]);
       if (d < bestD) { bestD = d; best = n; }
     });
@@ -375,7 +414,10 @@
           y: r[1] + r[3] * (0.2 + rnd() * 0.6),
           rad: Math.max(r[2], r[3]) * (0.3 + rnd() * 0.35),
           c: rnd() < 0.7 ? C.violet : C.cyan,
-          a: 0.05 + rnd() * 0.05
+          a: 0.05 + rnd() * 0.05,
+          /* ambient-motion phase (2026-08-27): seeded, so each wash breathes
+             and drifts on its own slow cycle but identically every visit */
+          ph: rnd() * 6.28
         });
       }
     });
@@ -411,8 +453,179 @@
     ctx.stroke();
   }
 
+  /* ---- ambient motion: shooting stars (2026-08-27) --------------------------
+     The LAYOUT of the sky is deterministic (seeded) — that's the identity.
+     Ephemeral events are allowed to be random: a meteor every ~15-40s, one at
+     a time, screen-space (atmosphere, not geography), gone in under a second.
+     Disabled entirely under prefers-reduced-motion. rAF pausing in hidden tabs
+     means no meteor debt accumulates while the tab is backgrounded. */
+  /* ?meteorfast — debug cadence so the layer is DETERMINISTICALLY testable
+     against the real file (a 0.7s streak every ~25s defeats statistical
+     screenshot sampling; an untestable ambient feature would be trusted on
+     faith forever). Production cadence is the default. */
+  var meteorFast = /[?&]meteorfast/.test(location.search);
+  var meteor = null;
+  var nextMeteorAt = Date.now() +
+    (meteorFast ? 700 : 6000 + Math.random() * 10000);
+  function meteorGap() {
+    return meteorFast ? 1500 + Math.random() * 1500
+                      : 15000 + Math.random() * 25000;
+  }
+  function spawnMeteor(nowAbs) {
+    var edge = Math.random();
+    var x0 = view.w * (0.1 + Math.random() * 0.8);
+    var y0 = view.h * (edge < 0.5 ? 0.05 + Math.random() * 0.2 : 0.25 + Math.random() * 0.3);
+    var ang = (35 + Math.random() * 25) * Math.PI / 180 * (Math.random() < 0.5 ? 1 : -1);
+    meteor = { x: x0, y: y0, dx: Math.cos(ang), dy: Math.abs(Math.sin(ang)),
+               start: nowAbs, life: 650 + Math.random() * 350,
+               speed: 0.55 + Math.random() * 0.35 };
+  }
+  function drawMeteor(nowAbs) {
+    if (reducedMotion) return;
+    if (!meteor) {
+      if (nowAbs >= nextMeteorAt) spawnMeteor(nowAbs);
+      return;
+    }
+    var t = (nowAbs - meteor.start) / meteor.life;
+    if (t >= 1) {
+      meteor = null;
+      nextMeteorAt = nowAbs + meteorGap();
+      return;
+    }
+    var dist = meteor.speed * (nowAbs - meteor.start);
+    var hx = meteor.x + meteor.dx * dist, hy = meteor.y + meteor.dy * dist;
+    var tail = 110 * (1 - t * 0.35);
+    var fade = t < 0.15 ? t / 0.15 : (1 - t);
+    /* ADDITIVE blending + a glowing head (2026-08-27): the first cut was a
+       1.4px source-over gradient line — console probes proved it drew every
+       frame while pixel diffs proved nobody could see it: white at 0.85α
+       composited over the bright Flow plates is a near-zero delta. 'lighter'
+       ADDS light, so the streak reads over the void AND over a gold nebula. */
+    ctx.globalCompositeOperation = "lighter";
+    var g = ctx.createLinearGradient(hx, hy, hx - meteor.dx * tail, hy - meteor.dy * tail);
+    g.addColorStop(0, rgba("#FFFFFF", 0.9 * fade));
+    g.addColorStop(0.35, rgba(C.cyan, 0.5 * fade));
+    g.addColorStop(1, rgba(C.cyan, 0));
+    ctx.strokeStyle = g;
+    ctx.lineWidth = 2.1;
+    ctx.beginPath();
+    ctx.moveTo(hx, hy);
+    ctx.lineTo(hx - meteor.dx * tail, hy - meteor.dy * tail);
+    ctx.stroke();
+    drawStarGlow(hx, hy, 7, C.cyan, 0.9 * fade);
+    ctx.globalCompositeOperation = "source-over";
+  }
+
   /* ---- render ---- */
   var t0 = Date.now();
+  /* ---- zoom-resolve (Slice 2.5): chapters become real objects ----------
+     Push past ZR_IN and a glow-dot crossfades into the object that encodes
+     what the chapter IS. The mapping is semantic and deliberately layered:
+     IDENTITY (this specific chapter) beats VOLUME beats STATE, because the
+     state is already carried by the glow ring that persists around the
+     object — a preached black-hole-star keeps its cyan ring, it does not
+     turn into a pulsar. Sprites are built by tools/build_atlas_sprites.py;
+     anything missing simply never draws, leaving today's glow-dot render
+     (fail-open, same contract as the nebula plates). */
+  var ZR_IN = 2.0, ZR_FULL = 3.2, SPRITE_K = 12.0;
+  /* The spec called for "screen" (black vanishes, luminance survives). That
+     is the right instinct for a sprite drawn on black over a black void, but
+     the volume plates are NOT black -- measured over the gold Volume 1 plate,
+     screen-blending ch5 was invisible. With the dark pocket below doing the
+     "black vanishes" job structurally, source-over reproduces the founder's
+     masters faithfully, dark engineered hulls included, instead of erasing
+     every unlit surface. ?spriteblend=screen|lighter to compare live. */
+  var SPRITE_BLEND = (/[?&]spriteblend=([\w-]+)/.exec(location.search) || [])[1]
+    || "source-over";
+  /* The registry — what each object IS and which chapter it lands on — is
+     data, written by tools/build_atlas_sprites.py from tools/atlas_objects.py
+     and inlined by atlas.php. This file deliberately keeps NO copy: adding an
+     object is a registry edit plus a generation, never a code change, and the
+     two can't drift. No registry => every lookup returns null => plain
+     glow-dots, which is exactly the pre-object render. */
+  var OBJ = (function () {
+    var el = document.getElementById("atlas-objects");
+    if (!el) return null;
+    try { return JSON.parse(el.textContent); } catch (e) { return null; }
+  })();
+  var spriteCache = {};
+  var spriteV = (stage.getAttribute("data-sprites-v") || "1");
+
+  function spriteKeyFor(n) {
+    if (!OBJ) return null;
+    if (n.beyond) return n.sprite;
+    if (OBJ.byChapter[n.id]) return OBJ.byChapter[n.id];
+    var v = OBJ.byVolume[String(n.vol)];
+    if (v) return v;                        /* the movement leaves the system */
+    if (n.forge && OBJ.byState.forge) return OBJ.byState.forge;
+    return OBJ.byState[n.state] || OBJ.byState.raw || null;
+  }
+  function objectInfo(n) {
+    var k = spriteKeyFor(n);
+    return (k && OBJ && OBJ.objects[k]) || null;
+  }
+
+  /* ---- the beyond-Type-1 field ----------------------------------------
+     Volume 6 closes on ch67, "Beyond Type 1 — Ultimate Potential", and out
+     past the map's right edge is what beyond looks like: structures that
+     move or enclose a whole star. They are not chapters — no number, no
+     state, no codex — so they carry a violet speculative ring instead of a
+     state ring, and their card says plainly what is proposal and what is
+     fiction. Made of the same pseudo-node shape as a chapter so focus,
+     hit-testing and deep links all work without a second code path. */
+  var BEYOND = ((OBJ && OBJ.beyond) || []).map(function (b) {
+    var info = (OBJ.objects && OBJ.objects[b.sprite]) || {};
+    return {
+      id: b.id, x: b.x, y: b.y, sprite: b.sprite, beyond: true,
+      num: "", state: "beyond", legacy: [], canon: [],
+      title: info.name || b.sprite
+    };
+  });
+  BEYOND.forEach(function (b) { nodeById[b.id] = b; });
+
+  /* Draws one resolved object, centred, at radius `orb`, fading in with
+     `alpha`. Chapters and the beyond-Type-1 field both come through here so
+     there is exactly one implementation of the compositing.
+
+     A WELL OF SPACE goes down first. The masters were generated on pure
+     black, and a volume plate is anything but: screen-blending ch5's red
+     sphere straight onto the gold Volume 1 nebula added almost nothing a
+     viewer could see. Sinking a soft dark pocket restores the contrast the
+     art was drawn for, whatever it happens to be flying over — and reads as
+     depth, the object being nearer the camera than the cloud behind it. */
+  function drawObject(sx, sy, orb, alpha, key) {
+    if (!key) return false;
+    var img = spriteImage(key);
+    if (!img) return false;
+    var pr = orb * 1.32;
+    var pk = ctx.createRadialGradient(sx, sy, orb * 0.1, sx, sy, pr);
+    pk.addColorStop(0, rgba("#000000", 0.9 * alpha));
+    pk.addColorStop(0.6, rgba("#000000", 0.82 * alpha));
+    pk.addColorStop(1, rgba("#000000", 0));
+    ctx.fillStyle = pk;
+    ctx.beginPath(); ctx.arc(sx, sy, pr, 0, 7); ctx.fill();
+
+    ctx.globalCompositeOperation = SPRITE_BLEND;
+    ctx.globalAlpha = alpha;
+    ctx.drawImage(img, sx - orb, sy - orb, orb * 2, orb * 2);
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = "source-over";
+    return true;
+  }
+
+  function spriteImage(key) {
+    var s = spriteCache[key];
+    if (s === undefined) {
+      spriteCache[key] = "loading";
+      var img = new Image();
+      img.onload = function () { spriteCache[key] = img; };
+      img.onerror = function () { spriteCache[key] = "failed"; };
+      img.src = "images/atlas/sprites/" + key + ".webp?v=" + spriteV;
+      return null;
+    }
+    return (s === "loading" || s === "failed") ? null : s;
+  }
+
   function draw() {
     if (!reducedMotion) {
       cam.x += (target.x - cam.x) * 0.14;
@@ -440,28 +653,46 @@
     }
 
     /* volume nebulae — the founder's Flow plates where loaded; procedural
-       washes only for volumes whose plate hasn't arrived (fail-open) */
+       washes only for volumes whose plate hasn't arrived (fail-open).
+       BREATHING (2026-08-27): each volume inhales on its own ~9s cycle,
+       phase-offset per volume so the map never pulses in unison. Depth is
+       ±0.04 alpha — felt, not seen. Static under reduced motion. */
     DATA.volumes.forEach(function (v) {
       var p = PLATES[v.vol];
       if (!p) return;
       var r = v.region;
       var p0 = toScreen(r[0], r[1]), p1 = toScreen(r[0] + r[2], r[1] + r[3]);
       if (p1[0] < 0 || p1[1] < 0 || p0[0] > view.w || p0[1] > view.h) return;
-      ctx.globalAlpha = 0.92;
+      ctx.globalAlpha = reducedMotion ? 0.92
+        : 0.92 + 0.04 * Math.sin(now / 9000 + v.vol * 1.7);
       ctx.drawImage(p, p0[0], p0[1], p1[0] - p0[0], p1[1] - p0[1]);
       ctx.globalAlpha = 1;
     });
     NEBULAE.forEach(function (nb) {
       if (PLATES[nb.vol]) return;
-      var s = toScreen(nb.x, nb.y);
+      /* slow drift + breath for the procedural washes (world-space ±3u) */
+      var nbx = nb.x, nby = nb.y, nba = nb.a;
+      if (!reducedMotion) {
+        nbx += 3 * Math.sin(now / 17000 + nb.ph);
+        nby += 3 * Math.cos(now / 23000 + nb.ph);
+        nba *= 1 + 0.22 * Math.sin(now / 11000 + nb.ph);
+      }
+      var s = toScreen(nbx, nby);
       var rad = nb.rad * z;
       if (s[0] + rad < 0 || s[1] + rad < 0 || s[0] - rad > view.w || s[1] - rad > view.h) return;
       var g = ctx.createRadialGradient(s[0], s[1], 0, s[0], s[1], rad);
-      g.addColorStop(0, rgba(nb.c, nb.a));
+      g.addColorStop(0, rgba(nb.c, nba));
       g.addColorStop(1, rgba(nb.c, 0));
       ctx.fillStyle = g;
       ctx.beginPath(); ctx.arc(s[0], s[1], rad, 0, 7); ctx.fill();
     });
+
+    /* shooting star — atmosphere IN FRONT of the nebula backdrop, behind the
+       map's structural layers. First cut drew it under the plates "for depth
+       correctness" and the meteor hunt proved it invisible: the plates are
+       near-opaque images covering most of the sky. Verified by pixel-diff
+       sampling after the move. */
+    drawMeteor(Date.now());
 
     /* faint volume boundaries + labels (legibility layer over the nebulae) */
     DATA.volumes.forEach(function (v) {
@@ -498,10 +729,30 @@
         });
         ctx.stroke();
       }
+      /* energy flowing along the SELECTED arc (2026-08-27): moving dashes in
+         route order — the reading direction made visible. Selected-arc only
+         (all arcs shimmering would be noise), skipped under reduced motion
+         where the solid bright line above already marks the selection. */
+      if (on && !reducedMotion) {
+        ctx.setLineDash([5, 17]);
+        ctx.lineDashOffset = -(now / 28) % 22;
+        ctx.strokeStyle = rgba("#FFFFFF", 0.7);
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        a.route.forEach(function (id, i) {
+          var n = nodeById[id];
+          var s = toScreen(n.x, n.y);
+          if (i === 0) ctx.moveTo(s[0], s[1]); else ctx.lineTo(s[0], s[1]);
+        });
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
     });
 
     /* chapter stars */
     var r = Math.max(5, Math.min(11, 6.5 * Math.sqrt(z)));
+    /* how far the zoom-resolve has come: 0 = pure glow, 1 = full object */
+    var zres = clamp((z - ZR_IN) / (ZR_FULL - ZR_IN), 0, 1);
     DATA.nodes.forEach(function (n) {
       var s = toScreen(n.x, n.y);
       if (s[0] < -80 || s[1] < -80 || s[0] > view.w + 80 || s[1] > view.h + 80) return;
@@ -511,36 +762,144 @@
         drawStarGlow(s[0], s[1], r * 4.2 + (reducedMotion ? 0 : pulse * 6), C.forge, 0.5 * pulse + 0.25);
         drawFlare(s[0], s[1], r * (3.2 + (reducedMotion ? 0 : pulse * 1.5)), C.forge, 0.5);
       }
-      if (n.state === "canon") {
-        drawStarGlow(s[0], s[1], r * 3.4, col, 0.85 * tw);
-        drawFlare(s[0], s[1], r * 2.6 * tw, col, 0.55 * tw);
-      } else if (n.state === "preached") {
-        drawStarGlow(s[0], s[1], r * 2.8, col, 0.75 * tw);
-      } else {
-        drawStarGlow(s[0], s[1], r * 1.7, col, 0.4 * tw);
+      /* LIVE beacon ripple (2026-08-27): forge nodes BREATHE (work being
+         done); the live node EMITS — two expanding rings, half a period
+         apart, like a signal going out. Distinct semantics, distinct motion.
+         Reduced motion: one static ring still marks it as live. */
+      if (n.id === liveNodeId) {
+        if (reducedMotion) {
+          ctx.strokeStyle = rgba(C.cyan, 0.55); ctx.lineWidth = 1.2;
+          ctx.beginPath(); ctx.arc(s[0], s[1], r * 3.0, 0, 7); ctx.stroke();
+        } else {
+          for (var ri = 0; ri < 2; ri++) {
+            var rp = ((now / 1800) + ri * 0.5) % 1;
+            ctx.strokeStyle = rgba(C.cyan, 0.55 * (1 - rp));
+            ctx.lineWidth = 1.6 * (1 - rp * 0.6);
+            ctx.beginPath();
+            ctx.arc(s[0], s[1], r * (1.6 + rp * 4.6), 0, 7);
+            ctx.stroke();
+          }
+        }
       }
-      /* stellar core */
-      ctx.fillStyle = rgba("#FFFFFF", n.state === "raw" ? 0.55 : 0.95);
-      ctx.beginPath(); ctx.arc(s[0], s[1], Math.max(1.4, r * 0.38), 0, 7); ctx.fill();
+      /* the glow dims as the object takes over — but STATE never stops being
+         visible: what fades out as a glow fades back in as a ring drawn at
+         the object's own perimeter (see below), so a raw chapter still reads
+         raw when it's a 300px telescope. */
+      var gd = 1 - zres * 0.72;
+      if (n.state === "canon") {
+        drawStarGlow(s[0], s[1], r * 3.4, col, 0.85 * tw * gd);
+        drawFlare(s[0], s[1], r * 2.6 * tw, col, 0.55 * tw * gd);
+      } else if (n.state === "preached") {
+        drawStarGlow(s[0], s[1], r * 2.8, col, 0.75 * tw * gd);
+      } else {
+        drawStarGlow(s[0], s[1], r * 1.7, col, 0.4 * tw * gd);
+      }
+      /* object diameter — grows with zoom so pushing in feels like approach */
+      var d = r * SPRITE_K * (z / ZR_IN);
+      var orb = d * 0.5;                       /* the object's own radius */
+      if (zres > 0) {
+        drawObject(s[0], s[1], orb, zres, spriteKeyFor(n));
+        /* state ring AROUND the object */
+        ctx.strokeStyle = rgba(col, 0.4 * zres * tw);
+        ctx.lineWidth = Math.max(1, 1.8 * zres);
+        ctx.beginPath(); ctx.arc(s[0], s[1], orb * 0.92, 0, 7); ctx.stroke();
+      }
+      /* stellar core — the object's own light replaces it once resolved */
+      if (zres < 1) {
+        ctx.fillStyle = rgba("#FFFFFF",
+          (n.state === "raw" ? 0.55 : 0.95) * (1 - zres));
+        ctx.beginPath(); ctx.arc(s[0], s[1], Math.max(1.4, r * 0.38), 0, 7); ctx.fill();
+      }
       if (focusedId === n.id) {
         ctx.strokeStyle = rgba(C.cyan, 0.9); ctx.lineWidth = 1.4;
-        ctx.beginPath(); ctx.arc(s[0], s[1], r + 4, 0, 7); ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(s[0], s[1], (zres > 0 ? orb * 0.92 : r) + 4, 0, 7);
+        ctx.stroke();
       }
+      /* labels clear the object once it resolves, instead of sitting on it */
+      var labelY = s[1] + (zres > 0 ? orb * 0.92 : r) + 4;
       if (z >= 0.85) {
         ctx.fillStyle = rgba(C.chrome, 0.9);
         ctx.font = "600 " + clamp(8.5 * z, 9, 15) + "px Rajdhani, sans-serif";
         ctx.textAlign = "center"; ctx.textBaseline = "top";
-        ctx.fillText(n.num, s[0], s[1] + r + 4);
+        ctx.fillText(n.num, s[0], labelY);
       }
       if (z >= 1.6) {
         ctx.fillStyle = rgba(C.chrome, 0.65);
         ctx.font = clamp(5.5 * z, 9, 14) + "px 'Exo 2', sans-serif";
         var t = n.title.length > 30 ? n.title.slice(0, 29) + "…" : n.title;
-        ctx.fillText(t, s[0], s[1] + r + 6 + clamp(9 * z, 10, 16));
+        ctx.fillText(t, s[0], labelY + 2 + clamp(9 * z, 10, 16));
       }
     });
+    drawBeyondField(z, now, zres);
     requestAnimationFrame(draw);
   }
+
+  function drawBeyondField(z, now, zres) {
+    if (!BEYOND.length) return;
+    /* the trail: ch67 literally points the way out of the map */
+    var from = nodeById[OBJ.beyondTrailFrom];
+    var to = nodeById[OBJ.beyondTrailTo];
+    if (from && to) {
+      var a = toScreen(from.x, from.y);
+      var b0 = toScreen(to.x, to.y);
+      ctx.save();
+      ctx.setLineDash([3, 12]);
+      if (!reducedMotion) ctx.lineDashOffset = -(now / 90) % 15;
+      ctx.strokeStyle = rgba(C.violet, 0.3);
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b0[0], b0[1]);
+      ctx.stroke();
+      ctx.restore();
+    }
+    /* field label, sized like a volume label so it reads as a region */
+    var lab = toScreen(OBJ.beyondLabelAt[0], OBJ.beyondLabelAt[1]);
+    if (lab[0] < view.w + 300 && lab[0] > -400) {
+      ctx.fillStyle = rgba(C.violet, 0.75);
+      ctx.font = "600 " + clamp(11 * z, 10, 19) + "px Rajdhani, sans-serif";
+      ctx.textAlign = "left"; ctx.textBaseline = "top";
+      ctx.fillText(OBJ.beyondLabel, lab[0], lab[1]);
+      ctx.fillStyle = rgba(C.raw, 0.5);
+      ctx.font = clamp(7 * z, 9, 13) + "px 'Exo 2', sans-serif";
+      ctx.fillText("what a civilisation builds after a planet",
+        lab[0], lab[1] + clamp(13 * z, 13, 22));
+    }
+    var r = Math.max(5, Math.min(11, 6.5 * Math.sqrt(z)));
+    BEYOND.forEach(function (b) {
+      var s = toScreen(b.x, b.y);
+      if (s[0] < -140 || s[1] < -140 || s[0] > view.w + 140 || s[1] > view.h + 140) return;
+      var tw = reducedMotion ? 1 : 0.8 + 0.2 * Math.sin(now / 1100 + b.x);
+      var orb = r * SPRITE_K * (z / ZR_IN) * 0.5;
+      /* dimmer than a chapter at distance — these are hints, not the map */
+      drawStarGlow(s[0], s[1], r * 1.5, C.violet, 0.34 * tw * (1 - zres * 0.72));
+      if (zres > 0) {
+        drawObject(s[0], s[1], orb, zres, b.sprite);
+        ctx.save();
+        ctx.setLineDash([2, 6]);          /* dashed = speculative, not state */
+        ctx.strokeStyle = rgba(C.violet, 0.45 * zres * tw);
+        ctx.lineWidth = Math.max(1, 1.6 * zres);
+        ctx.beginPath(); ctx.arc(s[0], s[1], orb * 0.92, 0, 7); ctx.stroke();
+        ctx.restore();
+      }
+      if (zres < 1) {
+        ctx.fillStyle = rgba("#FFFFFF", 0.4 * (1 - zres));
+        ctx.beginPath(); ctx.arc(s[0], s[1], Math.max(1.2, r * 0.3), 0, 7); ctx.fill();
+      }
+      if (focusedId === b.id) {
+        ctx.strokeStyle = rgba(C.cyan, 0.9); ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.arc(s[0], s[1], (zres > 0 ? orb * 0.92 : r) + 4, 0, 7);
+        ctx.stroke();
+      }
+      if (z >= 1.2) {
+        ctx.fillStyle = rgba(C.chrome, 0.62);
+        ctx.font = clamp(6 * z, 9, 14) + "px 'Exo 2', sans-serif";
+        ctx.textAlign = "center"; ctx.textBaseline = "top";
+        ctx.fillText(b.title, s[0], s[1] + (zres > 0 ? orb * 0.92 : r) + 5);
+      }
+    });
+  }
+
   function roundRect(x, y, w, h, rad) {
     rad = Math.min(rad, w / 2, h / 2);
     ctx.beginPath();
