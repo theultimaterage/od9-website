@@ -1,10 +1,11 @@
 {
   "_doc": "Per-repo schema-usage-lint config for od9. Read by ~/.claude/skills/schema-usage-lint via <cwd>/.claude/schema-usage-lint-config.json. Gates literal SQL in PHP — INSERT/UPDATE column lists and, since 2026-08-31, WHERE/JOIN/ORDER BY/GROUP BY/CASE predicates — against the schema below. Key names must be exactly `schemas` and `scan_roots`: a misnamed key yields empty lists and a confident CLEAN over 0 files and 0 tables.",
-
-  "schemas": ["database/schema.prod.sql"],
-
-  "scan_roots": ["."],
-
+  "schemas": [
+    "database/schema.prod.sql"
+  ],
+  "scan_roots": [
+    "."
+  ],
   "ignore_tables": [
     "activity_log",
     "content_recommendations",
@@ -15,19 +16,26 @@
     "user_pathway_progress",
     "user_streaks"
   ],
-
   "_ignore_tables_why": [
     "od9 talks to TWO databases with overlapping table names, and a static linter cannot tell which one a given query targets. The dashboard, me.php and api/v1/* read the Discord bot's LIVE SQLite at /home/ultimaterage/od9-discord-bot/data/od9.db (includes/od9_sqlite.php, api/v1/bootstrap.php::getBotDatabase) — that DB has 94 tables in the bot's own shape (guild_id, earned_at, achievement_id). The MySQL DB offda9_od9_tickets separately contains 149 tables including same-named ones in the PLATFORM shape (site_id, achievement_type_id, granted_at), left over from the od9_bot_* mirror retired 2026-06-28.",
     "These 8 names are the exact intersection of the two schemas, computed rather than guessed. Without this list the gate reported 20 phantom columns on its first run, every one of them a real column in the bot's SQLite — and a gate that cries wolf is one people switch off, which is the failure this repo's FTB sibling documents at length.",
     "Recompute the intersection if either schema changes; do not extend this list by hand from a failing run, because that is how a real phantom gets silenced."
   ],
-
   "_schemas_why": [
     "database/schema.prod.sql is generated FROM PROD (149 tables) and is the only accurate description of offda9_od9_tickets. The repo's migrations/ directory holds 7 incremental files covering a handful of tables — aiming the gate at those would have produced a green result while checking almost nothing, because schema-usage-lint skips tables it has no schema for BY DESIGN. That vacuous-pass shape is the same one that has bitten this ecosystem repeatedly; FTB's config carries the same warning for the same reason.",
     "Regenerate schema.prod.sql whenever the database changes and commit it in the same change as the migration. If it drifts, this gate starts reporting real columns as phantom — and the natural reaction to that is to switch the gate off."
   ],
-
   "_scan_roots_why": "The repo root IS the docroot since the public/ -> root restructure (801668f), so there is no src/ or app/ subtree to aim at — the PHP that talks to the database sits at the top level (subscribe.php, verify.php), under dashboard/, includes/ and api/. Scanning '.' covers all of it; the skill skips vendor/.git by default.",
-
-  "_first_run": "2026-09-01. Clean on 243 PHP files against 149 tables. Enabled in tools/prod-deploy-config.v2.json in the same change."
+  "_first_run": "2026-09-01. Clean on 243 PHP files against 149 tables. Enabled in tools/prod-deploy-config.v2.json in the same change.",
+  "_prod_schema_parity_why": "Prod Sentinel's daily `schema` check: does the dump this linter trusts still describe the live database? A cPanel ALTER TABLE, a hand-run migration, or a table born from a dump rather than a migration all leave the linter validating code against a picture nobody keeps current. email_log was invisible to it for its whole life that way. The probe runs ON the server through this site's own bootstrap, so no credential is stored or transported; the file is written into the site directory (the bootstraps resolve config from __DIR__) and removed in the same script.",
+  "prod_schema_parity": [
+    {
+      "label": "od9 tickets DB",
+      "schemas": [
+        "database/schema.prod.sql"
+      ],
+      "cwd": "/home/offda9/public_html/api/drip",
+      "bootstrap": "require_once __DIR__.'/../../config/database.php'; $pdo = getDatabaseConnection();"
+    }
+  ]
 }
