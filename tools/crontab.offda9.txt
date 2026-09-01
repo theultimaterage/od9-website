@@ -1,0 +1,21 @@
+# OD9 drip. Neither script had ever been scheduled: offda9's crontab was EMPTY,
+# and the only drip line anywhere in the fleet sat commented out in
+# crontab.freshthaplatform.txt pointing at a different script in the engine.
+#
+# Verified before scheduling: od9_drip_enrollments holds 0 rows and od9_drip_log
+# 0 rows, so these start against an empty queue and mail nobody until someone
+# enrols. That check mattered - a five-minute cron pointed at a stale queue would
+# have mailed every overdue step at once, to real people.
+#
+# sender.php is the SENDER, chosen against the LIVE SCHEMA rather than by which
+# file had been edited most recently. api/drip/processor.php is a second
+# implementation of the same job and is deliberately NOT scheduled: its query
+# references four columns that do not exist (e.id, e.sequence_id, s.id, st.id -
+# the real names are enrollment_id, sequence_name, sequence_id, step_id), so it
+# fails on its first statement every run. It was scheduled here briefly on
+# 2026-09-01 and logged exactly that. Retiring it is a repo decision, not a
+# crontab one.
+*/5 * * * * /opt/cpanel/ea-php85/root/usr/bin/php /home/offda9/public_html/api/drip/sender.php >> /home/offda9/logs/drip-sender.log 2>&1
+
+# Enrollment creation from webhook events - distinct job, no overlap with the sender.
+*/5 * * * * /opt/cpanel/ea-php85/root/usr/bin/php /home/offda9/public_html/api/drip/event_processor.php >> /home/offda9/logs/drip-event-processor.log 2>&1
