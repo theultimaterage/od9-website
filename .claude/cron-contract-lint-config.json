@@ -1,0 +1,13 @@
+{
+  "_why": "od9 does not use the ecosystem's crons/ convention — its scheduled scripts live under api/drip/, which is why this linter reported 'scanned 0 cron(s) — CLEAN' for the whole time it existed. A gate reading a directory this repo does not have is green for the wrong reason.",
+
+  "extra_cron_globs": [
+    "api/drip/event_processor.php",
+    "api/drip/processor.php",
+    "api/drip/sender.php",
+    "api/drip/weekly_lovelogic_sender.php"
+  ],
+  "_extra_cron_globs_note": "Listed one by one rather than as api/drip/*.php on purpose. That directory also holds webhook.php, which is a WEB endpoint reached by Square and Discord and must not have a CLI guard, and webhook_secret.config.php, which is configuration. Globbing the directory would flag both for 'no CLI guard' — a false positive on the very first run is how a gate loses its audience. These four are the scheduled ones; each already opens with php_sapi_name() !== 'cli'.",
+
+  "_crontab_note": "No crontab_path_prefix: od9's schedule lives in the offda9 account's crontab, which this repo does not version. The cross-reference against prod's real crontab — the check that caught cred-drift-monitor running repo-orphaned for 7 weeks — therefore does NOT run here. Committing tools/crontab.offda9.txt would turn it on, and is the obvious next improvement rather than a claim that this repo is fully covered."
+}

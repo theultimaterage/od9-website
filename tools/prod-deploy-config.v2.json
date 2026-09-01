@@ -159,6 +159,8 @@
   "pre_deploy": {
     "_note": "Brought to gate parity 2026-09-01, following this block's own instruction: each gate was RUN against od9 first, and is enabled only where it proved meaningful and either passed or had its findings fixed. od9 had been the least-gated repo in the fleet while carrying a database-backed dashboard, Discord OAuth and a drip mailer.",
     "lint_php": true,
+    "cron_contract": true,
+    "_cron_contract_note": "Enabled 2026-09-01. It had been off here while od9 runs four scheduled scripts — the drip sender, the weekly sender, and two processors — and the linter would have reported 'scanned 0 cron(s), CLEAN' if simply switched on, because od9 keeps them in api/drip/ rather than the ecosystem's crons/. .claude/cron-contract-lint-config.json now names them, and the linter now refuses to call zero files a pass. All four are clean; verified able to fail by pointing it at a fixture with no CLI guard (4 violations, exit 1).",
     "silent_failure": true,
     "docroot_vcs_drift": {
       "_why": "Enabled 2026-09-01 after triaging what it reported. It listed 127 live files no repo tracked, and the reason that number was allowed to exist is the reason this gate matters: od9's checkout disagreed with prod for a week while `git status` reported clean, because git answers from its index cache. This gate does not ask git what changed — it lists prod's actual files and diffs them against `git ls-files`, so the claim has to survive contact with reality on every deploy instead of being inherited from a note.",
@@ -188,8 +190,8 @@
     "brand_lint": false,
     "_brand_lint_why_off": "brand-lint encodes the FRESH palette (#D4AF37 gold on #0A0A0A, Playfair/Inter). od9 is a different brand with its own visual language, so the gate would report hundreds of 'violations' that are correct design. Turning it on would need an od9 palette definition first.",
 
-    "cron_contract": false,
-    "_cron_contract_why_off": "`crontab -l` for offda9 is EMPTY and the repo has no cron/ directory — there is nothing for this gate to check, and an empty gate is a green light that means nothing. Revisit if od9 gains scheduled work.",
+    "_cron_contract_superseded": "This block previously read `\"cron_contract\": false` with the reason: '`crontab -l` for offda9 is EMPTY and the repo has no cron/ directory — there is nothing for this gate to check, and an empty gate is a green light that means nothing.' Half of that is still true and half was a limitation of the linter, so both halves are recorded rather than deleted. The empty crontab is CONFIRMED (re-checked 2026-09-01: `no crontab for offda9`, and no VC'd crontab references od9's scripts). But 'nothing to check' was wrong: od9 has four CLI cron scripts under api/drip/, and the linter simply could not see them because it hardcoded <root>/crons. It is configurable now, so the gate is ON above and scans all four.",
+    "_cron_contract_operational_finding": "od9's drip scripts are scheduled NOWHERE. offda9's crontab is empty; the only OD9 drip line in the fleet is in crontab.freshthaplatform.txt and is COMMENTED OUT, and it points at a different script in the engine (_admin-platform/crons/od9-drip-processor.php) rather than these. So the drip mailer does not run in production — which means the 206acb6 fix to its logging and step-advancing has never executed there. Recorded, not silently fixed: scheduling it is the owner's operational decision, not a deploy-config change.",
 
     "_orphan_scan_why_absent": "od9 defines ZERO PHP classes (243 files, all procedural), and orphan-caller-scan checks for zero-caller classes and methods. It would scan nothing and report clean — the vacuous-pass shape this ecosystem keeps getting bitten by.",
 
