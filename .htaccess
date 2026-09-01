@@ -84,7 +84,10 @@ RewriteRule ^epk/?$ https://od9.freshthaplatform.com/epk [R=302,L]
 # publishes 70, 33 and 10 of them respectively. Validated against the real
 # 1,014-file docroot listing - 10 files match, all .htaccess/.user.ini/error_log,
 # and no content of any kind.
-<FilesMatch "(?i)^error_log$|\.(bak|backup|old|orig|save|swp|swo|tmp|dist|inc)([._-][^/]*)?$|~$">
+# `sql` is in the list because the repo now carries database/schema.prod.sql for
+# schema-usage-lint. The deploy excludes database/ so it should never reach the
+# webroot at all — this is the second layer, since od9 serves no .sql of any kind.
+<FilesMatch "(?i)^error_log$|\.(bak|backup|old|orig|save|swp|swo|tmp|dist|inc|sql)([._-][^/]*)?$|~$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>

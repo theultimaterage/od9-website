@@ -17,6 +17,15 @@
   },
   "_topology_note": "Connects AS the owning account. The retired tools/deploy.py SCP'd each file to /tmp and sudo-installed it as ultimaterage because 'the SSH user cannot write offda9's web root directly' — that is obsolete: /home/offda9/.ssh already holds an automation key, both ~/.ssh/id_rsa_automation and ~/.ssh/freshthaband_key authenticate directly as offda9@, the account owns its writable docroot, and rsync is present. So od9 needs NO engine changes; plain rsync-as-owner works exactly like the platform repos.",
 
+  "remove_remote": [
+    "public_html/customer/account.php",
+    "public_html/customer/dashboard.php",
+    "public_html/customer/login.php",
+    "public_html/customer/logout.php",
+    "public_html/customer/orders.php"
+  ],
+  "_remove_remote_note": "The customer/ portal was five 6-line wrappers that require_once files from /home/freshthaband/public_html/shared-platform/. offda9 cannot read another cPanel account's home, so every one of them returned HTTP 500 to any visitor — verified 2026-09-01, all four reachable URLs. They only ever worked while od9 lived inside the freshthaband account, and cross-account filesystem includes cannot be made to work; if od9 ever wants a customer portal it needs a real design (it is already a platform tenant at od9.freshthaplatform.com). Nothing linked, routed or sitemapped them. Deleted from the repo in the same change. Paths are relative to ssh.remote_base (/home/offda9).",
+
   "mappings": [
     {
       "local": "./",
@@ -28,6 +37,7 @@
         ".gitattributes",
         ".claude/",
         "tools/",
+        "database/",
         "logs/",
         "cache/",
         "migrations/",
@@ -87,14 +97,24 @@
   },
 
   "pre_deploy": {
-    "_note": "Starts minimal on purpose. lint_php is universally valuable and catches the parse errors this repo's bespoke deployer never checked. The FRESH-ecosystem gates are OFF because they encode platform-specific rules (FRESH brand palette, tenant-scope queries, cron contract, schema usage) that od9 does not follow — enable them individually only after confirming each is meaningful here, rather than shipping gates that fail for reasons unrelated to od9's correctness.",
+    "_note": "Brought to gate parity 2026-09-01, following this block's own instruction: each gate was RUN against od9 first, and is enabled only where it proved meaningful and either passed or had its findings fixed. od9 had been the least-gated repo in the fleet while carrying a database-backed dashboard, Discord OAuth and a drip mailer.",
     "lint_php": true,
     "bootstrap_compliance": { "enabled": false },
-    "guardrail_lint": false,
-    "deploy_coverage": false,
+    "guardrail_lint": true,
+    "deploy_coverage": true,
+    "schema_usage": true,
+
+    "_first_run_findings": "guardrail_lint reported 20 errors: five 6-line customer/ wrappers require_once-ing files from /home/freshthaband — another cPanel account offda9 cannot read, so all four reachable URLs returned HTTP 500. Deleted (see remove_remote). schema_usage found 5 phantom columns, every one in api/drip/processor.php: od9_drip_log had no step_id/email_to, od9_drip_enrollments had no completed_at, both its UPDATEs keyed on a non-existent `id` instead of enrollment_id, and the customers fallback filtered on a discord_user_id that table does not have. The drip mailer could not log a send, advance a step, or complete a sequence. All fixed in the same change.",
+
     "brand_lint": false,
+    "_brand_lint_why_off": "brand-lint encodes the FRESH palette (#D4AF37 gold on #0A0A0A, Playfair/Inter). od9 is a different brand with its own visual language, so the gate would report hundreds of 'violations' that are correct design. Turning it on would need an od9 palette definition first.",
+
     "cron_contract": false,
-    "schema_usage": false
+    "_cron_contract_why_off": "`crontab -l` for offda9 is EMPTY and the repo has no cron/ directory — there is nothing for this gate to check, and an empty gate is a green light that means nothing. Revisit if od9 gains scheduled work.",
+
+    "_orphan_scan_why_absent": "od9 defines ZERO PHP classes (243 files, all procedural), and orphan-caller-scan checks for zero-caller classes and methods. It would scan nothing and report clean — the vacuous-pass shape this ecosystem keeps getting bitten by.",
+
+    "_phpunit_why_absent": "od9 has no test suite. The engine's phpunit gate refuses on 0 tests executed rather than passing vacuously, so enabling it would simply block every deploy. A suite is the real prerequisite."
   },
 
   "post_deploy_smoke_tests": [
