@@ -35,28 +35,7 @@ $STATUS_COLORS = [
     'Retired'    => 'gray',
 ];
 
-function safe_query(PDO $pdo, string $sql, array $params = []): array {
-    try {
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchAll();
-    } catch (Throwable $e) {
-        if (!defined('ENVIRONMENT') || ENVIRONMENT !== 'local') {
-            error_log('[roadmap.php] query failed: ' . $e->getMessage());
-        }
-        return [];
-    }
-}
 
-function safe_count(PDO $pdo, string $sql, array $params = []): int {
-    try {
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-        return (int)$stmt->fetchColumn();
-    } catch (Throwable $e) {
-        return 0;
-    }
-}
 
 $detail_id = isset($_GET['id']) ? trim((string)$_GET['id']) : '';
 $domain_filter = isset($_GET['domain']) ? strtoupper(trim((string)$_GET['domain'])) : '';
@@ -75,58 +54,34 @@ $stats = [
 
 try {
     // Live SQLite read — the roadmap_triggers MySQL mirror was retired 2026-06-28.
-    require_once __DIR__ . '/includes/od9_sqlite.php';
-    $pdo = getOd9SqliteConnection();
-    if (!$pdo) throw new RuntimeException('live roadmap DB unavailable');
+    require_once __DIR__ . '/includes/od9_read.php';
+    if (!od9_read_healthy()) throw new RuntimeException('live roadmap DB unavailable');
 
+    // The domain filter used to be string-concatenated into the SQL. Through the
+    // read seam the caller cannot compose SQL at all, so each shape is its own
+    // registered query — a whitelist the caller can assemble is not a whitelist.
     if ($detail_id !== '') {
-        $rows = safe_query(
-            $pdo,
-            "SELECT * FROM roadmap_triggers WHERE trigger_id = :id LIMIT 1",
-            [':id' => $detail_id]
-        );
+        $rows = od9_read('roadmap_detail', ['trigger_id' => $detail_id]) ?? [];
         $detail_trigger = $rows[0] ?? null;
     } else {
-        $domain_clause = '';
-        $params = [];
-        if ($domain_filter) {
-            $domain_clause = ' AND domain = :domain';
-            $params[':domain'] = $domain_filter;
-        }
-        $active = safe_query(
-            $pdo,
-            "SELECT * FROM roadmap_triggers WHERE status = 'Active'$domain_clause ORDER BY domain, trigger_id",
-            $params
-        );
-        $approved = safe_query(
-            $pdo,
-            "SELECT * FROM roadmap_triggers WHERE status = 'Approved'$domain_clause ORDER BY domain, trigger_id LIMIT 50",
-            $params
-        );
-        $activated = safe_query(
-            $pdo,
-            "SELECT * FROM roadmap_triggers WHERE status = 'Activated'$domain_clause ORDER BY activated_at DESC LIMIT 20",
-            $params
-        );
+        $suffix = $domain_filter ? '_domain' : '';
+        $args   = $domain_filter ? ['domain' => $domain_filter] : [];
+        $active    = od9_read('roadmap_active' . $suffix, $args) ?? [];
+        $approved  = od9_read('roadmap_approved' . $suffix, $args) ?? [];
+        $activated = od9_read('roadmap_activated' . $suffix, $args) ?? [];
     }
 
     foreach (array_keys($STATUS_COLORS) as $status) {
-        $stats[strtolower($status)] = safe_count(
-            $pdo,
-            "SELECT COUNT(*) FROM roadmap_triggers WHERE status = :s",
-            [':s' => $status]
-        );
+        $r = od9_read('roadmap_count_by_status', ['status' => $status]);
+        $stats[strtolower($status)] = (int)($r['n'] ?? 0);
     }
     $stats['total'] = array_sum([
         $stats['active'], $stats['approved'], $stats['activated'],
         $stats['superseded'], $stats['retired'],
     ]);
     foreach (['seed', 'community', 'founder'] as $src) {
-        $stats['from_' . $src] = safe_count(
-            $pdo,
-            "SELECT COUNT(*) FROM roadmap_triggers WHERE source = :s",
-            [':s' => $src]
-        );
+        $r = od9_read('roadmap_count_by_source', ['source' => $src]);
+        $stats['from_' . $src] = (int)($r['n'] ?? 0);
     }
 } catch (Throwable $e) {
     if (!defined('ENVIRONMENT') || ENVIRONMENT !== 'local') {

@@ -84,22 +84,18 @@ if ($invalid_reason === null) {
         $configPath = __DIR__ . '/config/database.php';
     }
     require_once $configPath;
-    require_once __DIR__ . '/includes/od9_sqlite.php';
+    require_once __DIR__ . '/includes/od9_read.php';
 
     try {
-        // Read the bot's LIVE data (SQLite), falling back to the od9_bot_* MySQL
-        // mirror during the bake period. $ut/$dt are the source-appropriate table
-        // names (fixed strings from od9_member_source — never user input).
-        [$pdo, $ut, $dt] = od9_member_source();
-        if (!$pdo) throw new RuntimeException('no member data source');
+        // Read the bot's LIVE data through the read seam (od9_read), which is
+        // local PDO today and an HMAC-signed call to the bot the moment
+        // OD9_READ_API_URL is set — no query here changes when that happens.
+        // A null anywhere below means unavailable, and the page says so rather
+        // than inventing a member.
+        if (!od9_read_healthy()) throw new RuntimeException('no member data source');
 
         // Tier slug + credits + username
-        $stmt = $pdo->prepare(
-            "SELECT username, current_tier, total_credits
-             FROM $ut WHERE user_id = ? LIMIT 1"
-        );
-        $stmt->execute([$discord_user_id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $row = od9_read('member_profile', ['user_id' => $discord_user_id]);
         if ($row) {
             $username = $row['username'];
             $tier_slug = strtolower((string)($row['current_tier'] ?: 'observer'));
@@ -108,33 +104,13 @@ if ($invalid_reason === null) {
         }
 
         // Dimensions
-        try {
-            $stmt = $pdo->prepare(
-                "SELECT knowledge_score, resource_score, community_score, consciousness_score, system_score
-                 FROM $dt WHERE user_id = ? LIMIT 1"
-            );
-            $stmt->execute([$discord_user_id]);
-            $r3 = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($r3) $dimensions = $r3;
-        } catch (Throwable $e) { /* dimensions table missing on this env — tolerate */ }
+        $r3 = od9_read('member_dimensions', ['user_id' => $discord_user_id]);
+        if ($r3) $dimensions = $r3;   // absent table/row tolerated: null just leaves defaults
 
         // Achievements — for the badge grid. Earned (LEFT JOIN hit) vs locked;
         // hidden + unearned are dropped in the render so secret badges stay secret.
-        try {
-            $astmt = $pdo->prepare(
-                "SELECT ad.achievement_id, ad.name, ad.category, ad.rarity, ad.icon,
-                        ad.badge_image, ad.is_hidden,
-                        (ua.user_id IS NOT NULL) AS earned, ua.revealed AS revealed
-                 FROM achievement_definitions ad
-                 LEFT JOIN user_achievements ua
-                   ON ua.achievement_id = ad.achievement_id
-                  AND ua.guild_id = ad.guild_id AND ua.user_id = ?
-                 WHERE ad.guild_id != 'global'
-                 ORDER BY ad.sort_order"
-            );
-            $astmt->execute([$discord_user_id]);
-            $achievements = $astmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Throwable $e) { /* achievements table absent on this env — tolerate */ }
+        $achievements = od9_read('member_achievements', ['user_id' => $discord_user_id])
+                        ?? $achievements;   // absent table tolerated
     } catch (Throwable $e) {
         error_log('[me.php] DB query failed: ' . $e->getMessage());
         $db_unavailable = true;

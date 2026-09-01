@@ -28,13 +28,9 @@ $mrr_dollars = 0; $supporters = 0;
 // under-reports (its patreon flags don't sync — it read $0 while the bot knew $10,
 // caught 2026-07-04); it remains only a fallback.
 try {
-    require_once __DIR__ . '/includes/od9_sqlite.php';
-    $sq = getOd9SqliteConnection();
-    if ($sq) {
-        $row = $sq->query(
-            "SELECT COUNT(*) AS n, IFNULL(SUM(tier_amount),0) AS mrr
-             FROM patreon_supporters WHERE status = 'active'"
-        )->fetch();
+    require_once __DIR__ . '/includes/od9_read.php';
+    $row = od9_read('patreon_active_totals');
+    if ($row) {
         $supporters = (int)($row['n'] ?? 0);
         $mrr_dollars = (int)floor((float)($row['mrr'] ?? 0));
     }

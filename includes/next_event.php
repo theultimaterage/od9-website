@@ -20,17 +20,9 @@ function od9_next_event(): ?array {
     }
     $cached = true;
     try {
-        require_once __DIR__ . '/od9_sqlite.php';
-        [$botDb] = od9_member_source();
-        if ($botDb) {
-            $stmt = $botDb->query(
-                "SELECT event_date, title, event_type FROM community_events
-                 WHERE event_date >= date('now')
-                 ORDER BY event_date ASC, event_id ASC LIMIT 1"
-            );
-            $rows = $stmt ? $stmt->fetchAll() : [];
-            $event = $rows ? $rows[0] : null;
-        }
+        require_once __DIR__ . '/od9_read.php';
+        $rows = od9_read('next_event') ?? [];
+        $event = $rows ? $rows[0] : null;
     } catch (Throwable $e) {
         error_log('[next_event] read failed: ' . $e->getMessage());
         $event = null;

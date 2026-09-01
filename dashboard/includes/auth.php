@@ -203,17 +203,12 @@ function od9_rotate_remember_token(PDO $pdo, string $oldSelector): void
 
 function od9_remember_is_member(PDO $pdo, string $discordId): bool
 {
-    // Membership via the bot's LIVE SQLite (od9_member_source). The od9_bot_* MySQL
-    // mirror was retired 2026-06-28, so if the live DB is unreachable we fail safe
-    // (no auto-login via remember token; the user logs in fresh). The $pdo arg
-    // (MySQL, used for remember_tokens) is retained for signature compatibility.
-    require_once __DIR__ . '/../../includes/od9_sqlite.php';
+    // Membership via the read seam (od9_read). If the read path is unreachable we
+    // fail safe: no auto-login via remember token, the user logs in fresh. The
+    // $pdo arg (MySQL, remember_tokens) is retained for signature compatibility.
+    require_once __DIR__ . '/../../includes/od9_read.php';
     try {
-        [$conn, $ut, ] = od9_member_source();
-        if (!$conn) return false;
-        $stmt = $conn->prepare("SELECT 1 FROM $ut WHERE user_id = ? LIMIT 1");
-        $stmt->execute([$discordId]);
-        return (bool) $stmt->fetchColumn();
+        return od9_read('member_exists', ['user_id' => $discordId]) !== null;
     } catch (Throwable $e) {
         error_log('[auth] remember member check failed: ' . $e->getMessage());
         return false;

@@ -76,14 +76,9 @@ try {
 // flags don't sync, so this "live receipts" page read $0 MRR while the bot knew $10
 // (caught 2026-07-04). SQLite wins when readable; MySQL stays as the fallback above.
 try {
-    require_once __DIR__ . '/includes/od9_sqlite.php';
-    $sq = getOd9SqliteConnection();
-    if ($sq) {
-        $row = $sq->query(
-            "SELECT COUNT(*) AS n, IFNULL(SUM(tier_amount),0) AS mrr,
-                    SUM(CASE WHEN tier_amount >= 100 THEN 1 ELSE 0 END) AS founding
-             FROM patreon_supporters WHERE status = 'active'"
-        )->fetch();
+    require_once __DIR__ . '/includes/od9_read.php';
+    $row = od9_read('patreon_active_totals');
+    if ($row) {
         if ((int)($row['n'] ?? 0) > 0) {
             $mrr_cents = (int)round(((float)$row['mrr']) * 100);
             $founding_filled = (int)($row['founding'] ?? 0);

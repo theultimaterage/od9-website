@@ -96,7 +96,7 @@ function current_tier(): string {
  */
 function _live_tier_from_mirror(string $discord_id): ?string {
     if ($discord_id === '' || !ctype_digit($discord_id)) return null;
-    require_once __DIR__ . '/od9_sqlite.php';
+    require_once __DIR__ . '/od9_read.php';
     // Ensure getDatabaseConnection() exists for the MySQL-mirror FALLBACK only.
     // Prefer the OUTER config (current offda9_od9admin password); the INNER config
     // has a drifted/stale password that caused the 2026-06-13 "Benefactor sees
@@ -108,12 +108,10 @@ function _live_tier_from_mirror(string $discord_id): ?string {
         }
     }
     try {
-        [$conn, $ut, ] = od9_member_source();
-        if (!$conn) return null;
-        $stmt = $conn->prepare("SELECT current_tier FROM $ut WHERE user_id = ? LIMIT 1");
-        $stmt->execute([$discord_id]);
-        $t = $stmt->fetchColumn();
-        if ($t === false || $t === null) return null;
+        $row = od9_read('member_tier', ['user_id' => $discord_id]);
+        if ($row === null) return null;   // unreachable OR no such member: gate denies
+        $t = $row['current_tier'] ?? null;
+        if ($t === null) return null;
         $t = strtolower(trim((string)$t));
         return isset(TIER_ORDER[$t]) ? $t : null;
     } catch (Throwable $e) {

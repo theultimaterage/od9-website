@@ -21,16 +21,8 @@ $page_og_description = 'Daily lives, Think Tank at 6 PM CT, Freestyle Fridays, S
  * (see the note in dashboard/index.php). */
 $events = [];
 try {
-    require_once __DIR__ . '/includes/od9_sqlite.php';
-    [$botDb] = od9_member_source();
-    if ($botDb) {
-        $stmt = $botDb->query(
-            "SELECT event_date, title, event_type, notes FROM community_events
-             WHERE event_date >= date('now')
-             ORDER BY event_date ASC, event_id ASC LIMIT 30"
-        );
-        $events = $stmt ? $stmt->fetchAll() : [];
-    }
+    require_once __DIR__ . '/includes/od9_read.php';
+    $events = od9_read('upcoming_events') ?? [];
 } catch (Throwable $e) {
     error_log('[events.php] events read failed: ' . $e->getMessage());
     $events = [];

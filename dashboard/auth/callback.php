@@ -130,16 +130,16 @@ try {
     if (!file_exists($_cfg)) $_cfg = __DIR__ . '/../../config/database.php';
     require_once $_cfg;
     
-    require_once __DIR__ . '/../../includes/od9_sqlite.php';
+    require_once __DIR__ . '/../../includes/od9_read.php';
 
-    // Read the bot's LIVE SQLite (od9_member_source), falling back to the
-    // od9_bot_users MySQL mirror. user_id IS the Discord id. $ut is a fixed
-    // table name from the helper, never user input.
-    [$conn, $ut, ] = od9_member_source();
-    if (!$conn) throw new RuntimeException('no member data source');
-    $stmt = $conn->prepare("SELECT user_id, username, current_tier, total_credits, join_date FROM $ut WHERE user_id = ? LIMIT 1");
-    $stmt->execute([$discordId]);
-    $botUser = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Membership via the read seam (od9_read). user_id IS the Discord id.
+    //
+    // Health is checked FIRST and separately, because od9_read returns null for
+    // both "no such member" and "read path is down" — and those must not look
+    // alike here. Conflating them tells a real member during an outage that they
+    // are not in the Discord server, which is the worst possible wrong answer.
+    if (!od9_read_healthy()) throw new RuntimeException('no member data source');
+    $botUser = od9_read('member_card', ['user_id' => $discordId]);
     
     // od9_bot_users.current_tier is already the tier name; default if blank.
     if ($botUser && empty($botUser['current_tier'])) {
