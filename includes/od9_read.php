@@ -31,6 +31,34 @@ declare(strict_types=1);
  *   OD9_BOT_DIR          override the bot directory for local transport
  */
 
+/**
+ * Load the transport config ourselves if the caller has not.
+ *
+ * OD9_READ_API_URL / _SECRET live in dashboard/includes/secrets.config.php, and
+ * the DASHBOARD bootstrap loads that file — but the public pages
+ * (funding/events/roadmap/progress/me) bootstrap through config/database.php and
+ * never see it. So setting the URL flipped only half the site to the remote
+ * transport while the other half silently stayed local, with no error anywhere:
+ * both transports return correct data, so the split was invisible until the
+ * access log showed public page loads producing ZERO requests (2026-09-01).
+ *
+ * A consumer should not have to know which bootstrap it arrived through to get
+ * the right transport, so this file resolves its own config. require_once is a
+ * no-op when the dashboard already loaded it, and the file only calls putenv().
+ */
+if ((getenv('OD9_READ_API_URL') ?: '') === '') {
+    foreach ([
+        __DIR__ . '/../dashboard/includes/secrets.config.php',
+        __DIR__ . '/../../dashboard/includes/secrets.config.php',
+    ] as $_od9_secrets) {
+        if (is_file($_od9_secrets) && is_readable($_od9_secrets)) {
+            @require_once $_od9_secrets;
+            break;
+        }
+    }
+    unset($_od9_secrets);
+}
+
 if (!defined('OD9_BOT_DIR')) {
     define('OD9_BOT_DIR', getenv('OD9_BOT_DIR') ?: '/home/ultimaterage/od9-discord-bot');
 }
