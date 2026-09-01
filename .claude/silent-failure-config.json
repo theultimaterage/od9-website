@@ -11,6 +11,12 @@
     "api/drip/sender.php|swallowed-catch|catch (Exception $e) { no log, no rethrow } \u2014 the failure re": 1,
     "api/v1/atlas-live.php|swallowed-catch|catch (Throwable $e) { empty } \u2014 the failure reaches nobody": 1,
     "api/v1/pulse.php|swallowed-catch|catch (Throwable $e) { no log, no rethrow } \u2014 the failure re": 4,
+    "api_drip_event_processor.php|exception-not-throwable|catch (\\Exception) misses \\Error (TypeError, undefined funct": 1,
+    "api_drip_event_processor.php|exception-to-output|exception text goes straight to output \u2014 internals shown to ": 1,
+    "api_drip_event_processor.php|swallowed-catch|catch (Exception $e) { no log, no rethrow } \u2014 the failure re": 1,
+    "api_drip_sender.php|exception-not-throwable|catch (\\Exception) misses \\Error (TypeError, undefined funct": 1,
+    "api_drip_sender.php|exception-to-output|exception text goes straight to output \u2014 internals shown to ": 1,
+    "api_drip_sender.php|swallowed-catch|catch (Exception $e) { no log, no rethrow } \u2014 the failure re": 1,
     "contact-handler.php|error-suppression|@mail() \u2014 suppression turns a diagnosable failure into a wro": 1,
     "curriculum/view-beacon.php|error-suppression|@curl_exec() \u2014 suppression turns a diagnosable failure into ": 1,
     "dashboard/bunker.php|error-suppression|@file_get_contents() \u2014 suppression turns a diagnosable failu": 2,
@@ -21,9 +27,7 @@
     "insights.php|error-suppression|@file_get_contents() \u2014 suppression turns a diagnosable failu": 2,
     "insights.php|error-suppression|@file_put_contents() \u2014 suppression turns a diagnosable failu": 1,
     "library.php|error-suppression|@file_get_contents() \u2014 suppression turns a diagnosable failu": 1,
-    "me.php|swallowed-catch|catch (Throwable $e) { empty } \u2014 the failure reaches nobody": 2,
-    "music.php|swallowed-catch|catch (Throwable $e) { no log, no rethrow } \u2014 the failure re": 1,
-    "roadmap.php|swallowed-catch|catch (Throwable $e) { no log, no rethrow } \u2014 the failure re": 1
+    "music.php|swallowed-catch|catch (Throwable $e) { no log, no rethrow } \u2014 the failure re": 1
   },
   "_note": "Shrink-only ledger. Delete lines as they are fixed; adding one is a deliberate decision, not a formality."
 }
