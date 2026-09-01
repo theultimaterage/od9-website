@@ -125,6 +125,29 @@ function od9_read_local(string $query, array $params) {
     return $stmt->fetchAll();
 }
 
+/**
+ * Per-request circuit breaker for the remote transport.
+ *
+ * A DOWN bot is cheap: connect is refused instantly. A HUNG bot is not — each
+ * call burns the full CURLOPT_TIMEOUT. roadmap.php issues six reads, so a wedged
+ * bot would cost 6 x 5s = 30s, which is PHP's default max_execution_time: the
+ * page dies with a 500 instead of degrading to the empty-list fallbacks every
+ * caller already has.
+ *
+ * So the first TRANSPORT failure (curl error / timeout / 5xx) marks the backend
+ * dead for the remainder of THIS request and later reads return null
+ * immediately. Worst case becomes one timeout, not one per read.
+ *
+ * Deliberately NOT tripped by a 4xx: "unknown query" or "bad params" is a fault
+ * in one call, not evidence the backend is gone, and letting it disable every
+ * other read would turn a single typo into a blank page.
+ */
+function od9_read_remote_dead(?bool $set = null): bool {
+    static $dead = false;
+    if ($set !== null) { $dead = $set; }
+    return $dead;
+}
+
 /** Remote transport: HMAC-signed POST to the bot. No SQL crosses the wire. */
 function od9_read_remote(string $query, array $params) {
     $url = getenv('OD9_READ_API_URL') ?: '';
@@ -132,6 +155,9 @@ function od9_read_remote(string $query, array $params) {
     if ($url === '' || $secret === '') {
         error_log('[od9_read] remote transport not fully configured');
         return null;
+    }
+    if (od9_read_remote_dead()) {
+        return null;   // breaker open — a prior call this request proved it unreachable
     }
     $body = json_encode(['query' => $query, 'params' => (object) $params],
                         JSON_UNESCAPED_SLASHES);
@@ -154,6 +180,14 @@ function od9_read_remote(string $query, array $params) {
 
     if ($resp === false || $code !== 200) {
         error_log('[od9_read] remote ' . $query . ' http=' . $code . ' ' . $err);
+        // Transport-level failure (no connection, timeout, or the bot 5xx'd) =>
+        // open the breaker so the rest of this request degrades instantly.
+        // A 4xx is this query's problem alone and leaves the breaker closed.
+        if ($resp === false || $code === 0 || $code >= 500) {
+            od9_read_remote_dead(true);
+            error_log('[od9_read] remote transport marked DEAD for this request'
+                      . ' after ' . $query . ' (http=' . $code . ')');
+        }
         return null;
     }
     $decoded = json_decode((string) $resp, true);
