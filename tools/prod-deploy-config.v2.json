@@ -99,6 +99,7 @@
   "pre_deploy": {
     "_note": "Brought to gate parity 2026-09-01, following this block's own instruction: each gate was RUN against od9 first, and is enabled only where it proved meaningful and either passed or had its findings fixed. od9 had been the least-gated repo in the fleet while carrying a database-backed dashboard, Discord OAuth and a drip mailer.",
     "lint_php": true,
+    "silent_failure": true,
     "bootstrap_compliance": { "enabled": false },
     "guardrail_lint": true,
     "deploy_coverage": true,
