@@ -1,0 +1,26 @@
+# data/ is server-side only. Nothing here is fetched over HTTP.
+#
+# atlas.php and its siblings read these files from disk (__DIR__ . '/data/...')
+# and inline the result into the page, so denying the directory costs nothing.
+#
+# It is denied because on 2026-09-01 data/subscribers.txt was serving HTTP 200
+# to anyone who asked — 9 real subscriber names and email addresses, readable
+# since February. The site-wide rules could not have caught it: od9's .htaccess
+# is deliberately narrow on .txt and .json because it serves llms.txt,
+# robots.txt and agent.json, so the fix has to be scoped to the directory that
+# holds data rather than to the extension.
+#
+# What made it invisible was worse than the file itself. data/*.json answered
+# 403, so the directory looked protected — but that 403 came from CLOUDFLARE
+# (4.5KB error page), not from this origin (Apache's is ~358 bytes). An edge
+# rule we do not own, that can be changed or bypassed by reaching the origin
+# directly, was standing in for a permission we had never actually set. Same
+# lesson as the August webroot source-disclosure sweep: "it returns 403" is not
+# the same claim as "we deny it".
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order Deny,Allow
+    Deny from all
+</IfModule>

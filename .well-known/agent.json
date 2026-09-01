@@ -1,0 +1,93 @@
+{
+    "name": "OFF DA NINE",
+    "description": "Advancing Humanity Toward Type I Civilization",
+    "url": "https://offda9.com/api/v1/agent",
+    "version": "1.0",
+    "capabilities": {
+        "streaming": false,
+        "pushNotifications": false,
+        "stateTransitionHistory": false
+    },
+    "authentication": {
+        "schemes": []
+    },
+    "skills": [
+        {
+            "id": "search-events",
+            "name": "Search Events",
+            "description": "Find upcoming shows, concerts, and events",
+            "tags": [
+                "events",
+                "tickets",
+                "entertainment"
+            ],
+            "examples": [
+                "What shows are coming up?",
+                "Find events this weekend"
+            ]
+        },
+        {
+            "id": "check-ticket-availability",
+            "name": "Check Ticket Availability",
+            "description": "Check ticket availability and pricing for an event",
+            "tags": [
+                "tickets",
+                "availability",
+                "pricing"
+            ],
+            "examples": [
+                "Are there tickets available?",
+                "How much are VIP tickets?"
+            ]
+        },
+        {
+            "id": "get-merch",
+            "name": "Browse Merchandise",
+            "description": "Browse available merchandise and products",
+            "tags": [
+                "merch",
+                "products",
+                "shopping"
+            ],
+            "examples": [
+                "What merch is available?",
+                "Do you have hoodies?"
+            ]
+        },
+        {
+            "id": "browse-music",
+            "name": "Browse Music",
+            "description": "Explore music catalog, albums, and tracks",
+            "tags": [
+                "music",
+                "albums",
+                "tracks"
+            ],
+            "examples": [
+                "What music do you have?",
+                "Play the latest album"
+            ]
+        },
+        {
+            "id": "discord-community",
+            "name": "Discord Community",
+            "description": "Information about the Discord community and how to join",
+            "tags": [
+                "discord",
+                "community",
+                "social"
+            ],
+            "examples": [
+                "How do I join the Discord?",
+                "What happens in the community?"
+            ]
+        }
+    ],
+    "defaultInputModes": [
+        "text/plain"
+    ],
+    "defaultOutputModes": [
+        "text/plain",
+        "application/json"
+    ]
+}

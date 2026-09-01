@@ -1,0 +1,29 @@
+{
+    "version": "2026-01-11",
+    "profile": {
+        "name": "OFF DA NINE",
+        "platform": "F.R.E.S.H.",
+        "type": "entertainment_service"
+    },
+    "capabilities": [
+        {
+            "id": "dev.ucp.entertainment.booking",
+            "version": "1.0",
+            "description": "Request and confirm live performance bookings"
+        },
+        {
+            "id": "dev.ucp.shopping.checkout",
+            "version": "1.0",
+            "description": "Purchase tickets and merchandise"
+        }
+    ],
+    "endpoints": {
+        "booking": "/api/v1/agent/booking",
+        "checkout": "/api/v1/agent/checkout",
+        "profile": "/api/v1/agent/profile"
+    },
+    "authentication": {
+        "type": "api_key",
+        "registration_url": "https://freshthaplatform.com/developer/register"
+    }
+}
