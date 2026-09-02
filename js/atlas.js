@@ -106,6 +106,49 @@
   var STATE_LABEL = { raw: "RAW — awaiting its forge", preached: "PREACHED",
     canon: "CANON — read it now" };
 
+  /* ---- the onward door ----
+     Until 2026-09-01 the Atlas was a corridor: read a lesson, close it, land
+     back on the map with nothing that said what the reading was FOR. In OD9
+     reading is the first half of a verified act — the reflection on the board
+     is what earns (docs/ASCEND_PROGRESSION_ECONOMY_SPEC.md). So every card
+     carries the next move, and the moment the reader closes, the door lights
+     up for the lesson that was just read. The board link goes through OAuth
+     when the member is logged out; the Discord door is for people who are not
+     members yet — the Atlas is PUBLIC, and the announce that sends members
+     here also gets shared onward. Discord invite is read from the nav so the
+     two can never disagree. */
+  var discordInvite = (function () {
+    var a = document.querySelector('a[href*="discord.gg/"]');
+    return a ? a.getAttribute("href") : "";
+  })();
+  var lastRead = { nodeId: null, contentId: null };
+
+  function onwardBlock(n) {
+    var canon = n.canon || [];
+    var hot = lastRead.nodeId === n.id;
+    var lesson = null;
+    canon.forEach(function (c) {
+      if (hot && String(c.content_id) === String(lastRead.contentId)) lesson = c;
+    });
+    if (!lesson && canon.length) lesson = canon[0];
+    var h = '<div class="atlas-onward' + (hot ? " is-hot" : "") + '" id="atlas-onward">';
+    h += '<div class="atlas-onward-label">' +
+      (hot ? "You just read it &mdash; now make it count" :
+        (lesson ? "Your next move" : "Be in the room when it&rsquo;s preached")) + "</div>";
+    if (lesson) {
+      h += '<a class="atlas-onward-link is-primary" href="dashboard/board.php?focus=' +
+        encodeURIComponent(lesson.content_id) + '&amp;from=atlas">' +
+        "Reflect on it on your board &mdash; earn credit &rarr;</a>";
+    }
+    if (discordInvite) {
+      h += '<a class="atlas-onward-link" href="' + esc(discordInvite) +
+        '" target="_blank" rel="noopener">Not in yet? Join the Discord &rarr;</a>';
+    }
+    h += '<a class="atlas-onward-link" href="funding.php?from=atlas">Fund the forge &rarr;</a>';
+    h += "</div>";
+    return h;
+  }
+
   /* What the object IS, in its own words — the astronomy, kept separate from
      what the chapter means. `real` is load-bearing, not decoration: anything
      proposed, hypothetical or fictional says so on its face, because half
@@ -182,6 +225,7 @@
     } else {
       h += '<p class="atlas-await">Awaiting its sermon — the live rewrites this map one Sunday at a time.</p>';
     }
+    h += onwardBlock(n);
     if (arcs.length) {
       h += '<p class="atlas-route">Route: ' + arcs.map(function (a) {
         return "Arc " + a.num + " — " + esc(a.name);
@@ -195,6 +239,7 @@
   function closeCard() {
     if (card) card.classList.remove("open");
     focusedId = null;
+    lastRead = { nodeId: null, contentId: null };   /* "just read" must not go stale */
     if (history.replaceState) history.replaceState(null, "", "#");
   }
 
@@ -203,15 +248,34 @@
   var readerFrame = document.getElementById("atlas-reader-frame");
   function openLesson(url) {
     if (!reader || !readerFrame) { location.href = url; return; }
-    readerFrame.src = url + (url.indexOf("?") === -1 ? "?embed=1" : "&embed=1");
+    /* remember WHICH lesson, so the door can point at it when the reader closes */
+    var n = focusedId ? nodeById[focusedId] : null;
+    lastRead = { nodeId: null, contentId: null };
+    if (n) {
+      (n.canon || []).forEach(function (c) {
+        if (c.url === url) lastRead = { nodeId: n.id, contentId: c.content_id };
+      });
+    }
+    /* host=atlas: the codex's closing CTA says "back to the Atlas", not "return
+       to your board" — the board promise would be broken here */
+    readerFrame.src = url + (url.indexOf("?") === -1 ? "?" : "&") + "embed=1&host=atlas";
     reader.removeAttribute("hidden");
   }
   /* the lesson's own "Done reading" CTA calls parent.__odClose() — closing
-     returns the member to the map, never strands them in board-world */
+     returns the member to the map, never strands them in board-world. And
+     when it closes on a lesson they just read, the card re-renders with the
+     door lit and scrolled into view: the reading has somewhere to go. */
   window.__odClose = function () {
     if (!reader) return;
     reader.setAttribute("hidden", "");
     if (readerFrame) readerFrame.src = "about:blank";
+    if (lastRead.nodeId && focusedId === lastRead.nodeId && nodeById[focusedId]) {
+      openCard(nodeById[focusedId]);
+      var door = document.getElementById("atlas-onward");
+      if (door && door.scrollIntoView) {
+        door.scrollIntoView({ block: "nearest", behavior: reducedMotion ? "auto" : "smooth" });
+      }
+    }
   };
   if (card) {
     card.addEventListener("click", function (e) {

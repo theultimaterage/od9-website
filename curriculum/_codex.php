@@ -42,6 +42,11 @@ declare(strict_types=1);
 if (!function_exists('codex_render')):
 function codex_render(array $L): void {
     $embed = !empty($_GET['embed']);
+    // Who is hosting the embed. The board is the default host; the Atlas passes
+    // host=atlas so the closing CTA can stop promising "return to your board" —
+    // there, closing lands on the Atlas card, whose onward door carries the
+    // reflect-and-earn step (js/atlas.js). Anything else is treated as the board.
+    $host  = ($embed && (($_GET['host'] ?? '') === 'atlas')) ? 'atlas' : 'board';
     $h  = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
     $mt = fn(string $rel) => @filemtime(__DIR__ . '/' . $rel) ?: '1';  // rel from curriculum/
     $cssV  = $mt('../css/codex.css');
@@ -143,7 +148,7 @@ function codex_render(array $L): void {
             board INSIDE the modal. Close the parent reader instead (same-origin) —
             __odClose also unlocks the reflection form. Fallback: break out of the
             frame to the board if the parent hook is missing. */ ?>
-    <button type="button" class="cta" onclick="try{parent.__odClose()}catch(e){top.location='../../dashboard/board.php'}"><?= $L['cta'] ?? 'Return to your board &mdash; reflect &amp; earn &rarr;' ?></button>
+    <button type="button" class="cta" onclick="try{parent.__odClose()}catch(e){top.location='../../dashboard/board.php'}"><?= $host === 'atlas' ? 'Done &mdash; back to the Atlas to reflect &amp; earn &rarr;' : ($L['cta'] ?? 'Return to your board &mdash; reflect &amp; earn &rarr;') ?></button>
     <?php else: ?>
     <a class="cta" href="../../dashboard/board.php"><?= $L['cta'] ?? 'Return to your board &mdash; reflect &amp; earn &rarr;' ?></a>
     <?php endif; ?>

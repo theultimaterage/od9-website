@@ -92,6 +92,12 @@ $atlas_og_mode  = isset($_GET['og']);
   .atlas-canon-label{font-family:'Rajdhani',sans-serif;letter-spacing:2px;font-size:0.75rem;color:var(--gold);text-transform:uppercase;margin-bottom:0.3rem}
   .atlas-canon-link{display:block;color:var(--zone-cyan);text-decoration:none;font-size:0.92rem;padding:0.22rem 0;border-bottom:1px solid rgba(122,0,255,0.25)}
   .atlas-canon-link:hover{color:var(--gold)}
+  .atlas-onward{margin:0.9rem 0 0.4rem;padding:0.7rem 0.75rem;border:1px solid rgba(255,215,0,0.35);border-radius:3px;background:rgba(255,215,0,0.04)}
+  .atlas-onward.is-hot{border-color:var(--gold);box-shadow:0 0 14px rgba(255,215,0,0.28)}
+  .atlas-onward-label{font-family:'Rajdhani',sans-serif;letter-spacing:2px;font-size:0.75rem;color:var(--gold);text-transform:uppercase;margin-bottom:0.35rem}
+  .atlas-onward-link{display:block;color:var(--chrome);text-decoration:none;font-size:0.88rem;padding:0.2rem 0}
+  .atlas-onward-link.is-primary{color:var(--gold);font-weight:600;font-size:0.95rem}
+  .atlas-onward-link:hover{color:var(--zone-cyan)}
   .atlas-chip-beyond{color:var(--zone-violet);border-color:var(--zone-violet)}
   .atlas-object{border:1px solid rgba(122,0,255,0.3);border-radius:3px;padding:0.6rem 0.7rem;margin:0 0 0.8rem;background:rgba(122,0,255,0.05)}
   .atlas-object-head{display:flex;align-items:baseline;gap:0.55rem;flex-wrap:wrap;margin-bottom:0.3rem}
