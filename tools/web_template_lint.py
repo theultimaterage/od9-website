@@ -188,7 +188,9 @@ def find_dupes(tree: Path) -> dict[str, list[str]]:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--root", default="public", help="web root to scan")
+    # The repo root IS the docroot since the public/ -> root restructure; the old
+    # default made every bare invocation exit "root not found" (2026-09-04).
+    ap.add_argument("--root", default=".", help="web root to scan (default: the repo root)")
     ap.add_argument("--quiet", action="store_true")
     ap.add_argument("--list-ok", action="store_true", help="also list compliant pages")
     args = ap.parse_args()
