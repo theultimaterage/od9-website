@@ -96,6 +96,7 @@
         ".git/",
         ".gitignore",
         ".gitattributes",
+        "callin/state.json",
         ".claude/",
         "tools/",
         "database/",

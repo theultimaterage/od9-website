@@ -53,3 +53,6 @@ __pycache__/
 # Not ignored before the 2026-08-11 restructure commit, so 70 smoke-test
 # .eml captures were staged as if they were source.
 logs/
+
+# Runtime state the bot publishes beside the call-in door (cogs/callin_door.py); never a source file.
+callin/state.json
