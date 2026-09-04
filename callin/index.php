@@ -84,7 +84,10 @@ if ($state !== null) {
         try {
             $next = (new DateTimeImmutable((string)$state['next_show_utc']))->setTimezone($tz);
             $nextLabel = (string)($state['next_show_ct'] ?? '');
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
+            // A malformed timestamp from the bot must be visible in the PHP log,
+            // not silently turned into "no show" for every visitor.
+            error_log('[callin] unreadable next_show_utc in state.json: ' . $e->getMessage());
             $next = null;
         }
     }
