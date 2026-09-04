@@ -28,6 +28,16 @@ RewriteRule (.+)\.(jpe?g|png)$ $1.webp [T=image/webp,E=webp:1,L]
   Header append Vary Accept env=webp
 </IfModule>
 
+# The show rundown (a local file:// page — tools/build_rundown.py in the bot
+# repo) polls the call-in door's state, callin/state.json, which the bot
+# publishes. A public read: any origin may fetch it, and nothing caches it.
+<IfModule mod_headers.c>
+  <Files "state.json">
+    Header set Access-Control-Allow-Origin "*"
+    Header set Cache-Control "no-store"
+  </Files>
+</IfModule>
+
 # Serve the filesystem-generated sitemap at the conventional /sitemap.xml
 RewriteRule ^sitemap\.xml$ sitemap.php [L]
 
