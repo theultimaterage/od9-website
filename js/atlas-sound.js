@@ -32,6 +32,13 @@
   var FILES = ((stage && stage.getAttribute("data-audio")) || "").split(",").filter(Boolean);
   var VER = (stage && stage.getAttribute("data-audio-v")) || "1";
   function haveFile(name) { return Promise.resolve(FILES.indexOf(name + ".mp3") !== -1); }
+  /* arrival.mp3, arrival-b.mp3, arrival-c.mp3 … are takes of the same
+     gesture; each play picks one at random (the founder: "use both"). */
+  function variant(base) {
+    var opts = FILES.filter(function (f) { return f === base + ".mp3" || /^(.+)-[a-z]\.mp3$/.test(f) && f.slice(0, base.length + 1) === base + "-"; })
+      .map(function (f) { return f.replace(/\.mp3$/, ""); });
+    return opts.length ? opts[Math.floor(Math.random() * opts.length)] : base;
+  }
   var btn = document.getElementById("atlas-sound");
 
   /* Object family for a sprite key + state: the signature each one plays. */
@@ -220,7 +227,7 @@
   function play(name, synthKey, seconds) {
     if (!on || !ctx) return;
     duck(seconds || 2);
-    load(name).then(function (buf) {
+    load(variant(name)).then(function (buf) {
       if (!on) return;
       var t = ctx.currentTime + 0.02;
       if (buf) {
