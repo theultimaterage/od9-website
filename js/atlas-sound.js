@@ -29,8 +29,11 @@
      no take yet costs nothing — no fetch, no 404. Not a manifest.json: this
      site's Cloudflare answers browser fetches of *.json with its block page. */
   var stage = document.getElementById("atlas-stage");
-  var FILES = ((stage && stage.getAttribute("data-audio")) || "").split(",").filter(Boolean);
-  var VER = (stage && stage.getAttribute("data-audio-v")) || "1";
+  var VERS = {};                              /* "bed.mp3" -> its own mtime version */
+  ((stage && stage.getAttribute("data-audio")) || "").split(",").filter(Boolean).forEach(function (e) {
+    var i = e.indexOf(":"); VERS[i === -1 ? e : e.slice(0, i)] = i === -1 ? "1" : e.slice(i + 1);
+  });
+  var FILES = Object.keys(VERS);
   function haveFile(name) { return Promise.resolve(FILES.indexOf(name + ".mp3") !== -1); }
   /* arrival.mp3, arrival-b.mp3, arrival-c.mp3 … are takes of the same
      gesture; each play picks one at random (the founder: "use both"). */
@@ -75,7 +78,7 @@
     if (missing[name]) return Promise.resolve(null);
     return haveFile(name).then(function (ok) {
       if (!ok) { missing[name] = true; return null; }
-      return fetch(BASE + name + ".mp3?v=" + VER, { cache: "force-cache" });
+      return fetch(BASE + name + ".mp3?v=" + (VERS[name + ".mp3"] || "1"), { cache: "force-cache" });
     }).then(function (r) {
       if (r === null) return null;
       if (!r.ok) throw new Error(String(r.status));

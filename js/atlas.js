@@ -201,7 +201,7 @@
     if (n.forge) {
       var s = DATA.schedule && DATA.schedule[0];
       h += '<span class="atlas-chip atlas-chip-forge">IN THE FORGE' +
-        (s ? " — Sermon " + esc(s.sermon) + " · " + esc(s.date) : "") + "</span>";
+        (s ? " — Sermon " + esc(s.sermon) + " · " + esc(s.label || s.date) : "") + "</span>";
     }
     if (n.id === liveNodeId) h += '<span class="atlas-chip atlas-chip-live">&#9679; LIVE LESSON</span>';
     h += "</div>";
@@ -881,6 +881,22 @@
     } catch (e) { /* private mode: arrive every time */ }
     var hero = arrivalHero();
     if (!hero) return false;
+    /* On a cold cache the fly-in used to start over a black field and the
+       plate faded in mid-flight. Wait for the hero volume's plate (up to
+       1.5 s) — the deep field is on screen meanwhile, which is a fine
+       first frame — then begin. */
+    if (!PLATES[hero.vol] && !force) {
+      var tries = 0;
+      var iv = setInterval(function () {
+        tries++;
+        if (PLATES[hero.vol] || tries > 15) { clearInterval(iv); beginArrival(hero); }
+      }, 100);
+      return true;
+    }
+    beginArrival(hero);
+    return true;
+  }
+  function beginArrival(hero) {
     arrival = { hero: hero, t0: performance.now(), z0: fitZ * 0.62, z1: Math.max(3.6, fitZ * 3),
                 x0: hero.x + 140, y0: hero.y - 90, sounded: false, revealed: false };
     cam.x = arrival.x0; cam.y = arrival.y0; cam.z = arrival.z0;
@@ -888,7 +904,6 @@
     focusedId = hero.id;                         /* the object resolves under the camera */
     var hint = document.getElementById("atlas-arrival-hint");
     if (hint) hint.classList.add("on");
-    return true;
   }
   function endArrival(skipped) {
     if (!arrival) return;

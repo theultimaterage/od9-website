@@ -102,7 +102,7 @@ $atlas_og_mode  = isset($_GET['og']);
   @media (prefers-reduced-motion: reduce){#atlas-tour-cap{transition:none} #atlas-tour-cap p .cur{animation:none}}
   #atlas-live-chip.on{display:inline-block;animation:atlasLivePulse 2.2s ease-in-out infinite}
   @keyframes atlasLivePulse{0%,100%{box-shadow:0 0 4px var(--t-pioneer)}50%{box-shadow:0 0 14px var(--t-pioneer)}}
-  #atlas-stage{position:relative;max-width:1200px;margin:0 auto 2.5rem;height:calc(100vh - var(--nav-height) - 210px);min-height:420px;border:1px solid var(--carbon-dark);border-radius:8px;overflow:hidden;background:var(--zone-void)}
+  #atlas-stage{position:relative;max-width:1200px;margin:0 auto 2.5rem;height:calc(100vh - var(--nav-height) - 210px);height:calc(100dvh - var(--nav-height) - 210px);min-height:420px;border:1px solid var(--carbon-dark);border-radius:8px;overflow:hidden;background:var(--zone-void)}
   #atlas-canvas{position:absolute;inset:0;touch-action:none;cursor:grab}
   .atlas-zoom{position:absolute;right:12px;bottom:12px;display:flex;flex-direction:column;gap:6px;z-index:3}
   .atlas-zoom button{width:38px;height:38px;border-radius:6px;border:1px solid var(--zone-violet);background:rgba(10,10,10,0.8);color:var(--zone-cyan);font-size:1.15rem;font-family:'Rajdhani',sans-serif;cursor:pointer}
@@ -224,7 +224,7 @@ $atlas_og_mode  = isset($_GET['og']);
     #atlas-tour-cap .ctl .hint{display:none}
     .atlas-find{margin-left:0;width:100%}
     .atlas-find input{width:100%;max-width:none}
-    #atlas-stage{height:calc(100vh - var(--nav-height) - 128px);min-height:480px;margin:0 0 1.5rem;border-radius:0;border-left:none;border-right:none}
+    #atlas-stage{height:calc(100vh - var(--nav-height) - 128px);height:calc(100dvh - var(--nav-height) - 128px);min-height:480px;margin:0 0 1.5rem;border-radius:0;border-left:none;border-right:none}
     .atlas-zoom,#atlas-stage.has-card .atlas-zoom{top:12px;bottom:auto;right:10px}
     #atlas-live-strip{left:8px;right:58px;max-width:none;font-size:0.84rem;padding-right:1.8rem}
     #atlas-card{top:auto;left:0;right:0;width:100%;max-height:62%;border-left:none;border-top:1px solid var(--zone-violet);border-radius:14px 14px 0 0;transform:translateY(103%)}
@@ -271,7 +271,9 @@ $atlas_og_mode  = isset($_GET['og']);
 <?php endif; ?>
 <?php /* the sound layer's file list, server-side: Cloudflare answers browser fetches of *.json on this
          site with its block page (state.json, 2026-09-04), so the manifest rides the page instead */
-      $atlas_audio_files = array_map('basename', glob(__DIR__ . '/audio/atlas/*.mp3') ?: []);
+      /* name:mtime per file, so re-banking one cue never re-downloads the 2.7 MB bed */
+      $atlas_audio_files = array_map(function ($p) { return basename($p) . ':' . (@filemtime($p) ?: 1); },
+                                     glob(__DIR__ . '/audio/atlas/*.mp3') ?: []);
       $atlas_audio_mt = array_map('filemtime', glob(__DIR__ . '/audio/atlas/*.mp3') ?: []);
       $atlas_audio_v = $atlas_audio_mt ? max($atlas_audio_mt) : 1;   /* max([]) throws in PHP 8 */ ?>
 <div id="atlas-stage" role="application" aria-label="Zoomable map of the OD9 Manifesto" data-audio="<?= htmlspecialchars(implode(',', $atlas_audio_files)) ?>" data-audio-v="<?= (int)$atlas_audio_v ?>" data-plates-v="<?= @max(array_map('filemtime', glob(__DIR__ . '/images/atlas/plates/*.webp') ?: [])) ?: 1 ?>" data-sprites-v="<?= @max(array_map('filemtime', glob(__DIR__ . '/images/atlas/sprites/*.webp') ?: [])) ?: 1 ?>">
