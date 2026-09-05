@@ -349,6 +349,7 @@
   var pointers = {}, dragging = false, downAt = null, pinchD = 0;
   canvas.addEventListener("pointerdown", function (e) {
     if (arrival) endArrival(true);
+    if (tour) endTour("stopped");
     canvas.setPointerCapture(e.pointerId);
     pointers[e.pointerId] = [e.clientX, e.clientY];
     downAt = [e.clientX, e.clientY];
@@ -401,6 +402,7 @@
   canvas.addEventListener("wheel", function (e) {
     e.preventDefault();
     if (arrival) endArrival(true);
+    if (tour) endTour("stopped");
     var f = Math.pow(1.0015, -e.deltaY);
     var before = toWorld(e.offsetX, e.offsetY);
     target.z = clamp(target.z * f, fitZ * 0.85, 6);
@@ -411,6 +413,12 @@
   }, { passive: false });
   document.addEventListener("keydown", function (e) {
     if (arrival) { endArrival(true); return; }
+    if (tour) {
+      if (e.key === " ") { tourPause(); e.preventDefault(); return; }
+      if (e.key === "ArrowRight") { tourStep(1); e.preventDefault(); return; }
+      if (e.key === "ArrowLeft") { tourStep(-1); e.preventDefault(); return; }
+      if (e.key === "Escape") { endTour("stopped"); return; }
+    }
     if (e.key !== "Escape") return;
     if (reader && !reader.hasAttribute("hidden")) { window.__odClose(); return; }
     closeCard();
@@ -759,7 +767,7 @@
   function startArrival(force) {
     if (reducedMotion) return false;
     var q = location.search;
-    if (!force && (/[?&](og|live)=1/.test(q) || /[?&]arrival=0/.test(q) || location.hash.length > 1)) return false;
+    if (!force && (/[?&](og|live)=1/.test(q) || /[?&]arrival=0/.test(q) || /[?&]tour=/.test(q) || location.hash.length > 1)) return false;
     try {
       if (!force && sessionStorage.getItem("atlas.arrived")) return false;
       sessionStorage.setItem("atlas.arrived", "1");
@@ -804,8 +812,180 @@
     }
   }
 
+  /* FLIGHTS: a timed glide of the camera (the arrival's ease, reusable).
+     The tour flies stop to stop with it; a flight ends by handing the
+     target a continuous frame, so the normal ease takes over silently. */
+  var flight = null;
+  function flyTo(x, y, z, dur, done) {
+    if (reducedMotion || dur <= 0) {
+      cam.x = target.x = x; cam.y = target.y = y; cam.z = target.z = z;
+      flight = null; if (done) done(); return;
+    }
+    flight = { x0: cam.x, y0: cam.y, z0: cam.z, x1: x, y1: y, z1: z, t0: performance.now(), dur: dur, done: done };
+  }
+  function stepFlight() {
+    var f = flight, k = easeInOut(Math.min(1, (performance.now() - f.t0) / f.dur));
+    cam.x = f.x0 + (f.x1 - f.x0) * k; cam.y = f.y0 + (f.y1 - f.y0) * k;
+    cam.z = f.z0 * Math.pow(f.z1 / f.z0, k);
+    if (k >= 1) { flight = null; target.x = cam.x; target.y = cam.y; target.z = cam.z; if (f.done) f.done(); }
+  }
+
+  /* THE TOUR (2026-09-04, the spectacle brief's move 4): a guided flight
+     along a preached route. Each stop glides in, the object resolves, the
+     caption types the chapter's line; space pauses, arrows skip, Escape or
+     any gesture on the map leaves; the end pulls back to the whole map.
+     ?tour=arc1 (or all) starts one from a link. */
+  var tour = null;
+  var TOUR_FLY = 1700, TOUR_HOLD = 5200, TOUR_TYPE_MS = 22;
+  var tourBtn = document.getElementById("atlas-tour");
+  var tourMenu = document.getElementById("atlas-tour-menu");
+  var tourCap = document.getElementById("atlas-tour-cap");
+  function tourStops(spec) {
+    var arcs = spec === "all" ? DATA.arcs : DATA.arcs.filter(function (a) { return a.id === spec; });
+    var stops = [];
+    arcs.forEach(function (a) {
+      a.route.forEach(function (id, i) { if (nodeById[id]) stops.push({ arc: a, n: nodeById[id], i: i, of: a.route.length }); });
+    });
+    return stops;
+  }
+  function tourLine(n) {
+    return (n.bullets && n.bullets[0]) || n.note ||
+      "Awaiting its sermon \u2014 the live rewrites this map one Sunday at a time.";
+  }
+  function clearTourTimers() {
+    if (!tour) return;
+    if (tour.hold) { clearTimeout(tour.hold); tour.hold = null; }
+    if (tour.typing) { clearTimeout(tour.typing); tour.typing = null; }
+  }
+  function typeInto(el, text) {
+    el.innerHTML = "";
+    if (reducedMotion) { el.textContent = text; return; }
+    var i = 0, cur = document.createElement("span"); cur.className = "cur";
+    el.appendChild(cur);
+    (function tick() {
+      if (!tour) return;
+      if (i < text.length) {
+        el.insertBefore(document.createTextNode(text.charAt(i)), cur); i++;
+        tour.typing = setTimeout(tick, TOUR_TYPE_MS);
+      } else { cur.remove(); tour.typing = null; }
+    })();
+  }
+  function showStopCap(s) {
+    if (!tourCap) return;
+    tourCap.className = "";
+    tourCap.innerHTML =
+      '<div class="e">Arc ' + esc(s.arc.num) + " \u2014 " + esc(s.arc.name) + " \u00B7 " + (s.i + 1) + "/" + s.of + "</div>" +
+      '<h3 id="atlas-tour-title" title="Open the chapter">' + esc(s.n.num === "P" ? "Preface" : "Chapter " + s.n.num) + " \u00B7 " + esc(s.n.title) + "</h3>" +
+      '<p id="atlas-tour-line"></p>' +
+      '<div class="ctl"><button type="button" id="atlas-tour-prev" aria-label="Previous stop">\u25C0</button>' +
+      '<button type="button" id="atlas-tour-pause" aria-label="Pause">\u2016</button>' +
+      '<button type="button" id="atlas-tour-next" aria-label="Next stop">\u25B6</button>' +
+      '<button type="button" id="atlas-tour-stop" aria-label="Leave the tour">\u2715</button>' +
+      '<span class="hint">space pauses \u00B7 arrows skip \u00B7 esc leaves</span></div>';
+    tourCap.classList.add("on");
+    typeInto(document.getElementById("atlas-tour-line"), tourLine(s.n));
+    document.getElementById("atlas-tour-prev").addEventListener("click", function () { tourStep(-1); });
+    document.getElementById("atlas-tour-next").addEventListener("click", function () { tourStep(1); });
+    document.getElementById("atlas-tour-pause").addEventListener("click", tourPause);
+    document.getElementById("atlas-tour-stop").addEventListener("click", function () { endTour("stopped"); });
+    document.getElementById("atlas-tour-title").addEventListener("click", function () {
+      if (!tour) return;
+      if (!tour.paused) tourPause();
+      openCard(s.n);
+    });
+  }
+  function tourGo() {
+    var s = tour.stops[tour.si];
+    clearTourTimers();
+    closeCard();
+    focusedId = s.n.id;
+    activeArc = s.arc.id;
+    flyTo(s.n.x, s.n.y, Math.max(3.6, fitZ * 3), TOUR_FLY, function () {
+      if (!tour) return;
+      showStopCap(s);
+      if (window.AtlasSound) window.AtlasSound.cue(spriteKeyFor(s.n), s.n.state);
+      if (!tour.paused) tour.hold = setTimeout(function () { tourStep(1); }, TOUR_HOLD);
+    });
+  }
+  function tourStep(dir) {
+    if (!tour) return;
+    var next = tour.si + dir;
+    if (next >= tour.stops.length) { endTour("done"); return; }
+    if (next < 0) next = 0;
+    tour.si = next; tour.paused = false; tourGo();
+  }
+  function tourPause() {
+    if (!tour) return;
+    tour.paused = !tour.paused;
+    var b = document.getElementById("atlas-tour-pause");
+    if (b) { b.textContent = tour.paused ? "\u25B6" : "\u2016"; b.setAttribute("aria-label", tour.paused ? "Resume" : "Pause"); }
+    if (tour.paused) { if (tour.hold) { clearTimeout(tour.hold); tour.hold = null; } }
+    else if (!flight) { tour.hold = setTimeout(function () { tourStep(1); }, TOUR_HOLD * 0.6); }
+  }
+  function startTour(spec) {
+    var stops = tourStops(spec);
+    if (!stops.length) return false;
+    if (arrival) endArrival(true);
+    if (tour) { clearTourTimers(); }
+    tour = { spec: spec, stops: stops, si: 0, paused: false, hold: null, typing: null };
+    if (tourMenu) tourMenu.classList.remove("open");
+    if (tourBtn) tourBtn.setAttribute("aria-expanded", "false");
+    tourGo();
+    return true;
+  }
+  function endTour(reason) {
+    if (!tour) return;
+    clearTourTimers();
+    var spec = tour.spec, stops = tour.stops;
+    tour = null; focusedId = null; activeArc = null;
+    if (reason === "done") {
+      flyTo(W / 2, H / 2, homeZ(), 2200, function () { if (window.AtlasSound) window.AtlasSound.reveal(); });
+      if (tourCap) {
+        var arc = stops[stops.length - 1].arc;
+        tourCap.className = "on done";
+        tourCap.innerHTML = '<div class="e">Tour over \u00B7 ' + stops.length + " stops</div>" +
+          "<h3>" + (spec === "all" ? "All four routes" : "Arc " + esc(arc.num) + " \u2014 " + esc(arc.name)) + "</h3>" +
+          "<p>Their book is frozen. This one is being reforged, one Sunday at a time.</p>" +
+          '<a class="again" href="#' + esc(arc.id) + '" id="atlas-tour-route">Fit the route \u2192</a>' +
+          (spec !== "all" ? ' &nbsp; <a class="again" href="?tour=all" id="atlas-tour-all">All four routes \u2192</a>' : "");
+        var fitBtn = document.getElementById("atlas-tour-route");
+        if (fitBtn) fitBtn.addEventListener("click", function (e) { e.preventDefault(); tourCap.className = ""; location.hash = arc.id; });
+        var allBtn = document.getElementById("atlas-tour-all");
+        if (allBtn) allBtn.addEventListener("click", function (e) { e.preventDefault(); startTour("all"); });
+        setTimeout(function () { if (!tour && tourCap.classList.contains("done")) tourCap.className = ""; }, 9000);
+      }
+    } else {
+      flight = null; target.x = cam.x; target.y = cam.y; target.z = cam.z;
+      if (tourCap) tourCap.className = "";
+    }
+  }
+  if (tourBtn && tourMenu) {
+    DATA.arcs.forEach(function (a) {
+      var li = document.createElement("li"); li.setAttribute("role", "option");
+      li.innerHTML = "<b>Arc " + esc(a.num) + "</b><span>" + esc(a.name) + "</span><small>" + a.route.length + " stops \u00B7 ~" + Math.round(a.route.length * (TOUR_FLY + TOUR_HOLD) / 1000) + " s</small>";
+      li.addEventListener("click", function () { startTour(a.id); });
+      tourMenu.appendChild(li);
+    });
+    var all = document.createElement("li"); all.setAttribute("role", "option");
+    var nAll = DATA.arcs.reduce(function (s, a) { return s + a.route.length; }, 0);
+    all.innerHTML = "<b>All</b><span>Every preached route, in order</span><small>" + nAll + " stops \u00B7 ~" + Math.round(nAll * (TOUR_FLY + TOUR_HOLD) / 60000) + " min</small>";
+    all.addEventListener("click", function () { startTour("all"); });
+    tourMenu.appendChild(all);
+    tourBtn.addEventListener("click", function () {
+      var open = !tourMenu.classList.contains("open");
+      tourMenu.classList.toggle("open", open);
+      tourBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    document.addEventListener("click", function (e) {
+      if (tourMenu.classList.contains("open") && !tourMenu.contains(e.target) && e.target !== tourBtn) {
+        tourMenu.classList.remove("open"); tourBtn.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+
   function draw() {
     if (arrival) { stepArrival(); }
+    else if (flight) { stepFlight(); }
     else if (!reducedMotion) {
       cam.x += (target.x - cam.x) * 0.14;
       cam.y += (target.y - cam.y) * 0.14;
@@ -1181,7 +1361,9 @@
     snap();
   } else {
     routeHash();
-    startArrival(/[?&]arrival=1/.test(location.search));
+    var tm = /[?&]tour=([a-z0-9]+)/.exec(location.search);
+    if (tm) startTour(tm[1]);
+    else startArrival(/[?&]arrival=1/.test(location.search));
   }
   requestAnimationFrame(draw);
 })();

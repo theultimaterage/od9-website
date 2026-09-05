@@ -24,18 +24,14 @@
   var BED_GAIN = 0.16, CUE_GAIN = 0.28, DUCK = 0.55;
   var ctx = null, master = null, bedGain = null, bedNodes = [], bedTimer = null;
   var buffers = {}, missing = {}, on = false, started = false;
-  /* audio/atlas/manifest.json lists the files that exist (tools/atlas_audio.py
-     writes it), so a family with no take yet costs one manifest read, not a
-     404 per cue. No manifest at all = everything synthesized, one 404 total. */
-  var manifest = null;
-  function haveFile(name) {
-    if (manifest === null) {
-      manifest = fetch(BASE + "manifest.json", { cache: "no-cache" }).then(function (r) {
-        return r.ok ? r.json() : { files: [] };
-      }).then(function (m) { return (m && m.files) || []; }).catch(function () { return []; });
-    }
-    return manifest.then(function (files) { return files.indexOf(name + ".mp3") !== -1; });
-  }
+  /* The page carries the list of files that exist (atlas.php globs audio/atlas/
+     at render time: data-audio + data-audio-v on the stage), so a family with
+     no take yet costs nothing — no fetch, no 404. Not a manifest.json: this
+     site's Cloudflare answers browser fetches of *.json with its block page. */
+  var stage = document.getElementById("atlas-stage");
+  var FILES = ((stage && stage.getAttribute("data-audio")) || "").split(",").filter(Boolean);
+  var VER = (stage && stage.getAttribute("data-audio-v")) || "1";
+  function haveFile(name) { return Promise.resolve(FILES.indexOf(name + ".mp3") !== -1); }
   var btn = document.getElementById("atlas-sound");
 
   /* Object family for a sprite key + state: the signature each one plays. */
@@ -72,7 +68,7 @@
     if (missing[name]) return Promise.resolve(null);
     return haveFile(name).then(function (ok) {
       if (!ok) { missing[name] = true; return null; }
-      return fetch(BASE + name + ".mp3", { cache: "force-cache" });
+      return fetch(BASE + name + ".mp3?v=" + VER, { cache: "force-cache" });
     }).then(function (r) {
       if (r === null) return null;
       if (!r.ok) throw new Error(String(r.status));

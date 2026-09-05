@@ -75,6 +75,31 @@ $atlas_og_mode  = isset($_GET['og']);
   .atlas-find-results li.active,.atlas-find-results li:hover{background:rgba(122,0,255,0.25);color:#fff}
   .atlas-find-results li small{margin-left:auto;opacity:0.6;font-size:0.72rem;white-space:nowrap}
   #atlas-live-chip{display:none;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:2px;color:var(--t-pioneer);border:1px solid var(--t-pioneer);border-radius:3px;padding:0.15rem 0.6rem;cursor:pointer;background:none;font-size:0.78rem}
+  /* the tour (2026-09-04): a guided flight along a preached route */
+  .atlas-tour-wrap{position:relative}
+  #atlas-tour{font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:2px;color:var(--zone-cyan);border:1px solid var(--zone-cyan);border-radius:3px;padding:0.15rem 0.6rem;cursor:pointer;background:none;font-size:0.78rem;text-transform:uppercase}
+  #atlas-tour:hover,#atlas-tour:focus-visible{outline:none;box-shadow:0 0 8px rgba(0,255,247,0.4)}
+  #atlas-tour-menu{position:absolute;top:calc(100% + 6px);left:0;min-width:300px;background:rgba(10,10,10,0.96);border:1px solid var(--zone-violet);border-radius:6px;z-index:21;list-style:none;margin:0;padding:0.3rem 0;display:none;text-transform:none;letter-spacing:0}
+  #atlas-tour-menu.open{display:block}
+  #atlas-tour-menu li{padding:0.45rem 0.85rem;cursor:pointer;font-family:'Exo 2',sans-serif;font-size:0.88rem;color:var(--chrome);display:flex;gap:0.6rem;align-items:baseline}
+  #atlas-tour-menu li b{font-family:'Rajdhani',sans-serif;color:var(--zone-cyan);font-weight:600;min-width:3.2rem}
+  #atlas-tour-menu li small{margin-left:auto;opacity:0.6;font-size:0.72rem;white-space:nowrap}
+  #atlas-tour-menu li:hover,#atlas-tour-menu li.active{background:rgba(122,0,255,0.25);color:#fff}
+  #atlas-tour-cap{position:absolute;left:16px;bottom:16px;z-index:4;max-width:min(460px,70%);background:rgba(10,10,10,0.82);border:1px solid var(--zone-violet);border-left:3px solid var(--zone-cyan);border-radius:6px;padding:0.8rem 1rem 0.7rem;opacity:0;transform:translateY(8px);transition:opacity 0.35s,transform 0.35s;pointer-events:none}
+  #atlas-tour-cap.on{opacity:1;transform:none;pointer-events:auto}
+  #atlas-tour-cap .e{font-family:'Rajdhani',sans-serif;letter-spacing:2px;font-size:0.74rem;color:var(--zone-cyan);text-transform:uppercase}
+  #atlas-tour-cap h3{font-family:'Orbitron',sans-serif;color:#fff;font-size:1.02rem;margin:0.25rem 0 0.35rem;line-height:1.3;cursor:pointer}
+  #atlas-tour-cap h3:hover{color:var(--zone-cyan)}
+  #atlas-tour-cap p{margin:0;color:var(--chrome);font-size:0.92rem;line-height:1.5;min-height:1.5em}
+  #atlas-tour-cap p .cur{display:inline-block;width:0.5em;border-bottom:2px solid var(--zone-cyan);margin-left:2px;animation:atlasLivePulse 1s ease-in-out infinite}
+  #atlas-tour-cap .ctl{display:flex;gap:0.4rem;align-items:center;margin-top:0.6rem}
+  #atlas-tour-cap .ctl button{background:none;border:1px solid var(--zone-violet);color:var(--zone-cyan);border-radius:4px;width:34px;height:30px;cursor:pointer;font-size:0.95rem}
+  #atlas-tour-cap .ctl button:hover,#atlas-tour-cap .ctl button:focus-visible{border-color:var(--zone-cyan);outline:none}
+  #atlas-tour-cap .ctl .hint{margin-left:auto;font-family:'Rajdhani',sans-serif;letter-spacing:1px;font-size:0.7rem;color:var(--chrome);opacity:0.6;text-transform:uppercase}
+  #atlas-tour-cap.done h3{cursor:default}
+  #atlas-tour-cap.done h3:hover{color:#fff}
+  #atlas-tour-cap .again{display:inline-block;margin-top:0.5rem;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:2px;font-size:0.76rem;color:var(--gold);text-decoration:none;text-transform:uppercase}
+  @media (prefers-reduced-motion: reduce){#atlas-tour-cap{transition:none} #atlas-tour-cap p .cur{animation:none}}
   #atlas-live-chip.on{display:inline-block;animation:atlasLivePulse 2.2s ease-in-out infinite}
   @keyframes atlasLivePulse{0%,100%{box-shadow:0 0 4px var(--t-pioneer)}50%{box-shadow:0 0 14px var(--t-pioneer)}}
   #atlas-stage{position:relative;max-width:1200px;margin:0 auto 2.5rem;height:calc(100vh - var(--nav-height) - 210px);min-height:420px;border:1px solid var(--carbon-dark);border-radius:8px;overflow:hidden;background:var(--zone-void)}
@@ -146,6 +171,8 @@ $atlas_og_mode  = isset($_GET['og']);
     .atlas-dek{display:none}
     .atlas-legend{margin:0.35rem auto 0.35rem;padding:0 1rem;gap:0.4rem 0.7rem;font-size:0.7rem}
     .atlas-legend .atlas-hint{display:none}
+    #atlas-tour-cap{left:0;right:0;bottom:0;max-width:none;border-radius:10px 10px 0 0;border-left:1px solid var(--zone-violet);border-top:3px solid var(--zone-cyan)}
+    #atlas-tour-cap .ctl .hint{display:none}
     .atlas-find{margin-left:0;width:100%}
     .atlas-find input{width:100%;max-width:none}
     #atlas-stage{height:calc(100vh - var(--nav-height) - 128px);min-height:480px;margin:0 0 1.5rem;border-radius:0;border-left:none;border-right:none}
@@ -168,6 +195,10 @@ $atlas_og_mode  = isset($_GET['og']);
   <span><span class="atlas-dot atlas-dot-preached"></span>PREACHED</span>
   <span><span class="atlas-dot atlas-dot-canon"></span>CANON</span>
   <button id="atlas-live-chip" type="button">&#9679; LIVE</button>
+  <span class="atlas-tour-wrap">
+    <button id="atlas-tour" type="button" aria-haspopup="listbox" aria-expanded="false">&#9654; Take the tour</button>
+    <ul id="atlas-tour-menu" role="listbox" aria-label="Routes"></ul>
+  </span>
   <span class="atlas-hint">drag to pan · scroll or pinch to zoom · tap a chapter</span>
   <div class="atlas-find">
     <input id="atlas-find" type="search" placeholder="Find a chapter, an object, an idea…" aria-label="Find on the map" autocomplete="off">
@@ -188,7 +219,12 @@ $atlas_og_mode  = isset($_GET['og']);
   .atlas-og-lockup .u{display:inline-block;margin-top:12px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:3px;font-size:15px;color:var(--gold);border:1px solid var(--gold);border-radius:3px;padding:3px 12px}
 </style>
 <?php endif; ?>
-<div id="atlas-stage" role="application" aria-label="Zoomable map of the OD9 Manifesto" data-plates-v="<?= @max(array_map('filemtime', glob(__DIR__ . '/images/atlas/plates/*.webp') ?: [])) ?: 1 ?>" data-sprites-v="<?= @max(array_map('filemtime', glob(__DIR__ . '/images/atlas/sprites/*.webp') ?: [])) ?: 1 ?>">
+<?php /* the sound layer's file list, server-side: Cloudflare answers browser fetches of *.json on this
+         site with its block page (state.json, 2026-09-04), so the manifest rides the page instead */
+      $atlas_audio_files = array_map('basename', glob(__DIR__ . '/audio/atlas/*.mp3') ?: []);
+      $atlas_audio_mt = array_map('filemtime', glob(__DIR__ . '/audio/atlas/*.mp3') ?: []);
+      $atlas_audio_v = $atlas_audio_mt ? max($atlas_audio_mt) : 1;   /* max([]) throws in PHP 8 */ ?>
+<div id="atlas-stage" role="application" aria-label="Zoomable map of the OD9 Manifesto" data-audio="<?= htmlspecialchars(implode(',', $atlas_audio_files)) ?>" data-audio-v="<?= (int)$atlas_audio_v ?>" data-plates-v="<?= @max(array_map('filemtime', glob(__DIR__ . '/images/atlas/plates/*.webp') ?: [])) ?: 1 ?>" data-sprites-v="<?= @max(array_map('filemtime', glob(__DIR__ . '/images/atlas/sprites/*.webp') ?: [])) ?: 1 ?>">
   <canvas id="atlas-canvas"></canvas>
 <?php if ($atlas_og_mode): ?>
   <div class="atlas-og-lockup">
@@ -205,6 +241,7 @@ $atlas_og_mode  = isset($_GET['og']);
     <button id="atlas-sound" type="button" aria-label="Sound" aria-pressed="false" title="Sound off — click for the ambient bed and object tones">&#9834;</button>
   </div>
   <div id="atlas-arrival-hint" aria-hidden="true">tap to skip</div>
+  <div id="atlas-tour-cap" aria-live="polite"></div>
   <aside id="atlas-card" aria-live="polite"></aside>
   <?php /* Codex reader host — same embed contract as the board (?embed=1 +
            window.__odClose defined by js/atlas.js). Close returns to the map:
