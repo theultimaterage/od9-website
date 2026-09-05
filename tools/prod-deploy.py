@@ -50,6 +50,32 @@ _CANDIDATES = [
 if not any(a == "--config" or a.startswith("--config=") for a in sys.argv[1:]):
     sys.argv.extend(["--config", _CONFIG])
 
+# ATLAS CHECKS (2026-09-05): when the tree touches an Atlas file, the browser
+# checks run before the engine (tools/atlas_checks.py — Playwright from the
+# bot repo's venv, against local Apache like the render gate). Skipped on
+# --dry. --skip-atlas-checks bypasses; say why in the commit.
+_ATLAS_PATHS = ["atlas.php", "js/atlas.js", "js/atlas-sound.js", "api/v1/atlas-live.php",
+                "data/manifesto-map.json", "data/atlas-objects.json", "audio/atlas", "images/atlas"]
+if "--skip-atlas-checks" in sys.argv:
+    sys.argv.remove("--skip-atlas-checks")
+elif "--dry" not in sys.argv:
+    import subprocess
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    _touched = subprocess.run(["git", "-C", _root, "diff", "--name-only", "HEAD~5", "HEAD", "--"] + _ATLAS_PATHS,
+                              capture_output=True, text=True).stdout.split()
+    _touched += subprocess.run(["git", "-C", _root, "status", "--porcelain", "--"] + _ATLAS_PATHS,
+                               capture_output=True, text=True).stdout.split()
+    if _touched:
+        _venv = "/mnt/c/Users/Rage/IdeaProjects/OD9-Discord-Bot/venv/Scripts/python.exe"
+        _py = _venv if os.path.exists(_venv) else r"C:\Users\Rage\IdeaProjects\OD9-Discord-Bot\venv\Scripts\python.exe"
+        _script = os.path.join(_root, "tools", "atlas_checks.py")
+        if _script.startswith("/mnt/c/"):
+            _script = "C:/" + _script[len("/mnt/c/"):]     # the Windows interpreter needs a Windows path
+        print("=== Atlas browser checks (tools/atlas_checks.py) ===", flush=True)
+        _rc = subprocess.run([_py, _script]).returncode
+        if _rc != 0:
+            sys.exit("ABORT: Atlas browser checks failed (exit %d) — fix them, or --skip-atlas-checks with a reason in the commit" % _rc)
+
 for _engine in _CANDIDATES:
     if os.path.exists(_engine):
         sys.argv[0] = _engine
