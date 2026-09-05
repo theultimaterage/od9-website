@@ -135,6 +135,25 @@ $atlas_og_mode  = isset($_GET['og']);
   .atlas-timeline.past #atlas-tl-date{color:var(--gold)}
   .atlas-timeline .tl-label #atlas-tl-stat{opacity:0.75}
   @media (max-width:700px){.atlas-timeline{flex-wrap:wrap;margin-top:-1rem;padding:0.4rem 1rem 0} .atlas-timeline .tl-label{width:100%;justify-content:space-between}}
+  /* the guides (2026-09-05): four presences at the map's edge, each owning a layer */
+  .atlas-guides{position:absolute;left:12px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:3}
+  .atlas-guide{width:46px;height:46px;border-radius:50%;border:1px solid var(--zone-violet);background:rgba(10,10,10,0.75);padding:0;cursor:pointer;overflow:hidden;position:relative;transition:box-shadow .2s,border-color .2s;color:var(--zone-cyan);font-family:'Orbitron',sans-serif;font-size:1rem}
+  .atlas-guide img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
+  .atlas-guide.noimg img{display:none}
+  .atlas-guide.noimg::after{content:attr(data-initial);position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .atlas-guide:hover,.atlas-guide:focus-visible,.atlas-guide.on{border-color:var(--zone-cyan);box-shadow:0 0 12px rgba(0,255,247,0.45);outline:none}
+  .atlas-guide.forge{border-color:var(--gold)}
+  #atlas-guide-say{position:absolute;left:70px;top:50%;transform:translate(-6px,-50%);z-index:4;max-width:330px;background:rgba(10,10,10,0.9);border:1px solid var(--zone-violet);border-left:3px solid var(--zone-cyan);border-radius:6px;padding:0.6rem 0.85rem;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;font-family:'Exo 2',sans-serif;font-size:0.9rem;color:var(--chrome);line-height:1.45}
+  #atlas-guide-say.on{opacity:1;transform:translate(0,-50%);pointer-events:auto}
+  #atlas-guide-say .who{font-family:'Rajdhani',sans-serif;letter-spacing:2px;font-size:0.72rem;text-transform:uppercase;color:var(--zone-cyan);margin-bottom:0.2rem}
+  #atlas-guide-say .go{display:inline-block;margin-top:0.4rem;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1.5px;font-size:0.74rem;color:var(--gold);text-transform:uppercase;cursor:pointer;background:none;border:none;padding:0}
+  #atlas-guide-say .go:hover{text-decoration:underline}
+  @media (max-width:700px){
+    .atlas-guides{top:auto;bottom:14px;left:10px;transform:none;flex-direction:row;gap:8px}
+    .atlas-guide{width:40px;height:40px}
+    #atlas-guide-say{left:10px;right:10px;top:auto;bottom:62px;max-width:none;transform:translateY(6px)}
+    #atlas-guide-say.on{transform:none}
+  }
   #atlas-arrival-hint{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:3;font-family:'Rajdhani',sans-serif;letter-spacing:2px;font-size:0.78rem;text-transform:uppercase;color:var(--chrome);opacity:0;transition:opacity 0.6s;pointer-events:none;background:rgba(10,10,10,0.55);padding:0.25rem 0.7rem;border-radius:3px}
   #atlas-arrival-hint.on{opacity:0.85}
   #atlas-card{position:absolute;top:0;right:0;bottom:0;width:min(390px,92%);background:rgba(10,10,10,0.94);border-left:1px solid var(--zone-violet);padding:1.4rem 1.5rem;overflow-y:auto;transform:translateX(102%);transition:transform 0.25s ease;z-index:4}
@@ -273,6 +292,13 @@ $atlas_og_mode  = isset($_GET['og']);
   </div>
   <div id="atlas-arrival-hint" aria-hidden="true">tap to skip</div>
   <div id="atlas-live-strip" aria-live="polite"></div>
+  <div class="atlas-guides" role="group" aria-label="The guides">
+    <button type="button" class="atlas-guide" data-guide="navigator" data-initial="N" aria-label="The Navigator — the tour"><img src="images/atlas/guides/navigator.webp?v=<?= @filemtime(__DIR__ . '/images/atlas/guides/navigator.webp') ?: 1 ?>" alt="" onerror="this.parentNode.classList.add('noimg')"></button>
+    <button type="button" class="atlas-guide" data-guide="archivist" data-initial="A" aria-label="The Archivist — the timeline"><img src="images/atlas/guides/archivist.webp?v=<?= @filemtime(__DIR__ . '/images/atlas/guides/archivist.webp') ?: 1 ?>" alt="" onerror="this.parentNode.classList.add('noimg')"></button>
+    <button type="button" class="atlas-guide" data-guide="forgemaster" data-initial="F" aria-label="The Forgemaster — the forge"><img src="images/atlas/guides/forgemaster.webp?v=<?= @filemtime(__DIR__ . '/images/atlas/guides/forgemaster.webp') ?: 1 ?>" alt="" onerror="this.parentNode.classList.add('noimg')"></button>
+    <button type="button" class="atlas-guide" data-guide="quartermaster" data-initial="Q" aria-label="The Quartermaster — sound"><img src="images/atlas/guides/quartermaster.webp?v=<?= @filemtime(__DIR__ . '/images/atlas/guides/quartermaster.webp') ?: 1 ?>" alt="" onerror="this.parentNode.classList.add('noimg')"></button>
+  </div>
+  <div id="atlas-guide-say" aria-live="polite"></div>
   <div id="atlas-tour-cap" aria-live="polite"></div>
   <aside id="atlas-card" aria-live="polite"></aside>
   <?php /* Codex reader host — same embed contract as the board (?embed=1 +

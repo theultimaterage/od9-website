@@ -1574,8 +1574,77 @@
     });
     paintTl();
   }
+  /* THE GUIDES (2026-09-05, the founder's connective tissue): four presences
+     at the map's edge, each owning a layer — the Navigator the tour, the
+     Archivist the timeline, the Forgemaster the forge, the Quartermaster
+     the sound. Hover: a line in their voice. Tap: the line, and the thing
+     they own. Portraits are the canonical reference stills, cropped to
+     medallions by tools/build_atlas_guides.py (bot repo). */
+  var guideSay = document.getElementById("atlas-guide-say"), guideTimer = null;
+  function forgeNode() { return DATA.nodes.filter(function (n) { return n.forge; })[0] || null; }
+  var GUIDES = {
+    navigator: {
+      who: "The Navigator", go: "Take the tour",
+      line: function () { return "Four routes are preached. Say the word and I fly you down one."; },
+      act: function () { if (tourBtn && tourMenu && !tourMenu.classList.contains("open")) tourBtn.click(); }
+    },
+    archivist: {
+      who: "The Archivist", go: "Play the forge",
+      line: function () {
+        var c = tlCounts();
+        return "Every star has a date. I keep them. " + c.canon + " chapters are canon; drag the bar and watch the book get written.";
+      },
+      act: function () {
+        if (tlBar) tlBar.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "center" });
+        if (tlPlay && !tlTimer) tlPlay.click();
+      }
+    },
+    forgemaster: {
+      who: "The Forgemaster", go: "Go to the forge",
+      line: function () {
+        var f = forgeNode();
+        return f ? "Chapter " + f.num + " is on the anvil \u2014 " + f.title + ". Sunday it gets struck."
+                 : "The anvil's cold this week. Come back Sunday.";
+      },
+      act: function () { var f = forgeNode(); if (f) focusNode(f.id); }
+    },
+    quartermaster: {
+      who: "The Quartermaster", go: "Toggle sound",
+      line: function () {
+        return (window.AtlasSound && window.AtlasSound.enabled()) ? "Sound's on. You're welcome."
+             : "Sound's my department. Tap the note. Or don't \u2014 I'm not your mama.";
+      },
+      act: function () { var b = document.getElementById("atlas-sound"); if (b) b.click(); }
+    }
+  };
+  function guideSpeak(key, sticky) {
+    var g = GUIDES[key];
+    if (!g || !guideSay) return;
+    if (guideTimer) { clearTimeout(guideTimer); guideTimer = null; }
+    guideSay.innerHTML = '<div class="who">' + esc(g.who) + "</div>" + esc(g.line()) +
+      '<br><button type="button" class="go" id="atlas-guide-go">' + esc(g.go) + " \u2192</button>";
+    guideSay.classList.add("on");
+    var goBtn = document.getElementById("atlas-guide-go");
+    if (goBtn) goBtn.addEventListener("click", function () { g.act(); guideSpeak(key, true); });
+    guideTimer = setTimeout(function () { guideSay.classList.remove("on"); }, sticky ? 6000 : 3500);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".atlas-guide"), function (btn) {
+    var key = btn.getAttribute("data-guide");
+    if (key === "forgemaster" && forgeNode()) btn.classList.add("forge");
+    btn.addEventListener("mouseenter", function () { guideSpeak(key, false); });
+    btn.addEventListener("focus", function () { guideSpeak(key, false); });
+    btn.addEventListener("click", function (ev) {
+      ev.stopPropagation();                    /* the document's outside-click closer must not eat the tour menu the Navigator just opened */
+      if (arrival) endArrival(true);
+      GUIDES[key].act();
+      guideSpeak(key, true);
+      if (window.AtlasSound) window.AtlasSound.cue("probe", "star");
+    });
+  });
+
   /* read-only hooks for the headless tests */
-  window.__atlas = { stateCounts: tlCounts, asOf: function () { return asOf; }, days: function () { return tlDays; } };
+  window.__atlas = { stateCounts: tlCounts, asOf: function () { return asOf; }, days: function () { return tlDays; },
+                     guideLine: function (k) { return GUIDES[k] ? GUIDES[k].line() : null; } };
 
   window.addEventListener("resize", resize);
   window.addEventListener("hashchange", routeHash);
