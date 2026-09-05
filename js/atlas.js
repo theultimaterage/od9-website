@@ -219,6 +219,13 @@
       n.bullets.forEach(function (b) { h += "<li>" + esc(b) + "</li>"; });
       h += "</ul>";
     }
+    if (n.sections && n.sections.length) {
+      h += '<div class="atlas-canon-label">' + n.sections.length + ' sections</div><ol class="atlas-sections">';
+      n.sections.forEach(function (t, i) {
+        h += '<li data-si="' + i + '"' + (hiSection === i ? ' class="hi"' : "") + ">" + esc(t) + "</li>";
+      });
+      h += "</ol>";
+    }
     h += objectBlock(n);
     if (n.canon && n.canon.length) {
       h += '<div class="atlas-canon"><div class="atlas-canon-label">In the Codex:</div>';
@@ -240,10 +247,19 @@
     card.classList.add("open");
     var btn = document.getElementById("atlas-card-close");
     if (btn) btn.addEventListener("click", closeCard);
+    var lis = card.querySelectorAll(".atlas-sections li");
+    Array.prototype.forEach.call(lis, function (li) {
+      li.addEventListener("click", function () {
+        hiSection = parseInt(li.getAttribute("data-si"), 10);
+        Array.prototype.forEach.call(lis, function (x) { x.classList.toggle("hi", x === li); });
+        if (window.AtlasSound) window.AtlasSound.cue("probe", "star");
+      });
+    });
   }
   function closeCard() {
     if (card) card.classList.remove("open");
     stage.classList.remove("has-card");
+    hiSection = null;
     focusedId = null;
     lastRead = { nodeId: null, contentId: null };   /* "just read" must not go stale */
     if (history.replaceState) history.replaceState(null, "", "#");
@@ -291,10 +307,12 @@
     });
   }
 
-  function focusNode(id, withCard) {
+  var hiSection = null;                      /* index of the lit section of the focused chapter */
+  function focusNode(id, withCard, section) {
     var n = nodeById[id];
     if (!n) return;
     focusedId = id;
+    hiSection = (section === undefined || section === null) ? null : section;
     if (window.AtlasSound) window.AtlasSound.cue(spriteKeyFor(n), n.state);
     /* land PAST ZR_FULL so opening a chapter shows the object it resolves
        into — the old 2.1 sat just under the threshold and a click would
@@ -395,9 +413,13 @@
     delete pointers[e.pointerId];
     pinchD = 0;
     if (!dragging && downAt) {
-      var n = hitTest(e);
-      if (n) focusNode(n.id);
-      else closeCard();
+      var sh = hitSection(e);
+      if (sh) { focusNode(sh.n.id, true, sh.si); }
+      else {
+        var n = hitTest(e);
+        if (n) focusNode(n.id);
+        else closeCard();
+      }
     }
     dragging = false; downAt = null;
   }
@@ -428,6 +450,24 @@
     closeCard();
   });
 
+  function hitSection(e) {
+    if (cam.z < ZR_IN + (ZR_FULL - ZR_IN) * 0.6) return null;
+    var rect = canvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    var r = Math.max(5, Math.min(11, 6.5 * Math.sqrt(cam.z)));
+    var orb = r * SPRITE_K * (cam.z / ZR_IN) * 0.5, R = orb * 1.45;
+    var best = null, bestD = 12;
+    DATA.nodes.forEach(function (n) {
+      if (!n.sections || !n.sections.length) return;
+      var s = toScreen(n.x, n.y);
+      for (var si = 0; si < n.sections.length; si++) {
+        var ang = -Math.PI / 2 + (si / n.sections.length) * Math.PI * 2;
+        var d = Math.hypot(mx - (s[0] + Math.cos(ang) * R), my - (s[1] + Math.sin(ang) * R));
+        if (d < bestD) { bestD = d; best = { n: n, si: si }; }
+      }
+    });
+    return best;
+  }
   function hitTest(e) {
     var rect = canvas.getBoundingClientRect();
     var p = toWorld(e.clientX - rect.left, e.clientY - rect.top);
@@ -1261,6 +1301,29 @@
         var t = n.title.length > 30 ? n.title.slice(0, 29) + "…" : n.title;
         ctx.fillText(t, s[0], labelY + 2 + clamp(9 * z, 10, 16));
       }
+      /* SECTIONS (2026-09-05, the spec's third zoom level): once the object
+         has resolved, the chapter's sections orbit it as small stars with
+         their titles — the whole book, not its table of contents. Only the
+         one or two chapters on screen at that zoom ever draw them. */
+      if (zres >= 0.6 && n.sections && n.sections.length) {
+        var sa = clamp((zres - 0.6) / 0.4, 0, 1);
+        var R = orb * 1.45, N = n.sections.length;
+        ctx.font = clamp(4.6 * z, 8, 12) + "px 'Exo 2', sans-serif";
+        ctx.textBaseline = "middle";
+        for (var si = 0; si < N; si++) {
+          var ang = -Math.PI / 2 + (si / N) * Math.PI * 2;
+          var px = s[0] + Math.cos(ang) * R, py = s[1] + Math.sin(ang) * R;
+          var hi = (focusedId === n.id && hiSection === si);
+          ctx.fillStyle = rgba(hi ? C.cyan : C.chrome, (hi ? 1 : 0.75) * sa);
+          ctx.beginPath(); ctx.arc(px, py, hi ? 3.2 : 2, 0, 7); ctx.fill();
+          var right = Math.cos(ang) >= -0.05;
+          ctx.textAlign = right ? "left" : "right";
+          ctx.fillStyle = rgba(hi ? C.cyan : C.chrome, (hi ? 1 : 0.6) * sa);
+          var stt = n.sections[si], sl = stt.length > 34 ? stt.slice(0, 33) + "…" : stt;
+          ctx.fillText((si + 1) + "  " + sl, px + (right ? 6 : -6), py);
+        }
+        ctx.textBaseline = "top";
+      }
     });
     drawBeyondField(z, now, zres);
     requestAnimationFrame(draw);
@@ -1363,15 +1426,36 @@
     return [n.num, n.title, (n.bullets || []).join(" "), info.name || "", info.kind || "", n.note || ""]
       .join(" ").toLowerCase();
   }
+  /* a hit is {n} for a chapter or {n, si} for one of its sections */
+  function findMatches(q) {
+    var hits = [];
+    var m = /^(?:ch|chapter)?\s*(\d+)$/.exec(q);
+    DATA.nodes.concat(BEYOND).forEach(function (n) {
+      if (hits.length >= 8) return;
+      if (m ? String(n.num) === m[1] : findIndexText(n).indexOf(q) !== -1) { hits.push({ n: n }); return; }
+      if (!m && n.sections) {
+        for (var i = 0; i < n.sections.length && hits.length < 8; i++) {
+          if (n.sections[i].toLowerCase().indexOf(q) !== -1) hits.push({ n: n, si: i });
+        }
+      }
+    });
+    return hits;
+  }
   function renderFind() {
     if (!findUl) return;
     findUl.innerHTML = "";
-    findHits.forEach(function (n, i) {
+    findHits.forEach(function (hit, i) {
+      var n = hit.n;
       var li = document.createElement("li");
       li.setAttribute("role", "option");
       var info = objectInfo(n) || {};
-      li.innerHTML = "<b>" + esc(n.beyond ? "\u221E" : (n.num || "P")) + "</b><span>" + esc(n.title) + "</span>" +
-        (info.name ? "<small>" + esc(info.name) + "</small>" : "");
+      if (hit.si !== undefined) {
+        li.innerHTML = "<b>" + esc(n.num || "P") + "." + (hit.si + 1) + "</b><span>" + esc(n.sections[hit.si]) + "</span>" +
+          "<small>" + esc(n.title) + "</small>";
+      } else {
+        li.innerHTML = "<b>" + esc(n.beyond ? "\u221E" : (n.num || "P")) + "</b><span>" + esc(n.title) + "</span>" +
+          (info.name ? "<small>" + esc(info.name) + "</small>" : "");
+      }
       if (i === findIdx) li.className = "active";
       li.addEventListener("mousedown", function (ev) { ev.preventDefault(); pickFind(i); });
       findUl.appendChild(li);
@@ -1379,23 +1463,19 @@
     findUl.classList.toggle("open", findHits.length > 0);
   }
   function pickFind(i) {
-    var n = findHits[i];
-    if (!n) return;
+    var hit = findHits[i];
+    if (!hit) return;
     findUl.classList.remove("open"); findHits = []; findIdx = -1;
     if (findIn) findIn.blur();
     if (arrival) endArrival(true);
-    focusNode(n.id);
+    focusNode(hit.n.id, true, hit.si === undefined ? null : hit.si);
   }
   if (findIn) {
     findIn.addEventListener("input", function () {
       var q = findIn.value.trim().toLowerCase();
       findHits = []; findIdx = -1;
       if (q.length >= 2) {
-        var m = /^(?:ch|chapter)?\s*(\d+)$/.exec(q);
-        DATA.nodes.concat(BEYOND).forEach(function (n) {
-          var hit = m ? String(n.num) === m[1] : findIndexText(n).indexOf(q) !== -1;
-          if (hit && findHits.length < 8) findHits.push(n);
-        });
+        findHits = findMatches(q);
         if (findHits.length) findIdx = 0;
       }
       renderFind();

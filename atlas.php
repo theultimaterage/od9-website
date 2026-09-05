@@ -154,6 +154,11 @@ $atlas_og_mode  = isset($_GET['og']);
   .atlas-lineage,.atlas-note{color:var(--t-pioneer);font-size:0.85rem;line-height:1.5;margin:0 0 0.6rem}
   .atlas-note{color:var(--chrome);opacity:0.85}
   #atlas-card ul{margin:0 0 0.8rem 1.1rem;color:var(--chrome);font-size:0.9rem;line-height:1.55}
+  /* sections (2026-09-05): the chapter's own sections — click one, it lights on the map */
+  .atlas-sections{margin:0.3rem 0 0.9rem 1.2rem;padding:0;color:var(--chrome);font-size:0.84rem;line-height:1.45}
+  .atlas-sections li{margin-bottom:0.2rem;cursor:pointer;padding-left:0.2rem}
+  .atlas-sections li:hover{color:#fff}
+  .atlas-sections li.hi{color:var(--zone-cyan);text-shadow:0 0 8px rgba(0,255,247,0.5)}
   #atlas-card ul li{margin-bottom:0.3rem}
   .atlas-canon-label{font-family:'Rajdhani',sans-serif;letter-spacing:2px;font-size:0.75rem;color:var(--gold);text-transform:uppercase;margin-bottom:0.3rem}
   .atlas-canon-link{display:block;color:var(--zone-cyan);text-decoration:none;font-size:0.92rem;padding:0.22rem 0;border-bottom:1px solid rgba(122,0,255,0.25)}
