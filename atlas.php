@@ -124,6 +124,17 @@ $atlas_og_mode  = isset($_GET['og']);
   #atlas-live-strip a{color:var(--zone-cyan);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1.5px;font-size:0.76rem;text-transform:uppercase;margin-right:0.9rem}
   #atlas-live-strip a:hover{text-decoration:underline}
   #atlas-live-strip .x{position:absolute;top:4px;right:8px;background:none;border:none;color:var(--chrome);font-size:1.2rem;cursor:pointer;line-height:1}
+  /* the timeline (2026-09-04): scrub the ledger — the living-book proof */
+  .atlas-timeline{max-width:1200px;margin:-1.7rem auto 2.5rem;padding:0.55rem 1.5rem 0;display:flex;gap:0.8rem;align-items:center;font-family:'Rajdhani',sans-serif;letter-spacing:1px;font-size:0.8rem;color:var(--chrome);text-transform:uppercase}
+  .atlas-timeline[hidden]{display:none}
+  .atlas-timeline button{background:none;border:1px solid var(--zone-violet);color:var(--zone-cyan);border-radius:4px;height:30px;min-width:36px;padding:0 0.6rem;cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1.5px;font-size:0.76rem;text-transform:uppercase}
+  .atlas-timeline button:hover,.atlas-timeline button:focus-visible{border-color:var(--zone-cyan);outline:none;box-shadow:0 0 8px rgba(0,255,247,0.35)}
+  .atlas-timeline input[type=range]{flex:1;min-width:120px;accent-color:var(--zone-cyan);cursor:pointer}
+  .atlas-timeline .tl-label{display:flex;gap:0.8rem;align-items:baseline;white-space:nowrap}
+  .atlas-timeline .tl-label #atlas-tl-date{color:#fff;font-weight:700;letter-spacing:2px;min-width:8.5rem}
+  .atlas-timeline.past #atlas-tl-date{color:var(--gold)}
+  .atlas-timeline .tl-label #atlas-tl-stat{opacity:0.75}
+  @media (max-width:700px){.atlas-timeline{flex-wrap:wrap;margin-top:-1rem;padding:0.4rem 1rem 0} .atlas-timeline .tl-label{width:100%;justify-content:space-between}}
   #atlas-arrival-hint{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:3;font-family:'Rajdhani',sans-serif;letter-spacing:2px;font-size:0.78rem;text-transform:uppercase;color:var(--chrome);opacity:0;transition:opacity 0.6s;pointer-events:none;background:rgba(10,10,10,0.55);padding:0.25rem 0.7rem;border-radius:3px}
   #atlas-arrival-hint.on{opacity:0.85}
   #atlas-card{position:absolute;top:0;right:0;bottom:0;width:min(390px,92%);background:rgba(10,10,10,0.94);border-left:1px solid var(--zone-violet);padding:1.4rem 1.5rem;overflow-y:auto;transform:translateX(102%);transition:transform 0.25s ease;z-index:4}
@@ -270,6 +281,12 @@ $atlas_og_mode  = isset($_GET['og']);
       <iframe id="atlas-reader-frame" src="about:blank" title="Codex reader"></iframe>
     </div>
   </div>
+</div>
+<div id="atlas-timeline" class="atlas-timeline" hidden>
+  <button type="button" id="atlas-tl-play" aria-label="Play the forge from the first publish to now">&#9654; Forge</button>
+  <input type="range" id="atlas-tl-range" min="0" max="100" value="100" step="1" aria-label="As of date">
+  <div class="tl-label"><span id="atlas-tl-date">now</span><span id="atlas-tl-stat"></span></div>
+  <button type="button" id="atlas-tl-now">now</button>
 </div>
 
 <?php if ($atlas_map_raw !== ''): ?>

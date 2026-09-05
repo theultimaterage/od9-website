@@ -1,6 +1,156 @@
 {
  "skeleton_version": "2026-08-20",
- "generated_at": "2026-08-21T04:10:04Z",
+ "generated_at": "2026-09-05T02:43:32Z",
+ "timeline": {
+  "start": "2026-06-20",
+  "end": "2026-09-05",
+  "events": [
+   {
+    "at": "2026-06-23",
+    "node": "ch1",
+    "num": "1",
+    "title": "The OD9 Creed",
+    "state": "canon",
+    "what": "The OD9 Creed"
+   },
+   {
+    "at": "2026-06-23",
+    "node": "ch4",
+    "num": "4",
+    "title": "The Great Awakening",
+    "state": "canon",
+    "what": "The Twin Singularities"
+   },
+   {
+    "at": "2026-06-23",
+    "node": "appendix-a",
+    "num": "A",
+    "title": "Appendix A — Methods & the Evidence Standard",
+    "state": "canon",
+    "what": "The Evidence Standard"
+   },
+   {
+    "at": "2026-06-23",
+    "node": "preface",
+    "num": "P",
+    "title": "The Paradox of Transformation",
+    "state": "canon",
+    "what": "The Thesean Method"
+   },
+   {
+    "at": "2026-06-25",
+    "node": "ch3",
+    "num": "3",
+    "title": "A Labor of Love",
+    "state": "canon",
+    "what": "Love as Infrastructure"
+   },
+   {
+    "at": "2026-06-25",
+    "node": "ch5",
+    "num": "5",
+    "title": "The System In Crisis",
+    "state": "canon",
+    "what": "The System in Crisis"
+   },
+   {
+    "at": "2026-06-25",
+    "node": "ch7",
+    "num": "7",
+    "title": "The Solution Framework",
+    "state": "canon",
+    "what": "Responsible Transformation"
+   },
+   {
+    "at": "2026-06-25",
+    "node": "ch7",
+    "num": "7",
+    "title": "The Solution Framework",
+    "state": "canon",
+    "what": "The Solution Framework"
+   },
+   {
+    "at": "2026-06-25",
+    "node": "ch7",
+    "num": "7",
+    "title": "The Solution Framework",
+    "state": "canon",
+    "what": "From Vision to Action"
+   },
+   {
+    "at": "2026-07-02",
+    "node": "ch10",
+    "num": "10",
+    "title": "Mental Health",
+    "state": "canon",
+    "what": "Mental Health and Collective Psyche"
+   },
+   {
+    "at": "2026-07-02",
+    "node": "ch13",
+    "num": "13",
+    "title": "Scientific Institution Analysis",
+    "state": "canon",
+    "what": "Scientific Institution Analysis"
+   },
+   {
+    "at": "2026-07-02",
+    "node": "ch16",
+    "num": "16",
+    "title": "Economic Dysfunction",
+    "state": "canon",
+    "what": "Economic Dysfunction"
+   },
+   {
+    "at": "2026-07-02",
+    "node": "ch19",
+    "num": "19",
+    "title": "Political System Corruption",
+    "state": "canon",
+    "what": "Political System Corruption"
+   },
+   {
+    "at": "2026-07-02",
+    "node": "ch21",
+    "num": "21",
+    "title": "Environmental Degradation",
+    "state": "canon",
+    "what": "Environmental Degradation"
+   },
+   {
+    "at": "2026-07-02",
+    "node": "ch22",
+    "num": "22",
+    "title": "Religious Institutions & Pseudoscience",
+    "state": "canon",
+    "what": "Religious Institutions and Pseudoscience"
+   },
+   {
+    "at": "2026-07-02",
+    "node": "ch9",
+    "num": "9",
+    "title": "Media and Information Crisis",
+    "state": "canon",
+    "what": "Media and Information Crisis"
+   },
+   {
+    "at": "2026-08-23",
+    "node": "ch22",
+    "num": "22",
+    "title": "Religious Institutions & Pseudoscience",
+    "state": "forge",
+    "what": "Sermon 001 — The 62% Engine"
+   },
+   {
+    "at": "2026-08-30",
+    "node": "ch22",
+    "num": "22",
+    "title": "Religious Institutions & Pseudoscience",
+    "state": "forge",
+    "what": "Sermon 002 — They Hired Lawyers"
+   }
+  ]
+ },
  "world": {
   "w": 1600,
   "h": 1000
@@ -110,6 +260,13 @@
     }
    ],
    "note": "",
+   "history": [
+    {
+     "state": "canon",
+     "at": "2026-06-23",
+     "what": "The Thesean Method"
+    }
+   ],
    "x": 115.0,
    "y": 105.0
   },
@@ -140,6 +297,13 @@
     }
    ],
    "note": "",
+   "history": [
+    {
+     "state": "canon",
+     "at": "2026-06-23",
+     "what": "The OD9 Creed"
+    }
+   ],
    "x": 110.0,
    "y": 265.0
   },
@@ -170,6 +334,13 @@
     }
    ],
    "note": "",
+   "history": [
+    {
+     "state": "canon",
+     "at": "2026-06-25",
+     "what": "Love as Infrastructure"
+    }
+   ],
    "x": 270.0,
    "y": 265.0
   },
@@ -200,6 +371,13 @@
     }
    ],
    "note": "",
+   "history": [
+    {
+     "state": "canon",
+     "at": "2026-06-23",
+     "what": "The Twin Singularities"
+    }
+   ],
    "x": 110.0,
    "y": 375.0
   },
@@ -230,6 +408,13 @@
     }
    ],
    "note": "",
+   "history": [
+    {
+     "state": "canon",
+     "at": "2026-06-25",
+     "what": "The System in Crisis"
+    }
+   ],
    "x": 270.0,
    "y": 375.0
   },
@@ -272,6 +457,23 @@
     }
    ],
    "note": "Absorbs ch6 (ethics & safety front-matter) and ch8 (implementation pathways) — decided 2026-08-20.",
+   "history": [
+    {
+     "state": "canon",
+     "at": "2026-06-25",
+     "what": "Responsible Transformation"
+    },
+    {
+     "state": "canon",
+     "at": "2026-06-25",
+     "what": "The Solution Framework"
+    },
+    {
+     "state": "canon",
+     "at": "2026-06-25",
+     "what": "From Vision to Action"
+    }
+   ],
    "x": 110.0,
    "y": 485.0
   },
@@ -302,6 +504,13 @@
     }
    ],
    "note": "ch2 demoted to reference infrastructure; the evidence ladder stays in-line in the chapters.",
+   "history": [
+    {
+     "state": "canon",
+     "at": "2026-06-23",
+     "what": "The Evidence Standard"
+    }
+   ],
    "x": 270.0,
    "y": 485.0
   },
@@ -332,6 +541,13 @@
     }
    ],
    "note": "",
+   "history": [
+    {
+     "state": "canon",
+     "at": "2026-07-02",
+     "what": "Media and Information Crisis"
+    }
+   ],
    "x": 458.8,
    "y": 117.5
   },
@@ -362,6 +578,13 @@
     }
    ],
    "note": "",
+   "history": [
+    {
+     "state": "canon",
+     "at": "2026-07-02",
+     "what": "Mental Health and Collective Psyche"
+    }
+   ],
    "x": 576.2,
    "y": 117.5
   },
@@ -386,6 +609,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 693.8,
    "y": 117.5
   },
@@ -410,6 +634,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 811.2,
    "y": 117.5
   },
@@ -440,6 +665,13 @@
     }
    ],
    "note": "",
+   "history": [
+    {
+     "state": "canon",
+     "at": "2026-07-02",
+     "what": "Scientific Institution Analysis"
+    }
+   ],
    "x": 458.8,
    "y": 232.5
   },
@@ -464,6 +696,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 576.2,
    "y": 232.5
   },
@@ -488,6 +721,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 693.8,
    "y": 232.5
   },
@@ -518,6 +752,13 @@
     }
    ],
    "note": "",
+   "history": [
+    {
+     "state": "canon",
+     "at": "2026-07-02",
+     "what": "Economic Dysfunction"
+    }
+   ],
    "x": 811.2,
    "y": 232.5
   },
@@ -542,6 +783,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 458.8,
    "y": 347.5
   },
@@ -566,6 +808,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 576.2,
    "y": 347.5
   },
@@ -596,6 +839,13 @@
     }
    ],
    "note": "",
+   "history": [
+    {
+     "state": "canon",
+     "at": "2026-07-02",
+     "what": "Political System Corruption"
+    }
+   ],
    "x": 693.8,
    "y": 347.5
   },
@@ -620,6 +870,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 811.2,
    "y": 347.5
   },
@@ -650,6 +901,13 @@
     }
    ],
    "note": "",
+   "history": [
+    {
+     "state": "canon",
+     "at": "2026-07-02",
+     "what": "Environmental Degradation"
+    }
+   ],
    "x": 458.8,
    "y": 462.5
   },
@@ -680,6 +938,23 @@
     }
    ],
    "note": "",
+   "history": [
+    {
+     "state": "canon",
+     "at": "2026-07-02",
+     "what": "Religious Institutions and Pseudoscience"
+    },
+    {
+     "state": "forge",
+     "at": "2026-08-23",
+     "what": "Sermon 001 — The 62% Engine"
+    },
+    {
+     "state": "forge",
+     "at": "2026-08-30",
+     "what": "Sermon 002 — They Hired Lawyers"
+    }
+   ],
    "x": 576.2,
    "y": 462.5
   },
@@ -706,6 +981,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 975.0,
    "y": 100.0
   },
@@ -731,6 +1007,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 1085.0,
    "y": 100.0
   },
@@ -756,6 +1033,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 1195.0,
    "y": 100.0
   },
@@ -780,6 +1058,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 975.0,
    "y": 200.0
   },
@@ -804,6 +1083,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 1085.0,
    "y": 200.0
   },
@@ -828,6 +1108,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 1195.0,
    "y": 200.0
   },
@@ -853,6 +1134,7 @@
    ],
    "canon": [],
    "note": "ch33 retired — its transition remit already lives in every chapter's roadmap and in Volume 5.",
+   "history": [],
    "x": 975.0,
    "y": 300.0
   },
@@ -877,6 +1159,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 975.0,
    "y": 440.0
   },
@@ -902,6 +1185,7 @@
    ],
    "canon": [],
    "note": "Absorbs ch40 — one economy, one chapter.",
+   "history": [],
    "x": 1085.0,
    "y": 440.0
   },
@@ -927,6 +1211,7 @@
    ],
    "canon": [],
    "note": "Absorbs ch47 — its scale dimension.",
+   "history": [],
    "x": 1195.0,
    "y": 440.0
   },
@@ -951,6 +1236,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 975.0,
    "y": 540.0
   },
@@ -975,6 +1261,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 1085.0,
    "y": 540.0
   },
@@ -999,6 +1286,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 1195.0,
    "y": 540.0
   },
@@ -1023,6 +1311,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 975.0,
    "y": 640.0
   },
@@ -1047,6 +1336,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 1085.0,
    "y": 640.0
   },
@@ -1071,6 +1361,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 1195.0,
    "y": 640.0
   },
@@ -1095,6 +1386,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 975.0,
    "y": 740.0
   },
@@ -1119,6 +1411,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 1085.0,
    "y": 740.0
   },
@@ -1143,6 +1436,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 132.5,
    "y": 645.0
   },
@@ -1167,6 +1461,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 297.5,
    "y": 645.0
   },
@@ -1192,6 +1487,7 @@
    ],
    "canon": [],
    "note": "Absorbs ch49's shipped credit-economy content.",
+   "history": [],
    "x": 132.5,
    "y": 755.0
   },
@@ -1216,6 +1512,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 297.5,
    "y": 755.0
   },
@@ -1241,6 +1538,7 @@
    ],
    "canon": [],
    "note": "Absorbs ch56's learning-acceleration content.",
+   "history": [],
    "x": 132.5,
    "y": 865.0
   },
@@ -1267,6 +1565,7 @@
    ],
    "canon": [],
    "note": "The honest quarantine: unbuilt systems (physical deployment, advanced cryptography, neural interfaces) held as a research agenda under the volume's design-fiction preface.",
+   "history": [],
    "x": 297.5,
    "y": 865.0
   },
@@ -1291,6 +1590,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 485.0,
    "y": 631.7
   },
@@ -1315,6 +1615,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 595.0,
    "y": 631.7
   },
@@ -1339,6 +1640,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 705.0,
    "y": 631.7
   },
@@ -1363,6 +1665,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 815.0,
    "y": 631.7
   },
@@ -1387,6 +1690,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 485.0,
    "y": 715.0
   },
@@ -1411,6 +1715,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 595.0,
    "y": 715.0
   },
@@ -1435,6 +1740,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 705.0,
    "y": 715.0
   },
@@ -1459,6 +1765,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 815.0,
    "y": 715.0
   },
@@ -1483,6 +1790,7 @@
    ],
    "canon": [],
    "note": "",
+   "history": [],
    "x": 485.0,
    "y": 798.3
   }

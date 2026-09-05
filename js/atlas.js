@@ -1415,6 +1415,85 @@
     });
   }
 
+  /* THE TIMELINE (2026-09-04, the spectacle brief's move 5): scrub the
+     ledger. Every chapter carries history [{state, at}]; as of a date its
+     state is the last entry at or before it (raw before any). Scrubbing
+     rewrites n.state / n.forge in place and "now" restores them, so every
+     draw path — colours, rings, the objects a chapter resolves into — sees
+     the past for free. "Forge" plays the whole ledger in ~8 s. */
+  var TL = DATA.timeline && DATA.timeline.events ? DATA.timeline : null;
+  var tlBar = document.getElementById("atlas-timeline"), tlRange = document.getElementById("atlas-tl-range");
+  var tlDate = document.getElementById("atlas-tl-date"), tlStat = document.getElementById("atlas-tl-stat");
+  var tlPlay = document.getElementById("atlas-tl-play"), tlNow = document.getElementById("atlas-tl-now");
+  var asOf = null, tlTimer = null, tlDays = 0;
+  function tlDayOf(date) { return Math.round((Date.parse(date + "T12:00:00Z") - Date.parse(TL.start + "T12:00:00Z")) / 86400000); }
+  function tlDateOf(day) { return new Date(Date.parse(TL.start + "T12:00:00Z") + day * 86400000).toISOString().slice(0, 10); }
+  function stateAt(n, date) {
+    var st = "raw", forge = false;
+    (n.history || []).forEach(function (h) {
+      if (h.at <= date) { if (h.state === "forge") forge = true; else st = h.state; }
+    });
+    return { state: st, forge: forge };
+  }
+  function applyAsOf(date) {
+    DATA.nodes.forEach(function (n) {
+      if (n._state0 === undefined) { n._state0 = n.state; n._forge0 = n.forge; }
+      if (date) { var s = stateAt(n, date); n.state = s.state; n.forge = s.forge; }
+      else { n.state = n._state0; n.forge = n._forge0; }
+    });
+    asOf = date;
+    paintTl();
+  }
+  function tlCounts() {
+    var c = { canon: 0, forge: 0, preached: 0 };
+    DATA.nodes.forEach(function (n) { if (n.state === "canon") c.canon++; if (n.state === "preached") c.preached++; if (n.forge) c.forge++; });
+    return c;
+  }
+  function paintTl() {
+    if (!tlDate) return;
+    var c = tlCounts();
+    tlDate.textContent = asOf ? "as of " + asOf : "now";
+    var s = c.canon + " canon";
+    if (c.preached) s += " \u00B7 " + c.preached + " preached";
+    s += " \u00B7 " + c.forge + " in the forge";
+    if (!asOf) {
+      var weekAgo = tlDateOf(Math.max(0, tlDays - 7));
+      var recent = TL.events.filter(function (e) { return e.at >= weekAgo; });
+      s += recent.length ? " \u00B7 this week: " + recent.length + " change" + (recent.length > 1 ? "s" : "")
+                         : " \u00B7 nothing changed this week";
+    }
+    tlStat.textContent = s;
+    tlBar.classList.toggle("past", !!asOf);
+  }
+  function tlStop() { if (tlTimer) { clearInterval(tlTimer); tlTimer = null; if (tlPlay) tlPlay.innerHTML = "&#9654; Forge"; } }
+  if (TL && tlBar && tlRange) {
+    tlDays = Math.max(1, tlDayOf(TL.end));
+    tlRange.max = String(tlDays); tlRange.value = String(tlDays);
+    tlBar.removeAttribute("hidden");
+    tlRange.addEventListener("input", function () {
+      tlStop();
+      var v = parseInt(tlRange.value, 10);
+      applyAsOf(v >= tlDays ? null : tlDateOf(v));
+    });
+    if (tlNow) tlNow.addEventListener("click", function () { tlStop(); tlRange.value = String(tlDays); applyAsOf(null); });
+    if (tlPlay) tlPlay.addEventListener("click", function () {
+      if (tlTimer) { tlStop(); return; }
+      var day = 0, lastCanon = -1, step = Math.max(1, Math.round(tlDays / 200));
+      tlPlay.innerHTML = "&#10074;&#10074; Forge";
+      tlTimer = setInterval(function () {
+        day += step;
+        if (day >= tlDays) { tlRange.value = String(tlDays); applyAsOf(null); tlStop(); if (window.AtlasSound) window.AtlasSound.reveal(); return; }
+        tlRange.value = String(day); applyAsOf(tlDateOf(day));
+        var c = tlCounts().canon;
+        if (c > lastCanon && lastCanon >= 0 && window.AtlasSound) window.AtlasSound.cue("gold-star", "canon");
+        lastCanon = c;
+      }, 40);
+    });
+    paintTl();
+  }
+  /* read-only hooks for the headless tests */
+  window.__atlas = { stateCounts: tlCounts, asOf: function () { return asOf; }, days: function () { return tlDays; } };
+
   window.addEventListener("resize", resize);
   window.addEventListener("hashchange", routeHash);
 
