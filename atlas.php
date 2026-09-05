@@ -110,6 +110,20 @@ $atlas_og_mode  = isset($_GET['og']);
   #atlas-stage.has-card .atlas-zoom{right:calc(min(390px, 92%) + 12px)}   /* the open card never buries the controls */
   .atlas-zoom button.on{border-color:var(--gold);color:var(--gold);box-shadow:0 0 10px rgba(255,215,0,0.35)}
   .atlas-zoom button.armed{animation:atlasLivePulse 2.2s ease-in-out infinite}
+  /* live as an event (2026-09-04): the strip the box already knows how to fill */
+  #atlas-live-strip{position:absolute;top:12px;left:12px;right:64px;max-width:640px;z-index:3;background:rgba(10,10,10,0.86);border:1px solid var(--zone-violet);border-left:3px solid var(--zone-cyan);border-radius:6px;padding:0.55rem 2.2rem 0.55rem 0.9rem;display:none;font-family:'Exo 2',sans-serif;font-size:0.9rem;color:var(--chrome);line-height:1.45}
+  #atlas-live-strip.on{display:block}
+  #atlas-live-strip.live{border-left-color:var(--t-pioneer)}
+  #atlas-live-strip.tonight{border-left-color:var(--gold)}
+  #atlas-live-strip .e{font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:2px;font-size:0.74rem;text-transform:uppercase;color:var(--zone-cyan)}
+  #atlas-live-strip.live .e{color:var(--t-pioneer);animation:atlasLivePulse 2.2s ease-in-out infinite}
+  #atlas-live-strip.tonight .e{color:var(--gold)}
+  #atlas-live-strip b{color:#fff;font-family:'Orbitron',sans-serif;font-size:0.92rem;letter-spacing:0.5px}
+  #atlas-live-strip .pin{margin-top:0.25rem;color:var(--chrome)}
+  #atlas-live-strip .pin span{font-family:'Rajdhani',sans-serif;letter-spacing:1.5px;font-size:0.72rem;color:var(--zone-cyan);text-transform:uppercase;margin-right:0.4rem}
+  #atlas-live-strip a{color:var(--zone-cyan);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1.5px;font-size:0.76rem;text-transform:uppercase;margin-right:0.9rem}
+  #atlas-live-strip a:hover{text-decoration:underline}
+  #atlas-live-strip .x{position:absolute;top:4px;right:8px;background:none;border:none;color:var(--chrome);font-size:1.2rem;cursor:pointer;line-height:1}
   #atlas-arrival-hint{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:3;font-family:'Rajdhani',sans-serif;letter-spacing:2px;font-size:0.78rem;text-transform:uppercase;color:var(--chrome);opacity:0;transition:opacity 0.6s;pointer-events:none;background:rgba(10,10,10,0.55);padding:0.25rem 0.7rem;border-radius:3px}
   #atlas-arrival-hint.on{opacity:0.85}
   #atlas-card{position:absolute;top:0;right:0;bottom:0;width:min(390px,92%);background:rgba(10,10,10,0.94);border-left:1px solid var(--zone-violet);padding:1.4rem 1.5rem;overflow-y:auto;transform:translateX(102%);transition:transform 0.25s ease;z-index:4}
@@ -177,6 +191,7 @@ $atlas_og_mode  = isset($_GET['og']);
     .atlas-find input{width:100%;max-width:none}
     #atlas-stage{height:calc(100vh - var(--nav-height) - 128px);min-height:480px;margin:0 0 1.5rem;border-radius:0;border-left:none;border-right:none}
     .atlas-zoom,#atlas-stage.has-card .atlas-zoom{top:12px;bottom:auto;right:10px}
+    #atlas-live-strip{left:8px;right:58px;max-width:none;font-size:0.84rem;padding-right:1.8rem}
     #atlas-card{top:auto;left:0;right:0;width:100%;max-height:62%;border-left:none;border-top:1px solid var(--zone-violet);border-radius:14px 14px 0 0;transform:translateY(103%)}
     #atlas-card.open{transform:none}
   }
@@ -241,6 +256,7 @@ $atlas_og_mode  = isset($_GET['og']);
     <button id="atlas-sound" type="button" aria-label="Sound" aria-pressed="false" title="Sound off — click for the ambient bed and object tones">&#9834;</button>
   </div>
   <div id="atlas-arrival-hint" aria-hidden="true">tap to skip</div>
+  <div id="atlas-live-strip" aria-live="polite"></div>
   <div id="atlas-tour-cap" aria-live="polite"></div>
   <aside id="atlas-card" aria-live="polite"></aside>
   <?php /* Codex reader host — same embed contract as the board (?embed=1 +

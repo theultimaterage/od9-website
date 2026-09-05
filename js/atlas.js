@@ -205,6 +205,10 @@
     }
     if (n.id === liveNodeId) h += '<span class="atlas-chip atlas-chip-live">&#9679; LIVE LESSON</span>';
     h += "</div>";
+    if (n.id === liveNodeId && liveInfo && liveInfo.last_live && liveInfo.last_live.url) {
+      h += '<p class="atlas-note"><a class="atlas-canon-link" href="' + esc(liveInfo.last_live.url) +
+        '" target="_blank" rel="noopener">Last live: ' + esc(liveInfo.last_live.title || "watch") + " &rarr;</a></p>";
+    }
     if (n.legacy.length > 1) {
       h += '<p class="atlas-lineage">Forged from chapters ' +
         n.legacy.join(" · ") + " (structure decided 2026-08-20).</p>";
@@ -436,28 +440,91 @@
     return bestD * cam.z < r * cam.z && bestD < 26 ? best : null;
   }
 
-  /* ---- live beacon ---- */
-  /* Relative URL: resolves under /od9/ locally and at the root on prod. */
-  fetch("api/v1/atlas-live.php").then(function (r) {
-    return r.ok ? r.json() : null;
-  }).then(function (j) {
-    if (!j || !j.designated) return;
-    var nid = canonToNode[j.designated];
-    if (!nid) return;
-    liveNodeId = nid;
-    if (liveChip) {
-      var n = nodeById[nid];
-      liveChip.textContent = "● LIVE LESSON — " +
-        (n.num === "P" ? "PREFACE" : "CH " + n.legacy[0]);
-      liveChip.classList.add("on");
-      liveChip.addEventListener("click", function () { focusNode(nid); });
+  /* ---- live beacon + LIVE AS AN EVENT (2026-09-04) ----
+     Relative URL: resolves under /od9/ locally and at the root on prod.
+     Polled every 60 s (the endpoint caches 60 s): the designated lesson lights
+     the beacon once; the door + the show kit's words drive a strip in the
+     stage — LIVE NOW while the door is open, TONIGHT before it opens on a show
+     day, and the VOD afterwards. Dismissed once per session. */
+  var liveInfo = null, liveStrip = document.getElementById("atlas-live-strip"), liveSeen = false;
+  function liveState(j) {
+    var door = j.door || {}, show = j.show, last = j.last_live;
+    var today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Chicago" });
+    if (door.open) return "live";
+    if (show && show.day === today) {
+      if (last && String(last.at || "").slice(0, 10) === new Date().toISOString().slice(0, 10)) return "replay";
+      return "tonight";
     }
-    /* ?live=1 — the go-live announce's door: land on tonight's chapter.
-       A #hash deep link wins if both are present. */
-    if (/[?&]live=1/.test(location.search) && !location.hash) {
-      focusNode(nid);
+    return "";
+  }
+  function paintLive(j) {
+    if (!liveStrip) return;
+    var st = liveState(j);
+    var dismissed = false;
+    try { dismissed = sessionStorage.getItem("atlas.live.dismissed") === st; } catch (e) { /* private mode */ }
+    if (!st || dismissed) { liveStrip.className = ""; return; }
+    var show = j.show || {}, door = j.door || {}, last = j.last_live;
+    var head = show.headline || door.title || "The No Cap Zone";
+    var h = '<button type="button" class="x" aria-label="Dismiss">&times;</button>';
+    if (st === "live") {
+      h += '<div class="e">&#9679; Live now</div><b>' + esc(head) + "</b>";
+    } else if (st === "tonight") {
+      h += '<div class="e">Tonight &middot; 4 PM CT</div><b>' + esc(head) + "</b>";
+    } else {
+      h += '<div class="e">Tonight&rsquo;s show</div><b>' + esc(head) + "</b>";
     }
-  }).catch(function () { /* fail-open: no beacon */ });
+    if (show.pin) h += '<div class="pin"><span>Pinned</span>' + esc(show.pin) + "</div>";
+    h += '<div style="margin-top:.35rem">';
+    if (st === "live") {
+      if (door.watch_url) h += '<a href="' + esc(door.watch_url) + '" target="_blank" rel="noopener">Watch &rarr;</a>';
+      h += '<a href="https://offda9.com/callin" target="_blank" rel="noopener">The line is open &rarr;</a>';
+    } else if (st === "replay" && last && last.url) {
+      h += '<a href="' + esc(last.url) + '" target="_blank" rel="noopener">Watch the VOD &rarr;</a>';
+    } else if (door.next_show_ct) {
+      h += '<span class="e" style="color:var(--chrome)">' + esc(door.next_show_ct) + "</span>";
+    }
+    if (liveNodeId) h += '<a href="#' + esc(liveNodeId) + '" id="atlas-live-go">Tonight&rsquo;s chapter &rarr;</a>';
+    h += "</div>";
+    liveStrip.innerHTML = h;
+    liveStrip.className = "on " + st;
+    liveStrip.querySelector(".x").addEventListener("click", function () {
+      liveStrip.className = "";
+      try { sessionStorage.setItem("atlas.live.dismissed", st); } catch (e) { /* private mode */ }
+    });
+    var go = document.getElementById("atlas-live-go");
+    if (go) go.addEventListener("click", function (e) { e.preventDefault(); focusNode(liveNodeId); });
+  }
+  function pollLive() {
+    fetch("api/v1/atlas-live.php", { cache: "no-cache" }).then(function (r) {
+      return r.ok ? r.json() : null;
+    }).then(function (j) {
+      if (!j) return;
+      liveInfo = j;
+      if (j.designated && !liveSeen) {
+        var nid = canonToNode[j.designated];
+        if (nid) {
+          liveSeen = true;
+          liveNodeId = nid;
+          if (liveChip) {
+            var n = nodeById[nid];
+            liveChip.textContent = "● LIVE LESSON — " +
+              (n.num === "P" ? "PREFACE" : "CH " + n.legacy[0]);
+            liveChip.classList.add("on");
+            liveChip.addEventListener("click", function () { focusNode(nid); });
+          }
+          /* ?live=1 — the go-live announce's door: land on tonight's chapter.
+             A #hash deep link wins if both are present. */
+          if (/[?&]live=1/.test(location.search) && !location.hash) {
+            focusNode(nid);
+          }
+        }
+      }
+      paintLive(j);
+    }).catch(function () { /* fail-open: no beacon, no strip */ });
+  }
+  pollLive();
+  setInterval(pollLive, 60000);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) pollLive(); });
 
   /* ---- the cosmos layer (founder direction 2026-08-21: constellation vibes —
      stars, not dots; nebulae, not boxes; constellation lines, not dashes).
