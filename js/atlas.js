@@ -1316,6 +1316,9 @@
           var hi = (focusedId === n.id && hiSection === si);
           ctx.fillStyle = rgba(hi ? C.cyan : C.chrome, (hi ? 1 : 0.75) * sa);
           ctx.beginPath(); ctx.arc(px, py, hi ? 3.2 : 2, 0, 7); ctx.fill();
+          /* titles only on the chapter you opened — two resolved neighbours
+             with labelled rings wrote over each other (seen on ch4/ch5) */
+          if (focusedId !== n.id) continue;
           var right = Math.cos(ang) >= -0.05;
           ctx.textAlign = right ? "left" : "right";
           ctx.fillStyle = rgba(hi ? C.cyan : C.chrome, (hi ? 1 : 0.6) * sa);
