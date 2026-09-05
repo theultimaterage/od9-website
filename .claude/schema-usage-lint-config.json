@@ -14,8 +14,10 @@
     "pathway_steps",
     "user_achievements",
     "user_pathway_progress",
-    "user_streaks"
+    "user_streaks",
+    "content_notifications"
   ],
+  "_ignore_tables_sqlite_only_why": "content_notifications (added 2026-09-04) is the OTHER category the linter documents: a table that lives outside every configured schema on purpose. It exists only in the bot's SQLite (bot repo db/core.py creates it; api/v1/atlas-live.php reads its latest stream_start/youtube_live row read-only for the Atlas VOD link) and in no MySQL schema, so it is not part of the intersection above and must not be treated as a phantom.",
   "_ignore_tables_why": [
     "od9 talks to TWO databases with overlapping table names, and a static linter cannot tell which one a given query targets. The dashboard, me.php and api/v1/* read the Discord bot's LIVE SQLite at /home/ultimaterage/od9-discord-bot/data/od9.db (includes/od9_sqlite.php, api/v1/bootstrap.php::getBotDatabase) — that DB has 94 tables in the bot's own shape (guild_id, earned_at, achievement_id). The MySQL DB offda9_od9_tickets separately contains 149 tables including same-named ones in the PLATFORM shape (site_id, achievement_type_id, granted_at), left over from the od9_bot_* mirror retired 2026-06-28.",
     "These 8 names are the exact intersection of the two schemas, computed rather than guessed. Without this list the gate reported 20 phantom columns on its first run, every one of them a real column in the bot's SQLite — and a gate that cries wolf is one people switch off, which is the failure this repo's FTB sibling documents at length.",
