@@ -34,9 +34,18 @@ $out = ['designated' => null, 'door' => null, 'show' => null, 'last_live' => nul
 
 function atlas_live_json(string $path): ?array
 {
-    if (!is_readable($path)) return null;
-    $j = json_decode((string)@file_get_contents($path), true);
-    return is_array($j) ? $j : null;
+    if (!is_readable($path)) return null;          /* absent is a normal state (no show staged, door never published) */
+    $raw = file_get_contents($path);
+    if ($raw === false) {
+        error_log('atlas-live: ' . $path . ' is readable but could not be read');
+        return null;
+    }
+    $j = json_decode($raw, true);
+    if (!is_array($j)) {
+        error_log('atlas-live: ' . $path . ' is not a JSON object (' . json_last_error_msg() . ')');
+        return null;
+    }
+    return $j;
 }
 
 try {
@@ -75,7 +84,7 @@ try {
         ];
     }
 } catch (Throwable $e) {
-    /* fail-open: no door */
+    error_log('atlas-live: door state read failed: ' . $e->getMessage());   /* fail-open: no door */
 }
 
 try {
@@ -96,6 +105,6 @@ try {
         ];
     }
 } catch (Throwable $e) {
-    /* fail-open: no show words */
+    error_log('atlas-live: show words read failed: ' . $e->getMessage());   /* fail-open: no show words */
 }
 echo json_encode($out, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
