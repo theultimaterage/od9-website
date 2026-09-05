@@ -310,7 +310,7 @@
      view FILLS the stage instead (the middle of the map, big stars, pan to
      explore); landscape keeps the whole-map fit. */
   function homeZ() {
-    return (view.h > view.w) ? clamp(Math.max(view.w / W, view.h / H) * 0.9, fitZ * 0.85, 6) : fitZ;
+    return (view.h > view.w) ? clamp(Math.max(view.w / W, view.h / H) * 1.02, fitZ * 0.85, 6) : fitZ;
   }
   function fitAll() {
     if (view.h > view.w) { target.x = W / 2; target.y = H / 2; target.z = homeZ(); if (reducedMotion) snap(); }
