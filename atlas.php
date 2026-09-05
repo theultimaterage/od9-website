@@ -63,6 +63,17 @@ $atlas_og_mode  = isset($_GET['og']);
   .atlas-dot-preached{background:var(--zone-cyan);box-shadow:0 0 8px var(--zone-cyan)}
   .atlas-dot-canon{background:var(--gold);box-shadow:0 0 9px var(--gold)}
   .atlas-legend .atlas-hint{margin-left:auto;opacity:0.6;letter-spacing:0.5px;font-family:'Exo 2',sans-serif;text-transform:none}
+  /* find (2026-09-04): chapters, objects, ideas — "/" focuses it, arrows move, Enter flies */
+  .atlas-find{position:relative;margin-left:1rem;display:flex;align-items:center}
+  .atlas-find input{width:210px;max-width:44vw;background:rgba(10,10,10,0.8);border:1px solid var(--zone-violet);border-radius:4px;color:#fff;font-family:'Exo 2',sans-serif;font-size:0.85rem;padding:0.32rem 0.6rem;letter-spacing:0;text-transform:none}
+  .atlas-find input::placeholder{color:var(--chrome);opacity:0.55}
+  .atlas-find input:focus{outline:none;border-color:var(--zone-cyan);box-shadow:0 0 8px rgba(0,255,247,0.35)}
+  .atlas-find-results{position:absolute;top:calc(100% + 4px);right:0;min-width:300px;max-width:92vw;background:rgba(10,10,10,0.96);border:1px solid var(--zone-violet);border-radius:6px;z-index:20;list-style:none;margin:0;padding:0.3rem 0;display:none;text-transform:none;letter-spacing:0}
+  .atlas-find-results.open{display:block}
+  .atlas-find-results li{padding:0.4rem 0.8rem;cursor:pointer;font-family:'Exo 2',sans-serif;font-size:0.88rem;color:var(--chrome);display:flex;gap:0.6rem;align-items:baseline}
+  .atlas-find-results li b{font-family:'Rajdhani',sans-serif;color:var(--zone-cyan);font-weight:600;min-width:2.2rem}
+  .atlas-find-results li.active,.atlas-find-results li:hover{background:rgba(122,0,255,0.25);color:#fff}
+  .atlas-find-results li small{margin-left:auto;opacity:0.6;font-size:0.72rem;white-space:nowrap}
   #atlas-live-chip{display:none;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:2px;color:var(--t-pioneer);border:1px solid var(--t-pioneer);border-radius:3px;padding:0.15rem 0.6rem;cursor:pointer;background:none;font-size:0.78rem}
   #atlas-live-chip.on{display:inline-block;animation:atlasLivePulse 2.2s ease-in-out infinite}
   @keyframes atlasLivePulse{0%,100%{box-shadow:0 0 4px var(--t-pioneer)}50%{box-shadow:0 0 14px var(--t-pioneer)}}
@@ -71,6 +82,11 @@ $atlas_og_mode  = isset($_GET['og']);
   .atlas-zoom{position:absolute;right:12px;bottom:12px;display:flex;flex-direction:column;gap:6px;z-index:3}
   .atlas-zoom button{width:38px;height:38px;border-radius:6px;border:1px solid var(--zone-violet);background:rgba(10,10,10,0.8);color:var(--zone-cyan);font-size:1.15rem;font-family:'Rajdhani',sans-serif;cursor:pointer}
   .atlas-zoom button:hover,.atlas-zoom button:focus-visible{border-color:var(--zone-cyan);outline:none;box-shadow:0 0 8px rgba(0,255,247,0.4)}
+  #atlas-stage.has-card .atlas-zoom{right:calc(min(390px, 92%) + 12px)}   /* the open card never buries the controls */
+  .atlas-zoom button.on{border-color:var(--gold);color:var(--gold);box-shadow:0 0 10px rgba(255,215,0,0.35)}
+  .atlas-zoom button.armed{animation:atlasLivePulse 2.2s ease-in-out infinite}
+  #atlas-arrival-hint{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:3;font-family:'Rajdhani',sans-serif;letter-spacing:2px;font-size:0.78rem;text-transform:uppercase;color:var(--chrome);opacity:0;transition:opacity 0.6s;pointer-events:none;background:rgba(10,10,10,0.55);padding:0.25rem 0.7rem;border-radius:3px}
+  #atlas-arrival-hint.on{opacity:0.85}
   #atlas-card{position:absolute;top:0;right:0;bottom:0;width:min(390px,92%);background:rgba(10,10,10,0.94);border-left:1px solid var(--zone-violet);padding:1.4rem 1.5rem;overflow-y:auto;transform:translateX(102%);transition:transform 0.25s ease;z-index:4}
   #atlas-card.open{transform:none}
   @media (prefers-reduced-motion: reduce){#atlas-card{transition:none}}
@@ -121,8 +137,20 @@ $atlas_og_mode  = isset($_GET['og']);
   .atlas-fallback ol{margin-left:1.3rem;line-height:1.7}
   .atlas-fallback a{color:var(--zone-cyan)}
   @media (max-width:700px){
-    #atlas-stage{height:calc(100vh - var(--nav-height) - 250px)}
-    #atlas-card{top:auto;left:0;right:0;width:100%;max-height:62%;border-left:none;border-top:1px solid var(--zone-violet);transform:translateY(103%)}
+    /* PHONE FIRST (2026-09-04): the map above the fold. The title collapses to
+       one line, the dek goes, the legend is one row, and the stage takes the
+       screen — a Short viewer lands on stars, not a paragraph. */
+    .atlas-hero{padding:0.7rem 1rem 0.3rem}
+    .atlas-hero h1{font-size:1.25rem;margin:0.1rem 0 0}
+    .atlas-eyebrow{font-size:0.66rem;letter-spacing:2px}
+    .atlas-dek{display:none}
+    .atlas-legend{margin:0.35rem auto 0.35rem;padding:0 1rem;gap:0.4rem 0.7rem;font-size:0.7rem}
+    .atlas-legend .atlas-hint{display:none}
+    .atlas-find{margin-left:0;width:100%}
+    .atlas-find input{width:100%;max-width:none}
+    #atlas-stage{height:calc(100vh - var(--nav-height) - 128px);min-height:480px;margin:0 0 1.5rem;border-radius:0;border-left:none;border-right:none}
+    .atlas-zoom,#atlas-stage.has-card .atlas-zoom{top:12px;bottom:auto;right:10px}
+    #atlas-card{top:auto;left:0;right:0;width:100%;max-height:62%;border-left:none;border-top:1px solid var(--zone-violet);border-radius:14px 14px 0 0;transform:translateY(103%)}
     #atlas-card.open{transform:none}
   }
 </style>
@@ -141,6 +169,10 @@ $atlas_og_mode  = isset($_GET['og']);
   <span><span class="atlas-dot atlas-dot-canon"></span>CANON</span>
   <button id="atlas-live-chip" type="button">&#9679; LIVE</button>
   <span class="atlas-hint">drag to pan · scroll or pinch to zoom · tap a chapter</span>
+  <div class="atlas-find">
+    <input id="atlas-find" type="search" placeholder="Find a chapter, an object, an idea…" aria-label="Find on the map" autocomplete="off">
+    <ul id="atlas-find-results" class="atlas-find-results" role="listbox"></ul>
+  </div>
 </div>
 
 <?php if ($atlas_og_mode): ?>
@@ -170,7 +202,9 @@ $atlas_og_mode  = isset($_GET['og']);
     <button id="atlas-zoom-in" type="button" aria-label="Zoom in">+</button>
     <button id="atlas-zoom-out" type="button" aria-label="Zoom out">&minus;</button>
     <button id="atlas-zoom-reset" type="button" aria-label="Reset view">&#8634;</button>
+    <button id="atlas-sound" type="button" aria-label="Sound" aria-pressed="false" title="Sound off — click for the ambient bed and object tones">&#9834;</button>
   </div>
+  <div id="atlas-arrival-hint" aria-hidden="true">tap to skip</div>
   <aside id="atlas-card" aria-live="polite"></aside>
   <?php /* Codex reader host — same embed contract as the board (?embed=1 +
            window.__odClose defined by js/atlas.js). Close returns to the map:
@@ -192,6 +226,7 @@ $atlas_og_mode  = isset($_GET['og']);
 <?php endif; ?>
 <?php /* mtime-versioned so every deploy busts the CF asset cache (2026-08-21:
          an unversioned URL served the previous build for minutes post-deploy) */ ?>
+<script src="js/atlas-sound.js?v=<?= @filemtime(__DIR__ . '/js/atlas-sound.js') ?: 1 ?>" defer></script>
 <script src="js/atlas.js?v=<?= @filemtime(__DIR__ . '/js/atlas.js') ?: 1 ?>" defer></script>
 <?php endif; ?>
 

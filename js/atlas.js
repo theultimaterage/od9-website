@@ -185,6 +185,7 @@
 
   function openCard(n) {
     if (!card) return;
+    stage.classList.add("has-card");
     if (n.beyond) { openBeyondCard(n); return; }
     var arcs = DATA.arcs.filter(function (a) {
       return a.route.indexOf(n.id) !== -1;
@@ -238,6 +239,7 @@
   }
   function closeCard() {
     if (card) card.classList.remove("open");
+    stage.classList.remove("has-card");
     focusedId = null;
     lastRead = { nodeId: null, contentId: null };   /* "just read" must not go stale */
     if (history.replaceState) history.replaceState(null, "", "#");
@@ -289,6 +291,7 @@
     var n = nodeById[id];
     if (!n) return;
     focusedId = id;
+    if (window.AtlasSound) window.AtlasSound.cue(spriteKeyFor(n), n.state);
     /* land PAST ZR_FULL so opening a chapter shows the object it resolves
        into — the old 2.1 sat just under the threshold and a click would
        have zoomed to a glow-dot and stopped there */
@@ -302,7 +305,18 @@
     target.z = clamp(Math.min(view.w / w, view.h / h) * 0.8, fitZ * 0.85, 6);
     if (reducedMotion) snap();
   }
-  function fitAll() { fitRect(0, 0, W, H); activeArc = null; closeCard(); }
+  /* HOME VIEW (2026-09-04): a landscape world on a portrait screen used to
+     sit as a small band in the middle of a tall stage. On portrait the home
+     view FILLS the stage instead (the middle of the map, big stars, pan to
+     explore); landscape keeps the whole-map fit. */
+  function homeZ() {
+    return (view.h > view.w) ? clamp(Math.max(view.w / W, view.h / H) * 0.9, fitZ * 0.85, 6) : fitZ;
+  }
+  function fitAll() {
+    if (view.h > view.w) { target.x = W / 2; target.y = H / 2; target.z = homeZ(); if (reducedMotion) snap(); }
+    else { fitRect(0, 0, W, H); }
+    activeArc = null; closeCard();
+  }
 
   function routeHash() {
     var raw = (location.hash || "").replace("#", "").toLowerCase();
@@ -334,6 +348,7 @@
   /* ---- input ---- */
   var pointers = {}, dragging = false, downAt = null, pinchD = 0;
   canvas.addEventListener("pointerdown", function (e) {
+    if (arrival) endArrival(true);
     canvas.setPointerCapture(e.pointerId);
     pointers[e.pointerId] = [e.clientX, e.clientY];
     downAt = [e.clientX, e.clientY];
@@ -385,6 +400,7 @@
   canvas.addEventListener("pointercancel", endPointer);
   canvas.addEventListener("wheel", function (e) {
     e.preventDefault();
+    if (arrival) endArrival(true);
     var f = Math.pow(1.0015, -e.deltaY);
     var before = toWorld(e.offsetX, e.offsetY);
     target.z = clamp(target.z * f, fitZ * 0.85, 6);
@@ -394,6 +410,7 @@
     cam.x = target.x; cam.y = target.y;
   }, { passive: false });
   document.addEventListener("keydown", function (e) {
+    if (arrival) { endArrival(true); return; }
     if (e.key !== "Escape") return;
     if (reader && !reader.hasAttribute("hidden")) { window.__odClose(); return; }
     closeCard();
@@ -496,10 +513,33 @@
     var keys = { 0: "preface", 1: "vol1", 2: "vol2", 3: "vol3", 4: "vol4", 5: "vol5", 6: "vol6" };
     DATA.volumes.forEach(function (v) {
       var img = new Image();
-      img.onload = function () { PLATES[v.vol] = img; };
+      img.onload = function () { PLATES[v.vol] = featherPlate(img); };
       img.src = "images/atlas/plates/" + keys[v.vol] + ".webp?v=" + pv;
     });
   })();
+  /* ONE COSMOS (2026-09-04): a plate's edges fade to nothing over the outer
+     ~14% of each side, once, at load — so at the corpus view the six volumes
+     read as one field of nebulae, not six framed tiles (the first frame's
+     weakest habit, and the frame the Short sends people to). */
+  function featherPlate(img) {
+    try {
+      var c = document.createElement("canvas");
+      c.width = img.naturalWidth || img.width; c.height = img.naturalHeight || img.height;
+      var x = c.getContext("2d");
+      x.drawImage(img, 0, 0);
+      var fx = 0.14, fy = 0.14;
+      x.globalCompositeOperation = "destination-in";
+      var gh = x.createLinearGradient(0, 0, c.width, 0);
+      gh.addColorStop(0, "rgba(0,0,0,0)"); gh.addColorStop(fx, "rgba(0,0,0,1)");
+      gh.addColorStop(1 - fx, "rgba(0,0,0,1)"); gh.addColorStop(1, "rgba(0,0,0,0)");
+      x.fillStyle = gh; x.fillRect(0, 0, c.width, c.height);
+      var gv = x.createLinearGradient(0, 0, 0, c.height);
+      gv.addColorStop(0, "rgba(0,0,0,0)"); gv.addColorStop(fy, "rgba(0,0,0,1)");
+      gv.addColorStop(1 - fy, "rgba(0,0,0,1)"); gv.addColorStop(1, "rgba(0,0,0,0)");
+      x.fillStyle = gv; x.fillRect(0, 0, c.width, c.height);
+      return c;
+    } catch (e) { return img; }               /* a tainted canvas still draws the plate */
+  }
   function drawStarGlow(x, y, r, color, coreAlpha) {
     var g = ctx.createRadialGradient(x, y, 0, x, y, r);
     g.addColorStop(0, rgba("#FFFFFF", coreAlpha));
@@ -645,7 +685,10 @@
       title: info.name || b.sprite
     };
   });
-  BEYOND.forEach(function (b) { nodeById[b.id] = b; });
+  BEYOND.forEach(function (b) {
+    nodeById[b.id] = b;
+    if (!nodeById[b.sprite]) nodeById[b.sprite] = b;   /* #boltzmann-brain works as a deep link too */
+  });
 
   /* Draws one resolved object, centred, at radius `orb`, fading in with
      `alpha`. Chapters and the beyond-Type-1 field both come through here so
@@ -698,8 +741,72 @@
     return (s === "loading" || s === "failed") ? null : s;
   }
 
+  /* THE ARRIVAL (2026-09-04, the spectacle brief's move 1): the page opens
+     deep in the field, flies into one chapter until its object fills the
+     frame, holds a beat, then pulls back to reveal the whole map — the frame
+     that says "this book is alive". Once per session; any gesture skips it;
+     never under reduced motion, a deep link, ?live=1 or the og capture. */
+  var arrival = null;
+  var ARRIVAL_IN = 2600, ARRIVAL_HOLD = 1100, ARRIVAL_OUT = 2200;
+  function easeInOut(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
+  function arrivalHero() {
+    if (liveNodeId && nodeById[liveNodeId]) return nodeById[liveNodeId];
+    var forge = DATA.nodes.filter(function (n) { return n.forge; })[0];
+    if (forge) return forge;
+    var ch5 = legacyToNode[5] && nodeById[legacyToNode[5]];
+    return ch5 || DATA.nodes[0];
+  }
+  function startArrival(force) {
+    if (reducedMotion) return false;
+    var q = location.search;
+    if (!force && (/[?&](og|live)=1/.test(q) || /[?&]arrival=0/.test(q) || location.hash.length > 1)) return false;
+    try {
+      if (!force && sessionStorage.getItem("atlas.arrived")) return false;
+      sessionStorage.setItem("atlas.arrived", "1");
+    } catch (e) { /* private mode: arrive every time */ }
+    var hero = arrivalHero();
+    if (!hero) return false;
+    arrival = { hero: hero, t0: performance.now(), z0: fitZ * 0.62, z1: Math.max(3.6, fitZ * 3),
+                x0: hero.x + 140, y0: hero.y - 90, sounded: false, revealed: false };
+    cam.x = arrival.x0; cam.y = arrival.y0; cam.z = arrival.z0;
+    target.x = cam.x; target.y = cam.y; target.z = cam.z;
+    focusedId = hero.id;                         /* the object resolves under the camera */
+    var hint = document.getElementById("atlas-arrival-hint");
+    if (hint) hint.classList.add("on");
+    return true;
+  }
+  function endArrival(skipped) {
+    if (!arrival) return;
+    arrival = null; focusedId = null;
+    var hint = document.getElementById("atlas-arrival-hint");
+    if (hint) hint.classList.remove("on");
+    target.x = cam.x; target.y = cam.y; target.z = cam.z;   /* hand the ease a continuous frame */
+    if (skipped) fitRect(0, 0, W, H);
+  }
+  function stepArrival() {
+    var a = arrival, el = performance.now() - a.t0;
+    var fit = { x: W / 2, y: H / 2, z: homeZ() };
+    if (el < ARRIVAL_IN) {
+      var k = easeInOut(el / ARRIVAL_IN);
+      cam.x = a.x0 + (a.hero.x - a.x0) * k; cam.y = a.y0 + (a.hero.y - a.y0) * k;
+      cam.z = a.z0 * Math.pow(a.z1 / a.z0, k);           /* geometric zoom reads as constant speed */
+      if (!a.sounded && window.AtlasSound) { a.sounded = true; window.AtlasSound.arrival(); }
+    } else if (el < ARRIVAL_IN + ARRIVAL_HOLD) {
+      cam.x = a.hero.x; cam.y = a.hero.y; cam.z = a.z1;
+    } else if (el < ARRIVAL_IN + ARRIVAL_HOLD + ARRIVAL_OUT) {
+      var k2 = easeInOut((el - ARRIVAL_IN - ARRIVAL_HOLD) / ARRIVAL_OUT);
+      cam.x = a.hero.x + (fit.x - a.hero.x) * k2; cam.y = a.hero.y + (fit.y - a.hero.y) * k2;
+      cam.z = a.z1 * Math.pow(fit.z / a.z1, k2);
+      if (!a.revealed && window.AtlasSound) { a.revealed = true; window.AtlasSound.reveal(); }
+    } else {
+      cam.x = fit.x; cam.y = fit.y; cam.z = fit.z;
+      endArrival(false);
+    }
+  }
+
   function draw() {
-    if (!reducedMotion) {
+    if (arrival) { stepArrival(); }
+    else if (!reducedMotion) {
       cam.x += (target.x - cam.x) * 0.14;
       cam.y += (target.y - cam.y) * 0.14;
       cam.z += (target.z - cam.z) * 0.14;
@@ -770,11 +877,16 @@
     DATA.volumes.forEach(function (v) {
       var r = v.region;
       var p0 = toScreen(r[0], r[1]), p1 = toScreen(r[0] + r[2], r[1] + r[3]);
-      ctx.strokeStyle = rgba(C.violet, 0.16);
-      ctx.lineWidth = 1;
-      roundRect(p0[0], p0[1], p1[0] - p0[0], p1[1] - p0[1], 14 * Math.min(z, 1.4));
-      ctx.stroke();
-      ctx.fillStyle = rgba(C.chrome, z < 1.6 ? 0.7 : 0.3);
+      /* the boundary is orientation, not furniture: gone at the corpus view,
+         back as you zoom in (ONE COSMOS, 2026-09-04) */
+      var frameA = 0.16 * clamp((z - 1.05) / 0.6, 0, 1);
+      if (frameA > 0.005) {
+        ctx.strokeStyle = rgba(C.violet, frameA);
+        ctx.lineWidth = 1;
+        roundRect(p0[0], p0[1], p1[0] - p0[0], p1[1] - p0[1], 14 * Math.min(z, 1.4));
+        ctx.stroke();
+      }
+      ctx.fillStyle = rgba(C.chrome, z < 1.6 ? 0.55 : 0.3);
       ctx.font = "600 " + clamp(12 * z, 10, 20) + "px Rajdhani, sans-serif";
       ctx.textAlign = "left"; ctx.textBaseline = "top";
       ctx.fillText(v.name.toUpperCase(), p0[0] + 10, p0[1] + 8);
@@ -995,11 +1107,72 @@
   });
   if (zr) zr.addEventListener("click", fitAll);
 
+  /* ---- find (2026-09-04): chapters, objects, ideas — "/" focuses, arrows move, Enter flies ---- */
+  var findIn = document.getElementById("atlas-find");
+  var findUl = document.getElementById("atlas-find-results");
+  var findHits = [], findIdx = -1;
+  function findIndexText(n) {
+    var info = objectInfo(n) || {};
+    return [n.num, n.title, (n.bullets || []).join(" "), info.name || "", info.kind || "", n.note || ""]
+      .join(" ").toLowerCase();
+  }
+  function renderFind() {
+    if (!findUl) return;
+    findUl.innerHTML = "";
+    findHits.forEach(function (n, i) {
+      var li = document.createElement("li");
+      li.setAttribute("role", "option");
+      var info = objectInfo(n) || {};
+      li.innerHTML = "<b>" + esc(n.beyond ? "\u221E" : (n.num || "P")) + "</b><span>" + esc(n.title) + "</span>" +
+        (info.name ? "<small>" + esc(info.name) + "</small>" : "");
+      if (i === findIdx) li.className = "active";
+      li.addEventListener("mousedown", function (ev) { ev.preventDefault(); pickFind(i); });
+      findUl.appendChild(li);
+    });
+    findUl.classList.toggle("open", findHits.length > 0);
+  }
+  function pickFind(i) {
+    var n = findHits[i];
+    if (!n) return;
+    findUl.classList.remove("open"); findHits = []; findIdx = -1;
+    if (findIn) findIn.blur();
+    if (arrival) endArrival(true);
+    focusNode(n.id);
+  }
+  if (findIn) {
+    findIn.addEventListener("input", function () {
+      var q = findIn.value.trim().toLowerCase();
+      findHits = []; findIdx = -1;
+      if (q.length >= 2) {
+        var m = /^(?:ch|chapter)?\s*(\d+)$/.exec(q);
+        DATA.nodes.concat(BEYOND).forEach(function (n) {
+          var hit = m ? String(n.num) === m[1] : findIndexText(n).indexOf(q) !== -1;
+          if (hit && findHits.length < 8) findHits.push(n);
+        });
+        if (findHits.length) findIdx = 0;
+      }
+      renderFind();
+    });
+    findIn.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown" && findHits.length) { findIdx = (findIdx + 1) % findHits.length; renderFind(); e.preventDefault(); }
+      else if (e.key === "ArrowUp" && findHits.length) { findIdx = (findIdx - 1 + findHits.length) % findHits.length; renderFind(); e.preventDefault(); }
+      else if (e.key === "Enter" && findIdx >= 0) { pickFind(findIdx); e.preventDefault(); }
+      else if (e.key === "Escape") { findHits = []; renderFind(); findIn.blur(); }
+      e.stopPropagation();                       /* typing never skips the arrival or closes the card */
+    });
+    findIn.addEventListener("blur", function () { setTimeout(function () { findHits = []; renderFind(); }, 150); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "/" && document.activeElement !== findIn && !(reader && !reader.hasAttribute("hidden"))) {
+        e.preventDefault(); findIn.focus();
+      }
+    });
+  }
+
   window.addEventListener("resize", resize);
   window.addEventListener("hashchange", routeHash);
 
   resize();
-  cam.z = target.z = fitZ; snap();
+  cam.z = target.z = homeZ(); snap();
   /* ?og=1 — share-card capture: exact frame on the canon constellation
      (no fit margin; V5/V6 labels stay just out of the bottom edge) */
   if (/[?&]og=1/.test(location.search)) {
@@ -1008,6 +1181,7 @@
     snap();
   } else {
     routeHash();
+    startArrival(/[?&]arrival=1/.test(location.search));
   }
   requestAnimationFrame(draw);
 })();
