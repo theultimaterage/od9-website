@@ -682,7 +682,15 @@
     if (s === undefined) {
       spriteCache[key] = "loading";
       var img = new Image();
-      img.onload = function () { spriteCache[key] = img; };
+      /* Decode OFF the draw path. The first draw of a freshly loaded sprite
+         paid the webp decode on the main thread inside the focus ease — the
+         first tap after load stalled 180 ms (desktop) to 370 ms (phone),
+         measured headless 2026-09-04. decode() resolves once the bitmap is
+         ready; the cache only hands the image to draw() after that. */
+      img.onload = function () {
+        var ready = function () { spriteCache[key] = img; };
+        if (img.decode) { img.decode().then(ready, ready); } else { ready(); }
+      };
       img.onerror = function () { spriteCache[key] = "failed"; };
       img.src = "images/atlas/sprites/" + key + ".webp?v=" + spriteV;
       return null;
