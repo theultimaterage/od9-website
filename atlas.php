@@ -345,7 +345,9 @@ $atlas_og_mode  = isset($_GET['og']);
 <?php endif; ?>
 <?php /* mtime-versioned so every deploy busts the CF asset cache (2026-08-21:
          an unversioned URL served the previous build for minutes post-deploy) */ ?>
+<script src="js/atlas-beacon.js?v=<?= @filemtime(__DIR__ . '/js/atlas-beacon.js') ?: 1 ?>" defer></script>
 <script src="js/atlas-sound.js?v=<?= @filemtime(__DIR__ . '/js/atlas-sound.js') ?: 1 ?>" defer></script>
+<script src="js/atlas-cosmos.js?v=<?= @filemtime(__DIR__ . '/js/atlas-cosmos.js') ?: 1 ?>" defer></script>
 <script src="js/atlas.js?v=<?= @filemtime(__DIR__ . '/js/atlas.js') ?: 1 ?>" defer></script>
 <?php endif; ?>
 

@@ -265,11 +265,9 @@
   }
   function toggle() {
     var r = on ? (stop(), false) : start();
-    try {
-      navigator.sendBeacon("api/v1/atlas-ping.php", new Blob([JSON.stringify({
-        sid: sessionStorage.getItem("atlas.sid") || "anon", event: "sound", vp: window.innerWidth < 700 ? "phone" : "desktop",
-        props: { on: !!r, files: FILES.length } })], { type: "application/json" }));
-    } catch (e) { /* never the sound's problem */ }
+    /* one sender for the whole map (js/atlas-beacon.js) — this used to hand-roll
+       the same POST, which meant two places to change the endpoint or the shape */
+    if (window.AtlasBeacon) window.AtlasBeacon.ping("sound", { on: !!r, files: FILES.length });
     return r;
   }
   if (btn) btn.addEventListener("click", toggle);
