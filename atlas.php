@@ -348,6 +348,9 @@ $atlas_og_mode  = isset($_GET['og']);
 <script src="js/atlas-beacon.js?v=<?= @filemtime(__DIR__ . '/js/atlas-beacon.js') ?: 1 ?>" defer></script>
 <script src="js/atlas-sound.js?v=<?= @filemtime(__DIR__ . '/js/atlas-sound.js') ?: 1 ?>" defer></script>
 <script src="js/atlas-cosmos.js?v=<?= @filemtime(__DIR__ . '/js/atlas-cosmos.js') ?: 1 ?>" defer></script>
+<script src="js/atlas-timeline.js?v=<?= @filemtime(__DIR__ . '/js/atlas-timeline.js') ?: 1 ?>" defer></script>
+<script src="js/atlas-guides.js?v=<?= @filemtime(__DIR__ . '/js/atlas-guides.js') ?: 1 ?>" defer></script>
+<script src="js/atlas-find.js?v=<?= @filemtime(__DIR__ . '/js/atlas-find.js') ?: 1 ?>" defer></script>
 <script src="js/atlas.js?v=<?= @filemtime(__DIR__ . '/js/atlas.js') ?: 1 ?>" defer></script>
 <?php endif; ?>
 

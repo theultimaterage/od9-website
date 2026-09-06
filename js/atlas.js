@@ -1448,239 +1448,44 @@
   });
   if (zr) zr.addEventListener("click", fitAll);
 
-  /* ---- find (2026-09-04): chapters, objects, ideas — "/" focuses, arrows move, Enter flies ---- */
-  var findIn = document.getElementById("atlas-find");
-  var findUl = document.getElementById("atlas-find-results");
-  var findHits = [], findIdx = -1;
-  function findIndexText(n) {
-    var info = objectInfo(n) || {};
-    return [n.num, n.title, (n.bullets || []).join(" "), info.name || "", info.kind || "", n.note || ""]
-      .join(" ").toLowerCase();
-  }
-  /* a hit is {n} for a chapter or {n, si} for one of its sections */
-  function findMatches(q) {
-    var hits = [];
-    var m = /^(?:ch|chapter)?\s*(\d+)$/.exec(q);
-    DATA.nodes.concat(BEYOND).forEach(function (n) {
-      if (hits.length >= 8) return;
-      if (m ? String(n.num) === m[1] : findIndexText(n).indexOf(q) !== -1) { hits.push({ n: n }); return; }
-      if (!m && n.sections) {
-        for (var i = 0; i < n.sections.length && hits.length < 8; i++) {
-          if (n.sections[i].toLowerCase().indexOf(q) !== -1) hits.push({ n: n, si: i });
-        }
-      }
-    });
-    return hits;
-  }
-  function renderFind() {
-    if (!findUl) return;
-    findUl.innerHTML = "";
-    findHits.forEach(function (hit, i) {
-      var n = hit.n;
-      var li = document.createElement("li");
-      li.setAttribute("role", "option");
-      var info = objectInfo(n) || {};
-      if (hit.si !== undefined) {
-        li.innerHTML = "<b>" + esc(n.num || "P") + "." + (hit.si + 1) + "</b><span>" + esc(n.sections[hit.si]) + "</span>" +
-          "<small>" + esc(n.title) + "</small>";
-      } else {
-        li.innerHTML = "<b>" + esc(n.beyond ? "\u221E" : (n.num || "P")) + "</b><span>" + esc(n.title) + "</span>" +
-          (info.name ? "<small>" + esc(info.name) + "</small>" : "");
-      }
-      if (i === findIdx) li.className = "active";
-      li.addEventListener("mousedown", function (ev) { ev.preventDefault(); pickFind(i); });
-      findUl.appendChild(li);
-    });
-    findUl.classList.toggle("open", findHits.length > 0);
-  }
-  function pickFind(i) {
-    var hit = findHits[i];
-    if (!hit) return;
-    findUl.classList.remove("open"); findHits = []; findIdx = -1;
-    if (findIn) findIn.blur();
-    if (arrival) endArrival(true);
-    ping("find", { id: hit.n.id, section: hit.si === undefined ? -1 : hit.si, qlen: (findIn && findIn.value || "").length });
-    focusNode(hit.n.id, true, hit.si === undefined ? null : hit.si);
-  }
-  if (findIn) {
-    findIn.addEventListener("input", function () {
-      var q = findIn.value.trim().toLowerCase();
-      findHits = []; findIdx = -1;
-      if (q.length >= 2) {
-        findHits = findMatches(q);
-        if (findHits.length) findIdx = 0;
-      }
-      renderFind();
-    });
-    findIn.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowDown" && findHits.length) { findIdx = (findIdx + 1) % findHits.length; renderFind(); e.preventDefault(); }
-      else if (e.key === "ArrowUp" && findHits.length) { findIdx = (findIdx - 1 + findHits.length) % findHits.length; renderFind(); e.preventDefault(); }
-      else if (e.key === "Enter" && findIdx >= 0) { pickFind(findIdx); e.preventDefault(); }
-      else if (e.key === "Escape") { findHits = []; renderFind(); findIn.blur(); }
-      e.stopPropagation();                       /* typing never skips the arrival or closes the card */
-    });
-    findIn.addEventListener("blur", function () { setTimeout(function () { findHits = []; renderFind(); }, 150); });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "/" && document.activeElement !== findIn && !(reader && !reader.hasAttribute("hidden"))) {
-        e.preventDefault(); findIn.focus();
-      }
-    });
-  }
-
-  /* THE TIMELINE (2026-09-04, the spectacle brief's move 5): scrub the
-     ledger. Every chapter carries history [{state, at}]; as of a date its
-     state is the last entry at or before it (raw before any). Scrubbing
-     rewrites n.state / n.forge in place and "now" restores them, so every
-     draw path — colours, rings, the objects a chapter resolves into — sees
-     the past for free. "Forge" plays the whole ledger in ~8 s. */
-  var TL = DATA.timeline && DATA.timeline.events ? DATA.timeline : null;
-  var tlBar = document.getElementById("atlas-timeline"), tlRange = document.getElementById("atlas-tl-range");
-  var tlDate = document.getElementById("atlas-tl-date"), tlStat = document.getElementById("atlas-tl-stat");
-  var tlPlay = document.getElementById("atlas-tl-play"), tlNow = document.getElementById("atlas-tl-now");
-  var asOf = null, tlTimer = null, tlDays = 0;
-  function tlDayOf(date) { return Math.round((Date.parse(date + "T12:00:00Z") - Date.parse(TL.start + "T12:00:00Z")) / 86400000); }
-  function tlDateOf(day) { return new Date(Date.parse(TL.start + "T12:00:00Z") + day * 86400000).toISOString().slice(0, 10); }
-  function stateAt(n, date) {
-    var st = "raw", forge = false;
-    (n.history || []).forEach(function (h) {
-      if (h.at <= date) { if (h.state === "forge") forge = true; else st = h.state; }
-    });
-    return { state: st, forge: forge };
-  }
-  function applyAsOf(date) {
-    DATA.nodes.forEach(function (n) {
-      if (n._state0 === undefined) { n._state0 = n.state; n._forge0 = n.forge; }
-      if (date) { var s = stateAt(n, date); n.state = s.state; n.forge = s.forge; }
-      else { n.state = n._state0; n.forge = n._forge0; }
-    });
-    asOf = date;
-    paintTl();
-  }
-  function tlCounts() {
-    var c = { canon: 0, forge: 0, preached: 0 };
-    DATA.nodes.forEach(function (n) { if (n.state === "canon") c.canon++; if (n.state === "preached") c.preached++; if (n.forge) c.forge++; });
-    return c;
-  }
-  function paintTl() {
-    if (!tlDate) return;
-    var c = tlCounts();
-    tlDate.textContent = asOf ? "as of " + asOf : "now";
-    var s = c.canon + " canon";
-    if (c.preached) s += " \u00B7 " + c.preached + " preached";
-    s += " \u00B7 " + c.forge + " in the forge";
-    if (!asOf) {
-      var weekAgo = tlDateOf(Math.max(0, tlDays - 7));
-      var recent = TL.events.filter(function (e) { return e.at >= weekAgo; });
-      s += recent.length ? " \u00B7 this week: " + recent.length + " change" + (recent.length > 1 ? "s" : "")
-                         : " \u00B7 nothing changed this week";
-    }
-    tlStat.textContent = s;
-    tlBar.classList.toggle("past", !!asOf);
-  }
-  function tlStop() { if (tlTimer) { clearInterval(tlTimer); tlTimer = null; if (tlPlay) tlPlay.innerHTML = "&#9654; Replay history"; } }
-  if (TL && tlBar && tlRange) {
-    tlDays = Math.max(1, tlDayOf(TL.end));
-    tlRange.max = String(tlDays); tlRange.value = String(tlDays);
-    tlBar.removeAttribute("hidden");
-    var tlPinged = false;
-    tlRange.addEventListener("input", function () {
-      tlStop();
-      var v = parseInt(tlRange.value, 10);
-      applyAsOf(v >= tlDays ? null : tlDateOf(v));
-      if (!tlPinged) { tlPinged = true; ping("timeline", { how: "scrub" }); }
-    });
-    if (tlNow) tlNow.addEventListener("click", function () { tlStop(); tlRange.value = String(tlDays); applyAsOf(null); });
-    if (tlPlay) tlPlay.addEventListener("click", function () {
-      if (tlTimer) { tlStop(); return; }
-      ping("timeline", { how: "play" });
-      var day = 0, lastCanon = -1, step = Math.max(1, Math.round(tlDays / 200));
-      tlPlay.innerHTML = "&#10074;&#10074; Replaying";
-      if (typeof guideSpeak === "function") guideSpeak("archivist", true);   /* the Archivist narrates the replay in the stage */
-      tlTimer = setInterval(function () {
-        day += step;
-        if (day >= tlDays) { tlRange.value = String(tlDays); applyAsOf(null); tlStop(); if (window.AtlasSound) window.AtlasSound.reveal(); return; }
-        tlRange.value = String(day); applyAsOf(tlDateOf(day));
-        var c = tlCounts().canon;
-        if (c > lastCanon && lastCanon >= 0 && window.AtlasSound) window.AtlasSound.cue("gold-star", "canon");
-        lastCanon = c;
-      }, 40);
-    });
-    paintTl();
-  }
-  /* THE GUIDES (2026-09-05, the founder's connective tissue): four presences
-     at the map's edge, each owning a layer — the Navigator the tour, the
-     Archivist the timeline, the Forgemaster the forge, the Quartermaster
-     the sound. Hover: a line in their voice. Tap: the line, and the thing
-     they own. Portraits are the canonical reference stills, cropped to
-     medallions by tools/build_atlas_guides.py (bot repo). */
-  var guideSay = document.getElementById("atlas-guide-say"), guideTimer = null;
-  function forgeNode() { return DATA.nodes.filter(function (n) { return n.forge; })[0] || null; }
-  var GUIDES = {
-    navigator: {
-      who: "The Navigator", go: "Take the tour",
-      line: function () { return "Four routes are preached. Say the word and I fly you down one."; },
-      act: function () { if (tourBtn && tourMenu && !tourMenu.classList.contains("open")) tourBtn.click(); }
-    },
-    archivist: {
-      who: "The Archivist", go: "Replay the history",
-      line: function () {
-        var c = tlCounts();
-        return tlTimer ? "Watch the book get written: every chapter lights up on the day it was preached, first publish to now, in eight seconds."
-                       : "Every star has a date. I keep them. " + c.canon + " chapters are canon; drag the bar and watch the book get written.";
-      },
-      act: function () {
-        if (tlBar) tlBar.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "center" });
-        if (tlPlay && !tlTimer) tlPlay.click();
-      }
-    },
-    forgemaster: {
-      who: "The Forgemaster", go: "Go to the forge",
-      line: function () {
-        var f = forgeNode();
-        return f ? "Chapter " + f.num + " is on the anvil \u2014 " + f.title + ". Sunday it gets struck."
-                 : "The anvil's cold this week. Come back Sunday.";
-      },
-      act: function () { var f = forgeNode(); if (f) focusNode(f.id); }
-    },
-    quartermaster: {
-      who: "The Quartermaster", go: "Toggle sound",
-      line: function () {
-        return (window.AtlasSound && window.AtlasSound.enabled()) ? "Sound's on. You're welcome."
-             : "Sound's my department. Tap the note. Or don't \u2014 I'm not your mama.";
-      },
-      act: function () { var b = document.getElementById("atlas-sound"); if (b) b.click(); }
-    }
+  /* THE LEAF LAYERS (split out 2026-09-06): find, the timeline and the guides
+     each live in their own file. Every one of them is handed exactly what it
+     needs and reaches for nothing else — which is precisely what made them
+     separable, while the tour and the arrival stayed here: those two share the
+     camera's flight machinery and the "something is driving the camera" state
+     that the input handlers and the draw loop both read. Splitting those would
+     have produced two modules importing each other, which is ceremony, not
+     structure. Each init below fails open: a file that does not load costs its
+     own layer, never the map. */
+  var TIMELINE = window.AtlasTimeline ? window.AtlasTimeline.init({
+    nodes: DATA.nodes, ledger: DATA.timeline, ping: ping, sound: window.AtlasSound
+  }) : {
+    counts: function () { return { canon: 0, forge: 0, preached: 0 }; },
+    asOf: function () { return null; }, days: function () { return 0; },
+    isPlaying: function () { return false; }, play: function () {}, stop: function () {},
+    bar: null, onPlay: function () {}
   };
-  function guideSpeak(key, sticky) {
-    var g = GUIDES[key];
-    if (!g || !guideSay) return;
-    if (guideTimer) { clearTimeout(guideTimer); guideTimer = null; }
-    guideSay.innerHTML = '<div class="who">' + esc(g.who) + "</div>" + esc(g.line()) +
-      '<br><button type="button" class="go" id="atlas-guide-go">' + esc(g.go) + " \u2192</button>";
-    guideSay.classList.add("on");
-    var goBtn = document.getElementById("atlas-guide-go");
-    if (goBtn) goBtn.addEventListener("click", function () { g.act(); guideSpeak(key, true); });
-    guideTimer = setTimeout(function () { guideSay.classList.remove("on"); }, sticky ? 6000 : 3500);
-  }
-  Array.prototype.forEach.call(document.querySelectorAll(".atlas-guide"), function (btn) {
-    var key = btn.getAttribute("data-guide");
-    if (key === "forgemaster" && forgeNode()) btn.classList.add("forge");
-    btn.addEventListener("mouseenter", function () { guideSpeak(key, false); });
-    btn.addEventListener("focus", function () { guideSpeak(key, false); });
-    btn.addEventListener("click", function (ev) {
-      ev.stopPropagation();                    /* the document's outside-click closer must not eat the tour menu the Navigator just opened */
-      if (arrival) endArrival(true);
-      ping("guide", { who: key });
-      GUIDES[key].act();
-      guideSpeak(key, true);
-      if (window.AtlasSound) window.AtlasSound.cue("probe", "star");
-    });
+
+  var GUIDES = window.AtlasGuides ? window.AtlasGuides.init({
+    nodes: DATA.nodes, esc: esc, ping: ping, reducedMotion: reducedMotion,
+    focusNode: focusNode, sound: window.AtlasSound,
+    beforeAct: function () { if (arrival) endArrival(true); },
+    tour: { openMenu: function () { if (tourBtn && tourMenu && !tourMenu.classList.contains("open")) tourBtn.click(); } },
+    timeline: TIMELINE
+  }) : { speak: function () {}, line: function () { return null; } };
+  TIMELINE.onPlay(function () { GUIDES.speak("archivist", true); });   /* the Archivist narrates the replay */
+
+  if (window.AtlasFind) window.AtlasFind.init({
+    allNodes: function () { return DATA.nodes.concat(BEYOND); },
+    objectInfo: objectInfo, esc: esc, ping: ping, focusNode: focusNode,
+    beforeFly: function () { if (arrival) endArrival(true); },
+    isReaderOpen: function () { return !!(reader && !reader.hasAttribute("hidden")); }
   });
 
   /* read-only hooks for the headless tests */
-  window.__atlas = { stateCounts: tlCounts, asOf: function () { return asOf; }, days: function () { return tlDays; },
+  window.__atlas = { stateCounts: TIMELINE.counts, asOf: TIMELINE.asOf, days: TIMELINE.days,
                      me: function () { return me; },
-                     guideLine: function (k) { return GUIDES[k] ? GUIDES[k].line() : null; } };
+                     guideLine: function (k) { return GUIDES.line(k); } };
 
   window.addEventListener("resize", resize);
   window.addEventListener("hashchange", routeHash);
