@@ -2,6 +2,18 @@
  "files": [
   "arrival-b.mp3",
   "arrival.mp3",
-  "bed.mp3"
+  "bed.mp3",
+  "cue-beyond.mp3",
+  "cue-blackhole.mp3",
+  "cue-canon.mp3",
+  "cue-cluster.mp3",
+  "cue-forge.mp3",
+  "cue-nebula.mp3",
+  "cue-probe.mp3",
+  "cue-pulsar.mp3",
+  "cue-quasar.mp3",
+  "cue-raw.mp3",
+  "cue-star.mp3",
+  "reveal.mp3"
  ]
 }
