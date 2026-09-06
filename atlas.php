@@ -75,6 +75,12 @@ $atlas_og_mode  = isset($_GET['og']);
   .atlas-find-results li.active,.atlas-find-results li:hover{background:rgba(122,0,255,0.25);color:#fff}
   .atlas-find-results li small{margin-left:auto;opacity:0.6;font-size:0.72rem;white-space:nowrap}
   #atlas-live-chip{display:none;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:2px;color:var(--t-pioneer);border:1px solid var(--t-pioneer);border-radius:3px;padding:0.15rem 0.6rem;cursor:pointer;background:none;font-size:0.78rem}
+  /* your constellation: white, the one colour no state owns */
+  #atlas-me-chip{display:inline-block;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:2px;color:var(--chrome);border:1px solid var(--chrome);border-radius:3px;padding:0.15rem 0.6rem;font-size:0.78rem;text-decoration:none;white-space:nowrap}
+  #atlas-me-chip.lit{color:#fff;border-color:#fff;text-shadow:0 0 8px rgba(255,255,255,0.55)}
+  #atlas-me-chip:hover{background:rgba(255,255,255,0.08)}
+  #atlas-me-chip[hidden]{display:none}
+  .atlas-me-note{color:#fff;opacity:0.92}
   /* the tour (2026-09-04): a guided flight along a preached route */
   .atlas-tour-wrap{position:relative}
   #atlas-tour{font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:2px;color:var(--zone-cyan);border:1px solid var(--zone-cyan);border-radius:3px;padding:0.15rem 0.6rem;cursor:pointer;background:none;font-size:0.78rem;text-transform:uppercase}
@@ -246,6 +252,7 @@ $atlas_og_mode  = isset($_GET['og']);
   <span title="Preached live; the review into canon is still ahead"><span class="atlas-dot atlas-dot-preached"></span>PREACHED</span>
   <span title="Reviewed and canon: a lesson you can read now"><span class="atlas-dot atlas-dot-canon"></span>CANON</span>
   <button id="atlas-live-chip" type="button">&#9679; LIVE</button>
+  <a id="atlas-me-chip" href="dashboard/auth/discord.php?return=/atlas" title="The chapters you have completed, lit as yours; lines join them in the order you read them" hidden>&#9670; YOUR CONSTELLATION</a>
   <span class="atlas-tour-wrap">
     <button id="atlas-tour" type="button" aria-haspopup="listbox" aria-expanded="false">&#9654; Take the tour</button>
     <ul id="atlas-tour-menu" role="listbox" aria-label="Routes"></ul>

@@ -17,7 +17,7 @@
 declare(strict_types=1);
 
 const EVENTS = ['arrive', 'arrival_end', 'card', 'codex', 'onward', 'tour', 'tour_end', 'find', 'sound',
-                'guide', 'timeline', 'live_strip', 'section', 'error'];
+                'guide', 'timeline', 'live_strip', 'section', 'error', 'me'];
 const MAX_BODY = 2048;
 
 /* prod: the account's home, outside the docroot; anywhere else: the temp dir */

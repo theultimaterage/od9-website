@@ -250,6 +250,12 @@
         n.legacy.join(" · ") + " (structure decided 2026-08-20).</p>";
     }
     if (n.note) h += '<p class="atlas-note">' + esc(n.note) + "</p>";
+    if (me && me.signed_in) {
+      if (meRead[n.id]) h += '<p class="atlas-note atlas-me-note">\u25C6 In your constellation \u2014 completed ' + esc(meRead[n.id]) + ".</p>";
+      else if (n.state === "canon") h += '<p class="atlas-note atlas-me-note">Not in your constellation yet \u2014 open the lesson below and complete it.</p>';
+    } else if (me && n.state === "canon") {
+      h += '<p class="atlas-note atlas-me-note"><a class="atlas-canon-link" href="dashboard/auth/discord.php?return=/atlas">Sign in with Discord</a> to light the chapters you have read.</p>';
+    }
     if (n.bullets && n.bullets.length) {
       h += "<ul>";
       n.bullets.forEach(function (b) { h += "<li>" + esc(b) + "</li>"; });
@@ -530,6 +536,44 @@
      stage — LIVE NOW while the door is open, TONIGHT before it opens on a show
      day, and the VOD afterwards. Dismissed once per session. */
   var liveInfo = null, liveStrip = document.getElementById("atlas-live-strip"), liveSeen = false;
+
+  /* YOUR CONSTELLATION (2026-09-05, the ninth move): api/v1/atlas-me.php
+     answers with the chapters this member has completed (the dashboard's
+     Discord session; the cookie is site-wide). Those stars get a white
+     ring, are joined in the order they were read, and the card says so.
+     Anonymous visitors get the door. White is the member's colour — the
+     one colour no state owns. */
+  var me = null, meRead = {}, meOrder = [], meChip = document.getElementById("atlas-me-chip");
+  function paintMe() {
+    if (!meChip || !me) return;
+    var canon = DATA.nodes.filter(function (n) { return n.state === "canon"; });
+    var total = me.canon_total || canon.length;
+    if (!me.signed_in) {
+      meChip.innerHTML = "\u25C6 LIGHT YOUR CONSTELLATION \u00B7 SIGN IN";
+      meChip.href = "dashboard/auth/discord.php?return=/atlas";
+      meChip.classList.remove("lit");
+    } else {
+      var next = canon.filter(function (n) { return !meRead[n.id] && n.canon && n.canon[0] && n.canon[0].url; })[0];
+      var k = me.read_total || 0;
+      meChip.innerHTML = "\u25C6 YOUR CONSTELLATION \u00B7 " + k + " OF " + total +
+        (next ? " \u00B7 " + (k ? "NEXT" : "START HERE") + " \u2192" : (k ? " \u00B7 COMPLETE" : ""));
+      meChip.href = next ? next.canon[0].url + (next.canon[0].url.indexOf("?") < 0 ? "?from=atlas" : "&from=atlas") : "#";
+      meChip.classList.toggle("lit", k > 0);
+    }
+    meChip.removeAttribute("hidden");
+  }
+  fetch("api/v1/atlas-me.php", { cache: "no-cache", credentials: "same-origin" }).then(function (r) {
+    return r.ok ? r.json() : null;
+  }).then(function (j) {
+    if (!j || typeof j.signed_in === "undefined") return;
+    me = j; meRead = {}; meOrder = [];
+    (j.read || []).slice().sort(function (a, b) { return a.at < b.at ? -1 : a.at > b.at ? 1 : 0; }).forEach(function (x) {
+      if (nodeById[x.id]) { meRead[x.id] = x.at; meOrder.push(x.id); }
+    });
+    paintMe();
+    ping("me", { signed_in: !!j.signed_in, read: j.read_total || 0 });
+    if (focusedId && nodeById[focusedId] && card && card.classList.contains("open")) openCard(nodeById[focusedId]);
+  }).catch(function () { /* the map is whole without it */ });
   function liveState(j) {
     var door = j.door || {}, show = j.show, last = j.last_live;
     var today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Chicago" });
@@ -1288,6 +1332,18 @@
       }
     });
 
+    /* your constellation: the read chapters joined in reading order, under the stars */
+    if (meOrder.length > 1) {
+      ctx.save();
+      ctx.strokeStyle = rgba("#FFFFFF", 0.32); ctx.lineWidth = 1.1; ctx.setLineDash([2, 5]);
+      ctx.beginPath();
+      meOrder.forEach(function (id, i) {
+        var mn = nodeById[id]; if (!mn) return;
+        var mp = toScreen(mn.x, mn.y);
+        if (i === 0) ctx.moveTo(mp[0], mp[1]); else ctx.lineTo(mp[0], mp[1]);
+      });
+      ctx.stroke(); ctx.setLineDash([]); ctx.restore();
+    }
     /* chapter stars */
     var r = Math.max(5, Math.min(11, 6.5 * Math.sqrt(z)));
     /* how far the zoom-resolve has come: 0 = pure glow, 1 = full object */
@@ -1342,6 +1398,10 @@
         ctx.strokeStyle = rgba(col, 0.4 * zres * tw);
         ctx.lineWidth = Math.max(1, 1.8 * zres);
         ctx.beginPath(); ctx.arc(s[0], s[1], orb * 0.92, 0, 7); ctx.stroke();
+      }
+      if (meRead[n.id]) {                     /* yours: a white dashed ring, the member's own mark */
+        ctx.strokeStyle = rgba("#FFFFFF", 0.8 * tw); ctx.lineWidth = 1.2; ctx.setLineDash([3, 3]);
+        ctx.beginPath(); ctx.arc(s[0], s[1], zres > 0 ? orb * 1.12 : r * 2.2, 0, 7); ctx.stroke(); ctx.setLineDash([]);
       }
       /* stellar core — the object's own light replaces it once resolved */
       if (zres < 1) {
@@ -1719,6 +1779,7 @@
 
   /* read-only hooks for the headless tests */
   window.__atlas = { stateCounts: tlCounts, asOf: function () { return asOf; }, days: function () { return tlDays; },
+                     me: function () { return me; },
                      guideLine: function (k) { return GUIDES[k] ? GUIDES[k].line() : null; } };
 
   window.addEventListener("resize", resize);

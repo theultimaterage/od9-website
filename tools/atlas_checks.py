@@ -28,6 +28,7 @@ import argparse
 import datetime
 import json
 import sys
+import zoneinfo
 
 try:
     from playwright.sync_api import sync_playwright
@@ -122,8 +123,10 @@ def run(base: str) -> int:
 
         # ---- live as an event (mocked endpoint) -------------------------------
         print("live strip")
-        today = datetime.date.today().isoformat()
         for state, want in (("live", "on live"), ("tonight", "on tonight"), ("quiet", "")):
+            # the page decides "tonight" on Chicago's calendar; take the date fresh per state, in that zone
+            # (a run that started at 23:59 once built the fixture on yesterday's date and failed at 00:00)
+            today = datetime.datetime.now(zoneinfo.ZoneInfo("America/Chicago")).date().isoformat()
             payload = {"designated": 84,
                        "door": {"open": state == "live", "reason": "stream_start" if state == "live" else "closed",
                                 "video_id": None, "watch_url": "https://youtube.com/@x" if state == "live" else None,
@@ -167,6 +170,27 @@ def run(base: str) -> int:
         pg.wait_for_timeout(300)
         check(any(x.startswith("5.9") for x in pg.evaluate(LINES, "#atlas-find-results li")), "find matches a section title (5.9)")
         ctx.close()
+
+        # ---- your constellation (mocked endpoint) -----------------------------
+        print("constellation")
+        for who, fx, want_chip, want_card in (
+                ("member", {"signed_in": True, "name": "T", "member": True, "tier": "observer", "credits": 10,
+                            "read": [{"id": "ch5", "at": "2026-07-02"}, {"id": "ch1", "at": "2026-07-01"}],
+                            "read_total": 2, "canon_total": 14}, "2 OF 14", "In your constellation"),
+                ("visitor", {"signed_in": False, "login": "/dashboard/auth/discord.php?return=/atlas"}, "SIGN IN", "Sign in with Discord")):
+            ctx, pg = page(b, errors=errors)
+            pg.route("**/api/v1/atlas-me.php", lambda route, request=None, body=json.dumps(fx): route.fulfill(
+                status=200, content_type="application/json", body=body))
+            pg.goto(base + "?arrival=0#ch5", wait_until="load")
+            pg.wait_for_timeout(2200)
+            chip = pg.evaluate("() => document.getElementById('atlas-me-chip').textContent")
+            check(want_chip in chip, f"{who}: the chip reads '{chip.strip()}'")
+            check(want_card in pg.evaluate("() => document.getElementById('atlas-card').innerText"), f"{who}: the chapter card says '{want_card}'")
+            if who == "visitor":
+                check("discord.php" in pg.evaluate("() => document.getElementById('atlas-me-chip').getAttribute('href')"), "visitor: the chip is the sign-in door")
+            else:
+                check(pg.evaluate("() => window.__atlas.me().read_total") == 2, "member: the page holds the constellation")
+            ctx.close()
 
         # ---- the beacon ------------------------------------------------------
         print("beacon")

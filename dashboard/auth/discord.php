@@ -143,6 +143,14 @@ if (preg_match('/(Discord-Android|FBAN|FBAV|Instagram|; wv\))/i', $ua)) {
     exit;
 }
 
+// Where to land after login (2026-09-05: the Atlas's sign-in door sends
+// ?return=/atlas). A local absolute path only — never a full URL and never
+// "//host" — so this cannot become an open redirect. callback.php honours
+// $_SESSION['auth_redirect'] and clears it.
+if (isset($_GET['return']) && preg_match('#^/(?!/)[A-Za-z0-9_\-./?=&%]{0,200}$#', (string)$_GET['return'])) {
+    $_SESSION['auth_redirect'] = (string)$_GET['return'];
+}
+
 // Generate state token for CSRF protection
 $state = bin2hex(random_bytes(16));
 $_SESSION['oauth_state'] = $state;
