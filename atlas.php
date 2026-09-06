@@ -260,7 +260,7 @@ $atlas_og_mode  = isset($_GET['og']);
 <style>
   /* og capture mode: the stage IS the frame — fixed fullscreen over all chrome */
   #atlas-stage{position:fixed;inset:0;z-index:99999;height:100vh;max-width:none;margin:0;border:none;border-radius:0}
-  .atlas-zoom{display:none}
+  .atlas-zoom,.atlas-guides,#atlas-live-strip,#atlas-arrival-hint,#atlas-guide-say{display:none}   /* the card is the map, not its chrome */
   #atlas-stage::after{content:"";position:absolute;left:0;bottom:0;width:62%;height:48%;background:radial-gradient(ellipse at 10% 90%, rgba(10,10,10,0.92), rgba(10,10,10,0.55) 48%, transparent 74%);z-index:4;pointer-events:none}
   .atlas-og-lockup{position:absolute;left:34px;bottom:34px;z-index:5;pointer-events:none}
   .atlas-og-lockup .e{font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:4px;font-size:15px;color:var(--zone-cyan);text-transform:uppercase}
