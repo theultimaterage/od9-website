@@ -98,6 +98,38 @@
   /* ---- focus + card ---- */
   var focusedId = null, activeArc = null, liveNodeId = null;
 
+  /* THE BEACON (2026-09-05, audit gap #1): the spec's success measures were
+     never counted — a #chNN arrival never reaches the server log. Small
+     events go to api/v1/atlas-ping.php (one JSON line per event, outside the
+     docroot; tools/atlas_stats.py in the bot repo reads them). No cookie,
+     no IP; the session id lives in this tab's sessionStorage. Sending is
+     fire-and-forget and can never break the map. */
+  var sid = "";
+  try {
+    sid = sessionStorage.getItem("atlas.sid") || "";
+    if (!sid) { sid = Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 6); sessionStorage.setItem("atlas.sid", sid); }
+  } catch (e) { sid = "anon"; }
+  var VP = (window.innerWidth < 700) ? "phone" : "desktop";
+  function ping(event, props) {
+    try {
+      var body = JSON.stringify({ sid: sid, event: event, vp: VP, props: props || {} });
+      if (navigator.sendBeacon) navigator.sendBeacon("api/v1/atlas-ping.php", new Blob([body], { type: "application/json" }));
+      else fetch("api/v1/atlas-ping.php", { method: "POST", body: body, keepalive: true, headers: { "Content-Type": "application/json" } }).catch(function () {});
+    } catch (e) { /* never the map's problem */ }
+  }
+  window.addEventListener("error", function (e) {
+    ping("error", { msg: String(e.message || "").slice(0, 160), src: String(e.filename || "").split("/").pop() + ":" + (e.lineno || 0) });
+  });
+  (function () {
+    var from = "direct";
+    if (/[?&]live=1/.test(location.search)) from = "live";
+    else if (/[?&]tour=/.test(location.search)) from = "tour";
+    else if (location.hash.length > 1) from = "hash";
+    var ref = "";
+    try { ref = document.referrer ? new URL(document.referrer).hostname : ""; } catch (e) { ref = ""; }
+    ping("arrive", { from: from, hash: location.hash.slice(1, 40), ref: ref, w: window.innerWidth, h: window.innerHeight });
+  })();
+
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (ch) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch];
@@ -247,6 +279,13 @@
     card.classList.add("open");
     var btn = document.getElementById("atlas-card-close");
     if (btn) btn.addEventListener("click", closeCard);
+    ping("card", { id: n.id, state: n.state, section: hiSection === null ? -1 : hiSection });
+    Array.prototype.forEach.call(card.querySelectorAll(".atlas-canon-link"), function (a) {
+      a.addEventListener("click", function () { ping("codex", { id: n.id, href: (a.getAttribute("href") || "").slice(0, 120) }); });
+    });
+    Array.prototype.forEach.call(card.querySelectorAll(".atlas-onward-link"), function (a) {
+      a.addEventListener("click", function () { ping("onward", { id: n.id, href: (a.getAttribute("href") || "").slice(0, 120) }); });
+    });
     var lis = card.querySelectorAll(".atlas-sections li");
     Array.prototype.forEach.call(lis, function (li) {
       li.addEventListener("click", function () {
@@ -527,6 +566,10 @@
     h += "</div>";
     liveStrip.innerHTML = h;
     liveStrip.className = "on " + st;
+    if (liveStrip.getAttribute("data-pinged") !== st) { liveStrip.setAttribute("data-pinged", st); ping("live_strip", { state: st }); }
+    Array.prototype.forEach.call(liveStrip.querySelectorAll("a"), function (a) {
+      a.addEventListener("click", function () { ping("live_strip", { state: st, click: (a.textContent || "").slice(0, 40) }); });
+    });
     liveStrip.querySelector(".x").addEventListener("click", function () {
       liveStrip.className = "";
       try { sessionStorage.setItem("atlas.live.dismissed", st); } catch (e) { /* private mode */ }
@@ -907,6 +950,7 @@
   }
   function endArrival(skipped) {
     if (!arrival) return;
+    ping("arrival_end", { skipped: !!skipped, ms: Math.round(performance.now() - arrival.t0) });
     arrival = null; focusedId = null;
     var hint = document.getElementById("atlas-arrival-hint");
     if (hint) hint.classList.remove("on");
@@ -1050,6 +1094,7 @@
     if (arrival) endArrival(true);
     if (tour) { clearTourTimers(); }
     tour = { spec: spec, stops: stops, si: 0, paused: false, hold: null, typing: null };
+    ping("tour", { spec: spec, stops: stops.length });
     if (tourMenu) tourMenu.classList.remove("open");
     if (tourBtn) tourBtn.setAttribute("aria-expanded", "false");
     tourGo();
@@ -1058,8 +1103,9 @@
   function endTour(reason) {
     if (!tour) return;
     clearTourTimers();
-    var spec = tour.spec, stops = tour.stops;
+    var spec = tour.spec, stops = tour.stops, at = tour.si;
     tour = null; focusedId = null; activeArc = null;
+    ping("tour_end", { spec: spec, reason: reason, stop: at + 1, of: stops.length });
     if (reason === "done") {
       flyTo(W / 2, H / 2, homeZ(), 2200, function () { if (window.AtlasSound) window.AtlasSound.reveal(); });
       if (tourCap) {
@@ -1486,6 +1532,7 @@
     findUl.classList.remove("open"); findHits = []; findIdx = -1;
     if (findIn) findIn.blur();
     if (arrival) endArrival(true);
+    ping("find", { id: hit.n.id, section: hit.si === undefined ? -1 : hit.si, qlen: (findIn && findIn.value || "").length });
     focusNode(hit.n.id, true, hit.si === undefined ? null : hit.si);
   }
   if (findIn) {
@@ -1568,14 +1615,17 @@
     tlDays = Math.max(1, tlDayOf(TL.end));
     tlRange.max = String(tlDays); tlRange.value = String(tlDays);
     tlBar.removeAttribute("hidden");
+    var tlPinged = false;
     tlRange.addEventListener("input", function () {
       tlStop();
       var v = parseInt(tlRange.value, 10);
       applyAsOf(v >= tlDays ? null : tlDateOf(v));
+      if (!tlPinged) { tlPinged = true; ping("timeline", { how: "scrub" }); }
     });
     if (tlNow) tlNow.addEventListener("click", function () { tlStop(); tlRange.value = String(tlDays); applyAsOf(null); });
     if (tlPlay) tlPlay.addEventListener("click", function () {
       if (tlTimer) { tlStop(); return; }
+      ping("timeline", { how: "play" });
       var day = 0, lastCanon = -1, step = Math.max(1, Math.round(tlDays / 200));
       tlPlay.innerHTML = "&#10074;&#10074; Forge";
       tlTimer = setInterval(function () {
@@ -1651,6 +1701,7 @@
     btn.addEventListener("click", function (ev) {
       ev.stopPropagation();                    /* the document's outside-click closer must not eat the tour menu the Navigator just opened */
       if (arrival) endArrival(true);
+      ping("guide", { who: key });
       GUIDES[key].act();
       guideSpeak(key, true);
       if (window.AtlasSound) window.AtlasSound.cue("probe", "star");

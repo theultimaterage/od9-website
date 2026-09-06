@@ -155,6 +155,22 @@ def run(base: str) -> int:
         check(any(x.startswith("5.9") for x in pg.evaluate(LINES, "#atlas-find-results li")), "find matches a section title (5.9)")
         ctx.close()
 
+        # ---- the beacon ------------------------------------------------------
+        print("beacon")
+        sent: list = []
+        ctx, pg = page(b, errors=errors)
+        pg.route("**/api/v1/atlas-ping.php", lambda route, request=None: (sent.append(json.loads(route.request.post_data or "{}")), route.fulfill(status=204)))
+        pg.goto(base + "?arrival=0#ch5", wait_until="load")
+        pg.wait_for_timeout(1800)
+        pg.click("#atlas-sound")
+        pg.wait_for_timeout(600)
+        names = [e.get("event") for e in sent]
+        check("arrive" in names and any(e.get("event") == "arrive" and e["props"].get("from") == "hash" for e in sent), "beacon: arrive(from=hash) on a deep link")
+        check("card" in names, "beacon: card on the chapter card")
+        check("sound" in names, "beacon: sound on the toggle")
+        check(all(len(e.get("sid", "")) >= 8 for e in sent), "beacon: every event carries the session id")
+        ctx.close()
+
         # ---- the guides ------------------------------------------------------
         print("guides")
         ctx, pg = page(b, errors=errors, audio=True)

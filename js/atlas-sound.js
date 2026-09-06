@@ -263,7 +263,15 @@
     if (bedGain) { bedGain.gain.cancelScheduledValues(ctx.currentTime); bedGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.6); }
     setTimeout(stopBed, 700);
   }
-  function toggle() { return on ? (stop(), false) : start(); }
+  function toggle() {
+    var r = on ? (stop(), false) : start();
+    try {
+      navigator.sendBeacon("api/v1/atlas-ping.php", new Blob([JSON.stringify({
+        sid: sessionStorage.getItem("atlas.sid") || "anon", event: "sound", vp: window.innerWidth < 700 ? "phone" : "desktop",
+        props: { on: !!r, files: FILES.length } })], { type: "application/json" }));
+    } catch (e) { /* never the sound's problem */ }
+    return r;
+  }
   if (btn) btn.addEventListener("click", toggle);
 
   /* A visitor who left it on last time gets it back on their first gesture —
