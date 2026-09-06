@@ -16,8 +16,8 @@ $lesson = [
   "cover"     => "atlas-vol1.jpg",
   "archivist" => "&ldquo;You&rsquo;ve seen where we sit on the ladder, and what tends to kill civilizations at exactly this rung. Here&rsquo;s the part most people miss: the danger isn&rsquo;t the power. It&rsquo;s the <em>gap</em> between the power and the wisdom to wield it. Mind the gap.&rdquo;",
   "canon" => [
-    ["p" => "The necessity of integrating technological and consciousness evolution creates what we term the Twin Singularities&mdash;complementary developmental trajectories that must converge for successful navigation of our evolutionary bottleneck.", "lead" => true],
-    ["p" => "Recent analysis by existential risk researchers suggests that the period between achieving advanced technology and developing commensurate wisdom represents a narrow evolutionary bottleneck that may explain the Great Silence (Bostrom, 2002; Ord, 2020)."],
+    ["sec" => 4, "p" => "The necessity of integrating technological and consciousness evolution creates what we term the Twin Singularities&mdash;complementary developmental trajectories that must converge for successful navigation of our evolutionary bottleneck.", "lead" => true],
+    ["sec" => 9, "p" => "Recent analysis by existential risk researchers suggests that the period between achieving advanced technology and developing commensurate wisdom represents a narrow evolutionary bottleneck that may explain the Great Silence (Bostrom, 2002; Ord, 2020)."],
   ],
   "study" => [
     ["label" => "The Archivist's read"],

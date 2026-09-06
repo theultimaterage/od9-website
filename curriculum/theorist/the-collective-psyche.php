@@ -24,13 +24,13 @@ $lesson = [
   "cover"     => "atlas-vol2.jpg",
   "archivist" => "&ldquo;The other barriers are out there &mdash; institutions, markets, feeds. This one is in here. The chapter&rsquo;s claim is uncomfortable and precise: psychological capacity is <em>infrastructure</em>, as load-bearing as any power grid, and ours is failing under engineered load. Read it without flinching and without mysticism &mdash; the &lsquo;collective psyche&rsquo; is not a spirit hovering over us; it is what millions of individual minds, wired together, measurably do to each other.&rdquo;",
   "canon" => [
-    ["p" => "The implications for civilizational development are profound. A civilization cannot progress beyond the psychological capacity of its collective consciousness: the exterior development of a society cannot long exceed its interior development without creating severe social pathologies. This principle establishes mental health as prerequisite infrastructure for higher civilization capabilities.", "lead" => true],
+    ["sec" => 1, "p" => "The implications for civilizational development are profound. A civilization cannot progress beyond the psychological capacity of its collective consciousness: the exterior development of a society cannot long exceed its interior development without creating severe social pathologies. This principle establishes mental health as prerequisite infrastructure for higher civilization capabilities.", "lead" => true],
 
-    ["p" => "Beyond the direct manifestations of psychological disorder lies a more subtle yet perhaps more consequential dimension of mental health crisis: the systematic restriction of consciousness development through sophisticated psychological manipulation. This dimension represents not accidental dysfunction but deliberate limitation&mdash;creating perhaps the most profound evolutionary bottleneck preventing civilization advancement."],
+    ["sec" => 8, "p" => "Beyond the direct manifestations of psychological disorder lies a more subtle yet perhaps more consequential dimension of mental health crisis: the systematic restriction of consciousness development through sophisticated psychological manipulation. This dimension represents not accidental dysfunction but deliberate limitation&mdash;creating perhaps the most profound evolutionary bottleneck preventing civilization advancement."],
 
-    ["p" => "This evidence suggests that addiction functions less as individual pathology and more as adaptive response to social contexts increasingly engineered for disconnection&mdash;revealing how modern social structures create vulnerabilities that addiction industries systematically exploit."],
+    ["sec" => 7, "p" => "This evidence suggests that addiction functions less as individual pathology and more as adaptive response to social contexts increasingly engineered for disconnection&mdash;revealing how modern social structures create vulnerabilities that addiction industries systematically exploit."],
 
-    ["p" => "Research across disciplines converges on a fundamental conclusion: Type 1 civilization capabilities cannot emerge or persist with predominantly Type 0 psychology."],
+    ["sec" => 10, "p" => "Research across disciplines converges on a fundamental conclusion: Type 1 civilization capabilities cannot emerge or persist with predominantly Type 0 psychology."],
 
     ["affirm" => "While the challenges identified are severe, research across multiple domains indicates specific approaches with significant development potential."],
   ],

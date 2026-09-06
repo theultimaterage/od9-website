@@ -27,6 +27,7 @@ from __future__ import annotations
 import argparse
 import datetime
 import json
+import re
 import sys
 import zoneinfo
 
@@ -195,6 +196,34 @@ def run(base: str) -> int:
             else:
                 check(pg.evaluate("() => window.__atlas.me().read_total") == 2, "member: the page holds the constellation")
             ctx.close()
+
+        # ---- section anchors: the third zoom level is a door -----------------
+        print("section anchors")
+        ctx, pg = page(b, errors=errors)
+        pg.goto(base + "?arrival=0#ch5", wait_until="load")
+        pg.wait_for_timeout(2000)
+        pg.click("#atlas-find")
+        pg.keyboard.type("media and information")
+        pg.wait_for_timeout(400)
+        pg.keyboard.press("Enter")
+        pg.wait_for_timeout(1800)
+        href = pg.evaluate("() => { const a = document.querySelector('#atlas-card [data-lesson]'); return a ? a.getAttribute('href') : ''; }")
+        check(href.endswith("#sec-6"), f"a lit section links at its anchor (href ends {href[-10:]!r})")
+        pg.click("#atlas-card [data-lesson]")
+        pg.wait_for_timeout(2000)
+        src = pg.evaluate("() => document.getElementById('atlas-reader-frame').src")
+        check("embed=1" in src and src.endswith("#sec-6"), "the reader opens at the section, embed query first")
+        # the canon URL is absolute to production, so the iframe is NOT this base.
+        # Ask THIS origin for the lesson instead, or the check would only ever
+        # describe prod and would pass before the anchors were deployed.
+        lesson = base.rsplit("/atlas", 1)[0] + "/curriculum/observer/the-system-in-crisis.php?embed=1&host=atlas"
+        body = pg.request.get(lesson).text()
+        m = re.search(r'id="sec-6">(.{0,60})', body)
+        check(bool(m), "the lesson on this origin carries the anchor")
+        check(bool(m) and "Information failure" in m.group(1), "the anchor is the passage that quotes that section")
+        check(pg.evaluate("""() => { const a = document.querySelector('#atlas-card a[href*="discord.php"]'); return !a || !a.hasAttribute('data-lesson'); }"""),
+              "the sign-in door is not treated as a lesson (it cannot render in the reader)")
+        ctx.close()
 
         # ---- keyboard travel -------------------------------------------------
         print("keyboard")

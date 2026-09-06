@@ -271,8 +271,12 @@
     h += objectBlock(n);
     if (n.canon && n.canon.length) {
       h += '<div class="atlas-canon"><div class="atlas-canon-label">In the Codex:</div>';
+      /* a lit section links at its anchor in the lesson (#sec-N, 1-based like
+         the source line's §N). A lesson that does not quote that section lands
+         at the top — safe everywhere, precise where the lesson declares it. */
+      var secHash = (hiSection === null || hiSection === undefined) ? "" : "#sec-" + (hiSection + 1);
       n.canon.forEach(function (c) {
-        h += '<a class="atlas-canon-link" data-lesson="1" href="' + esc(c.url) + '">' +
+        h += '<a class="atlas-canon-link" data-lesson="1" href="' + esc(c.url + secHash) + '">' +
           esc(c.title) + " &rarr;</a>";
       });
       h += "</div>";
@@ -318,7 +322,11 @@
   var reader = document.getElementById("atlas-reader");
   var readerFrame = document.getElementById("atlas-reader-frame");
   function openLesson(url) {
-    if (!reader || !readerFrame) { location.href = url; return; }
+    /* the section anchor rides at the END, after the embed query, or the frame
+       would ask for a page named "…php#sec-6?embed=1" and land nowhere */
+    var hash = "", hi = url.indexOf("#");
+    if (hi >= 0) { hash = url.slice(hi); url = url.slice(0, hi); }
+    if (!reader || !readerFrame) { location.href = url + hash; return; }
     /* remember WHICH lesson, so the door can point at it when the reader closes */
     var n = focusedId ? nodeById[focusedId] : null;
     lastRead = { nodeId: null, contentId: null };
@@ -329,7 +337,7 @@
     }
     /* host=atlas: the codex's closing CTA says "back to the Atlas", not "return
        to your board" — the board promise would be broken here */
-    readerFrame.src = url + (url.indexOf("?") === -1 ? "?" : "&") + "embed=1&host=atlas";
+    readerFrame.src = url + (url.indexOf("?") === -1 ? "?" : "&") + "embed=1&host=atlas" + hash;
     reader.removeAttribute("hidden");
   }
   /* the lesson's own "Done reading" CTA calls parent.__odClose() — closing
@@ -351,10 +359,6 @@
   if (card) {
     card.addEventListener("click", function (e) {
       if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) return;
-      /* ONLY real lesson links open in the reader (2026-09-06). The class is
-         shared with the sign-in door and the last-live link; intercepting those
-         put Discord's login and YouTube inside the codex iframe, where neither
-         renders — a blank panel with no error. A link now says what it is. */
       var a = e.target && e.target.closest ? e.target.closest("[data-lesson]") : null;
       if (a) { e.preventDefault(); openLesson(a.getAttribute("href")); }
     });

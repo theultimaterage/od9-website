@@ -50,6 +50,19 @@ function codex_render(array $L): void {
     $h  = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
     $mt = fn(string $rel) => @filemtime(__DIR__ . '/' . $rel) ?: '1';  // rel from curriculum/
     $cssV  = $mt('../css/codex.css');
+    /* SECTION ANCHORS (2026-09-06): a canon block may name the manifesto
+       section it is drawn from — ["p" => "…", "sec" => 6] — and gets
+       id="sec-6". The Atlas links a section satellite straight at it; a
+       section this lesson does not quote lands at the top instead, so the
+       link is safe against every lesson, declared or not. */
+    $anch = static function (array $b): string {
+        return isset($b['sec']) ? ' id="sec-' . (int)$b['sec'] . '"' : '';
+    };
+    $slug = static function (string $s): string {
+        $t = html_entity_decode(strip_tags($s), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $t = strtolower((string)preg_replace('/[^A-Za-z0-9]+/', '-', $t));
+        return trim($t, '-') ?: 'part';
+    };
     $logoV = $mt('../images/board/od9-logomark.png');
     $arcV  = $mt('../images/board/guides/archivist.jpg');
     $cover = (string)($L['cover'] ?? '');
@@ -98,14 +111,14 @@ function codex_render(array $L): void {
   <?php endif; ?>
 
   <?php if (!empty($L['canon'])): ?>
-  <section class="canon">
+  <section class="canon" id="canon">
     <?php foreach ($L['canon'] as $blk):
       if (isset($blk['preamble'])): ?>
-        <p class="canon-preamble"><?= $blk['preamble'] ?></p>
+        <p class="canon-preamble"<?= $anch($blk) ?>><?= $blk['preamble'] ?></p>
       <?php elseif (isset($blk['affirm'])): ?>
-        <div class="canon-affirm"><?= $blk['affirm'] ?></div>
+        <div class="canon-affirm"<?= $anch($blk) ?>><?= $blk['affirm'] ?></div>
       <?php elseif (isset($blk['principle'])): [$n, $name, $text, $gloss] = $blk['principle']; ?>
-        <div class="principle">
+        <div class="principle"<?= $anch($blk) ?>>
           <div class="n"><?= $h($n) ?></div>
           <div class="pbody">
             <div class="pname"><?= $name ?></div>
@@ -114,19 +127,19 @@ function codex_render(array $L): void {
           </div>
         </div>
       <?php elseif (isset($blk['p'])): ?>
-        <p class="canon-p<?= !empty($blk['lead']) ? ' lead' : '' ?>"><?= $blk['p'] ?></p>
+        <p class="canon-p<?= !empty($blk['lead']) ? ' lead' : '' ?>"<?= $anch($blk) ?>><?= $blk['p'] ?></p>
       <?php endif;
     endforeach; ?>
   </section>
   <?php endif; ?>
 
   <?php if (!empty($L['study'])): ?>
-  <section class="study">
+  <section class="study" id="study">
     <?php foreach ($L['study'] as $blk):
       if (isset($blk['label'])): ?>
         <div class="seg-label"><?= $blk['label'] ?></div>
       <?php elseif (isset($blk['h3'])): ?>
-        <h3><?= $blk['h3'] ?></h3>
+        <h3 id="<?= $slug($blk['h3']) ?>"><?= $blk['h3'] ?></h3>
       <?php elseif (isset($blk['p'])): ?>
         <p><?= $blk['p'] ?></p>
       <?php elseif (isset($blk['ul'])): ?>
