@@ -90,7 +90,12 @@
     }
 
     if (TL && TL.events && bar && range) {
-      days = Math.max(1, dayOf(TL.end));
+      // The scrubber's right edge is TODAY, computed here rather than baked
+      // into the map. TL.end is the last dated event (a deterministic build
+      // artifact); "now" is a render-time fact, and reading it from the JSON
+      // meant the timeline quietly stopped at whenever the map was last built.
+      var today = new Date().toISOString().slice(0, 10);
+      days = Math.max(1, dayOf(TL.end), dayOf(today));
       range.max = String(days); range.value = String(days);
       bar.removeAttribute("hidden");
       var pinged = false;
