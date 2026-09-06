@@ -272,7 +272,7 @@
     if (n.canon && n.canon.length) {
       h += '<div class="atlas-canon"><div class="atlas-canon-label">In the Codex:</div>';
       n.canon.forEach(function (c) {
-        h += '<a class="atlas-canon-link" href="' + esc(c.url) + '">' +
+        h += '<a class="atlas-canon-link" data-lesson="1" href="' + esc(c.url) + '">' +
           esc(c.title) + " &rarr;</a>";
       });
       h += "</div>";
@@ -290,7 +290,7 @@
     var btn = document.getElementById("atlas-card-close");
     if (btn) btn.addEventListener("click", closeCard);
     ping("card", { id: n.id, state: n.state, section: hiSection === null ? -1 : hiSection });
-    Array.prototype.forEach.call(card.querySelectorAll(".atlas-canon-link"), function (a) {
+    Array.prototype.forEach.call(card.querySelectorAll("[data-lesson]"), function (a) {
       a.addEventListener("click", function () { ping("codex", { id: n.id, href: (a.getAttribute("href") || "").slice(0, 120) }); });
     });
     Array.prototype.forEach.call(card.querySelectorAll(".atlas-onward-link"), function (a) {
@@ -351,7 +351,11 @@
   if (card) {
     card.addEventListener("click", function (e) {
       if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) return;
-      var a = e.target && e.target.closest ? e.target.closest(".atlas-canon-link") : null;
+      /* ONLY real lesson links open in the reader (2026-09-06). The class is
+         shared with the sign-in door and the last-live link; intercepting those
+         put Discord's login and YouTube inside the codex iframe, where neither
+         renders — a blank panel with no error. A link now says what it is. */
+      var a = e.target && e.target.closest ? e.target.closest("[data-lesson]") : null;
       if (a) { e.preventDefault(); openLesson(a.getAttribute("href")); }
     });
   }
