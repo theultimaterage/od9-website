@@ -42,6 +42,8 @@
   ],
   "phantom_table_baseline": [
     "api/v1/atlas-live.php:tt_lesson_state",
+    "api/v1/atlas-me.php:content_completion",
+    "api/v1/atlas-me.php:users",
     "api/v1/leaderboards.php:achievements",
     "api/v1/leaderboards.php:credit_transactions",
     "api/v1/leaderboards.php:think_tank_attendance",
