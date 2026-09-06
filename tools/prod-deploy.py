@@ -72,7 +72,13 @@ elif "--dry" not in sys.argv:
         if _script.startswith("/mnt/c/"):
             _script = "C:/" + _script[len("/mnt/c/"):]     # the Windows interpreter needs a Windows path
         print("=== Atlas browser checks (tools/atlas_checks.py) ===", flush=True)
-        _rc = subprocess.run([_py, _script]).returncode
+        # UTF-8 for the child, ALWAYS (2026-09-06): the checks print star glyphs
+        # and arrows in their labels, and a Windows child inherits a cp1252
+        # stdout when its output is a pipe — UnicodeEncodeError, which the gate
+        # reads as a failed check and aborts a healthy deploy. The script also
+        # guards its own stdout; this is the half that protects the NEXT script.
+        _cenv = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
+        _rc = subprocess.run([_py, _script], env=_cenv).returncode
         if _rc != 0:
             sys.exit("ABORT: Atlas browser checks failed (exit %d) — fix them, or --skip-atlas-checks with a reason in the commit" % _rc)
 
