@@ -13,6 +13,13 @@ file (--skip-atlas-checks bypasses; say why in the commit).
 
 Needs Playwright + Chromium: the bot repo's venv has them
 (C:/Users/Rage/IdeaProjects/OD9-Discord-Bot/venv/Scripts/python.exe).
+
+Hermetic: every page here swallows the beacon (api/v1/atlas-ping.php -> 204
+in the browser), so a check run never writes a line to the live event log —
+the first live run did, and the day's numbers began with twelve synthetic
+sessions. Against an https base one un-routed POST (sid "probecheck",
+props.probe = true, which tools/atlas_stats.py ignores) proves the real
+endpoint answers 204 through Cloudflare.
 Exit 0 = every check passed; 1 = a failure, listed; 2 = could not run.
 """
 from __future__ import annotations
@@ -46,6 +53,9 @@ def page(b, w=1440, h=900, errors=None, audio=False):
     pg = ctx.new_page()
     if errors is not None:
         pg.on("pageerror", lambda e: errors.append(str(e)[:200]))
+    # hermetic: the beacon never reaches the live log from a check (the beacon
+    # section registers its own capturing route on top of this one; later wins)
+    pg.route("**/api/v1/atlas-ping.php", lambda route, request=None: route.fulfill(status=204))
     return ctx, pg
 
 
@@ -185,6 +195,18 @@ def run(base: str) -> int:
         pg.wait_for_timeout(400)
         check(pg.evaluate("() => document.getElementById('atlas-tour-menu').className") == "open", "the Navigator opens the tour menu")
         ctx.close()
+
+        # ---- the real endpoint (live only) ------------------------------------
+        if base.startswith("https://"):
+            print("probe")
+            ctx, pg = page(b, errors=errors)
+            pg.goto(base + "?arrival=0", wait_until="load")
+            pg.wait_for_timeout(800)
+            pg.unroute("**/api/v1/atlas-ping.php")          # this one request goes to the real endpoint
+            st = pg.evaluate("""() => fetch("api/v1/atlas-ping.php", {method: "POST", headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({sid: "probecheck", event: "arrive", vp: "desktop", props: {probe: true, from: "direct"}})}).then(r => r.status)""")
+            check(st == 204, f"probe: the live endpoint accepts a real POST through Cloudflare (got {st})")
+            ctx.close()
         b.close()
 
     check(not errors, "no page errors anywhere" + (f": {errors[:2]}" if errors else ""))
