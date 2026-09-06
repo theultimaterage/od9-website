@@ -237,6 +237,10 @@
     }
     if (n.id === liveNodeId) h += '<span class="atlas-chip atlas-chip-live">&#9679; LIVE LESSON</span>';
     h += "</div>";
+    if (n.forge) {
+      h += '<p class="atlas-note">The forge is where a chapter gets reforged: this one is preached live on Sunday at 4 PM CT, ' +
+        'reviewed, and then struck into canon \u2014 a lesson you can read.</p>';
+    }
     if (n.id === liveNodeId && liveInfo && liveInfo.last_live && liveInfo.last_live.url) {
       h += '<p class="atlas-note"><a class="atlas-canon-link" href="' + esc(liveInfo.last_live.url) +
         '" target="_blank" rel="noopener">Last live: ' + esc(liveInfo.last_live.title || "watch") + " &rarr;</a></p>";
@@ -1128,6 +1132,9 @@
     }
   }
   if (tourBtn && tourMenu) {
+    var lead = document.createElement("li"); lead.className = "lead";
+    lead.textContent = "A guided flight down one route of the book. The camera lands on each chapter in order and the caption gives its thesis; open any stop, or keep flying. Arrows skip \u00B7 space pauses \u00B7 Esc leaves.";
+    tourMenu.appendChild(lead);
     DATA.arcs.forEach(function (a) {
       var li = document.createElement("li"); li.setAttribute("role", "option");
       li.innerHTML = "<b>Arc " + esc(a.num) + "</b><span>" + esc(a.name) + "</span><small>" + a.route.length + " stops \u00B7 ~" + Math.round(a.route.length * (TOUR_FLY + TOUR_HOLD) / 1000) + " s</small>";
@@ -1610,7 +1617,7 @@
     tlStat.textContent = s;
     tlBar.classList.toggle("past", !!asOf);
   }
-  function tlStop() { if (tlTimer) { clearInterval(tlTimer); tlTimer = null; if (tlPlay) tlPlay.innerHTML = "&#9654; Forge"; } }
+  function tlStop() { if (tlTimer) { clearInterval(tlTimer); tlTimer = null; if (tlPlay) tlPlay.innerHTML = "&#9654; Replay history"; } }
   if (TL && tlBar && tlRange) {
     tlDays = Math.max(1, tlDayOf(TL.end));
     tlRange.max = String(tlDays); tlRange.value = String(tlDays);
@@ -1627,7 +1634,8 @@
       if (tlTimer) { tlStop(); return; }
       ping("timeline", { how: "play" });
       var day = 0, lastCanon = -1, step = Math.max(1, Math.round(tlDays / 200));
-      tlPlay.innerHTML = "&#10074;&#10074; Forge";
+      tlPlay.innerHTML = "&#10074;&#10074; Replaying";
+      if (typeof guideSpeak === "function") guideSpeak("archivist", true);   /* the Archivist narrates the replay in the stage */
       tlTimer = setInterval(function () {
         day += step;
         if (day >= tlDays) { tlRange.value = String(tlDays); applyAsOf(null); tlStop(); if (window.AtlasSound) window.AtlasSound.reveal(); return; }
@@ -1654,10 +1662,11 @@
       act: function () { if (tourBtn && tourMenu && !tourMenu.classList.contains("open")) tourBtn.click(); }
     },
     archivist: {
-      who: "The Archivist", go: "Play the forge",
+      who: "The Archivist", go: "Replay the history",
       line: function () {
         var c = tlCounts();
-        return "Every star has a date. I keep them. " + c.canon + " chapters are canon; drag the bar and watch the book get written.";
+        return tlTimer ? "Watch the book get written: every chapter lights up on the day it was preached, first publish to now, in eight seconds."
+                       : "Every star has a date. I keep them. " + c.canon + " chapters are canon; drag the bar and watch the book get written.";
       },
       act: function () {
         if (tlBar) tlBar.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "center" });

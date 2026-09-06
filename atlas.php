@@ -85,6 +85,7 @@ $atlas_og_mode  = isset($_GET['og']);
   #atlas-tour-menu li b{font-family:'Rajdhani',sans-serif;color:var(--zone-cyan);font-weight:600;min-width:3.2rem}
   #atlas-tour-menu li small{margin-left:auto;opacity:0.6;font-size:0.72rem;white-space:nowrap}
   #atlas-tour-menu li:hover,#atlas-tour-menu li.active{background:rgba(122,0,255,0.25);color:#fff}
+  #atlas-tour-menu li.lead,#atlas-tour-menu li.lead:hover{display:block;cursor:default;background:none;color:var(--chrome);opacity:0.85;font-size:0.78rem;line-height:1.4;max-width:340px;border-bottom:1px solid rgba(122,0,255,0.35);margin-bottom:0.25rem;padding-bottom:0.55rem}
   #atlas-tour-cap{position:absolute;left:16px;bottom:16px;z-index:4;max-width:min(460px,70%);background:rgba(10,10,10,0.82);border:1px solid var(--zone-violet);border-left:3px solid var(--zone-cyan);border-radius:6px;padding:0.8rem 1rem 0.7rem;opacity:0;transform:translateY(8px);transition:opacity 0.35s,transform 0.35s;pointer-events:none}
   #atlas-tour-cap.on{opacity:1;transform:none;pointer-events:auto}
   #atlas-tour-cap .e{font-family:'Rajdhani',sans-serif;letter-spacing:2px;font-size:0.74rem;color:var(--zone-cyan);text-transform:uppercase}
@@ -240,10 +241,10 @@ $atlas_og_mode  = isset($_GET['og']);
 </header>
 
 <div class="atlas-legend">
-  <span><span class="atlas-dot atlas-dot-raw"></span>RAW</span>
-  <span><span class="atlas-dot atlas-dot-forge"></span>IN THE FORGE</span>
-  <span><span class="atlas-dot atlas-dot-preached"></span>PREACHED</span>
-  <span><span class="atlas-dot atlas-dot-canon"></span>CANON</span>
+  <span title="Not preached yet: the chapter as the book first published it"><span class="atlas-dot atlas-dot-raw"></span>RAW</span>
+  <span title="The forge is where a chapter gets reforged: preached live on Sunday, reviewed, then struck into canon"><span class="atlas-dot atlas-dot-forge"></span>IN THE FORGE</span>
+  <span title="Preached live; the review into canon is still ahead"><span class="atlas-dot atlas-dot-preached"></span>PREACHED</span>
+  <span title="Reviewed and canon: a lesson you can read now"><span class="atlas-dot atlas-dot-canon"></span>CANON</span>
   <button id="atlas-live-chip" type="button">&#9679; LIVE</button>
   <span class="atlas-tour-wrap">
     <button id="atlas-tour" type="button" aria-haspopup="listbox" aria-expanded="false">&#9654; Take the tour</button>
@@ -316,7 +317,7 @@ $atlas_og_mode  = isset($_GET['og']);
   </div>
 </div>
 <div id="atlas-timeline" class="atlas-timeline" hidden>
-  <button type="button" id="atlas-tl-play" aria-label="Play the forge from the first publish to now">&#9654; Forge</button>
+  <button type="button" id="atlas-tl-play" aria-label="Replay the book's history: every chapter lighting up from the first publish to now, in eight seconds" title="Replay the book's history: every chapter lighting up from the first publish to now, in eight seconds">&#9654; Replay history</button>
   <input type="range" id="atlas-tl-range" min="0" max="100" value="100" step="1" aria-label="As of date">
   <div class="tl-label"><span id="atlas-tl-date">now</span><span id="atlas-tl-stat"></span></div>
   <button type="button" id="atlas-tl-now">now</button>

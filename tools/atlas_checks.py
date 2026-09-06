@@ -116,7 +116,8 @@ def run(base: str) -> int:
         check(pg.evaluate("() => document.getElementById('atlas-tour-cap').className") == "", "Escape leaves")
         pg.click("#atlas-tour")
         pg.wait_for_timeout(300)
-        check(len(pg.evaluate(LINES, "#atlas-tour-menu li")) == 5, "the menu lists four routes + all")
+        check(len(pg.evaluate(LINES, "#atlas-tour-menu li[role=option]")) == 5, "the menu lists four routes + all")
+        check("guided flight" in pg.evaluate(LINES, "#atlas-tour-menu li.lead")[0], "the menu says what a tour is")
         ctx.close()
 
         # ---- live as an event (mocked endpoint) -------------------------------
@@ -143,6 +144,8 @@ def run(base: str) -> int:
         pg.goto(base + "?arrival=0", wait_until="load")
         pg.wait_for_timeout(1800)
         check(pg.evaluate("() => !document.getElementById('atlas-timeline').hasAttribute('hidden')"), "timeline bar is shown")
+        check("Replay history" in pg.evaluate("() => document.getElementById('atlas-tl-play').textContent"), "the replay button says what it does")
+        check("reforged" in pg.evaluate("() => document.querySelector('.atlas-legend [title*=forge]').title"), "the forge chip defines the forge")
         pg.evaluate("(v) => { const r = document.getElementById('atlas-tl-range'); r.value = String(v); r.dispatchEvent(new Event('input', {bubbles: true})); }", 4)
         pg.wait_for_timeout(200)
         counts = pg.evaluate("() => window.__atlas.stateCounts()")
