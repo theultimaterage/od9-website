@@ -54,7 +54,7 @@ if not any(a == "--config" or a.startswith("--config=") for a in sys.argv[1:]):
 # checks run before the engine (tools/atlas_checks.py — Playwright from the
 # bot repo's venv, against local Apache like the render gate). Skipped on
 # --dry. --skip-atlas-checks bypasses; say why in the commit.
-_ATLAS_PATHS = ["atlas.php", "js/atlas.js", "js/atlas-sound.js", "api/v1/atlas-live.php",
+_ATLAS_PATHS = ["atlas.php", "js/atlas.js", "js/atlas-sound.js", "api/v1/atlas-live.php", "api/v1/atlas-ping.php",
                 "data/manifesto-map.json", "data/atlas-objects.json", "audio/atlas", "images/atlas"]
 if "--skip-atlas-checks" in sys.argv:
     sys.argv.remove("--skip-atlas-checks")
