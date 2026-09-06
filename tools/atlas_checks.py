@@ -30,6 +30,10 @@ import json
 import sys
 import zoneinfo
 
+# Windows consoles default to cp1252; the checks print the page's own glyphs (the chip's diamond)
+# and the deploy gate runs this without PYTHONIOENCODING — one crash on print aborted a deploy (2026-09-06).
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 try:
     from playwright.sync_api import sync_playwright
 except ImportError:  # pragma: no cover
