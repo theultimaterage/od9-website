@@ -4,19 +4,20 @@
   "site_url": "https://offda9.com",
   "local_base_url": "http://localhost/od9",
   "_local_base_url_note": "Arms the pre-deploy LOCAL render gate (added 2026-08-27, the day the engine's WSL Host-header fix made that gate actually work — before that it silently skipped itself on this workstation). All six smoke tests are same-host page renders, so all six run locally; a runtime fatal in any of them now stops the deploy BEFORE prod instead of being discovered by prod smoke after the sync.",
-
   "deploy_enabled": true,
   "_deploy_enabled_note": "Enabled 2026-08-11 after the --dry diff was reviewed line by line. That review was not a formality: it caught that api/drip/weekly_lovelogic_sender.php (cron-driven, Mondays 9 AM) was NEWER ON PROD than in the repo, so deploying would have reverted a live weekly broadcast to a stale build using the wrong PHP interpreter. Fixed in 5b023d1 before enabling. The diff was also cut from 22 creates / 16 changes to 16 / 15 by removing five root-level duplicates of live senders; of the 15 remaining changes, 13 are prod-side CRLF being normalized to LF (verified zero real content difference with --strip-trailing-cr) and 2 are repo-ahead comment updates.",
-
   "ssh": {
     "host": "72.167.54.213",
     "user": "offda9",
     "key": "~/.ssh/id_rsa_automation",
     "remote_base": "/home/offda9",
-    "timeouts": { "ssh": 120, "tar": 600, "rsync": 900 }
+    "timeouts": {
+      "ssh": 120,
+      "tar": 600,
+      "rsync": 900
+    }
   },
   "_topology_note": "Connects AS the owning account. The retired tools/deploy.py SCP'd each file to /tmp and sudo-installed it as ultimaterage because 'the SSH user cannot write offda9's web root directly' — that is obsolete: /home/offda9/.ssh already holds an automation key, both ~/.ssh/id_rsa_automation and ~/.ssh/freshthaband_key authenticate directly as offda9@, the account owns its writable docroot, and rsync is present. So od9 needs NO engine changes; plain rsync-as-owner works exactly like the platform repos.",
-
   "remove_remote": [
     "public_html/api/drip/processor.php",
     "public_html/customer/account.php",
@@ -86,7 +87,6 @@
   ],
   "_remove_remote_note": "The customer/ portal was five 6-line wrappers that require_once files from /home/freshthaband/public_html/shared-platform/. offda9 cannot read another cPanel account's home, so every one of them returned HTTP 500 to any visitor — verified 2026-09-01, all four reachable URLs. They only ever worked while od9 lived inside the freshthaband account, and cross-account filesystem includes cannot be made to work; if od9 ever wants a customer portal it needs a real design (it is already a platform tenant at od9.freshthaplatform.com). Nothing linked, routed or sitemapped them. Deleted from the repo in the same change. Paths are relative to ssh.remote_base (/home/offda9).",
   "_remove_remote_note_2026_09_01": "The next 59 came out of the docroot-vcs-drift triage. (1) data/subscribers.txt served HTTP 200 to anyone who asked, with 11 lines holding 9 real subscriber names and email addresses, since February — no code reads or writes it, and the .htaccess is deliberately narrow on .txt because the site serves llms.txt and robots.txt. The 403 on data/*.json that made the directory look protected turned out to be a CLOUDFLARE rule, not ours, which is exactly the trap that hid the webroot source-disclosure class in August: 'it returns 403' is not the same as 'we deny it'. A committed data/.htaccess now denies the directory at the origin, and this removes the file. (2) public/ was a COMPLETE duplicate of an older OD9 site — 55 files, publicly reachable at /public/ (200), with its own robots.txt and sitemap.xml, and a second copy of the customer portal the five entries above already deleted. Every one of its pages exists at the docroot as the live version. (3) api/agent/test.{json,txt} are 15- and 6-byte scratch files ('hello'), and index.html is a January static page orphaned by index.php. Nothing links to, routes to or sitemaps any of them. All 59 were archived on prod BEFORE removal — /home/offda9/_od9_removed_before_triage_20260901_191014.tar.gz, 59 entries verified equal to the 59-line list that drives these paths — because a backup that cannot prove it captured what the delete removes is not a backup.",
-
   "mappings": [
     {
       "local": "./",
@@ -109,7 +109,6 @@
         "__pycache__/",
         "*.py",
         "*.pyc",
-
         "AGENTS.md",
         "CLAUDE.md",
         "OD9_AUDIT_INVENTORY.md",
@@ -119,7 +118,6 @@
         "_ztrans_dest.html",
         "dashboard/_board_preview.php",
         "dashboard/_proto-console.php",
-
         "*.config.php",
         "config/database.php",
         "config/mail.php",
@@ -128,15 +126,12 @@
         "dashboard/includes/db.php",
         "founding_patron_launch_sender.php",
         ".htpasswd",
-
         "check_db.php",
         "check-admin.php",
-
         "php.ini",
         ".user.ini",
         ".env",
         ".env.*",
-
         "*.bak",
         "*.bak.*",
         "*.bak-*",
@@ -146,7 +141,6 @@
       ]
     }
   ],
-
   "skip_always": {
     "_doc": "Human-readable summary of the exclude list above — why each class never ships.",
     "credentials": "config/database.php, config/mail.php, config/sp-credentials.php, dashboard/includes/config.php and the *.config.php glob (platform.config.php, mail.config.php, secrets.config.php, api/v1/pulse_secret.config.php). Several of these are TRACKED IN THE REPO with local-dev values AND live on prod with real credentials — deploying the repo copy would overwrite prod's working config. The *.config.php glob deliberately does NOT match *.config.example.php, so the examples still ship.",
@@ -157,7 +151,6 @@
     "legacy_never_deploy": "dashboard/includes/db.php, founding_patron_launch_sender.php and .htpasswd are carried over from the retired tools/deploy.py's `never_deploy` list. The first --dry run of this config would have shipped all three — porting that list is not optional when replacing a deployer.",
     "diagnostics": "check_db.php and check-admin.php are DB/admin diagnostics that the first dry run would have newly created in a public webroot — the same class as the _phpinfo.php found serving on freshthaband.com. They stay local."
   },
-
   "pre_deploy": {
     "_note": "Brought to gate parity 2026-09-01, following this block's own instruction: each gate was RUN against od9 first, and is enabled only where it proved meaningful and either passed or had its findings fixed. od9 had been the least-gated repo in the fleet while carrying a database-backed dashboard, Discord OAuth and a drip mailer.",
     "lint_php": true,
@@ -181,43 +174,121 @@
         "m44.html": "A 2.4MB standalone page (MONWELL 44) carrying its own `robots: noindex, nofollow`. Nothing links to it and it is in no sitemap, which is the shape of a deliberately unlisted page shared by direct link — so it is allowed rather than removed: deleting it would break a URL somebody was given, and that is not a call a cleanup should make silently."
       }
     },
-    "bootstrap_compliance": { "enabled": false },
+    "bootstrap_compliance": {
+      "enabled": false
+    },
     "guardrail_lint": true,
     "deploy_coverage": true,
     "schema_usage": true,
     "release_warden": true,
-
     "_first_run_findings": "guardrail_lint reported 20 errors: five 6-line customer/ wrappers require_once-ing files from /home/freshthaband — another cPanel account offda9 cannot read, so all four reachable URLs returned HTTP 500. Deleted (see remove_remote). schema_usage found 5 phantom columns, every one in api/drip/processor.php: od9_drip_log had no step_id/email_to, od9_drip_enrollments had no completed_at, both its UPDATEs keyed on a non-existent `id` instead of enrollment_id, and the customers fallback filtered on a discord_user_id that table does not have. The drip mailer could not log a send, advance a step, or complete a sequence. All fixed in the same change.",
-
     "brand_lint": false,
     "_brand_lint_why_off": "brand-lint encodes the FRESH palette (#D4AF37 gold on #0A0A0A, Playfair/Inter). od9 is a different brand with its own visual language, so the gate would report hundreds of 'violations' that are correct design. Turning it on would need an od9 palette definition first.",
-
     "_cron_contract_superseded": "This block previously read `\"cron_contract\": false` with the reason: '`crontab -l` for offda9 is EMPTY and the repo has no cron/ directory — there is nothing for this gate to check, and an empty gate is a green light that means nothing.' Half of that is still true and half was a limitation of the linter, so both halves are recorded rather than deleted. The empty crontab is CONFIRMED (re-checked 2026-09-01: `no crontab for offda9`, and no VC'd crontab references od9's scripts). But 'nothing to check' was wrong: od9 has four CLI cron scripts under api/drip/, and the linter simply could not see them because it hardcoded <root>/crons. It is configurable now, so the gate is ON above and scans all four.",
     "_cron_contract_operational_finding": "RESOLVED 2026-09-01. This previously read: 'od9's drip scripts are scheduled NOWHERE — offda9's crontab is empty, and the only OD9 drip line in the fleet is COMMENTED OUT in crontab.freshthaplatform.txt pointing at a different script in the engine.' All true. api/drip/sender.php and api/drip/event_processor.php now run every five minutes from tools/crontab.offda9.txt (committed, so cron-contract-lint's crontab cross-reference is live for this repo), verified firing clean. The queue was measured empty BEFORE scheduling — 0 enrollments, 0 drip_log rows — because a five-minute cron aimed at a stale queue mails every overdue step at once to real people.",
     "_retired_processor": "api/drip/processor.php was RETIRED in the same change and is removed from prod via remove_remote. It duplicated sender.php and could never have run: four phantom columns in its main SELECT. It was briefly scheduled here on 2026-09-01, which is how that was proven rather than argued. Nothing was lost — its one distinct behaviour, resolving a recipient from od9_members, already happens upstream in event_processor.php at enrolment time and is stored on the row sender.php reads. Kept in git history, not in the tree.",
-
     "_orphan_scan_why_absent": "od9 defines ZERO PHP classes (243 files, all procedural), and orphan-caller-scan checks for zero-caller classes and methods. It would scan nothing and report clean — the vacuous-pass shape this ecosystem keeps getting bitten by.",
-
     "_phpunit_why_absent": "od9 has no test suite. The engine's phpunit gate refuses on 0 tests executed rather than passing vacuously, so enabling it would simply block every deploy. A suite is the real prerequisite."
   },
-
   "post_deploy_smoke_tests": [
-    { "url": "https://offda9.com/",            "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"], "must_contain": ["Off Da Nine"] },
-    { "url": "https://offda9.com/about.php",   "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] },
-    { "url": "https://offda9.com/music.php",   "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] },
-    { "url": "https://offda9.com/join.php",    "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] },
-    { "url": "https://offda9.com/library.php", "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] },
-    { "url": "https://offda9.com/support.php", "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"] },
-    { "url": "https://offda9.com/atlas",       "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"], "must_contain": ["Atlas"],
-      "_note": "CLEAN-URL PIN, not a page pin: /atlas works only through the .htaccess RewriteRule, and this URL is printed in a published YouTube description. The 2026-08-27 catch-up deploy shipped a rule-less .htaccess over prod's hotfixed one and this link 404'd for ~20 minutes while smoke passed 6/6 — because every test pinned a real file and none pinned a REWRITE. An .htaccess regression must fail the deploy, not be discovered by a viewer." },
-    { "url": "https://offda9.com/epk",         "expect_status": [200], "must_not_contain": ["Fatal error", "Parse error"], "must_contain": ["Press Kit"],
-      "_note": "REDIRECT PIN, followed end-to-end: /epk on the brand domain 302s to od9.freshthaplatform.com/epk, the platform-rendered press kit (Phase 24B). follow_redirects is the default, so this asserts the WHOLE chain — the .htaccess rule exists AND the redirect target actually renders a press kit. Both custom domains 404'd on /epk until 2026-08-27 while the platform subdomains served fine; a brand-domain URL someone puts on a flyer must not depend on nobody testing it." }
+    {
+      "url": "https://offda9.com/",
+      "expect_status": [
+        200
+      ],
+      "must_not_contain": [
+        "Fatal error",
+        "Parse error"
+      ],
+      "must_contain": [
+        "Off Da Nine"
+      ]
+    },
+    {
+      "url": "https://offda9.com/about.php",
+      "expect_status": [
+        200
+      ],
+      "must_not_contain": [
+        "Fatal error",
+        "Parse error"
+      ]
+    },
+    {
+      "url": "https://offda9.com/music.php",
+      "expect_status": [
+        200
+      ],
+      "must_not_contain": [
+        "Fatal error",
+        "Parse error"
+      ]
+    },
+    {
+      "url": "https://offda9.com/join.php",
+      "expect_status": [
+        200
+      ],
+      "must_not_contain": [
+        "Fatal error",
+        "Parse error"
+      ]
+    },
+    {
+      "url": "https://offda9.com/library.php",
+      "expect_status": [
+        200
+      ],
+      "must_not_contain": [
+        "Fatal error",
+        "Parse error"
+      ]
+    },
+    {
+      "url": "https://offda9.com/support.php",
+      "expect_status": [
+        200
+      ],
+      "must_not_contain": [
+        "Fatal error",
+        "Parse error"
+      ]
+    },
+    {
+      "url": "https://offda9.com/atlas",
+      "expect_status": [
+        200
+      ],
+      "must_not_contain": [
+        "Fatal error",
+        "Parse error"
+      ],
+      "must_contain": [
+        "Atlas"
+      ],
+      "_note": "CLEAN-URL PIN, not a page pin: /atlas works only through the .htaccess RewriteRule, and this URL is printed in a published YouTube description. The 2026-08-27 catch-up deploy shipped a rule-less .htaccess over prod's hotfixed one and this link 404'd for ~20 minutes while smoke passed 6/6 — because every test pinned a real file and none pinned a REWRITE. An .htaccess regression must fail the deploy, not be discovered by a viewer."
+    },
+    {
+      "url": "https://offda9.com/epk",
+      "expect_status": [
+        200
+      ],
+      "must_not_contain": [
+        "Fatal error",
+        "Parse error"
+      ],
+      "must_contain": [
+        "Press Kit"
+      ],
+      "_note": "REDIRECT PIN, followed end-to-end: /epk on the brand domain 302s to od9.freshthaplatform.com/epk, the platform-rendered press kit (Phase 24B). follow_redirects is the default, so this asserts the WHOLE chain — the .htaccess rule exists AND the redirect target actually renders a press kit. Both custom domains 404'd on /epk until 2026-08-27 while the platform subdomains served fine; a brand-domain URL someone puts on a flyer must not depend on nobody testing it."
+    }
   ],
   "_smoke_note": "must_contain 'Off Da Nine' on the apex proves we reached OD9 and not a parked domain or a misrouted edge — status+200 alone cannot tell those apart.",
-
   "backup": {
     "prefix": "_backup_pre_sync_od9_web_",
-    "include": ["public_html"],
+    "include": [
+      "public_html"
+    ],
     "exclude": [
       "public_html/guide-videos",
       "public_html/library",
@@ -227,11 +298,34 @@
     "_exclude_note": "Large out-of-band media and runtime dirs are omitted from the pre-deploy tar to keep it small and fast. They are also never written by the deploy (excluded from the mapping, and rsync runs without --delete), so nothing that changes goes un-backed-up.",
     "retention_days": 30
   },
-
   "log": {
     "path": "tools/deploy-log.jsonl",
     "runs_dir": "tools/deploy-runs"
   },
-
-  "_provenance": "Authored 2026-08-11 as part of the od9 repo↔prod reconciliation. Replaces the 234-line repo-local tools/deploy.py, whose web_src pointed at a public/ directory that no longer exists (so it was already broken). RETIRE deploy.py only after a --dry run here is reviewed and deploy_enabled is flipped. Two capabilities of the old deployer are NOT yet in the canonical engine and remain open: Cloudflare cache purge (cf_zone_id/cf_api_token) and opcache reset."
+  "_provenance": "Authored 2026-08-11 as part of the od9 repo↔prod reconciliation. Replaces the 234-line repo-local tools/deploy.py, whose web_src pointed at a public/ directory that no longer exists (so it was already broken). RETIRE deploy.py only after a --dry run here is reviewed and deploy_enabled is flipped. Two capabilities of the old deployer are NOT yet in the canonical engine and remain open: Cloudflare cache purge (cf_zone_id/cf_api_token) and opcache reset.",
+  "post_deploy": {
+    "cloudflare_purge": {
+      "_note": "Purge what the deploy actually sent. Added 2026-09-06 after a js/atlas-timeline.js deploy passed 8/8 smoke while Cloudflare served the pre-deploy file for hours (cf-cache-status HIT, max-age=2678400 = 31 days). Secrets stay OUT of this file — it is tracked in git — so both values are read from the gitignored tools/prod-deploy-config.json.",
+      "enabled": true,
+      "base_url": "https://offda9.com",
+      "zone_id_from": "prod-deploy-config.json:cf_zone_id",
+      "api_token_from": "prod-deploy-config.json:cf_api_token",
+      "extensions": [
+        ".js",
+        ".css",
+        ".json",
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".gif",
+        ".svg",
+        ".webp",
+        ".ico",
+        ".woff",
+        ".woff2",
+        ".mp4",
+        ".webm"
+      ]
+    }
+  }
 }
