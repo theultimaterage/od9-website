@@ -196,6 +196,28 @@ def run(base: str) -> int:
                 check(pg.evaluate("() => window.__atlas.me().read_total") == 2, "member: the page holds the constellation")
             ctx.close()
 
+        # ---- pinch release (the beacon found this one in the wild) ------------
+        print("pinch")
+        ctx, pg = page(b, 390, 844, errors=errors)
+        pg.goto(base + "?arrival=0", wait_until="load")
+        pg.wait_for_timeout(1500)
+        perr: list = []
+        pg.on("pageerror", lambda e: perr.append(str(e)[:160]))
+        pg.evaluate("""() => {
+          const c = document.querySelector("#atlas-stage canvas");
+          const ev = (t, id, x, y) => c.dispatchEvent(new PointerEvent(t, {pointerId: id, clientX: x, clientY: y, bubbles: true, pointerType: "touch"}));
+          c.setPointerCapture = () => {};                 /* synthetic ids cannot be captured */
+          ev("pointerdown", 1, 100, 300);
+          ev("pointerdown", 2, 200, 400);                 /* pinch begins */
+          ev("pointermove", 2, 210, 410);
+          ev("pointerup",   1, 100, 300);                 /* one finger leaves, one stays */
+          for (let i = 0; i < 6; i++) ev("pointermove", 2, 220 + i * 8, 420 + i * 4);
+          ev("pointerup",   2, 260, 440);
+        }""")
+        pg.wait_for_timeout(400)
+        check(not perr, "pinch: releasing one finger of a pinch does not throw" + (f" ({perr[0]})" if perr else ""))
+        ctx.close()
+
         # ---- the beacon ------------------------------------------------------
         print("beacon")
         sent: list = []

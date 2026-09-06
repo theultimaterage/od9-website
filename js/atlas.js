@@ -451,6 +451,7 @@
       return;
     }
     var dx = e.clientX - prev[0], dy = e.clientY - prev[1];
+    if (!downAt) downAt = [e.clientX, e.clientY];   /* no anchor is a new anchor, never a throw */
     if (Math.abs(e.clientX - downAt[0]) + Math.abs(e.clientY - downAt[1]) > 6) dragging = true;
     if (dragging) {
       target.x -= dx / cam.z; target.y -= dy / cam.z;
@@ -461,6 +462,17 @@
   function endPointer(e) {
     delete pointers[e.pointerId];
     pinchD = 0;
+    /* PINCH RELEASE (2026-09-06, found by the beacon: 87 errors in one phone
+       session): lifting one finger of a pinch used to null the anchor while
+       the other finger was still down, so the next move threw and the map
+       froze until both fingers left. The gesture continues — re-anchor on the
+       finger still down, and do not read the release as a tap. */
+    var rest = Object.keys(pointers);
+    if (rest.length) {
+      var still = pointers[rest[0]];
+      if (still) { downAt = [still[0], still[1]]; dragging = true; }
+      return;
+    }
     if (!dragging && downAt) {
       var sh = hitSection(e);
       if (sh) { focusNode(sh.n.id, true, sh.si); }
