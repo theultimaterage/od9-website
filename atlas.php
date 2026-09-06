@@ -161,6 +161,13 @@ $atlas_og_mode  = isset($_GET['og']);
     #atlas-guide-say{left:10px;right:10px;top:auto;bottom:62px;max-width:none;transform:translateY(6px)}
     #atlas-guide-say.on{transform:none}
   }
+  /* keyboard travel: the cursor's chip, and a focus ring the canvas never had */
+  #atlas-canvas:focus{outline:none}
+  #atlas-canvas:focus-visible{outline:2px solid var(--zone-cyan);outline-offset:-3px}
+  #atlas-kb{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:5;display:none;max-width:min(560px,92%);background:rgba(10,10,10,0.92);border:1px solid var(--zone-violet);border-radius:6px;padding:0.4rem 0.9rem;font-family:'Exo 2',sans-serif;font-size:0.88rem;color:#fff;line-height:1.35;text-align:center;pointer-events:none}
+  #atlas-kb.on{display:block}
+  #atlas-kb b{font-family:'Rajdhani',sans-serif;letter-spacing:1.5px;color:var(--zone-cyan);font-weight:600;margin-right:0.4rem}
+  #atlas-kb .k{display:block;font-family:'Rajdhani',sans-serif;letter-spacing:1.5px;font-size:0.7rem;text-transform:uppercase;color:var(--chrome);opacity:0.75;margin-top:3px}
   #atlas-arrival-hint{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:3;font-family:'Rajdhani',sans-serif;letter-spacing:2px;font-size:0.78rem;text-transform:uppercase;color:var(--chrome);opacity:0;transition:opacity 0.6s;pointer-events:none;background:rgba(10,10,10,0.55);padding:0.25rem 0.7rem;border-radius:3px}
   #atlas-arrival-hint.on{opacity:0.85}
   #atlas-card{position:absolute;top:0;right:0;bottom:0;width:min(390px,92%);background:rgba(10,10,10,0.94);border-left:1px solid var(--zone-violet);padding:1.4rem 1.5rem;overflow-y:auto;transform:translateX(102%);transition:transform 0.25s ease;z-index:4}
@@ -257,7 +264,7 @@ $atlas_og_mode  = isset($_GET['og']);
     <button id="atlas-tour" type="button" aria-haspopup="listbox" aria-expanded="false">&#9654; Take the tour</button>
     <ul id="atlas-tour-menu" role="listbox" aria-label="Routes"></ul>
   </span>
-  <span class="atlas-hint">drag to pan · scroll or pinch to zoom · tap a chapter</span>
+  <span class="atlas-hint">drag to pan · scroll or pinch to zoom · tap a chapter · or tab to the map and travel with the arrow keys</span>
   <div class="atlas-find">
     <input id="atlas-find" type="search" placeholder="Find a chapter, an object, an idea…" aria-label="Find on the map" autocomplete="off">
     <ul id="atlas-find-results" class="atlas-find-results" role="listbox"></ul>
@@ -285,7 +292,8 @@ $atlas_og_mode  = isset($_GET['og']);
       $atlas_audio_mt = array_map('filemtime', glob(__DIR__ . '/audio/atlas/*.mp3') ?: []);
       $atlas_audio_v = $atlas_audio_mt ? max($atlas_audio_mt) : 1;   /* max([]) throws in PHP 8 */ ?>
 <div id="atlas-stage" role="application" aria-label="Zoomable map of the OD9 Manifesto" data-audio="<?= htmlspecialchars(implode(',', $atlas_audio_files)) ?>" data-audio-v="<?= (int)$atlas_audio_v ?>" data-plates-v="<?= @max(array_map('filemtime', glob(__DIR__ . '/images/atlas/plates/*.webp') ?: [])) ?: 1 ?>" data-sprites-v="<?= @max(array_map('filemtime', glob(__DIR__ . '/images/atlas/sprites/*.webp') ?: [])) ?: 1 ?>">
-  <canvas id="atlas-canvas"></canvas>
+  <canvas id="atlas-canvas" tabindex="0" role="application" aria-label="The manifesto map. Arrow keys travel between chapters, Enter opens one, Escape closes it, Home returns to the whole map."></canvas>
+  <div id="atlas-kb" aria-live="polite"></div>
 <?php if ($atlas_og_mode): ?>
   <div class="atlas-og-lockup">
     <div class="e">The Living Map of the OD9 Manifesto</div>

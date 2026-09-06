@@ -459,7 +459,58 @@
     }
     pointers[e.pointerId] = [e.clientX, e.clientY];
   });
+  /* KEYBOARD TRAVEL (2026-09-06): the canvas takes focus, the arrows travel
+     to the nearest node IN THAT DIRECTION. Spatial, not index order — on a map
+     "next chapter" means the one your eye would go to, and tab-order travel
+     would throw you across the sky. `focusedId` IS the cursor, so a click and
+     an arrow press continue each other instead of fighting. */
+  var kbOn = false, kbSaid = false, kbChip = document.getElementById("atlas-kb");
+  function kbShow(n) {
+    if (!kbChip) return;
+    kbChip.innerHTML = "<b>" + esc(n.num === "P" ? "PREFACE" : n.num ? "CH " + n.num : "BEYOND") + "</b>" +
+      esc(n.title) + '<span class="k">Enter opens \u00B7 arrows travel \u00B7 Home is the whole map \u00B7 Esc closes</span>';
+    kbChip.classList.add("on");
+  }
+  function kbHide() { kbOn = false; if (kbChip) kbChip.classList.remove("on"); }
+  function kbTravel(dx, dy) {
+    var from = focusedId ? nodeById[focusedId] : null;
+    var ox = from ? from.x : cam.x, oy = from ? from.y : cam.y;
+    var best = null, bestScore = Infinity, near = null, nearScore = Infinity;
+    DATA.nodes.concat(BEYOND).forEach(function (n) {
+      if (from && n.id === from.id) return;
+      var vx = n.x - ox, vy = n.y - oy;
+      var along = vx * dx + vy * dy;
+      if (along <= 0.5) return;                        /* behind us, or beside us */
+      var perp = Math.abs(vx * dy - vy * dx);
+      if (along + perp < nearScore) { nearScore = along + perp; near = n; }   /* the half-plane fallback */
+      if (perp > along * 2) return;                    /* outside the cone */
+      var score = along + perp * 1.5;
+      if (score < bestScore) { bestScore = score; best = n; }
+    });
+    var pick = best || near;                           /* the map's edge must not dead-end */
+    if (!pick) return;
+    kbOn = true;
+    /* the card is a detail pane: if it is open it FOLLOWS the cursor, or the
+       reader is left looking at one chapter while the brackets sit on another */
+    focusNode(pick.id, !!(card && card.classList.contains("open")));
+    kbShow(pick);
+    if (!kbSaid) { kbSaid = true; ping("keyboard", { id: pick.id }); }
+  }
+  var KB_DIR = { ArrowRight: [1, 0], ArrowLeft: [-1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+  canvas.addEventListener("keydown", function (e) {
+    if (arrival || tour) return;                       /* those own the arrows while they run */
+    var d = KB_DIR[e.key];
+    if (d) { kbTravel(d[0], d[1]); e.preventDefault(); return; }
+    if (e.key === "Enter" || e.key === " ") {
+      if (focusedId && nodeById[focusedId]) { kbOn = true; openCard(nodeById[focusedId]); }
+      e.preventDefault(); return;
+    }
+    if (e.key === "Home") { kbHide(); focusedId = null; fitAll(); e.preventDefault(); return; }   /* fitAll closes the card itself */
+    if (e.key === "Escape") { kbHide(); }               /* the document handler closes the card */
+  });
+  canvas.addEventListener("blur", kbHide);
   function endPointer(e) {
+    kbHide();                                          /* the pointer takes over the cursor */
     delete pointers[e.pointerId];
     pinchD = 0;
     /* PINCH RELEASE (2026-09-06, found by the beacon: 87 errors in one phone
@@ -1410,6 +1461,19 @@
         ctx.strokeStyle = rgba(col, 0.4 * zres * tw);
         ctx.lineWidth = Math.max(1, 1.8 * zres);
         ctx.beginPath(); ctx.arc(s[0], s[1], orb * 0.92, 0, 7); ctx.stroke();
+      }
+      if (kbOn && n.id === focusedId) {        /* the keyboard cursor: brackets, never a ring */
+        var kr = (zres > 0 ? orb * 1.3 : r * 3.0), arm = kr * 0.38;
+        ctx.strokeStyle = rgba(C.violet, 0.95); ctx.lineWidth = 2; ctx.lineCap = "round";
+        for (var qi = 0; qi < 4; qi++) {
+          var qx = qi < 2 ? -1 : 1, qy = (qi % 2) ? 1 : -1;
+          ctx.beginPath();
+          ctx.moveTo(s[0] + qx * kr, s[1] + qy * (kr - arm));
+          ctx.lineTo(s[0] + qx * kr, s[1] + qy * kr);
+          ctx.lineTo(s[0] + qx * (kr - arm), s[1] + qy * kr);
+          ctx.stroke();
+        }
+        ctx.lineCap = "butt";
       }
       if (meRead[n.id]) {                     /* yours: a white dashed ring, the member's own mark */
         ctx.strokeStyle = rgba("#FFFFFF", 0.8 * tw); ctx.lineWidth = 1.2; ctx.setLineDash([3, 3]);

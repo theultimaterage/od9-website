@@ -196,6 +196,37 @@ def run(base: str) -> int:
                 check(pg.evaluate("() => window.__atlas.me().read_total") == 2, "member: the page holds the constellation")
             ctx.close()
 
+        # ---- keyboard travel -------------------------------------------------
+        print("keyboard")
+        ctx, pg = page(b, errors=errors)
+        pg.goto(base + "?arrival=0#ch5", wait_until="load")
+        pg.wait_for_timeout(2000)
+        check(pg.evaluate("() => document.getElementById('atlas-canvas').getAttribute('tabindex')") == "0", "the map can be reached by tab")
+        pg.focus("#atlas-canvas")
+        pg.keyboard.press("ArrowRight")
+        pg.wait_for_timeout(900)
+        moved = pg.evaluate("() => location.hash")
+        check(moved not in ("", "#ch5"), f"ArrowRight travels off chapter 5 (to {moved or 'nowhere'})")
+        # textContent, not innerText: the key line is uppercased by CSS, and the
+        # check is about the words being there, not how they are cased on screen
+        chip = pg.evaluate("() => document.getElementById('atlas-kb').textContent")
+        check("Enter opens" in chip and "arrows travel" in chip, "the cursor chip names the keys")
+        check(pg.evaluate("() => document.getElementById('atlas-kb').className") == "on", "the cursor chip is shown")
+        pg.keyboard.press("Enter")
+        pg.wait_for_timeout(700)
+        check(pg.evaluate("() => document.getElementById('atlas-card').className").find("open") >= 0, "Enter opens the chapter")
+        pg.keyboard.press("ArrowDown")
+        pg.wait_for_timeout(1100)
+        after = pg.evaluate("""() => ({hash: location.hash, card: document.getElementById('atlas-card').innerText.slice(0, 400),
+                                       chip: document.getElementById('atlas-kb').textContent})""")
+        title = after["chip"].split("Enter opens")[0].split(after["chip"][:2])[-1]
+        check(after["card"].count("CHAPTER") + after["card"].count("PREFACE") > 0 and title[-12:].strip() in after["card"],
+              "an open card follows the cursor (%s)" % title.strip()[:40])
+        pg.keyboard.press("Escape")
+        pg.wait_for_timeout(400)
+        check(pg.evaluate("() => document.getElementById('atlas-kb').className") == "", "Escape puts the cursor away")
+        ctx.close()
+
         # ---- pinch release (the beacon found this one in the wild) ------------
         print("pinch")
         ctx, pg = page(b, 390, 844, errors=errors)
