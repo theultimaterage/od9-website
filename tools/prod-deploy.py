@@ -50,6 +50,29 @@ _CANDIDATES = [
 if not any(a == "--config" or a.startswith("--config=") for a in sys.argv[1:]):
     sys.argv.extend(["--config", _CONFIG])
 
+# CITATION GATE (2026-09-08): the Codex lessons quote the manifesto verbatim,
+# and the manifesto's own repair worklists condemn fabricated and re-dated
+# citations that have not been repaired yet. Nothing checked whether a condemned
+# one had already been published. It runs on EVERY deploy, not only when
+# curriculum files change, because it takes under a second and the thing it
+# prevents is putting an invented source on a site whose whole claim is that it
+# does not invent. --skip-citation-gate bypasses; say why in the commit.
+# It also runs on --dry, unlike the browser checks: those cost a minute, this
+# costs under a second, and a dry run that skips a gate reports a pass the real
+# deploy might not give.
+if "--skip-citation-gate" in sys.argv:
+    sys.argv.remove("--skip-citation-gate")
+else:
+    import subprocess
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    _cg = os.path.join(_root, "tools", "citation_gate.py")
+    if os.path.exists(_cg):
+        print("=== Citation gate (published lessons vs the manifesto worklists) ===", flush=True)
+        _cenv = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
+        if subprocess.run([sys.executable, _cg], env=_cenv).returncode != 0:
+            sys.exit("ABORT: a published lesson carries a citation the manifesto's worklists "
+                     "condemn, or a worklist names a source nobody has classified")
+
 # ATLAS CHECKS (2026-09-05): when the tree touches an Atlas file, the browser
 # checks run before the engine (tools/atlas_checks.py — Playwright from the
 # bot repo's venv, against local Apache like the render gate). Skipped on

@@ -34,6 +34,7 @@ $nav_links = [
     'about'      => ['href' => $nav_url('about.php'),      'label' => 'About'],
     'framework'  => ['href' => $nav_url('framework.php'),  'label' => 'Framework'],
     'atlas'      => ['href' => $nav_url('atlas.php'),      'label' => 'Atlas'],
+    'forge'      => ['href' => $nav_url('forge.php'),      'label' => 'Forge'],
     'roadmap'    => ['href' => $nav_url('roadmap.php'),    'label' => 'Roadmap'],
     'tiers'      => ['href' => $nav_url('tiers.php'),      'label' => 'Tiers'],
     'library'    => ['href' => $nav_url('library.php'),    'label' => 'Library'],
