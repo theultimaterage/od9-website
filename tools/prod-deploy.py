@@ -105,10 +105,41 @@ elif "--dry" not in sys.argv:
         if _rc != 0:
             sys.exit("ABORT: Atlas browser checks failed (exit %d) — fix them, or --skip-atlas-checks with a reason in the commit" % _rc)
 
+# ROUTE CRAWL (2026-09-08): the deploy's own smoke tests check a handful of named
+# URLs. This requests EVERY page the site serves and attributes any 5xx to the
+# fatal that caused it, so a page nobody thought to list cannot break unnoticed.
+# It runs AFTER the engine — including after the Cloudflare purge — so it sees
+# what a visitor sees rather than what the edge cached before the deploy.
+# --skip-route-crawl bypasses; say why in the commit.
+_skip_crawl = "--skip-route-crawl" in sys.argv
+if _skip_crawl:
+    sys.argv.remove("--skip-route-crawl")
+_dry_run = "--dry" in sys.argv
+
 for _engine in _CANDIDATES:
     if os.path.exists(_engine):
         sys.argv[0] = _engine
-        runpy.run_path(_engine, run_name="__main__")  # propagates the engine's exit code
-        break
+        _rc_deploy = 0
+        try:
+            runpy.run_path(_engine, run_name="__main__")
+        except SystemExit as _e:          # the engine exits rather than returning
+            if isinstance(_e.code, str):  # a refusal message: print it as the engine would
+                print(_e.code, file=sys.stderr)
+                _rc_deploy = 1
+            else:
+                _rc_deploy = _e.code or 0
+        if _rc_deploy == 0 and not _dry_run and not _skip_crawl:
+            import subprocess
+            _crawl = os.path.expanduser("~/.claude/skills/route-crawl/route_crawl.py")
+            _repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            if os.path.exists(_crawl):
+                print("")
+                print("=== Route crawl (every page, and why any 5xx happened) ===", flush=True)
+                _cenv = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
+                if subprocess.run([sys.executable, _crawl], cwd=_repo, env=_cenv).returncode != 0:
+                    sys.exit("DEPLOYED, BUT A ROUTE IS RETURNING 5xx. The files are already live "
+                             "— fix forward, or roll back from the backup named above.")
+        sys.exit(_rc_deploy)
 else:
-    sys.exit("prod-deploy engine not found. Looked in:\n  " + "\n  ".join(_CANDIDATES))
+    sys.exit("prod-deploy engine not found. Looked in:" + "".join(
+        chr(10) + "  " + c for c in _CANDIDATES))

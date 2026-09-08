@@ -1,0 +1,54 @@
+{
+  "_doc": "Per-repo config for ~/.claude/skills/route-crawl. Requests every page offda9.com serves and attributes any 5xx to the fatal that caused it. Added 2026-09-08 after a PHP TypeError printed into forge.php's body while the page still returned 200 \u2014 a status-only check called that healthy.",
+  "base_url": "https://offda9.com",
+  "route_root": "",
+  "url_prefix": "",
+  "timeout": 25,
+  "_route_root_why": "The repo root IS the docroot since the public/ -> root restructure (801668f), so there is no subdirectory to aim at.",
+  "excludes": [
+    "includes/*",
+    "includes/**/*",
+    "dashboard/includes/*",
+    "dashboard/includes/**/*",
+    "email-templates/*",
+    "email-templates/**/*",
+    "config/*",
+    "config/**/*",
+    "admin/*",
+    "admin/**/*",
+    "private/*",
+    "private/**/*",
+    "api/*",
+    "api/**/*",
+    "vendor/*",
+    "vendor/**/*",
+    "curriculum/_codex.php",
+    "contact-handler.php",
+    "founding_patron_launch_sender.php",
+    "check-admin.php",
+    "check_db.php",
+    "_sof_board_harness.php",
+    "download.php",
+    "*-handler.php",
+    "*_sender.php"
+  ],
+  "_excludes_why": [
+    "SAFETY FIRST, not tidiness. A crawler requests every route it discovers, so anything that SENDS or MUTATES on GET must never be discoverable: api/drip/sender.php and weekly_lovelogic_sender.php mail real subscribers, contact-handler.php and founding_patron_launch_sender.php send, api/soundcloud/set_sotw.php and api/v1/me/settings.php write. Excluding api/ and the senders wholesale is the safe boundary \u2014 an endpoint is not a page, and its health belongs to its own smoke test.",
+    "includes/ and dashboard/includes/ are partials loaded BY pages; requested directly they fatal on missing scope and would report a fault that does not exist for any visitor.",
+    "config/ holds credentials and *.example.php stubs. private/ is the admin area and is named for what it is.",
+    "curriculum/_codex.php is the shared renderer, not a lesson; the 16 lessons under curriculum/<tier>/ ARE crawled, because they are the pages the Atlas and the Forge link to.",
+    "download.php streams a file rather than rendering a page.",
+    "admin/index.php is a ROUTER that forwards /admin/<path> into private/admin/<path>, so crawling it walks straight through the private/ exclusion into the admin dashboard. Excluding private/ while leaving its front door open would have been an exclusion in name only.",
+    "email-templates/ holds the shared email chrome (a layout partial included by the mailers), not a page. It was the crawl's only finding on the first run, reported as 'no response' rather than a 5xx because its directory name contains a space \u2014 a reminder that a route list built from the filesystem inherits the filesystem's oddities, and that 'no response' is not the same finding as '500'."
+  ],
+  "ssh": {
+    "host": "72.167.54.213",
+    "user": "offda9",
+    "key": "~/.ssh/id_rsa_automation"
+  },
+  "error_log": {
+    "path": "/home/offda9/public_html/error_log",
+    "remote_route_base": "/home/offda9/public_html"
+  },
+  "_error_log_caveat": "This host sets php.ini error_log to the bare filename 'error_log', which cPanel resolves RELATIVE TO THE ERRORING SCRIPT'S DIRECTORY. So there is no single log: a fatal in atlas.php lands in public_html/error_log, one in api/v1/atlas-ping.php lands in public_html/api/v1/error_log. The path above is the docroot's, which covers the top-level pages that make up most of the crawled surface. Attribution for a fatal in a subdirectory route will therefore come back empty even though the 5xx itself is still reported \u2014 the crawl still catches the break, it just cannot always name the cause. Do not read an empty attribution as 'no fatal'."
+}

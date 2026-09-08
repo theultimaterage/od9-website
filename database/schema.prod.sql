@@ -17,6 +17,8 @@
 -- Contains no data and no credentials.
 /*M!999999\- enable the sandbox mode */ 
 
+/*M!999999\- enable the sandbox mode */ 
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -2029,6 +2031,26 @@ CREATE TABLE `od9_drip_steps` (
   UNIQUE KEY `unique_sequence_step` (`sequence_id`,`step_number`),
   KEY `idx_sequence` (`sequence_id`),
   CONSTRAINT `od9_drip_steps_ibfk_1` FOREIGN KEY (`sequence_id`) REFERENCES `od9_drip_sequences` (`sequence_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `od9_member_sync_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `od9_member_sync_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `received_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `action` enum('member_join','member_leave','member_update','full_sync','test') NOT NULL,
+  `discord_user_id` varchar(50) DEFAULT NULL,
+  `member_count` int(11) DEFAULT NULL,
+  `request_ip` varchar(45) DEFAULT NULL,
+  `signature_valid` tinyint(1) NOT NULL DEFAULT 0,
+  `response_code` int(11) NOT NULL,
+  `error_message` text DEFAULT NULL,
+  `payload_summary` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_received_at` (`received_at`),
+  KEY `idx_action` (`action`),
+  KEY `idx_discord_user_id` (`discord_user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `od9_members`;
