@@ -853,7 +853,13 @@
   function startArrival(force) {
     if (reducedMotion) return false;
     var q = location.search;
-    if (!force && (/[?&](og|live)=1/.test(q) || /[?&]arrival=0/.test(q) || /[?&]tour=/.test(q) || location.hash.length > 1)) return false;
+    /* The tour test reads the STATE, not the query string. It used to read
+       ?tour= — which is the same answer right up until the spec names no arc,
+       and then a link that outlived a rename suppressed the arrival on behalf
+       of a tour that never started, leaving a still map and no opening at all.
+       startTour runs first and sets `tour` only when it has stops, so this
+       asks the question that actually matters. */
+    if (!force && (/[?&](og|live)=1/.test(q) || /[?&]arrival=0/.test(q) || tour || location.hash.length > 1)) return false;
     try {
       if (!force && sessionStorage.getItem("atlas.arrived")) return false;
       sessionStorage.setItem("atlas.arrived", "1");
@@ -1542,8 +1548,11 @@
   } else {
     routeHash();
     var tm = /[?&]tour=([a-z0-9]+)/.exec(location.search);
-    if (tm) startTour(tm[1]);
-    else startArrival(/[?&]arrival=1/.test(location.search));
+    /* startTour returns false when the spec names no arc — which is what a
+       printed link outlives an arc rename into. Ignoring that return is how
+       offda9.com/tour would quietly land a visitor on a map doing nothing at
+       all; falling through gives them the arrival the front door gives. */
+    if (!tm || !startTour(tm[1])) startArrival(/[?&]arrival=1/.test(location.search));
   }
   requestAnimationFrame(draw);
 })();

@@ -132,6 +132,38 @@ def run(base: str) -> int:
         check("guided flight" in pg.evaluate(LINES, "#atlas-tour-menu li.lead")[0], "the menu says what a tour is")
         ctx.close()
 
+        # ---- /tour, the short link an end card is read off a screen ----------
+        print("tour short link")
+        site = base.rsplit("/atlas", 1)[0]
+        ctx, pg = page(b, errors=errors)
+        pg.goto(site + "/tour", wait_until="load")
+        pg.wait_for_timeout(3200)
+        # rstrip the hash: the Atlas writes an empty "#" of its own once it routes
+        landed = pg.url.rstrip("#")
+        check(landed.endswith("/atlas?tour=arc1"), f"/tour lands on the Atlas running arc 1 (got {landed})")
+        # ...[0] only when there is one. When the redirect is what broke, this page is a
+        # 404 with no caption at all, and an IndexError here would abort the run and take
+        # every check after it down with the one that already reported the real fault.
+        caps = pg.evaluate(LINES, "#atlas-tour-cap")
+        cap = caps[0] if caps else ""
+        check(cap.startswith("ARC 1") and "1/6" in cap, "the flight is already under way on arrival")
+        ctx.close()
+
+        # A printed link outlives an arc rename. That must degrade to the ordinary
+        # opening, not to a still map — the arrival guard reads tour STATE for
+        # exactly this case, and reading the query string instead looked identical
+        # until the day the spec named nothing.
+        ctx, pg = page(b, errors=errors)
+        pg.goto(base + "?tour=nosucharc", wait_until="load")
+        pg.wait_for_timeout(3000)
+        check(pg.evaluate("() => document.getElementById('atlas-tour-cap').className") == "",
+              "an arc that no longer exists starts no tour")
+        check(pg.evaluate("() => document.getElementById('atlas-arrival-hint').className.includes('on')")
+              or pg.evaluate("() => !!window.sessionStorage.getItem('atlas.arrived')"),
+              "and the visitor gets the arrival instead of a dead map")
+        ctx.close()
+
+
         # ---- live as an event (mocked endpoint) -------------------------------
         print("live strip")
         for state, want in (("live", "on live"), ("tonight", "on tonight"), ("quiet", "")):

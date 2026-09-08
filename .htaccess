@@ -57,6 +57,31 @@ RewriteRule ^subscribe$ subscribe.php [L,QSA]
 # YouTube description.
 RewriteRule ^atlas$ atlas.php [L,QSA]
 
+# /tour -> the Atlas with a guided flight already running, for an end card
+# somebody reads off a screen. Defaults to arc 1, "The Information Problem":
+# six stops, about forty seconds. /tour/arc3 and /tour/all pick another route,
+# and the shape (arc + digit) rather than a list of ids means adding arc5 needs
+# no edit here.
+#
+# A REDIRECT, unlike /atlas directly above it, and the difference is not
+# stylistic. The tour is started by JavaScript reading location.search, and an
+# internal rewrite never touches the browser's URL — the query would reach PHP
+# and the browser would still see none, so the clean link would land on a map
+# that sits there doing nothing. atlas.php reads only ?og, so there is no
+# server-side channel to carry it either. 302 rather than 301: the default arc
+# should be changeable without fighting a permanent redirect cached in every
+# browser that ever followed the card.
+# The base comes from REQUEST_URI rather than being written down, because a
+# relative substitution on an external redirect resolves against the FILESYSTEM
+# path in a per-directory context: the first working version of this rule sent
+# browsers to http://localhost/C:/xampp/htdocs/od9/atlas. %1 is whatever sits in
+# front of /tour — empty on prod, /od9 on the local XAMPP copy — so one rule is
+# right in both places without a RewriteBase that could only be right in one.
+RewriteCond %{REQUEST_URI} ^(.*)/tour/?$
+RewriteRule ^tour/?$ %1/atlas?tour=arc1 [R=302,L,QSA]
+RewriteCond %{REQUEST_URI} ^(.*)/tour/(?:all|arc[1-9])/?$
+RewriteRule ^tour/(all|arc[1-9])/?$ %1/atlas?tour=$1 [R=302,L,QSA]
+
 # /epk -> the platform-served press kit. A REDIRECT this time, not an internal
 # rewrite like /atlas: the press kit is not a file in this docroot at all — it
 # is rendered by the F.R.E.S.H. platform from the od9 tenant's epk_profiles row
