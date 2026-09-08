@@ -708,6 +708,7 @@
   var COSMOS = window.AtlasCosmos ? window.AtlasCosmos.init({
     ctx: ctx, view: view, W: W, H: H, C: C, rgba: rgba,
     volumes: DATA.volumes, reducedMotion: reducedMotion,
+    extraPlates: [{ key: "beyond", file: "beyond" }],   /* a region without being a volume */
     platesVersion: stage.getAttribute("data-plates-v") || "1"
   }) : { field: [], nebulae: [], plates: {}, starGlow: function () {}, flare: function () {}, meteor: function () {} };
   var FIELD = COSMOS.field, NEBULAE = COSMOS.nebulae, PLATES = COSMOS.plates;
@@ -1376,6 +1377,20 @@
       ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b0[0], b0[1]);
       ctx.stroke();
       ctx.restore();
+    }
+    /* the ground: the field's plate, drawn first so the figure and the objects
+       sit ON it. Fails open like every other plate — until it loads, the field
+       is what it was, sprites on void. */
+    var bplate = PLATES.beyond, breg = OBJ.beyondRegion;
+    if (bplate && breg) {
+      var b0 = toScreen(breg[0], breg[1]), b1 = toScreen(breg[0] + breg[2], breg[1] + breg[3]);
+      if (b1[0] > -200 && b0[0] < view.w + 200) {
+        ctx.save();
+        ctx.globalAlpha = 0.9;
+        ctx.globalCompositeOperation = SPRITE_BLEND;   /* same compositing as a volume plate */
+        ctx.drawImage(bplate, b0[0], b0[1], b1[0] - b0[0], b1[1] - b0[1]);
+        ctx.restore();
+      }
     }
     /* THE FIGURE (2026-09-08): the field's own constellation, drawn UNDER the
        objects and fading as they resolve — you read a constellation from far

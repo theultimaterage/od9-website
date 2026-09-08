@@ -12,7 +12,9 @@
  * timeline and the card do not: they all read and write the same focus.
  *
  * window.AtlasCosmos.init({ ctx, view, W, H, C, rgba, volumes, platesVersion,
- *                           reducedMotion })
+ *                           reducedMotion, extraPlates })
+ * extraPlates: [{key, file}] for regions that are not volumes — the beyond
+ * field is the only one, and it is a region without being a volume.
  *   -> { field, nebulae, plates, starGlow, flare, meteor }
  * `view` and the returned `plates` are LIVE references: the viewport is mutated
  * on resize, and plates arrive asynchronously as their images load.
@@ -112,6 +114,11 @@
         var img = new Image();
         img.onload = function () { PLATES[v.vol] = featherPlate(img); };
         img.src = "images/atlas/plates/" + keys[v.vol] + ".webp?v=" + pv;
+      });
+      (o.extraPlates || []).forEach(function (p) {
+        var img = new Image();
+        img.onload = function () { PLATES[p.key] = featherPlate(img); };
+        img.src = "images/atlas/plates/" + p.file + ".webp?v=" + pv;
       });
     })();
 

@@ -470,5 +470,11 @@
    "beyond-topopolis",
    "beyond-globus"
   ]
+ ],
+ "beyondRegion": [
+  1400,
+  380,
+  560,
+  600
  ]
 }
