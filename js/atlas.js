@@ -1385,9 +1385,13 @@
     if (bplate && breg) {
       var b0 = toScreen(breg[0], breg[1]), b1 = toScreen(breg[0] + breg[2], breg[1] + breg[3]);
       if (b1[0] > -200 && b0[0] < view.w + 200) {
+        /* Plain source-over at roughly half a volume's opacity. A volume plate
+           draws at 0.92; the sprite blend mode ADDS light, which made this the
+           brightest thing on the map — wrong for a field the registry calls a
+           faint cluster inviting the flight out. Beyond is a hint, not a
+           destination, and it must never out-shout Volume 5. */
         ctx.save();
-        ctx.globalAlpha = 0.9;
-        ctx.globalCompositeOperation = SPRITE_BLEND;   /* same compositing as a volume plate */
+        ctx.globalAlpha = 0.5;
         ctx.drawImage(bplate, b0[0], b0[1], b1[0] - b0[0], b1[1] - b0[1]);
         ctx.restore();
       }
