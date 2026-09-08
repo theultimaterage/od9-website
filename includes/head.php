@@ -50,4 +50,11 @@ $h = static fn(string $s): string => htmlspecialchars($s, ENT_QUOTES);
      vs ~342 KB from the cdnjs kit). Regenerate via tools/build_fa_subset.py. -->
 <link rel="stylesheet" href="<?= $_bp ?>/css/od9-fa.css">
 <link rel="stylesheet" href="<?= $_bp ?>/css/od9.css?v=<?= @filemtime(__DIR__ . '/../css/od9.css') ?: '1' ?>">
+<?php /* Every page reports its own JS faults (2026-09-08). Loaded here rather
+         than per page, because the pages that most need it are the ones nobody
+         remembered to instrument — the Atlas found an 87-error pinch bug within
+         a day of getting a beacon, and every other page had that same blind
+         spot. Capped, deduped and failure-silent; see js/od9-errors.js. */ ?>
+<script id="od9-err" src="<?= $_bp ?>/js/od9-errors.js?v=<?= @filemtime(__DIR__ . '/../js/od9-errors.js') ?: '1' ?>"
+        data-endpoint="<?= $_bp ?>/api/v1/error-beacon.php" defer></script>
 <?php include __DIR__ . '/seo_schema.php'; // Organization + WebSite JSON-LD (after page meta) ?>

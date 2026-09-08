@@ -297,6 +297,17 @@
         "chapters readable now"
       ],
       "_why": "The ledger renders from data/manifesto-map.json and includes head.php, which redefines a helper this page also uses. That collision printed a TypeError INTO the page body on 2026-09-08 while still returning 200 \u2014 so the status alone said healthy. must_not_contain is what actually catches that class; must_contain proves the map data rendered rather than the page falling back to its 503 stub."
+    },
+    {
+      "url": "https://offda9.com/about.php",
+      "expect_status": [
+        200
+      ],
+      "must_contain": [
+        "od9-errors.js",
+        "data-endpoint"
+      ],
+      "_why": "Every page reports its own JS faults via includes/head.php. If that script tag ever stops rendering, the whole site goes silent again and nothing else would say so \u2014 the failure mode of a reporter is silence, which looks exactly like health. Checking a page OTHER than the Atlas proves the shared head carries it."
     }
   ],
   "_smoke_note": "must_contain 'Off Da Nine' on the apex proves we reached OD9 and not a parked domain or a misrouted edge \u2014 status+200 alone cannot tell those apart.",
