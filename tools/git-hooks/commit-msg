@@ -1,27 +1,66 @@
 #!/usr/bin/env bash
-# commit-msg hook: THE CLASS-FIX GATE.
+# commit-msg hook: THE CLASS-FIX GATE and THE PROVER GATE.
 #
-# Born 2026-07-23, after the QOTD pool drought — the SECOND occurrence of the
-# same failure class (silent supply-chain starvation). The first fix (88c5353)
-# patched the broken link and declared victory; no invariant was built, so the
-# class recurred and cost the founder another day.
+# ---------------------------------------------------------------------------
+# GATE 1 — Class-fix (born 2026-07-23, the QOTD pool drought)
+# ---------------------------------------------------------------------------
+# The SECOND occurrence of the same failure class (silent supply-chain
+# starvation). The first fix (88c5353) patched the broken link and declared
+# victory; no invariant was built, so the class recurred and cost the founder
+# another day.
 #
 # The founder's demand, verbatim: "WHY CAN'T YOU ALWAYS ASK THE QUESTION
 # 'WHAT HAS TO EXIST SO THIS CLASS CAN NEVER FAIL SILENTLY AGAIN?'"
 # Intention doesn't persist across sessions. THIS GATE does.
 #
-# Rule: any commit whose subject starts with "fix(" or "fix:" MUST contain a
-# trailer line answering the class question:
+# Rule: any commit whose subject starts with "fix(" or "fix:" MUST contain:
 #
 #   Class-fix: <the invariant/monitor/test/gate built so this class cannot
 #               silently recur>
 #   -- or, when a class fix truly doesn't apply (typo, cosmetic, one-shot): --
 #   Class-fix: none — <one-line reason why this cannot be a recurring class>
 #
-# The gate cannot force a good answer. It makes SILENTLY SKIPPING THE QUESTION
-# impossible — for every session, every model, forever.
+# ---------------------------------------------------------------------------
+# GATE 2 — Provers (born 2026-09-08, The Firm)
+# ---------------------------------------------------------------------------
+# Gate 1 covers FIXES. The orphan/caller rule covers WIRING. Neither asks the
+# question a NEW FEATURE has to answer: what proves this still works tomorrow?
+#
+# The Firm slipped through both. /firm_invite had a live caller, so the orphan
+# rule was satisfied. It was not a fix, so Class-fix never fired. It shipped as
+# a feat(, worked on the day, and then sat for months as the only subsystem in
+# the whole system map that no machine could check — its invite log was a JSONL
+# a human read. The Call flow could have died in silence and the first news
+# would have been a member asking why nobody answered.
+#
+# The founder, on being shown that: "everything you build henceforth MUST be
+# built with a prover. Like wtf? Why would that NOT be the standard?"
+#
+# It is now. Any commit whose subject starts with "feat(" or "feat:" MUST
+# contain:
+#
+#   Provers: <what an automated run can execute to prove this still works —
+#             a test path, a heartbeat name, a command>
+#   -- or, when the change rides coverage that already exists: --
+#   Provers: covered by <the existing test/heartbeat that exercises this path>
+#   -- or, genuinely unprovable-by-machine (rare; it is an admission): --
+#   Provers: none — <what is missing and what would fix it>
+#
+# "none" is not a shrug. It is the same contract MANUAL_ONLY_ACCEPTED carries:
+# an exemption has to say what would have to exist for it to be deleted, or it
+# is not an accepted reason, it is an unfixed gap with better manners.
+#
+# NOTE the trap this gate exists to catch: naming a test that exercises the
+# WORDS while the thing that RUNS goes unproven. The Firm had four test files
+# when it was declared unprovable — all of them covering the invite copy. A
+# prover has to execute the part that can break, or the coverage number becomes
+# a lie that no longer needs a human to tell it.
+#
+# Neither gate can force a good answer. They make SILENTLY SKIPPING THE
+# QUESTION impossible — for every session, every model, forever.
 #
 # Bypass (logged in your conscience): git commit --no-verify
+# Parity across repos is verified by /gate-parity, never by a list in a file.
 
 MSG_FILE="$1"
 
@@ -41,6 +80,28 @@ case "$subject" in
       echo "  Class-fix: none — <why this cannot recur as a class (typo/cosmetic/one-shot)>"
       echo ""
       echo "If the honest answer is 'the invariant doesn't exist yet' — BUILD IT,"
+      echo "then commit. That is the entire point of this gate."
+      exit 1
+    fi
+    ;;
+  feat\(*|feat:*)
+    if ! grep -qiE '^Provers:[[:space:]]*\S' "$MSG_FILE"; then
+      echo ""
+      echo "COMMIT BLOCKED — this is a feature commit with no Provers: trailer."
+      echo ""
+      echo "Answer the question The Firm taught us to never skip:"
+      echo "  WHAT PROVES THIS STILL WORKS TOMORROW, WITHOUT A HUMAN LOOKING?"
+      echo ""
+      echo "Add to the commit body ONE of:"
+      echo "  Provers: <test path / heartbeat name / command an automated run executes>"
+      echo "  Provers: covered by <the existing test or heartbeat that exercises this path>"
+      echo "  Provers: none — <what is missing and what would fix it>"
+      echo ""
+      echo "A prover must execute the part that RUNS. The Firm had four test"
+      echo "files covering the invite COPY while the invite PATH went unwatched"
+      echo "for months — that is coverage theatre, not a prover."
+      echo ""
+      echo "If the honest answer is 'nothing proves it yet' — BUILD THAT,"
       echo "then commit. That is the entire point of this gate."
       exit 1
     fi
