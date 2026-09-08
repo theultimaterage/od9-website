@@ -95,6 +95,12 @@ def run(base: str) -> int:
         pg.goto(base + "#boltzmann-brain", wait_until="load")
         pg.wait_for_timeout(2000)
         check("Boltzmann" in pg.evaluate("() => document.getElementById('atlas-card').innerText"), "Beyond deep link by sprite key")
+        # the beyond field's constellation: the data has to REACH the page, and
+        # the brain has to stay off it — it is an accident, not something built
+        fig = pg.evaluate("() => (JSON.parse(document.getElementById('atlas-objects').textContent).beyondFigure || [])")
+        check(len(fig) >= 5, f"the beyond field ships a constellation figure ({len(fig)} segment(s))")
+        check(all("beyond-boltzmann" not in seg for seg in fig), "the Boltzmann brain is joined to nothing")
+        check(any(seg[0] == "beyond-mckendree" for seg in fig), "the figure starts where ch67's trail lands")
         ctx.close()
         ctx, pg = page(b, 390, 844, errors=errors)
         pg.goto(base + "?arrival=0", wait_until="load")

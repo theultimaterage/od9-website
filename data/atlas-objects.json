@@ -444,5 +444,31 @@
   340
  ],
  "beyondTrailFrom": "ch67",
- "beyondTrailTo": "beyond-mckendree"
+ "beyondTrailTo": "beyond-mckendree",
+ "beyondFigure": [
+  [
+   "beyond-mckendree",
+   "beyond-ringworld"
+  ],
+  [
+   "beyond-ringworld",
+   "beyond-topopolis"
+  ],
+  [
+   "beyond-topopolis",
+   "beyond-alderson"
+  ],
+  [
+   "beyond-alderson",
+   "beyond-stellar"
+  ],
+  [
+   "beyond-stellar",
+   "beyond-shkadov"
+  ],
+  [
+   "beyond-topopolis",
+   "beyond-globus"
+  ]
+ ]
 }

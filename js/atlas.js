@@ -1377,6 +1377,28 @@
       ctx.stroke();
       ctx.restore();
     }
+    /* THE FIGURE (2026-09-08): the field's own constellation, drawn UNDER the
+       objects and fading as they resolve — you read a constellation from far
+       off and the structures up close, never both at once. Solid, because the
+       dashes in this region already mean two other things: the trail in is a
+       route, and an object's ring is speculation. */
+    if (OBJ.beyondFigure && OBJ.beyondFigure.length) {
+      var figA = 0.55 * (1 - zres);
+      if (figA > 0.01) {
+        ctx.save();
+        ctx.strokeStyle = rgba(C.violet, figA);
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        OBJ.beyondFigure.forEach(function (seg) {
+          var s0 = nodeById[seg[0]], s1 = nodeById[seg[1]];
+          if (!s0 || !s1) return;
+          var p0 = toScreen(s0.x, s0.y), p1 = toScreen(s1.x, s1.y);
+          ctx.moveTo(p0[0], p0[1]); ctx.lineTo(p1[0], p1[1]);
+        });
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
     /* field label, sized like a volume label so it reads as a region */
     var lab = toScreen(OBJ.beyondLabelAt[0], OBJ.beyondLabelAt[1]);
     if (lab[0] < view.w + 300 && lab[0] > -400) {
