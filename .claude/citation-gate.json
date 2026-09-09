@@ -43,11 +43,6 @@
       "why": "same phantom book as Wagner (1991) (TIER A #7)"
     },
     {
-      "name": "Seto",
-      "year": 2016,
-      "why": "journal volume 1 is 2017; proposal untraceable; the known Michael Seto is a forensic psychologist (TIER A #8)"
-    },
-    {
       "name": "Kessler",
       "year": 2018,
       "why": "'Kessler & Poon (2018), JMIR' VR-meditation review, untraceable (TIER A #9)"
@@ -93,24 +88,24 @@
       "why": "re-dated real work: the book is 2013 (Vol 2 defect class 2)"
     },
     {
-      "name": "Piketty",
-      "year": 2022,
-      "why": "re-dated real work: the book is 2013 (Vol 2 defect class 2)"
-    },
-    {
       "name": "Tetlock",
       "year": 2027,
       "why": "dated in the future (Vol 2 worklist)"
     },
     {
-      "name": "Rogers",
-      "year": 2022,
-      "why": "dead-author re-date: Everett Rogers died 2004-10-21; Diffusion of Innovations' last edition is 2003 (Vol 2 worklist dead roster). Carl Rogers (1961) is a different, real citation and stays cleared"
-    },
-    {
       "name": "Peterson",
       "year": 2023,
       "why": "orphaned '(Peterson, 2023)' in ch28-section8 — no reference entry backs it (Vol 2 worklist)"
+    },
+    {
+      "name": "Chalmers",
+      "year": 2019,
+      "why": "'Chalmers and Schooler (2019), Consciousness cannot be separated from function, TiCS' — appears fabricated; the meta-problem paper is Chalmers 2018, JCS, solo (ch7-s3 worklist item)"
+    },
+    {
+      "name": "Schwartz",
+      "year": 2027,
+      "why": "future-dated 'Schwartz & Tetlock (2027)' (Vol 2 worklist); also caught by the impossible-date rule"
     }
   ],
   "cleared": [
@@ -233,6 +228,71 @@
       "name": "Rogers",
       "year": 1961,
       "why": "Carl Rogers, On Becoming a Person (1961) — real, and cited correctly in ch3/ch4/ch7. The worklist's objection is the ch8-s2 SHUFFLE, where a Granovetter weak-ties quote was matched to it. Same surname as the flagged Rogers (2022), different person, different verdict — which is the whole reason this gate matches on name AND year"
+    },
+    {
+      "name": "Fung",
+      "year": 2011,
+      "why": "co-author of the genuine Participedia paper; the fault is the nonexistent MIT 'Citizens' Law project' it was attached to. Same verdict as Warren (2011)"
+    },
+    {
+      "name": "Chalmers",
+      "year": 2018,
+      "why": "the real meta-problem-of-consciousness paper (JCS, solo) — named by the worklist as the CORRECT source, not a fault"
+    },
+    {
+      "name": "Chalmers",
+      "year": 2010,
+      "why": "'The Singularity: A Philosophical Analysis', JCS 2010 — the real intelligence-explosion paper the worklist says ch4-s2 should have cited"
+    },
+    {
+      "name": "Malone",
+      "year": 2022,
+      "why": "the Vol 2 worklist CONFIRMED Malone & Bernstein as real (Handbook of Collective Intelligence, eds.) and resolved ch42-s7 by de-quoting, not stripping"
+    },
+    {
+      "name": "Bernstein",
+      "year": 2022,
+      "why": "co-author of the confirmed-real Malone & Bernstein; see Malone (2022)"
+    },
+    {
+      "name": "Frey",
+      "year": 2023,
+      "why": "Frey & Osborne are real. The Vol 2 worklist marks the ch45-s4 pair STILL OPEN as a STUDYBY-HIGH pattern rather than condemning it, so this gate does not condemn it either. The year remains unverified and belongs to the ORG-VERB/STUDYBY residual work"
+    },
+    {
+      "name": "Osborne",
+      "year": 2023,
+      "why": "co-author of the still-open Frey & Osborne pair; see Frey (2023)"
+    },
+    {
+      "name": "Google",
+      "year": 2023,
+      "why": "CORRECTED 2026-09-08. The worklist condemns a CONSTRUCTION -- the person-as-subject 'Google and Qualcomm (2023) found...' -- not the name. Every live instance is a legitimate organizational author, '(Google, 2023)' sitting beside '(Apple, 2023)' and '(Microsoft, 2023)' for the differential-privacy library and Google Translate. Flagging the bare name+year condemned 14 correct citations, which is precisely the cry-wolf failure this gate exists to avoid"
+    },
+    {
+      "name": "Tech",
+      "year": 2023,
+      "why": "same correction as Google (2023): 'Tech and Harvard (2023)' is a mangled construction already treated by fix_person_subject.py, not a condemned source"
+    },
+    {
+      "name": "Bits",
+      "year": 2023,
+      "why": "same correction: 'MIT Center for Bits and Atoms (2023)' is a real organizational author; only the person-as-subject phrasing was the defect, and it survives solely in an _audit-staging backup the source scan excludes"
+    },
+    {
+      "name": "Seto",
+      "year": 2016,
+      "why": "RECLASSIFIED 2026-09-08, after the fabrication it collided with was repaired. The condemned Seto (2016) was 'Michael Seto', a phantom Kardashev paper in a Journal of Big History volume that did not exist that year; ch4-s6 no longer cites it. What remains under this name+year is Karen C. Seto's real 'Carbon lock-in: Types, causes, and policy implications', Annual Review of Environment and Resources 41, 425-452, cited correctly in ch21 and ch38. Same surname, same year, different scholar -- repairing the fabrication is what makes this safe to clear"
+    },
+    {
+      "name": "Rogers",
+      "year": 2022,
+      "why": "RECLASSIFIED 2026-09-08. Nine instances were Everett Rogers (d. 2004) re-dated from Diffusion of Innovations (2003), Roo Rogers of Botsman & Rogers (2010), and Carl Rogers (1961) on person-centred design -- all repaired against each file's OWN reference list, which already carried the correct year. What remains is John A. Rogers, the materials scientist, in a ch27 energy-autonomous-sensing reference no worklist condemns. NOT a statement that that paper is real: it is unverified, and flagged for a human in the session report. It is simply not this gate's finding"
+    },
+    {
+      "name": "Piketty",
+      "year": 2022,
+      "why": "RECLASSIFIED 2026-09-08. The re-dated Capital citations went to 2014 (Belknap, Goldhammer as translator, not co-author) and one fabricated title, 'Capital concentration spiral', was deleted as an orphan. What remains is Chancel, Piketty, Saez & Zucman's World Inequality Report 2022, Harvard University Press -- genuinely 2022, verified"
     }
   ],
   "source": {
@@ -246,6 +306,6 @@
       "tools/",
       "_audit-staging/"
     ],
-    "ratchet": 56
+    "ratchet": 0
   }
 }

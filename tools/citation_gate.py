@@ -75,6 +75,11 @@ MANIFESTO = Path(os.environ.get("MANIFESTO_DIR", r"C:\Users\Rage\Documents\The O
 NAME = r"[A-Z][A-Za-z'\u2019\-]{2,}"
 # A \u2014 narrative: "Fermi (1950)", "Meadows et al. (2008)"
 NARRATIVE_RE = re.compile(rf"\b({NAME})\s*(?:et al\.?)?\s*\((\d{{4}})\)")
+# A2 \u2014 narrative pair: "Peterson & Lee (2023)". Without this the plain narrative
+#      rule credits only "Lee", and two fabricated Peterson & Lee papers sat
+#      unflagged in ch28 while the same fabrication WAS caught in its own
+#      reference entry. Every paired form has to name both authors.
+NARRATIVE_PAIR_RE = re.compile(rf"\b({NAME})\s*(?:&|and)\s*({NAME})\s*(?:et al\.?)?\s*\((\d{{4}})\)")
 # B \u2014 parenthetical, the form this corpus actually prefers: "(Karp, 2018)",
 #     "(Kessler & Poon, 2018)", "(Fermi, 1950; Webb, 2015)", "(Rodrik, 2011, p. 4)"
 PAREN_GROUP_RE = re.compile(r"\(([^()]{1,240})\)")
@@ -102,6 +107,10 @@ def cites_in(text: str) -> list[tuple[str, int, int]]:
 
     for m in NARRATIVE_RE.finditer(t):
         out.append((m.group(1), int(m.group(2)), m.start()))
+
+    for m in NARRATIVE_PAIR_RE.finditer(t):
+        out.append((m.group(1), int(m.group(3)), m.start()))
+        out.append((m.group(2), int(m.group(3)), m.start()))
 
     for group in PAREN_GROUP_RE.finditer(t):
         base = group.start(1)
@@ -212,6 +221,7 @@ def selftest(cfg: dict) -> int:
 
     cases = [
         ("narrative      ", f"<!-- selftest {n} ({y}) -->", f"{n} ({y})"),
+        ("narrative-pair ", f"<!-- selftest {n} & Nobody ({y}) -->", f"{n} ({y})"),
         ("parenthetical  ", f"<!-- selftest as shown ({n}, {y}) -->", f"{n} ({y})"),
         ("paired-paren   ", f"<!-- selftest ({n} & Nobody, {y}) -->", f"{n} ({y})"),
         ("semicolon-list ", f"<!-- selftest (Someone, 1999; {n}, {y}) -->", f"{n} ({y})"),
