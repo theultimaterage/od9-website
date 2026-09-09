@@ -145,6 +145,14 @@
   "work": [
    {
     "at": "2026-09-09",
+    "sha": "ede5493",
+    "scope": "Ch 5",
+    "kind": "feat",
+    "what": "Nine sections to three — the five failure domains, and the filter",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
     "sha": "e7822ba",
     "scope": "Ch 1",
     "kind": "feat",
@@ -1769,7 +1777,7 @@
      "url": "https://offda9.com/curriculum/observer/the-system-in-crisis.php"
     }
    ],
-   "note": "",
+   "note": "Compressed 2026-09-09 per the 2026-08-20 decision: bookends plus one Five Failure Domains section, with §IX kept as the climax.",
    "history": [
     {
      "state": "canon",
@@ -1778,15 +1786,9 @@
     }
    ],
    "sections": [
-    "Introduction - Systemic Failure as Evolutionary Bottleneck",
-    "The Complexity of Converging Crises",
-    "Environmental Degradation and Planetary Boundaries",
-    "Economic Dysfunction and Resource Misallocation",
-    "Political System Failure and Governance Inadequacy",
-    "Media and Information Crisis",
-    "Psychological and Social Fragmentation",
-    "Compounding Effects and System Interactions",
-    "Analyzing the Great Filter Potential"
+    "I. Introduction: Systemic Failure as Evolutionary Bottleneck",
+    "II. The Five Failure Domains",
+    "III. Analyzing the Great Filter Potential"
    ],
    "x": 270.0,
    "y": 375.0
