@@ -1,60 +1,251 @@
 {
   "_doc": "Which citations the manifesto's own repair worklists condemn, and which they merely mention. Read by tools/citation_gate.py, which refuses to let a condemned one appear in a published Codex lesson. Classify by NAME + YEAR: the year is usually what makes a citation false, and the same author often has a real work too.",
-
   "_why_this_file_is_hand_curated": [
     "The worklists name the offender and its replacement in the same sentence — 'phantom futurist Elaine Day (2015) ... Weak-signal analysis belongs to Ansoff/Hiltunen' — so no regex can tell which of the two is the problem. A machine-derived list would condemn the fix.",
     "The ratchet in the gate covers the cost of curating by hand: every Author (YYYY) the worklists mention must appear below as flagged or cleared, or the gate fails. A newly condemned source cannot be silently missed, which is the failure mode of every hand-maintained list."
   ],
-
   "worklists": [
     "CH1-8-CITATION-REPAIR-WORKLIST.md",
     "VOL2-FABSTATS-PURGE-WORKLIST.md"
   ],
-  "scan": ["curriculum/*/*.php"],
-
-  "flagged": [
-    {"name": "Day", "year": 2015, "why": "phantom futurist 'Elaine Day (2015)', cited to two different chapter titles for the same page range (TIER A #1)"},
-    {"name": "Karp", "year": 2018, "why": "Journal of Neurotherapy ceased in 2013; the article cannot exist (TIER A #2)"},
-    {"name": "Price", "year": 2013, "why": "the title cited is R.T. Cox's 1946 paper (TIER A #3)"},
-    {"name": "Fermi", "year": 1950, "why": "no such publication — Fermi never published the remark (TIER A #5)"},
-    {"name": "Wagner", "year": 1991, "why": "'Sternberg & Wagner (1991), MSG thinking' — no such book or finding (TIER A #7)"},
-    {"name": "Sternberg", "year": 1991, "why": "same phantom book as Wagner (1991) (TIER A #7)"},
-    {"name": "Seto", "year": 2016, "why": "journal volume 1 is 2017; proposal untraceable; the known Michael Seto is a forensic psychologist (TIER A #8)"},
-    {"name": "Kessler", "year": 2018, "why": "'Kessler & Poon (2018), JMIR' VR-meditation review, untraceable (TIER A #9)"},
-    {"name": "Poon", "year": 2018, "why": "same untraceable review as Kessler (2018) (TIER A #9)"},
-
-    {"name": "Ostrom", "year": 2022, "why": "dead-author re-date: Ostrom died in 2012 (Vol 2 defect class 1)"},
-    {"name": "Meadows", "year": 2022, "why": "dead-author re-date: Meadows died in 2001 (Vol 2 defect class 1)"},
-    {"name": "Stout", "year": 2020, "why": "dead-author re-date: Stout died in 2018 (Vol 2 defect class 1)"},
-    {"name": "Boulding", "year": 2022, "why": "dead-author re-date: Boulding died in 1993 (Vol 2 defect class 1)"},
-    {"name": "Polanyi", "year": 2021, "why": "dead-author re-date: Polanyi died in 1964; the real work is 1944 (Vol 2 defect classes 1-2)"},
-    {"name": "Polanyi", "year": 2022, "why": "dead-author re-date: Polanyi died in 1964; the real work is 1944 (Vol 2 defect classes 1-2)"},
-    {"name": "Piketty", "year": 2021, "why": "re-dated real work: the book is 2013 (Vol 2 defect class 2)"},
-    {"name": "Piketty", "year": 2022, "why": "re-dated real work: the book is 2013 (Vol 2 defect class 2)"},
-    {"name": "Tetlock", "year": 2027, "why": "dated in the future (Vol 2 worklist)"}
+  "scan": [
+    "curriculum/*/*.php"
   ],
-
+  "flagged": [
+    {
+      "name": "Day",
+      "year": 2015,
+      "why": "phantom futurist 'Elaine Day (2015)', cited to two different chapter titles for the same page range (TIER A #1)"
+    },
+    {
+      "name": "Karp",
+      "year": 2018,
+      "why": "Journal of Neurotherapy ceased in 2013; the article cannot exist (TIER A #2)"
+    },
+    {
+      "name": "Price",
+      "year": 2013,
+      "why": "the title cited is R.T. Cox's 1946 paper (TIER A #3)"
+    },
+    {
+      "name": "Fermi",
+      "year": 1950,
+      "why": "no such publication — Fermi never published the remark (TIER A #5)"
+    },
+    {
+      "name": "Wagner",
+      "year": 1991,
+      "why": "'Sternberg & Wagner (1991), MSG thinking' — no such book or finding (TIER A #7)"
+    },
+    {
+      "name": "Sternberg",
+      "year": 1991,
+      "why": "same phantom book as Wagner (1991) (TIER A #7)"
+    },
+    {
+      "name": "Seto",
+      "year": 2016,
+      "why": "journal volume 1 is 2017; proposal untraceable; the known Michael Seto is a forensic psychologist (TIER A #8)"
+    },
+    {
+      "name": "Kessler",
+      "year": 2018,
+      "why": "'Kessler & Poon (2018), JMIR' VR-meditation review, untraceable (TIER A #9)"
+    },
+    {
+      "name": "Poon",
+      "year": 2018,
+      "why": "same untraceable review as Kessler (2018) (TIER A #9)"
+    },
+    {
+      "name": "Ostrom",
+      "year": 2022,
+      "why": "dead-author re-date: Ostrom died in 2012 (Vol 2 defect class 1)"
+    },
+    {
+      "name": "Meadows",
+      "year": 2022,
+      "why": "dead-author re-date: Meadows died in 2001 (Vol 2 defect class 1)"
+    },
+    {
+      "name": "Stout",
+      "year": 2020,
+      "why": "dead-author re-date: Stout died in 2018 (Vol 2 defect class 1)"
+    },
+    {
+      "name": "Boulding",
+      "year": 2022,
+      "why": "dead-author re-date: Boulding died in 1993 (Vol 2 defect class 1)"
+    },
+    {
+      "name": "Polanyi",
+      "year": 2021,
+      "why": "dead-author re-date: Polanyi died in 1964; the real work is 1944 (Vol 2 defect classes 1-2)"
+    },
+    {
+      "name": "Polanyi",
+      "year": 2022,
+      "why": "dead-author re-date: Polanyi died in 1964; the real work is 1944 (Vol 2 defect classes 1-2)"
+    },
+    {
+      "name": "Piketty",
+      "year": 2021,
+      "why": "re-dated real work: the book is 2013 (Vol 2 defect class 2)"
+    },
+    {
+      "name": "Piketty",
+      "year": 2022,
+      "why": "re-dated real work: the book is 2013 (Vol 2 defect class 2)"
+    },
+    {
+      "name": "Tetlock",
+      "year": 2027,
+      "why": "dated in the future (Vol 2 worklist)"
+    },
+    {
+      "name": "Rogers",
+      "year": 2022,
+      "why": "dead-author re-date: Everett Rogers died 2004-10-21; Diffusion of Innovations' last edition is 2003 (Vol 2 worklist dead roster). Carl Rogers (1961) is a different, real citation and stays cleared"
+    },
+    {
+      "name": "Peterson",
+      "year": 2023,
+      "why": "orphaned '(Peterson, 2023)' in ch28-section8 — no reference entry backs it (Vol 2 worklist)"
+    }
+  ],
   "cleared": [
-    {"name": "Meadows", "year": 2008, "why": "Thinking in Systems: A Primer, published posthumously in 2008 and entirely real. The naive rule 'any date after the author died' would condemn this, and a gate that cries wolf gets switched off. Three published lessons cite it correctly."},
-    {"name": "Jones", "year": 1985, "why": "the worklist names this as the CORRECT fix for the phantom Fermi (1950), not as a fault"},
-    {"name": "Duckworth", "year": 2016, "why": "Grit is real; the worklist's objection is the 'wise love' claim attached to it, which is a claim fault a citation checker cannot see"},
-    {"name": "Jeste", "year": 2020, "why": "real author; same 'wise love' attribution problem as Duckworth — a claim fault, not a fabricated source"},
-    {"name": "Warren", "year": 2011, "why": "Fung & Warren (2011) is the genuine Participedia paper; the fault is the nonexistent project it was attached to"},
-    {"name": "Lal", "year": 2015, "why": "mentioned in the worklist as a real source, not condemned"},
-    {"name": "Schooler", "year": 2019, "why": "mentioned in the worklist as a real source, not condemned"},
-    {"name": "Osborne", "year": 2023, "why": "Vol 2 worklist mention; not condemned as fabricated"},
-    {"name": "Zhang", "year": 2023, "why": "Vol 2 worklist mention; not condemned as fabricated"},
-    {"name": "Bernstein's", "year": 2022, "why": "possessive fragment of a longer institutional name in prose, not a citation of its own"},
-    {"name": "Atoms", "year": 2023, "why": "trailing word of a longer institutional name; matching on it alone would false-positive"},
-    {"name": "Center", "year": 2021, "why": "trailing word of a longer institutional name"},
-    {"name": "Collaborative", "year": 2022, "why": "trailing word of a longer institutional name"},
-    {"name": "Consortium", "year": 2023, "why": "trailing word of a longer institutional name"},
-    {"name": "Ecology", "year": 2024, "why": "trailing word of a longer institutional name"},
-    {"name": "Harvard", "year": 2023, "why": "trailing word of a longer institutional name"},
-    {"name": "Initiative", "year": 2022, "why": "trailing word of a longer institutional name"},
-    {"name": "Laboratory", "year": 2023, "why": "trailing word of a longer institutional name"},
-    {"name": "Project", "year": 2022, "why": "trailing word of a longer institutional name"},
-    {"name": "Qualcomm", "year": 2023, "why": "trailing word of a longer institutional name"},
-    {"name": "Systems", "year": 2024, "why": "trailing word of a longer institutional name"}
-  ]
+    {
+      "name": "Meadows",
+      "year": 2008,
+      "why": "Thinking in Systems: A Primer, published posthumously in 2008 and entirely real. The naive rule 'any date after the author died' would condemn this, and a gate that cries wolf gets switched off. Three published lessons cite it correctly."
+    },
+    {
+      "name": "Jones",
+      "year": 1985,
+      "why": "the worklist names this as the CORRECT fix for the phantom Fermi (1950), not as a fault"
+    },
+    {
+      "name": "Duckworth",
+      "year": 2016,
+      "why": "Grit is real; the worklist's objection is the 'wise love' claim attached to it, which is a claim fault a citation checker cannot see"
+    },
+    {
+      "name": "Jeste",
+      "year": 2020,
+      "why": "real author; same 'wise love' attribution problem as Duckworth — a claim fault, not a fabricated source"
+    },
+    {
+      "name": "Warren",
+      "year": 2011,
+      "why": "Fung & Warren (2011) is the genuine Participedia paper; the fault is the nonexistent project it was attached to"
+    },
+    {
+      "name": "Lal",
+      "year": 2015,
+      "why": "mentioned in the worklist as a real source, not condemned"
+    },
+    {
+      "name": "Schooler",
+      "year": 2019,
+      "why": "mentioned in the worklist as a real source, not condemned"
+    },
+    {
+      "name": "Osborne",
+      "year": 2023,
+      "why": "Vol 2 worklist mention; not condemned as fabricated"
+    },
+    {
+      "name": "Zhang",
+      "year": 2023,
+      "why": "Vol 2 worklist mention; not condemned as fabricated"
+    },
+    {
+      "name": "Bernstein's",
+      "year": 2022,
+      "why": "possessive fragment of a longer institutional name in prose, not a citation of its own"
+    },
+    {
+      "name": "Atoms",
+      "year": 2023,
+      "why": "trailing word of a longer institutional name; matching on it alone would false-positive"
+    },
+    {
+      "name": "Center",
+      "year": 2021,
+      "why": "trailing word of a longer institutional name"
+    },
+    {
+      "name": "Collaborative",
+      "year": 2022,
+      "why": "trailing word of a longer institutional name"
+    },
+    {
+      "name": "Consortium",
+      "year": 2023,
+      "why": "trailing word of a longer institutional name"
+    },
+    {
+      "name": "Ecology",
+      "year": 2024,
+      "why": "trailing word of a longer institutional name"
+    },
+    {
+      "name": "Harvard",
+      "year": 2023,
+      "why": "trailing word of a longer institutional name"
+    },
+    {
+      "name": "Initiative",
+      "year": 2022,
+      "why": "trailing word of a longer institutional name"
+    },
+    {
+      "name": "Laboratory",
+      "year": 2023,
+      "why": "trailing word of a longer institutional name"
+    },
+    {
+      "name": "Project",
+      "year": 2022,
+      "why": "trailing word of a longer institutional name"
+    },
+    {
+      "name": "Qualcomm",
+      "year": 2023,
+      "why": "trailing word of a longer institutional name"
+    },
+    {
+      "name": "Systems",
+      "year": 2024,
+      "why": "trailing word of a longer institutional name"
+    },
+    {
+      "name": "Gilboa",
+      "year": 1989,
+      "why": "Gilboa & Schmeidler, 'Maxmin expected utility with non-unique prior', J. Mathematical Economics 18(2) 141-153 — verified real. The worklist's objection is that ch1-s4 hangs it on Carl Ginet and Keynes, who had nothing to do with it: a claim fault, not a fabricated source"
+    },
+    {
+      "name": "Schmeidler",
+      "year": 1989,
+      "why": "co-author of the real 1989 paper; see Gilboa (1989)"
+    },
+    {
+      "name": "Rogers",
+      "year": 1961,
+      "why": "Carl Rogers, On Becoming a Person (1961) — real, and cited correctly in ch3/ch4/ch7. The worklist's objection is the ch8-s2 SHUFFLE, where a Granovetter weak-ties quote was matched to it. Same surname as the flagged Rogers (2022), different person, different verdict — which is the whole reason this gate matches on name AND year"
+    }
+  ],
+  "source": {
+    "_doc": "The manifesto corpus itself. The lesson scan answers 'did a fabrication reach the public'; this answers 'is it still in the book'. Denylist, not allowlist: an allowlist of volumes silently misses the next volume, while a new ops doc merely shows up as findings. The worklists are excluded because cataloguing a condemned citation is their job.",
+    "glob": "**/*.md",
+    "exclude": [
+      "CH1-8-CITATION-REPAIR-WORKLIST.md",
+      "VOL2-FABSTATS-PURGE-WORKLIST.md",
+      "MANIFESTO-REVISION-MASTERPLAN.md",
+      "MANIFESTO-STRUCTURE-PROPOSAL-2026-08-20.md",
+      "tools/",
+      "_audit-staging/"
+    ],
+    "ratchet": 56
+  }
 }
