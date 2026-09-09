@@ -3741,5 +3741,9 @@
   "chapters_target": 52,
   "legacy_accounted": 67,
   "canon_lessons": 16
+ },
+ "retired_chapters": {
+  "_doc": "Chapters the decided skeleton retires WITHOUT a single successor node, so they cannot be expressed as another node's legacy entry. Read by tools/chapter_refs.py, which needs somewhere to redirect a reference once the chapter's directory is gone. A dissolved chapter with no registry entry is the worst case: every sentence pointing at it dangles with nothing to rewrite it to.",
+  "33": "Dissolved by the 2026-08-20 audit (Volume 3, 13 -> 7). Its remit already lives in every chapter's own roadmap section and in Volume 5; there is no single successor. Rewrite a reference to point at the roadmap section of the chapter being discussed, or at Volume 5."
  }
 }

@@ -94,6 +94,25 @@ else:
             sys.exit("ABORT: the Forge's work log is behind the manifesto. "
                      "Run: python tools/forge_timeline.py, then commit the map.")
 
+# CHAPTER REFERENCES (2026-09-09): the manifesto is consolidating 67 chapters to
+# 52, and 2,264 sentences say "Chapter N". Every merge invalidates the ones
+# pointing at what it absorbed -- demoting ch2 to Appendix A broke twenty in a
+# single afternoon. The map is the registry; this holds the prose to it, and only
+# for chapters whose source has actually moved, so it is not permanently red.
+# --skip-chapter-refs bypasses; say why in the commit.
+if "--skip-chapter-refs" in sys.argv:
+    sys.argv.remove("--skip-chapter-refs")
+else:
+    import subprocess
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    _cr = os.path.join(_root, "tools", "chapter_refs.py")
+    if os.path.exists(_cr):
+        print("=== Chapter references (the prose vs the decided skeleton) ===", flush=True)
+        _renv = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
+        if subprocess.run([sys.executable, _cr], env=_renv).returncode != 0:
+            sys.exit("ABORT: a sentence points at a chapter that no longer exists. "
+                     "Rewrite each in context, then deploy.")
+
 # ATLAS CHECKS (2026-09-05): when the tree touches an Atlas file, the browser
 # checks run before the engine (tools/atlas_checks.py — Playwright from the
 # bot repo's venv, against local Apache like the render gate). Skipped on
