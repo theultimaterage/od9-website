@@ -161,6 +161,14 @@
    },
    {
     "at": "2026-09-09",
+    "sha": "950f803",
+    "scope": "Ch 1, 4-5",
+    "kind": "fix",
+    "what": "Repair the twenty sentences the Appendix A move broke",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
     "sha": "5b8fbea",
     "scope": "Ch 1, 3-4",
     "kind": "fix",
