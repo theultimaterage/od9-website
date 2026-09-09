@@ -73,6 +73,27 @@ else:
             sys.exit("ABORT: a published lesson carries a citation the manifesto's worklists "
                      "condemn, or a worklist names a source nobody has classified")
 
+# FORGE WORK LOG (2026-09-08): the Forge publishes what has been done to the
+# manifesto, derived from the book's own git history. Deploying the page while
+# that log is behind the book means publishing a ledger that is silently out of
+# date -- which is the exact failure this whole page exists to refuse. Runs on
+# --dry too; it is a JSON diff and costs nothing. It does NOT block when the
+# manifesto checkout is absent, because a machine without the book cannot know,
+# and saying so out loud beats failing forever.
+# --skip-forge-timeline bypasses; say why in the commit.
+if "--skip-forge-timeline" in sys.argv:
+    sys.argv.remove("--skip-forge-timeline")
+else:
+    import subprocess
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    _ft = os.path.join(_root, "tools", "forge_timeline.py")
+    if os.path.exists(_ft):
+        print("=== Forge work log (the ledger vs the manifesto's git history) ===", flush=True)
+        _fenv = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
+        if subprocess.run([sys.executable, _ft, "--check"], env=_fenv).returncode != 0:
+            sys.exit("ABORT: the Forge's work log is behind the manifesto. "
+                     "Run: python tools/forge_timeline.py, then commit the map.")
+
 # ATLAS CHECKS (2026-09-05): when the tree touches an Atlas file, the browser
 # checks run before the engine (tools/atlas_checks.py — Playwright from the
 # bot repo's venv, against local Apache like the render gate). Skipped on

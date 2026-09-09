@@ -39,6 +39,14 @@ $nodes     = $MAP['nodes'];
 $volumes   = $MAP['volumes'] ?? [];
 $schedule  = $MAP['schedule'] ?? [];
 $events    = $MAP['timeline']['events'] ?? [];
+/* The work log is DERIVED from the manifesto's git history by
+   tools/forge_timeline.py, and it is deliberately a different array from
+   $events. $events is the chapter-state ledger the Atlas replays and the stall
+   clock below measures. If commits fed into it, any docs commit would reset
+   "nothing has moved" — silencing the one number on this page that is not
+   flattering. Two clocks, both honest: the book is being maintained, and the
+   chapters still are not moving. */
+$work      = $MAP['timeline']['work'] ?? [];
 $readable  = array_values(array_filter($nodes, static fn($n) => !empty($n['canon'])));
 $awaiting  = array_values(array_filter($nodes, static fn($n) => empty($n['canon'])));
 $onAnvil   = array_values(array_filter($nodes, static fn($n) => !empty($n['forge'])));
@@ -92,6 +100,16 @@ $page_og_description = 'A book being reforged one chapter at a time, with the le
   .forge-list a:hover{color:#fff;border-bottom-color:#fff}
   .forge-list .muted{color:var(--chrome);opacity:0.75}
   .forge-list .why{margin-left:auto;font-size:0.76rem;color:var(--chrome);opacity:0.7;white-space:nowrap;padding-left:1rem}
+  /* The work log's scope varies ("Ch 9" to "Vols 1-4") where the chapter ledger's
+     never does, so it gets a FIXED column — min-width alone leaves every sentence
+     starting at a different x. */
+  .forge-work .n{flex:0 0 6.4rem;min-width:6.4rem;max-width:6.4rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .forge-work .muted{flex:1 1 auto;min-width:0}
+  @media (max-width:640px){
+    .forge-work li{flex-wrap:wrap}
+    .forge-work .muted{flex:1 1 100%;order:3}
+    .forge-work .why{margin-left:auto;order:2}
+  }
   .forge-anvil{border:1px solid var(--t-pioneer);border-radius:6px;padding:1rem 1.2rem;background:rgba(229,181,58,0.05)}
   .forge-anvil h3{font-family:'Orbitron',sans-serif;margin:0 0 0.3rem;color:var(--t-pioneer);font-size:1rem}
   .forge-anvil p{font-family:'Exo 2',sans-serif;color:var(--chrome);margin:0.3rem 0 0;line-height:1.55}
@@ -118,15 +136,21 @@ $page_og_description = 'A book being reforged one chapter at a time, with the le
       <div><b><?= count($readable) ?></b><span>chapters readable now</span></div>
       <div><b><?= count($awaiting) ?></b><span>not yet written out</span></div>
       <div><b><?= $sections ?></b><span>sections mapped</span></div>
-      <div><b><?= $daysIdle === null ? '—' : $daysIdle ?></b><span>days since the last change</span></div>
+      <div><b><?= $daysIdle === null ? '—' : $daysIdle ?></b><span>days since a chapter moved</span></div>
     </div>
 
     <?php if ($stalled): ?>
     <p class="forge-stall">
-      Nothing has moved in <?= (int)$daysIdle ?> days. The last change was
+      No chapter has moved in <?= (int)$daysIdle ?> days. The last one was
       <?= $esc($lastAt) ?>. The sermons that turn a raw chapter into a readable one are the
       bottleneck, and pretending otherwise on our own ledger would be the first dishonest
       thing on this site.
+      <?php if ($work): ?>
+      Work on the book has continued in that time — <?= count(array_filter($work,
+        static fn($w) => ($w['at'] ?? '') > $lastAt)) ?> commits against it since,
+      logged below. Repairing the text is not the same as publishing a chapter, and
+      this page will not let one stand in for the other.
+      <?php endif; ?>
     </p>
     <?php endif; ?>
   </header>
@@ -206,6 +230,29 @@ $page_og_description = 'A book being reforged one chapter at a time, with the le
       <?php endforeach; ?>
     </ul>
   </section>
+
+  <?php if ($work): ?>
+  <section class="forge-sec">
+    <h2>What we have been doing to it</h2>
+    <p class="lede">Every commit against the manifesto itself, newest first, read straight
+       out of the book's version history — so this list cannot be curated after the fact and
+       cannot quietly stop. A chapter becoming readable is the list above; this is the
+       repair, the argument and the housekeeping underneath it. It is an engineering record
+       and reads like one: these are the notes we write to each other, published unedited
+       rather than tidied up for you.</p>
+    <ul class="forge-list forge-work">
+      <?php foreach (array_slice($work, 0, 30) as $w): ?>
+      <li>
+        <span class="forge-when"><?= $esc($w['at']) ?></span>
+        <span class="n"><?= $esc($w['scope'] ?? '') ?></span>
+        <span class="muted"><?= $esc($w['what'] ?? '') ?></span>
+        <span class="why"><?= $esc($w['kind'] ?? '') ?></span>
+      </li>
+      <?php endforeach; ?>
+    </ul>
+    <p class="lede">Showing <?= min(30, count($work)) ?> of <?= count($work) ?>.</p>
+  </section>
+  <?php endif; ?>
 
   <p class="forge-foot">
     Forty chapters are not published yet, and that is deliberate: the revision is repairing
