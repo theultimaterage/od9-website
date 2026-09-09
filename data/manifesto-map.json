@@ -153,6 +153,14 @@
    },
    {
     "at": "2026-09-09",
+    "sha": "d678639",
+    "scope": "Ch 5-8",
+    "kind": "feat",
+    "what": "Ch6 and ch8 fold into ch7' — Volume 1 reaches five chapters",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
     "sha": "a0f66bf",
     "scope": "Ch 1-4, 7-8",
     "kind": "fix",
@@ -1821,7 +1829,7 @@
      "url": "https://offda9.com/curriculum/observer/from-vision-to-action.php"
     }
    ],
-   "note": "Absorbs ch6 (ethics & safety front-matter) and ch8 (implementation pathways) — decided 2026-08-20.",
+   "note": "Absorbs ch6 (ethics & safety, now §II) and ch8 (implementation, folded into §V, §VIII, §IX and §X) — decided 2026-08-20, executed 2026-09-09. Ten sections.",
    "history": [
     {
      "state": "canon",
@@ -1840,33 +1848,16 @@
     }
    ],
    "sections": [
-    "Introduction - Beyond Critique to Creation",
-    "Architectural Principles of the ASCEND System",
-    "Achievement System - Capability Through Conscious Action",
-    "Community Dynamics - Resonance-Based Connection",
-    "Evolutionary Algorithms - Continuous System Improvement",
-    "Neural Development - Consciousness Enhancement Infrastructure",
-    "Development Pathways - From Theory to Practice",
-    "Resource System - Abundance Through Optimization",
-    "From ASCEND to Type I Civilization",
-    "Introduction - The Ethics of Conscious Evolution",
-    "Anticipating Unintended Consequences",
-    "Safety Frameworks for Technological Development",
-    "Consciousness Development Safety",
-    "Ethical Frameworks for Transformation",
-    "Responsible Transformation Frameworks",
-    "Learning From Historical Transformation Attempts",
-    "Addressing Legitimate Concerns",
-    "The Integration of Wisdom and Transformation",
-    "Introduction - The Imperative of Implementation",
-    "Individual Practice - The Foundation of Transformation",
-    "Interpersonal Methodologies - Evolutionary Relationships",
-    "Community Implementation - Local Transformation Frameworks",
-    "Organizational Transformation - Evolutionary Institutions",
-    "Cultural Evolution Strategies - Transforming Meaning Systems",
-    "Economic Implementation - Resource Systems for Evolution",
-    "Governance Evolution - Implementation in Political Contexts",
-    "From Volume 1 to Volume 2 - The Path Forward"
+    "I. Introduction: Beyond Critique to Creation",
+    "II. Ethics and Safety Before Architecture",
+    "III. Architectural Principles of the ASCEND System",
+    "IV. Achievement System: Capability Through Conscious Action",
+    "V. Community Dynamics: Resonance-Based Connection",
+    "VI. Evolutionary Algorithms: Continuous System Improvement",
+    "VII. Neural Development: Consciousness Enhancement Infrastructure",
+    "VIII. Development Pathways: From Theory to Practice",
+    "IX. Resource System: Abundance Through Optimization",
+    "X. From ASCEND to Type I Civilization"
    ],
    "x": 110.0,
    "y": 485.0

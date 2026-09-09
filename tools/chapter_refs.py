@@ -61,7 +61,7 @@ OUR_RANGE = range(1, 68)
 # for the same reason the citation gate excludes the worklists: cataloguing a
 # defect is not committing one.
 SKIP_PARTS = ("_audit-staging", "tools" + os.sep, "WORKLIST", "MASTERPLAN",
-              "STRUCTURE-PROPOSAL", "sermons" + os.sep)
+              "STRUCTURE-PROPOSAL", "MERGE-MANIFEST", "sermons" + os.sep)
 # A line may name a retired chapter deliberately, to record where something came
 # from. Provenance is not drift, so a line saying so is allowed to say so.
 PROVENANCE = ("demoted from", "formerly chapter", "former chapter", "was chapter",
