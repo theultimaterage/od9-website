@@ -169,6 +169,14 @@
    },
    {
     "at": "2026-09-09",
+    "sha": "c17fa6d",
+    "scope": "Ch 36-47",
+    "kind": "feat",
+    "what": "Ch40 folds in and the chapter is rewritten — 277k words to 5.2k",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
     "sha": "a0f66bf",
     "scope": "Ch 1-4, 7-8",
     "kind": "fix",
@@ -2863,25 +2871,15 @@
     "How consciousness evolution transforms economic reality"
    ],
    "canon": [],
-   "note": "Absorbs ch40 — one economy, one chapter.",
+   "note": "Absorbs ch40 (one economy, told twice) and rewritten to the ch26 model — decided 2026-08-20, executed 2026-09-09. 277,000 words to ~5,200.",
    "history": [],
    "sections": [
-    "Introduction - Economic Evolution as Civilizational Enabler",
-    "Theoretical Foundation and First Principles",
-    "Transformation Architecture Overview",
-    "Resource Abundance Frameworks",
-    "Multidimensional Value Systems",
-    "Coordination Without Control Mechanisms",
-    "Integration Framework",
-    "Resource Requirements",
-    "Human-System Dynamics",
-    "Ethics, Governance, and Risk Management",
-    "Implementation Roadmap",
-    "Type 1 Civilization Integration",
-    "Introduction - Work Evolution as Civilizational Enabler",
-    "Self-Actualization Through Consciously Chosen Work",
-    "Post-Scarcity Contribution Frameworks",
-    "Value Creation and Recognition Systems"
+    "I. Introduction: The Economy as a Coordination System",
+    "II. What Scarcity Actually Is",
+    "III. What Money Cannot See",
+    "IV. Coordination Beyond Hierarchy and Price",
+    "V. Work as Chosen Contribution",
+    "VI. What This Requires, and What We Do Not Know"
    ],
    "x": 1085.0,
    "y": 440.0
