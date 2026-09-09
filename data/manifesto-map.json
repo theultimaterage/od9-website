@@ -144,6 +144,22 @@
   ],
   "work": [
    {
+    "at": "2026-09-09",
+    "sha": "a0f66bf",
+    "scope": "Ch 1-4, 7-8",
+    "kind": "fix",
+    "what": "Tier B — real sources, wrong claims, corrected per instance",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "5b8fbea",
+    "scope": "Ch 1, 3-4",
+    "kind": "fix",
+    "what": "Tier C — the woo-adjacent sourcing that survived the purge",
+    "src": "git"
+   },
+   {
     "at": "2026-09-08",
     "sha": "d7a8738",
     "scope": "Vols 1-4",
