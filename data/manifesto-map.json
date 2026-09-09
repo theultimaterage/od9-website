@@ -208,6 +208,14 @@
     "src": "git"
    },
    {
+    "at": "2026-09-09",
+    "sha": "05f1c58",
+    "scope": "Ch 24-38",
+    "kind": "feat",
+    "what": "Ch33 and ch34 fold in — Getting There Safely, 227k words to 4.2k",
+    "src": "git"
+   },
+   {
     "at": "2026-09-08",
     "sha": "d7a8738",
     "scope": "Vols 1-4",
@@ -2772,7 +2780,8 @@
    "vol": 3,
    "legacy": [
     35,
-    34
+    34,
+    33
    ],
    "state": "raw",
    "forge": false,
@@ -2786,27 +2795,16 @@
     "How security enables rather than restricts transformation"
    ],
    "canon": [],
-   "note": "ch33 retired — its transition remit already lives in every chapter's roadmap and in Volume 5.",
+   "note": "Absorbs ch34 and ch33; rewritten to the ch26 model — decided 2026-08-20, executed 2026-09-09. 227,000 words to ~4,200. Survives as chapter 35 in the corpus.",
    "history": [],
    "sections": [
-    "Introduction - Security as Civilizational Enabler",
-    "Theoretical Foundation and First Principles",
-    "Technical Architecture Overview",
-    "Cryptographic Foundation Systems",
-    "Privacy-Preserving Technologies",
-    "Distributed Security Systems",
-    "Integration Framework",
-    "Resource Requirements",
-    "Human-Security Interface",
-    "Meta-Security and Risk Management",
-    "Implementation Roadmap",
-    "Type 1 Civilization Integration",
-    "Introduction - Systems Integration as Civilizational Enabler",
-    "Interface Standards Framework",
-    "Emergent Intelligence Coordination System",
-    "Resilience Architecture",
-    "Human-System Interface",
-    "Security, Ethics, and Risk Management"
+    "I. Introduction: Three Problems That Are One Problem",
+    "II. Interfaces, and What Emerges Across Them",
+    "III. Resilience: Failing Without Falling Over",
+    "IV. Cryptographic Foundations, and Privacy in Use",
+    "V. Security Without a Centre",
+    "VI. Bridges: The Thesean Transition",
+    "VII. What This Requires, and What We Do Not Know"
    ],
    "x": 975.0,
    "y": 300.0
@@ -3742,7 +3740,6 @@
   "canon_lessons": 16
  },
  "retired_chapters": {
-  "_doc": "Chapters the decided skeleton retires WITHOUT a single successor node, so they cannot be expressed as another node's legacy entry. Read by tools/chapter_refs.py, which needs somewhere to redirect a reference once the chapter's directory is gone. A dissolved chapter with no registry entry is the worst case: every sentence pointing at it dangles with nothing to rewrite it to.",
-  "33": "Dissolved by the 2026-08-20 audit (Volume 3, 13 -> 7). Its remit already lives in every chapter's own roadmap section and in Volume 5; there is no single successor. Rewrite a reference to point at the roadmap section of the chapter being discussed, or at Volume 5."
+  "_doc": "Chapters the decided skeleton retires WITHOUT a single successor node, so they cannot be expressed as another node's legacy entry. Read by tools/chapter_refs.py, which needs somewhere to redirect a reference once the chapter's directory is gone. A dissolved chapter with no registry entry is the worst case: every sentence pointing at it dangles with nothing to rewrite it to."
  }
 }
