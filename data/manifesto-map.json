@@ -201,6 +201,14 @@
    },
    {
     "at": "2026-09-09",
+    "sha": "3f65a09",
+    "scope": "Vols 2-4",
+    "kind": "feat",
+    "what": "Ch27 folds in — energy and resources are one problem",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
     "sha": "2e35624",
     "scope": "Ch 3",
     "kind": "refactor",
@@ -2636,27 +2644,17 @@
     "Advanced materials for infrastructure resilience and efficiency"
    ],
    "canon": [],
-   "note": "",
+   "note": "ch26 (already reworked 2026-06-25) absorbs ch27's coordination pipeline as §6-§7 — decided 2026-08-20, executed 2026-09-09. Survives as chapter 26.",
    "history": [],
    "sections": [
-    "Energy as the Type-1 Threshold",
-    "Physical Foundations and Limits",
-    "Renewable Capture and Storage",
-    "Planetary-Scale Integration",
-    "Resources, Risk, and Security",
-    "Implementation Pathway",
-    "Introduction - Resource Coordination as Civilizational Enabler",
-    "Theoretical Foundation and First Principles",
-    "Technical Architecture Overview",
-    "Resource Sensing and Inventory Systems",
-    "Need Forecasting and Prioritization Frameworks",
-    "Allocation Optimization Engines",
-    "Integration Framework",
-    "Resource Requirements",
-    "Human-System Interface",
-    "Security, Ethics, and Risk Management",
-    "Implementation Roadmap",
-    "Type 1 Civilization Integration"
+    "1. Energy as the Type-1 Threshold",
+    "2. Physical Foundations & Limits",
+    "3. Renewable Capture & Storage",
+    "4. Planetary-Scale Integration",
+    "5. Resources, Risk & Security",
+    "6. Knowing What Exists",
+    "7. Deciding Where It Goes",
+    "8. Implementation Pathway"
    ],
    "x": 1195.0,
    "y": 100.0
