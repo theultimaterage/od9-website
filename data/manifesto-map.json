@@ -169,6 +169,14 @@
    },
    {
     "at": "2026-09-09",
+    "sha": "cd52a33",
+    "scope": "Vols 2-4",
+    "kind": "feat",
+    "what": "Ch24 folds in — The Information Commons, 162k words to 4.5k",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
     "sha": "c17fa6d",
     "scope": "Ch 36-47",
     "kind": "feat",
@@ -2600,25 +2608,15 @@
     "How transformed information systems enable collective wisdom"
    ],
    "canon": [],
-   "note": "",
+   "note": "ch25 absorbs ch24 (collective intelligence) and is rewritten to the ch26 model — decided 2026-08-20, executed 2026-09-09. 162,000 words to ~4,500. Survives as chapter 25.",
    "history": [],
    "sections": [
-    "Introduction - Information Environment as Civilizational Enabler",
-    "Theoretical Foundation and First Principles",
-    "Technical Architecture Overview",
-    "Reality Construction Optimization Systems",
-    "Understanding-Optimized Algorithmic Design",
-    "Open Intelligence Platforms and Verification Systems",
-    "Integration Framework",
-    "Resource Requirements",
-    "Human-System Interface",
-    "Security, Ethics, and Risk Management",
-    "Implementation Roadmap",
-    "Type 1 Civilization Integration",
-    "Introduction - Collective Intelligence Systems as Civilizational Enabler",
-    "Distributed Cognition Networks",
-    "Human-AI Collaborative Intelligence",
-    "Decision Augmentation Systems"
+    "1. Information Systems Build Reality",
+    "2. What Engagement Optimization Does",
+    "3. Provenance and Verification",
+    "4. Thinking Together",
+    "5. Human and Machine Cognition",
+    "6. What This Requires, and What We Do Not Know"
    ],
    "x": 1085.0,
    "y": 100.0
