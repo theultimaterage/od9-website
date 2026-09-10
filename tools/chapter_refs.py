@@ -69,6 +69,18 @@ MANIFESTO = Path(os.environ.get("MANIFESTO_DIR", r"C:\Users\Rage\Documents\The O
 # sentences; matching them would indict the SUMMARIES' own file listing.
 CHAPTER_RE = re.compile(r"\bCh(?:apters?\s+|\.\s*|)(\d+)\b")
 DIR_NUM_RE = re.compile(r"^Chapter\s+(\d+)\b", re.IGNORECASE)
+
+# A reference can name a chapter that exists AND a section it no longer has.
+# `Ch.7's 'Community Implementation'` resolves -- ch7 is live -- but the
+# rewrite collapsed ch7's fifteen sections into six with new titles and folded
+# ch8 in, so the quoted section is gone. The number was repointed by the merge
+# campaign; the quoted title was not, because nothing was checking it. On
+# 2026-09-10 the LoveLogic master carried 97 such quotations, of which roughly
+# half named a section the chapter no longer has. The map's per-node `sections`
+# list is the oracle, so this is checkable without semantics.
+SECTION_QUOTE_RE = re.compile(
+    r"\bCh(?:apters?\s+|\.\s*|)(\d+)['’]s\s+['‘“]([^'’”]{6,90})['’”]")
+SECTIONS_BASELINE = ROOT / "tools" / "chapter_refs_sections_baseline.json"
 # This book has 67 chapters. Other books are quoted in it and have their own: the
 # Dao De Jing's chapter 81 is not a dangling reference to ours, and reading it as
 # one is how a linter earns a reputation for crying wolf.
@@ -135,6 +147,45 @@ def title_index(doc: dict) -> dict[str, int]:
             if len(old_title) >= MIN_TITLE_LEN:
                 idx[old_title] = int(num)
     return idx
+
+
+def sections_index(doc: dict) -> dict[int, tuple[str, set[str]]]:
+    """{chapter number -> (lowercased chapter title, {lowercased section titles})},
+    keyed by EVERY number a node answers to, so a quotation credited to retired
+    ch8 is judged against ch7's sections -- where the words would be if the
+    section survived the fold."""
+    out: dict[int, tuple[str, set[str]]] = {}
+    for n in doc.get("nodes", []):
+        secs = {s.strip().lower() for s in (n.get("sections") or []) if s}
+        title = (n.get("title") or "").strip().lower()
+        for old in (n.get("legacy") or []):
+            out[int(old)] = (title, secs)
+    return out
+
+
+def stale_sections(line: str, sidx: dict[int, tuple[str, set[str]]]) -> list[tuple[int, str]]:
+    """(chapter, quoted title) for every `Ch.N's 'Title'` on the line where
+    Title is neither one of Chapter N's sections nor Chapter N's own title.
+
+    Substring in either direction, case-insensitive: LoveLogic quotes
+    'Knowledge Transfer Systems' against a section titled 'What We Know About
+    Transferring Knowledge' -- and that is a miss, correctly, because the
+    quoted words are not the section's name. Only what the map can vouch for
+    is accepted; a paraphrase is a finding, and a finding is a sentence to
+    rewrite, not a token to swap."""
+    out = []
+    for m in SECTION_QUOTE_RE.finditer(line):
+        num = int(m.group(1))
+        if num not in OUR_RANGE or num not in sidx:
+            continue
+        quoted = m.group(2).strip().lower()
+        title, secs = sidx[num]
+        if title and (quoted in title or title in quoted):
+            continue
+        if any(quoted in s or s in quoted for s in secs):
+            continue
+        out.append((num, m.group(2).strip()))
+    return out
 
 
 def misdirected(line: str, idx: dict[str, int]) -> list[tuple[str, int, int]]:
@@ -264,7 +315,8 @@ def scan(doc: dict, extra: dict[Path, str] | None = None) -> dict:
     broken = {n: lbl for n, lbl in retired.items() if n not in still_on_disk}
 
     idx = title_index(doc)
-    findings, gaps, wrong, scanned = [], [], [], 0
+    sidx = sections_index(doc)
+    findings, gaps, wrong, stale, scanned = [], [], [], [], 0
     # .json as well as .md. The manuscript is markdown, but it is not the only
     # thing that cites chapters: pdf1_foundation_data.json is the LoveLogic
     # compendium's question bank and carries 394 `Ch.N` citations straight into
@@ -288,6 +340,11 @@ def scan(doc: dict, extra: dict[Path, str] | None = None) -> dict:
                 wrong.append({"file": rel, "line": i, "chapter": cited,
                               "now": f"names “{title}”, which is Chapter {correct}",
                               "text": line.strip()[:150]})
+            for num, quoted in stale_sections(line, sidx):
+                stale.append({"file": rel, "line": i, "chapter": num,
+                              "now": f"quotes a section “{quoted}” that Chapter {num} "
+                                     f"no longer has",
+                              "text": line.strip()[:150]})
             for m in CHAPTER_RE.finditer(line):
                 num = int(m.group(1))
                 if num not in OUR_RANGE:
@@ -304,6 +361,7 @@ def scan(doc: dict, extra: dict[Path, str] | None = None) -> dict:
                         {"file": rel, "line": i, "chapter": num,
                          "now": "not in the map", "text": line.strip()[:150]})
     return {"scanned": scanned, "findings": findings, "misdirected": wrong,
+            "stale_sections": stale,
             "map_gaps": sorted({g["chapter"] for g in gaps}),
             "retired_total": len(retired), "moved_already": sorted(broken)}
 
@@ -406,6 +464,30 @@ def selftest(doc: dict) -> int:
         print("  WARN the map has too few titled chapters to prove the misdirection rule")
         ok = False
 
+    # the stale-section rule: a quoted section the chapter no longer has fires;
+    # one it does have, and the chapter's own title, stay quiet
+    sidx = sections_index(doc)
+    with_secs = [(n, t, s) for n, (t, s) in sidx.items() if s and n in live]
+    if with_secs:
+        n, t, s = with_secs[0]
+        real = sorted(s)[0]
+        got = scan(doc, {f: f"Ch.{n}'s 'Zebra Quantum Gardening Protocols' covers it.\n"})
+        caught = any(x["chapter"] == n for x in got.get("stale_sections", []))
+        ok &= caught
+        print(f"  {'OK  ' if caught else 'FAIL'} a quoted section Chapter {n} does not have is caught")
+        got = scan(doc, {f: f"Ch.{n}'s '{real}' covers it.\n"})
+        quiet6 = not got.get("stale_sections")
+        ok &= quiet6
+        print(f"  {'OK  ' if quiet6 else 'FAIL'} a quoted section Chapter {n} DOES have is silent")
+        if t:
+            got = scan(doc, {f: f"Ch.{n}'s '{t}' covers it.\n"})
+            quiet7 = not got.get("stale_sections")
+            ok &= quiet7
+            print(f"  {'OK  ' if quiet7 else 'FAIL'} the chapter's own title in quotes is silent")
+    else:
+        print("  WARN the map carries no sections to prove the stale-section rule")
+        ok = False
+
     # the skip list must not swallow the indices: "MANIFEST" is inside "MANIFESTO"
     for name in ("OD9 Manifesto Table of Contents.md", "OD9-MANIFESTO-SUMMARIES.md"):
         swallowed = any(sp in name for sp in SKIP_PARTS)
@@ -425,6 +507,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--ratchet-sections", action="store_true",
+                    help="record the current stale-section count as the ceiling (after a repair pass)")
     a = ap.parse_args()
 
     if not MAP.is_file():
@@ -469,9 +553,43 @@ def main() -> int:
             print(f"      cites Chapter {w['chapter']} but {w['now']}")
             print(f"      {w['text']}")
 
-    if not r["findings"] and not r["misdirected"]:
-        print("  CLEAN — every chapter reference points at something that exists, and every "
-              "reference naming a title agrees with it")
+    # STALE SECTIONS ride a RATCHET, not a zero: on 2026-09-10 there were dozens
+    # of them, every one a sentence in the LoveLogic corpus that needs rewriting
+    # by hand, and a gate that goes red for weeks over known work gets switched
+    # off. So the count may only go DOWN. `--ratchet-sections` records the
+    # current count as the new ceiling after a repair pass; a commit that adds
+    # one fails.
+    stale = r["stale_sections"]
+    baseline = None
+    if SECTIONS_BASELINE.is_file():
+        try:
+            baseline = int(json.loads(SECTIONS_BASELINE.read_text(encoding="utf-8"))["stale_sections"])
+        except (ValueError, KeyError, TypeError):
+            baseline = None
+    if a.ratchet_sections:
+        SECTIONS_BASELINE.write_text(json.dumps({"stale_sections": len(stale)}, indent=2) + "\n",
+                                     encoding="utf-8")
+        print(f"\n  stale-section baseline written: {len(stale)}")
+        baseline = len(stale)
+    sections_over = baseline is not None and len(stale) > baseline
+    if stale:
+        print(f"\n  STALE SECTIONS: {len(stale)} quotation(s) name a section their chapter no "
+              f"longer has (ratchet {baseline if baseline is not None else 'unset'}). The "
+              f"chapter number resolves; the quoted title did not survive its rewrite.")
+        for s in stale[:12]:
+            print(f"    {s['file']}:{s['line']}  Chapter {s['chapter']} {s['now']}")
+        if len(stale) > 12:
+            print(f"    ... and {len(stale) - 12} more (--json for all)")
+        if sections_over:
+            print(f"  RATCHET BROKEN: {len(stale)} > {baseline}. A new stale section quotation "
+                  "was introduced; rewrite it, do not raise the ceiling.")
+        elif baseline is None:
+            print("  (no baseline yet — run with --ratchet-sections to set the ceiling)")
+
+    if not r["findings"] and not r["misdirected"] and not sections_over:
+        print("  CLEAN — every chapter reference points at something that exists, every "
+              "reference naming a title agrees with it, and no new stale section quotation "
+              "was introduced")
         return 0 if not r["map_gaps"] else 1
     if not r["findings"]:
         return 1
