@@ -169,6 +169,22 @@
    },
    {
     "at": "2026-09-10",
+    "sha": "58dd863",
+    "scope": "Ch 36, 48, 50",
+    "kind": "refactor",
+    "what": "Strip ch49 indices, repoint 33 refs, fix 4 split-misroutes",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "55f6608",
+    "scope": "Ch 38, 47",
+    "kind": "feat",
+    "what": "Ch47 folds in — Governance at Every Scale, 181,521 words to 6,203",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
     "sha": "3db20be",
     "scope": "Ch 23, 29-30",
     "kind": "feat",
@@ -3362,31 +3378,22 @@
    "tier": "S3",
    "verdict": "ALIGN",
    "bullets": [
-    "Mechanics recognizing genuine evolutionary contribution",
-    "Multidimensional advancement tracking frameworks",
-    "Beyond gamification: authentic progress measurement",
-    "Individual and collective achievement integration",
-    "How proper metrics accelerate transformation"
+    "Three gates that do not substitute: credits, dimension floors, shipped demonstrations",
+    "Presence earns nothing; value is recognised only after verification",
+    "Money buys one dimension of five, and multipliers cannot touch the gate",
+    "One credit chokepoint, enforced by a test rather than by discipline",
+    "What was designed and never built, separated so a reader can tell"
    ],
    "canon": [],
-   "note": "Absorbs ch49's shipped credit-economy content.",
+   "note": "Absorbs ch49's SHIPPED credit-economy content — decided 2026-08-20, executed 2026-09-10. 154,315 words to 4,912. ch49's EVT/ROT token specifications (21,149 words, never built) go to Future Deployments instead, per D6. The only chapter in the book describing something a reader can go and check: every figure verified against live configuration and source, not against the predecessor chapter. States its own inconsistency — Benefactor requires active supporter status, the one gate effort cannot satisfy. Survives as chapter 54.",
    "history": [],
    "sections": [
-    "Implementation Overview and System Architecture",
-    "Technical Foundations and Implementation Principles",
-    "Architectural Specifications",
-    "Evolution Token (EVT) Implementation",
-    "Resource Optimization Token (ROT) Implementation",
-    "Value Recognition System Implementation",
-    "Consciousness Integration Framework",
-    "User Interface and Experience Design",
-    "Data Architecture and Knowledge Systems",
-    "Deployment Strategy and Timeline",
-    "Integration with Other ASCEND Components",
-    "Resource Requirements and Management",
-    "Risk Management and Mitigation",
-    "Governance and Maintenance Systems",
-    "Advancement Metrics and Success Indicators"
+    "I. What Was Actually Built",
+    "II. Five Dimensions and the Gate",
+    "III. Verification Before Value",
+    "IV. What Money Can and Cannot Buy",
+    "V. Designed, Not Built",
+    "VI. What This Requires, and What We Do Not Know"
    ],
    "x": 132.5,
    "y": 755.0

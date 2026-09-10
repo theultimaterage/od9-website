@@ -60,8 +60,14 @@ OUR_RANGE = range(1, 68)
 # Ops docs argue ABOUT the moves and must name retired numbers to do it. Excluded
 # for the same reason the citation gate excludes the worklists: cataloguing a
 # defect is not committing one.
+# NOTE the exact form "-MANIFEST.md": the merge runbooks are named VOL3-CH23-MERGE-
+# MANIFEST.md, VOL5-RESTRUCTURE-MANIFEST.md and so on, and a new one appeared with a
+# name the old literal "MERGE-MANIFEST" did not cover. The obvious generalisation to
+# "MANIFEST" is a TRAP: it is a substring of MANIFESTO, so it would silently skip
+# "OD9 Manifesto Table of Contents.md" and "OD9-MANIFESTO-SUMMARIES.md" — the two files
+# that most need checking. The selftest pins that they are still scanned.
 SKIP_PARTS = ("_audit-staging", "tools" + os.sep, "WORKLIST", "MASTERPLAN",
-              "STRUCTURE-PROPOSAL", "MERGE-MANIFEST", "sermons" + os.sep)
+              "STRUCTURE-PROPOSAL", "-MANIFEST.md", "sermons" + os.sep)
 # A line may name a retired chapter deliberately, to record where something came
 # from. Provenance is not drift, so a line saying so is allowed to say so.
 PROVENANCE = ("demoted from", "formerly chapter", "former chapter", "was chapter",
@@ -319,6 +325,16 @@ def selftest(doc: dict) -> int:
     else:
         print("  WARN the map has too few titled chapters to prove the misdirection rule")
         ok = False
+
+    # the skip list must not swallow the indices: "MANIFEST" is inside "MANIFESTO"
+    for name in ("OD9 Manifesto Table of Contents.md", "OD9-MANIFESTO-SUMMARIES.md"):
+        swallowed = any(sp in name for sp in SKIP_PARTS)
+        ok &= not swallowed
+        print(f"  {'OK  ' if not swallowed else 'FAIL'} {name[:38]:<40} is still scanned")
+    runbook = "VOL5-RESTRUCTURE-MANIFEST.md"
+    skipped = any(sp in runbook for sp in SKIP_PARTS)
+    ok &= skipped
+    print(f"  {'OK  ' if skipped else 'FAIL'} a merge runbook IS skipped ({runbook})")
 
     print("  selftest: " + ("it can fail and it can stay quiet, so a clean run means something"
                             if ok else "THE LINTER IS DECORATION"))
