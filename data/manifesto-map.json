@@ -141,6 +141,1504 @@
     "state": "forge",
     "what": "Sermon 001 — The 62% Engine (attempted 2026-08-23 · redo TBD)"
    }
+  ],
+  "work": [
+   {
+    "at": "2026-09-10",
+    "sha": "e1ea1bf",
+    "scope": "Ch 51, 53, 57",
+    "kind": "feat",
+    "what": "Future Deployments — the campaign closes at 52 chapters",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "d9973de",
+    "scope": "Ch 36, 48",
+    "kind": "fix",
+    "what": "Remove 15 fabricated self-quotations; repoint 69 more references",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "b3bb9cd",
+    "scope": "Ch 32",
+    "kind": "fix",
+    "what": "Ch32 §11 sent ASCEND Development Pathways to Chapter 47",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "9afb321",
+    "scope": "Ch 23",
+    "kind": "feat",
+    "what": "Section V — the ethics that come first",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "9a479fa",
+    "scope": "Ch 54, 56, 58",
+    "kind": "feat",
+    "what": "Ch56's learning half folds in — Development Pathways",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "8046ea4",
+    "scope": "Ch 23",
+    "kind": "feat",
+    "what": "Section IV — what we know about transferring knowledge",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "7a0d87d",
+    "scope": "Ch 58",
+    "kind": "fix",
+    "what": "Correct three claims the draft asserted instead of verifying",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "6c520a5",
+    "scope": "Ch 49, 54",
+    "kind": "feat",
+    "what": "Ch49's shipped half folds in — The Progression Economy",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "58dd863",
+    "scope": "Ch 36, 48, 50",
+    "kind": "refactor",
+    "what": "Strip ch49 indices, repoint 33 refs, fix 4 split-misroutes",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "55f6608",
+    "scope": "Ch 38, 47",
+    "kind": "feat",
+    "what": "Ch47 folds in — Governance at Every Scale, 181,521 words to 6,203",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "3db20be",
+    "scope": "Ch 23, 29-30",
+    "kind": "feat",
+    "what": "Ch29 and ch30 fold in — Enhancement, 188,568 words to 7,539",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "133dbf0",
+    "scope": "Ch 38",
+    "kind": "feat",
+    "what": "Sections II and III — scale, and what deliberation shows",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "060a5ae",
+    "scope": "Ch 23",
+    "kind": "feat",
+    "what": "Section III — what we know about changing the body",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "ede5493",
+    "scope": "Ch 5",
+    "kind": "feat",
+    "what": "Nine sections to three — the five failure domains, and the filter",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "e7822ba",
+    "scope": "Ch 1",
+    "kind": "feat",
+    "what": "Merge the duplicate Kardashev drafts; ch1 runs I-VIII",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "d678639",
+    "scope": "Ch 5-8",
+    "kind": "feat",
+    "what": "Ch6 and ch8 fold into ch7' — Volume 1 reaches five chapters",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "cd52a33",
+    "scope": "Vols 2-4",
+    "kind": "feat",
+    "what": "Ch24 folds in — The Information Commons, 162k words to 4.5k",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "c17fa6d",
+    "scope": "Ch 36-47",
+    "kind": "feat",
+    "what": "Ch40 folds in and the chapter is rewritten — 277k words to 5.2k",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "b7b4f80",
+    "scope": "Ch 47",
+    "kind": "fix",
+    "what": "Repair an off-by-five cascade in ch47 §11",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "b607d93",
+    "scope": "Ch 23",
+    "kind": "feat",
+    "what": "Section II — what we know about changing the brain",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "a0f66bf",
+    "scope": "Ch 1-4, 7-8",
+    "kind": "fix",
+    "what": "Tier B — real sources, wrong claims, corrected per instance",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "950f803",
+    "scope": "Ch 1, 4-5",
+    "kind": "fix",
+    "what": "Repair the twenty sentences the Appendix A move broke",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "5b8fbea",
+    "scope": "Ch 1, 3-4",
+    "kind": "fix",
+    "what": "Tier C — the woo-adjacent sourcing that survived the purge",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "59f0775",
+    "scope": "Ch 18-48",
+    "kind": "refactor",
+    "what": "Strip ch29/ch30 indices, repoint prose, fix 3 bad xrefs",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "3f65a09",
+    "scope": "Vols 2-4",
+    "kind": "feat",
+    "what": "Ch27 folds in — energy and resources are one problem",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "2e35624",
+    "scope": "Ch 3",
+    "kind": "refactor",
+    "what": "Ch2 becomes Appendix A — methods as reference, not chapter two",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "05f1c58",
+    "scope": "Ch 24-38",
+    "kind": "feat",
+    "what": "Ch33 and ch34 fold in — Getting There Safely, 227k words to 4.2k",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-08",
+    "sha": "d7a8738",
+    "scope": "Vols 1-4",
+    "kind": "fix",
+    "what": "The re-dated and phantom citations the worklists never reached",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-08",
+    "sha": "c1c7ce3",
+    "scope": "Ch 1-2, 4",
+    "kind": "fix",
+    "what": "The eleven fabricated citations, repaired per instance",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-08",
+    "sha": "1182d7c",
+    "scope": "Ch 1, 3-4",
+    "kind": "fix",
+    "what": "The Tier-A claim faults, which no gate can see",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-27",
+    "sha": "15b7738",
+    "scope": "sermons",
+    "kind": "docs",
+    "what": "Record the 08-27 pivot — 001 gets a redo, 002 parked",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-20",
+    "sha": "5657b17",
+    "scope": "Ch 5, 7, 18, 24",
+    "kind": "feat",
+    "what": "Land the 2026-08-20 audit decisions — D1-D7 approved",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-17",
+    "sha": "6bc2db0",
+    "scope": "sermons",
+    "kind": "feat",
+    "what": "Fill 001's tie-in beat, draft 002, set the board lesson",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-15",
+    "sha": "fdced12",
+    "scope": "sermons",
+    "kind": "feat",
+    "what": "Beat-sheet template + Sermon 001 — The 62% Engine",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-15",
+    "sha": "5f00c24",
+    "scope": "Ch 23-48",
+    "kind": "purge",
+    "what": "Person-as-subject invented studies treated (Vols 3-6) — WAVE 3 CLOSED",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-15",
+    "sha": "2392ab8",
+    "scope": "Ch 27-39",
+    "kind": "purge",
+    "what": "Lens verb-widening caught 13 more — treated; gates hold {0,0}",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-15",
+    "sha": "0989cd2",
+    "scope": "Ch 33",
+    "kind": "purge",
+    "what": "4 stat-less have-developed pairs hedged (ch33)",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "fe9904a",
+    "scope": "Vols 2-4",
+    "kind": "purge",
+    "what": "MED pass — Crossref/OpenAlex/DBLP-verified",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "fd4205f",
+    "scope": "Ch 7",
+    "kind": "purge",
+    "what": "Ch7 — Solution Framework cleared (42)",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "d56c681",
+    "scope": "Ch 42",
+    "kind": "purge",
+    "what": "Quote-mosaic de-quoted — 67 pins, embedded fake stats neutralized",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "d42b64f",
+    "scope": "Ch 1, 3",
+    "kind": "purge",
+    "what": "MED pass tail — real repairs + misattribution strips",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "d0a54fa",
+    "scope": "Ch 9, 12-13",
+    "kind": "purge",
+    "what": "MED verification pass — 23 real kept, 8 repaired, 5 stripped",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "c91885d",
+    "scope": "Ch 27",
+    "kind": "purge",
+    "what": "Verb-gap escapees cleared; detector v6.1",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "b943b45",
+    "scope": "Ch 40",
+    "kind": "feat",
+    "what": "Deterministic anonpin de-quoter — tight shapes only",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "b6fb5ab",
+    "scope": "Ch 42",
+    "kind": "purge",
+    "what": "Ch42 — Community Evolution cleared (68); ANONPIN=0 CORPUS-WIDE",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "b55c4c6",
+    "scope": "Ch 33",
+    "kind": "purge",
+    "what": "Ch33 — Transition Technologies cleared (128)",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "b0c2dda",
+    "scope": "Ch 39, 45, 47",
+    "kind": "purge",
+    "what": "Staging fix + Gunnlaugson sibling refs",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "ad3d412",
+    "scope": "Ch 27, 39, 48",
+    "kind": "purge",
+    "what": "The fake-institution factory dismantled — 878 ORGVERB to 0",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "891f32f",
+    "scope": "Ch 45",
+    "kind": "purge",
+    "what": "Final 3 STUDYBY-MED repaired to verified real citations — GATE TOTAL 0",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "868b686",
+    "scope": "Ch 7-45",
+    "kind": "purge",
+    "what": "Mechanical wave — 568 tight-shape pins de-quoted across 40 files",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "6175e8f",
+    "scope": "Ch 42, 45",
+    "kind": "purge",
+    "what": "Quote-mosaic closed — 77 de-quoted + 9 tail verdicts; corpus gate 0",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "5f01464",
+    "scope": "Ch 42",
+    "kind": "purge",
+    "what": "Quote-mosaic de-quoted — 78 pins to honest indirect attribution",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "4ec3fb7",
+    "scope": "Ch 7, 45",
+    "kind": "purge",
+    "what": "Ch45 s1-s11 zero + s12 partial + ch7 s9 — fleet survivors",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "4d3f424",
+    "scope": "Ch 7-45",
+    "kind": "purge",
+    "what": "NAMEDPIN class closed — 182 pins to 0 corpus-wide",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "36bb1f5",
+    "scope": "Ch 39",
+    "kind": "purge",
+    "what": "Pearl fake-lab verb-gap residue — 3 escapees cleared",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "34111f0",
+    "scope": "Ch 8",
+    "kind": "purge",
+    "what": "Ch8 — From Vision to Action cleared (60)",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "27b8706",
+    "scope": "Vols 2-4",
+    "kind": "purge",
+    "what": "234 dead-author citation violations -> 0 — BOTH GATES AT ABSOLUTE ZERO",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "2135072",
+    "scope": "Ch 9",
+    "kind": "purge",
+    "what": "Ch9 — Media and Information Crisis cleared (17)",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "1d7aff2",
+    "scope": "Vols 1-4",
+    "kind": "purge",
+    "what": "All 86 research-word fusions repaired — SPLICE=0",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "13b8729",
+    "scope": "Ch 42",
+    "kind": "purge",
+    "what": "MED pass — 69 findings worked; year-repairs HONEST-CAVEATED",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "02b9ee0",
+    "scope": "Vols 2-4",
+    "kind": "purge",
+    "what": "959 'as research <bare-verb>' agreement mangles fixed",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "00ef9e3",
+    "scope": "Ch 39",
+    "kind": "purge",
+    "what": "ORGVERB cleared — 246 org-as-subject fabrications to 0; chapter fully clean",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-14",
+    "sha": "0003890",
+    "scope": "Ch 45",
+    "kind": "purge",
+    "what": "Ch45 s12 — Chapter 45 ANONPIN closed",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-13",
+    "sha": "f003e30",
+    "scope": "Ch 35-48",
+    "kind": "purge",
+    "what": "Fabricated reference-list layer for the v5-repaired names cleared",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-13",
+    "sha": "dbebbef",
+    "scope": "Ch 39",
+    "kind": "purge",
+    "what": "Last Nielsen phantom — the MED-tier in-text coinage de-cited",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-13",
+    "sha": "c8ffd89",
+    "scope": "Ch 13",
+    "kind": "purge",
+    "what": "Class-4 v5 possessive layer — fake co-author constellations resolved",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-13",
+    "sha": "c5caa26",
+    "scope": "Ch 18, 20-21",
+    "kind": "purge",
+    "what": "Class-4 v5 possessive layer — real papers restored to their real findings",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-13",
+    "sha": "bf76811",
+    "scope": "Ch 9",
+    "kind": "purge",
+    "what": "Class-4 v5 possessive layer — Martinez-Ortega + 4 more judged",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-13",
+    "sha": "7d4dd90",
+    "scope": "Ch 45",
+    "kind": "purge",
+    "what": "Class-4 v5 possessive layer — Bandura dead-author trap + 6 more",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-13",
+    "sha": "6eed1f4",
+    "scope": "Ch 9",
+    "kind": "purge",
+    "what": "Class-4 CLOSED — last fabricated authority stripped, ledger corrected",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-13",
+    "sha": "54656b1",
+    "scope": "Ch 18",
+    "kind": "purge",
+    "what": "Org-year transplant sub-class — three fabricated Pew justice stats stripped",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-13",
+    "sha": "4ff4576",
+    "scope": "Ch 39",
+    "kind": "purge",
+    "what": "Class-4 v5 possessive layer — 11 findings, 6 repaired to real works",
+    "src": "git"
+   },
+   {
+    "at": "2026-08-13",
+    "sha": "010acb1",
+    "scope": "Ch 28, 32",
+    "kind": "purge",
+    "what": "Class-4 v5 possessive layer — DOI-verified fabrication deleted",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "ed090c3",
+    "scope": "Ch 21",
+    "kind": "purge",
+    "what": "Class-4 wave 2 — section7 cleared (36H): the uniform-2022 re-date file",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "df16bfd",
+    "scope": "Ch 12",
+    "kind": "purge",
+    "what": "Class-4 v4 layer — transformation-pathways cross-line fabrications (partial)",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "de9d64d",
+    "scope": "Ch 12",
+    "kind": "purge",
+    "what": "Class-4 wave 2 — sections 7/9/10 cleared (uniform-2022 re-date pattern)",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "dc95bab",
+    "scope": "Ch 13",
+    "kind": "purge",
+    "what": "Class-4 wave 1 — 246 HIGH + ~35 MED cleared (agent died at file boundary)",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "d485fd4",
+    "scope": "Ch 13",
+    "kind": "purge",
+    "what": "Class-4 COMPLETE — 390 -> 43 justified-real survivors",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "cb839a4",
+    "scope": "Ch 18",
+    "kind": "purge",
+    "what": "Class-4 — sections 3/11 cleared (31 fixed, real scholarship kept)",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "c88a99e",
+    "scope": "Ch 30",
+    "kind": "purge",
+    "what": "Class-4 — section9 cleared (63: 24 HIGH + 39 MED)",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "c73f2e8",
+    "scope": "Ch 15",
+    "kind": "purge",
+    "what": "Class-4 wave 1 — sections 1/2/6/10 cleared (58 fixed)",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "b289ed8",
+    "scope": "Ch 12, 15-16",
+    "kind": "purge",
+    "what": "Class-4 partial — session-limit salvage",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "9683f81",
+    "scope": "Ch 11",
+    "kind": "purge",
+    "what": "Class-4 COMPLETE — 978 -> 14 justified-real survivors",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "8ebff49",
+    "scope": "Ch 11",
+    "kind": "purge",
+    "what": "Section3 deepened — real sources restored w/ WebSearch verification",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "86319a4",
+    "scope": "Vols 1-6",
+    "kind": "strip",
+    "what": "Remove fake-citation scaffolding wholesale — honest, not perfect",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "75bf513",
+    "scope": "Ch 11",
+    "kind": "purge",
+    "what": "Class-4 wave 2 — sections 4/7/9/10 cleared (283 HIGH)",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "68c88cb",
+    "scope": "Ch 12",
+    "kind": "purge",
+    "what": "Class-4 COMPLETE — transformation-pathways fabrication layer cleared",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "658f0de",
+    "scope": "Ch 15",
+    "kind": "purge",
+    "what": "Class-4 COMPLETE — sections 3/5/8 cleared, chapter 0/0",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "63ac54c",
+    "scope": "Ch 10",
+    "kind": "purge",
+    "what": "Class-4 COMPLETE — 135 -> 0",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "5fe5de7",
+    "scope": "Ch 30",
+    "kind": "purge",
+    "what": "Class-4 COMPLETE — 431 -> 4 justified-real coinages",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "52035ec",
+    "scope": "Ch 12",
+    "kind": "purge",
+    "what": "Class-4 wave 1 — section8 (prison/family) cleared, whole-file style swept",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "4204a4e",
+    "scope": "Ch 20",
+    "kind": "purge",
+    "what": "Class-4 COMPLETE + detector v3 (accented names, verb variants, future-dates)",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "33728b9",
+    "scope": "Ch 11-13, 16",
+    "kind": "purge",
+    "what": "Class-4 HIGH mop-up — 27 -> 5 verified-real FPs",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "2dad00e",
+    "scope": "Ch 21",
+    "kind": "purge",
+    "what": "Class-4 wave 3 — section6 (food systems) cleared + Zorb misattribution",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "28bd51c",
+    "scope": "Ch 20-21, 30",
+    "kind": "purge",
+    "what": "Class-4 partial progress — session-limit salvage",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "23b945a",
+    "scope": "Ch 16",
+    "kind": "purge",
+    "what": "Class-4 tail — Washington Consensus / Chang fake dates fixed",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "2386d95",
+    "scope": "Ch 13",
+    "kind": "purge",
+    "what": "Class-4 wave 2 — section5 (replication crisis) cleared",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "1bd5bb9",
+    "scope": "Ch 20",
+    "kind": "purge",
+    "what": "Consolidation-pass tail — Himmelstein citation collapse finished",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-03",
+    "sha": "00b0729",
+    "scope": "Ch 13",
+    "kind": "purge",
+    "what": "Class-4 v4 layer — cross-line fixes, 13 verified-real HIGH survivors",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "ff21bac",
+    "scope": "Ch 21",
+    "kind": "purge",
+    "what": "Citation integrity — re-dates, misattributions, fab-org bibliography orphans",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "fea38da",
+    "scope": "Ch 33, 42",
+    "kind": "purge",
+    "what": "Citation integrity 84+34 -> 0 + 3 new dead authors in gate",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "f6f2f8c",
+    "scope": "Ch 12",
+    "kind": "purge",
+    "what": "Two possessive-form Ostrom re-dates the pre-fix regex missed -> 1990",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "e86c54b",
+    "scope": "Ch 40",
+    "kind": "purge",
+    "what": "Citation integrity — the Ostrom-2015 stamp x105 + 3 verified whitelists",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "e59dd0e",
+    "scope": "Ch 16",
+    "kind": "purge",
+    "what": "Citation integrity residuals — 34 gate findings + self-found fixes, all 11 sections",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "e322fbf",
+    "scope": "Ch 34, 37",
+    "kind": "purge",
+    "what": "Remainders complete + gate possessive-form fix",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "e1a350b",
+    "scope": "Ch 42",
+    "kind": "purge",
+    "what": "Final Maathai/Leopold clears — chapter at 0",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "ddfa1da",
+    "scope": "Ch 20",
+    "kind": "purge",
+    "what": "Citation integrity — SS7 fake-reissue saturation + 5 gate-DB-missing dead authors",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "d2774c0",
+    "scope": "Ch 44",
+    "kind": "purge",
+    "what": "Citation integrity 31 -> 0",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "c93108b",
+    "scope": "Ch 22",
+    "kind": "restore",
+    "what": "USIP case study rebuilt on the verified record + settlement-wave salience-suppression analysis",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "bf9e02d",
+    "scope": "Ch 37-47",
+    "kind": "purge",
+    "what": "Roster-expansion layer complete — 92 -> 1 verified FP",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "bdd4344",
+    "scope": "Ch 18",
+    "kind": "purge",
+    "what": "Citation integrity — dead-author fabrications + eight re-dated classics web-verified",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "ae734cd",
+    "scope": "Ch 9-21",
+    "kind": "purge",
+    "what": "Ch12 + Ch14 follow-ups + reference-list re-date sweep + gate initials-form fix",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "ae2f428",
+    "scope": "Ch 21",
+    "kind": "purge",
+    "what": "Class-4 wave 1 — sections 8/9 cleared (85 HIGH + 33 MED)",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "ae2ef69",
+    "scope": "Ch 19",
+    "kind": "purge",
+    "what": "Citation integrity — fabricated internal communications, quote laundering, SS10 re-date sweep",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "aa2bce3",
+    "scope": "Ch 9",
+    "kind": "purge",
+    "what": "Citation integrity — constructed authorities, apocryphal Sagan, citation-variant collapse",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "a95ea9a",
+    "scope": "Ch 13",
+    "kind": "purge",
+    "what": "SS10-11 .txt saturation cleared — ~128 fabricated items, never previously audited",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "a69074e",
+    "scope": "Ch 22",
+    "kind": "fix",
+    "what": "Brooklyn diocese figures verified + added to the settlement wave",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "a29e284",
+    "scope": "Ch 12",
+    "kind": "purge",
+    "what": "Citation integrity — dead-author re-dates fixed, fabricated stats stripped",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "a18133b",
+    "scope": "Ch 12",
+    "kind": "purge",
+    "what": "Last Polanyi Foundation instance + verified-identity whitelists",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "9c8fe8c",
+    "scope": "Ch 17",
+    "kind": "purge",
+    "what": "Citation integrity — one dead-author fix; chapter otherwise clean",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "99a8f84",
+    "scope": "Ch 32",
+    "kind": "purge",
+    "what": "Citation integrity 36 fixes -> 0 + 3 verified whitelists",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "8ca5e40",
+    "scope": "Ch 27",
+    "kind": "purge",
+    "what": "Final fake-org clears — real terms honestly re-attributed",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "8c9858f",
+    "scope": "Ch 23-46",
+    "kind": "purge",
+    "what": "Ch23 deep clean + 27-fix cross-volume batch + gate wave-3 upgrades",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "893a21a",
+    "scope": "Ch 13",
+    "kind": "purge",
+    "what": "Citation integrity — artifacts, dual-year collapses, misattributions + .txt gate blind spot fixed",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "815149c",
+    "scope": "Ch 7",
+    "kind": "purge",
+    "what": "14 -> 0 — one real fix, twelve verified-legitimate whitelists",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "7bcda7c",
+    "scope": "Ch 43",
+    "kind": "purge",
+    "what": "Citation integrity 104 -> 0 + gate co-author-position fix",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "7896431",
+    "scope": "Ch 11",
+    "kind": "purge",
+    "what": "Citation integrity — 18 dead-author findings resolved",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "7627e5e",
+    "scope": "Ch 25",
+    "kind": "purge",
+    "what": "Citation integrity 65 -> 0 — claim-matched Ostrom restoration",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "6d72169",
+    "scope": "Ch 22",
+    "kind": "feat",
+    "what": "Kirk assassination paragraph — cold factual version, founder-approved",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "687479b",
+    "scope": "Ch 27, 45",
+    "kind": "purge",
+    "what": "Citation integrity — 78+82 -> 0 + fake-foundation FABORG phrases",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "6389708",
+    "scope": "Ch 14",
+    "kind": "purge",
+    "what": "Citation integrity — quoted-in laundering, fake-org DiResta/Zuckerman variants",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "6047161",
+    "scope": "Ch 22",
+    "kind": "purge",
+    "what": "Citation integrity — USIP fabrication deleted, simulation block reduced, Lynn IQ dropped",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "5a27b4e",
+    "scope": "Ch 10-12, 21",
+    "kind": "purge",
+    "what": "Co-author-form stragglers cleared — Vol 2 back to FPs-only",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "4b2174d",
+    "scope": "Ch 21",
+    "kind": "purge",
+    "what": "Follow-up pass — SS10-11 re-date sweep + fabricated-institute clearance",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "4311b83",
+    "scope": "Ch 10",
+    "kind": "purge",
+    "what": "Citation integrity — dead authors, debunked stats, contested claims hedged",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "41a5d18",
+    "scope": "Ch 27",
+    "kind": "purge",
+    "what": "Fake dead-thinker institutes cleared — orchestrator FABORG pass",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "347b6c3",
+    "scope": "Ch 30, 48",
+    "kind": "purge",
+    "what": "Citation integrity 21+27 -> 0",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "2e196f2",
+    "scope": "Ch 19",
+    "kind": "purge",
+    "what": "Follow-up pass — SS2-8 living-author re-dates + stat clusters cleared",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "2da8f74",
+    "scope": "Ch 15",
+    "kind": "purge",
+    "what": "Citation integrity — dead authors + fabricated posthumous co-authorships",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "2cc3f18",
+    "scope": "Ch 11",
+    "kind": "purge",
+    "what": "Class-4 wave 1 — sections 5/6/8 fully cleared (346 HIGH + 41 MED)",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "2c494fd",
+    "scope": "Ch 25-35",
+    "kind": "purge",
+    "what": "Roster-expansion layer complete — 27 -> 3 verified FPs",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "2900262",
+    "scope": "Ch 39",
+    "kind": "purge",
+    "what": "Citation integrity 79 -> 0",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "275009f",
+    "scope": "Ch 34, 37",
+    "kind": "purge",
+    "what": "Partial progress — agents hit session limit mid-sweep",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "230a16b",
+    "scope": "Ch 36",
+    "kind": "purge",
+    "what": "Citation integrity — full sweep, gate 142+ -> 0",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "1c11ae6",
+    "scope": "Ch 15",
+    "kind": "purge",
+    "what": "Phase A closeout — fictional authorities + SS8 precision (remainder)",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "09f90e3",
+    "scope": "Ch 47",
+    "kind": "purge",
+    "what": "Citation integrity 67 -> 0 + Brandeis restoration",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-02",
+    "sha": "0345c31",
+    "scope": "Vols 2-4",
+    "kind": "purge",
+    "what": "Vol 2 COMPLETE (roster-expansion layer) + Vol 3/4 partial progress",
+    "src": "git"
+   },
+   {
+    "at": "2026-07-01",
+    "sha": "21aa2f9",
+    "scope": "Ch 16",
+    "kind": "purge",
+    "what": "Fab-stats surgical pass — fix re-dated/fabricated attributions in canon-quoted passages",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-25",
+    "sha": "dc29fa3",
+    "scope": "Ch 26",
+    "kind": "refactor",
+    "what": "New s6 'Implementation Pathway'; cut s11 -- chapter complete",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-25",
+    "sha": "b4b3493",
+    "scope": "Ch 31",
+    "kind": "feat",
+    "what": "Add Chapter 31 'Quantum Technologies' -- replace deleted woo chapter",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-25",
+    "sha": "ae63d68",
+    "scope": "Ch 26",
+    "kind": "refactor",
+    "what": "New s4 'Planetary-Scale Integration'; merge s3+s7, cut s9",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-25",
+    "sha": "99f2eff",
+    "scope": "Ch 26",
+    "kind": "refactor",
+    "what": "New s5 'Resources, Risk & Security'; merge s8+s10",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-25",
+    "sha": "3fc82c6",
+    "scope": "Ch 26",
+    "kind": "fix",
+    "what": "Retire fabrication-driving framework mandate; restructure 12 to 6",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-25",
+    "sha": "2c92280",
+    "scope": "Ch 26",
+    "kind": "refactor",
+    "what": "New s2 'Physical Foundations & Limits'; cut old s2",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-25",
+    "sha": "0ccf390",
+    "scope": "Ch 26",
+    "kind": "refactor",
+    "what": "New s3 'Renewable Capture & Storage'; merge s4+s5, cut s6",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-25",
+    "sha": "0b5a642",
+    "scope": "Ch 26",
+    "kind": "refactor",
+    "what": "New s1 'Energy as the Type-1 Threshold'; fold+cut old s1, s12",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "ee9be56",
+    "scope": "Ch 2, 28",
+    "kind": "fix",
+    "what": "Ch2 fringe contemplative sources + Ch28 cosmology bullet",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "ee568ae",
+    "scope": "Ch 23-35",
+    "kind": "fix",
+    "what": "Vol3 fab-stat strip — comparative/multiplier templates (scripted, scan-clean)",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "ece1dcb",
+    "scope": "Ch 36-48",
+    "kind": "fix",
+    "what": "Vol4 Hübl cluster + orphaned woo bibliography (Ch36-48)",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "e9b28b3",
+    "scope": "Ch 41",
+    "kind": "fix",
+    "what": "Ch41 heavy-edit — strip mind-over-matter woo, keep real mind-body science",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "d736377",
+    "scope": "Ch 3",
+    "kind": "fix",
+    "what": "Ch3 'A Labor of Love' — strip oxytocin/vasopressin gap + Fredrickson positivity-resonance",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "c80dd3c",
+    "scope": "Ch 14-39",
+    "kind": "fix",
+    "what": "STRONG-tier fab-stat judgment pass — strip fabricated-org cites",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "c2c9781",
+    "scope": "Ch 39-48",
+    "kind": "fix",
+    "what": "Volume 4 fab-stat strip — comparative/multiplier templates (scripted, scan-clean)",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "ba90b1b",
+    "scope": "Ch 49-51, 56",
+    "kind": "fix",
+    "what": "Volume 5 fab-stat strip — comparative/multiplier templates (scripted, scan-clean)",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "a841221",
+    "scope": "Vols 2-4",
+    "kind": "fix",
+    "what": "Delete 576 orphaned fabricated bibliography entries",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "a590c74",
+    "scope": "Ch 9-17, 19-22",
+    "kind": "fix",
+    "what": "Vol2 fab-stat judgment round 2 — finish Ch9-22",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "9194ee4",
+    "scope": "Ch 23-35",
+    "kind": "fix",
+    "what": "Vol3 fab-stat judgment pass",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "9034afd",
+    "scope": "Ch 10-21",
+    "kind": "fix",
+    "what": "Vol2 fab-stat judgment pass (partial — agents hit session limit)",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "7b54b16",
+    "scope": "Ch 39-48",
+    "kind": "fix",
+    "what": "Vol4 fab-stat judgment pass — noun-forms/genlabel/CITED",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "602fd35",
+    "scope": "Ch 14",
+    "kind": "chore",
+    "what": "Commit audit-gate upgrades + ignore agent cruft",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "5b68836",
+    "scope": "Ch 1",
+    "kind": "refactor",
+    "what": "Tighten the OD9 Creed from ten principles to nine",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "2a297f3",
+    "scope": "Ch 9-22",
+    "kind": "fix",
+    "what": "Vol2 fabricated-statistics strip (partial, method-verified)",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "1d6566b",
+    "scope": "Ch 9-22",
+    "kind": "fix",
+    "what": "Vol2 fab-stat strip — comparative/multiplier templates (scripted, verified)",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-24",
+    "sha": "1c8009d",
+    "scope": "Vols 1-5",
+    "kind": "fix",
+    "what": "Strip comparative 'N% more/less X' fab-stat class (all volumes)",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-23",
+    "sha": "e015172",
+    "scope": "Ch 37-38, 47-48",
+    "kind": "fix",
+    "what": "Vol4 in-text woo strip (Wilber et al.) + expand audit lexicon",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-23",
+    "sha": "88ac8d5",
+    "scope": "Ch 2, 50-51, 57",
+    "kind": "fix",
+    "what": "Tighten Chapter 2 to pass its own evidence standard",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-23",
+    "sha": "887a6f3",
+    "scope": "Vols 2-5",
+    "kind": "chore",
+    "what": "Vol 2-5 finisher pass (delegated agents)",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-23",
+    "sha": "8671df3",
+    "scope": "Ch 1-8",
+    "kind": "chore",
+    "what": "Volume 1 comprehensive scrub (HARD + SOFT, aggressive)",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-23",
+    "sha": "85a072f",
+    "scope": "Ch 26",
+    "kind": "fix",
+    "what": "Strip non-Vol4 SOFT woo + add fabricated-stats detector",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-23",
+    "sha": "75679fd",
+    "scope": "Ch 67",
+    "kind": "fix",
+    "what": "Eradicate real HARD residual + fix audit false-positives",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-23",
+    "sha": "426965c",
+    "scope": "Ch 2, 4",
+    "kind": "fix",
+    "what": "Strip O'Fallon (integral/STAGES) + orphaned Hübl ref from Vol1",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-23",
+    "sha": "337f95f",
+    "scope": "Vols 1-4",
+    "kind": "chore",
+    "what": "Cut Ch31 Quantum Consciousness + Laszlo refs + audit tool",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-23",
+    "sha": "218e58e",
+    "scope": "Vols 2-5",
+    "kind": "chore",
+    "what": "Vol 2-5 partial scrub (agents rate-limited mid-pass)",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-23",
+    "sha": "1ffd5b4",
+    "scope": "Ch 4",
+    "kind": "fix",
+    "what": "Remove Laszlo \"macroshift\" pseudoscience cite from §1",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-12",
+    "sha": "cbb6a2c",
+    "scope": "Vols 1-6",
+    "kind": "",
+    "what": "Baseline: OD9 Manifesto as developed (pre-tightening import)",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-12",
+    "sha": "88684ed",
+    "scope": "Ch 49",
+    "kind": "tighten",
+    "what": "Honest implementation-status framing note",
+    "src": "git"
+   },
+   {
+    "at": "2026-06-12",
+    "sha": "635feaf",
+    "scope": "Ch 49-50",
+    "kind": "tighten",
+    "what": "Propagate honest implementation-status framing",
+    "src": "git"
+   }
   ]
  },
  "world": {
