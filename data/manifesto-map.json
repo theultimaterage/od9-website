@@ -2541,7 +2541,7 @@
   {
    "id": "v3-mind",
    "num": "III·1",
-   "title": "Engineering the Mind: Enhancement, Learning, Longevity",
+   "title": "Enhancement: Mind, Body & Learning",
    "vol": 3,
    "legacy": [
     23,
@@ -2553,36 +2553,22 @@
    "tier": "S3",
    "verdict": "REFRAME+COMPRESS",
    "bullets": [
-    "Technical frameworks for consciousness development",
-    "Neural integration systems and brain-computer interfaces",
-    "Consciousness measurement and development metrics",
-    "Cognitive enhancement technologies and approaches",
-    "Integration of technological and contemplative techniques"
+    "Enhancement is continuous with medicine, not a separate category",
+    "What is established about changing the brain, including the replication failures",
+    "What is established about changing the body: gene editing's approvals, longevity's real state",
+    "What is established about transferring knowledge, and the fictions that are not",
+    "Ethics before architecture: consent, irreversibility, and who gets access"
    ],
    "canon": [],
-   "note": "",
+   "note": "Absorbs ch29 and ch30; rewritten to the ch26 model — decided 2026-08-20, executed 2026-09-10. 188,568 words to 7,539. All three ran the identical 12-section template, nine titles byte-identical. The finding: evidence weakens as interventions move from clinical and specific toward general and non-invasive. Does NOT propose heritable modification — the source carried a germline milestone schedule, now removed. Survives as chapter 23 in the corpus.",
    "history": [],
    "sections": [
-    "Introduction - Consciousness Engineering as Civilizational Enabler",
-    "Theoretical Foundation and First Principles",
-    "Technical Architecture Overview",
-    "Neural Measurement and Monitoring Subsystem",
-    "Neural Stimulation and Modulation Subsystem",
-    "Consciousness Feedback and Training Subsystem",
-    "Integration Framework",
-    "Resource Requirements",
-    "Human-System Interface",
-    "Security, Ethics, and Risk Management",
-    "Implementation Roadmap",
-    "Type 1 Civilization Integration",
-    "Introduction - Biomedical Enhancement as Civilizational Enabler",
-    "Genetic and Epigenetic Enhancement Systems",
-    "Neural and Cognitive Enhancement Systems",
-    "Biological Age Reversal and Longevity Systems",
-    "Introduction - Knowledge Transfer Systems as Civilizational Enabler",
-    "Neural Interface Education Systems",
-    "Experiential Knowledge Transfer Mechanisms",
-    "Collective Wisdom Distribution Networks"
+    "I. One Question, Three Substrates",
+    "II. What We Know About Changing the Brain",
+    "III. What We Know About Changing the Body",
+    "IV. What We Know About Transferring Knowledge",
+    "V. The Ethics That Come First",
+    "VI. What This Requires, and What We Do Not Know"
    ],
    "x": 975.0,
    "y": 100.0
