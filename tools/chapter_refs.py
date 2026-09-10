@@ -50,7 +50,24 @@ ROOT = Path(__file__).resolve().parents[1]
 MAP = ROOT / "data" / "manifesto-map.json"
 MANIFESTO = Path(os.environ.get("MANIFESTO_DIR", r"C:\Users\Rage\Documents\The OD9 Manifesto"))
 
-CHAPTER_RE = re.compile(r"\bChapters?\s+(\d+)\b")
+# EVERY form a reference takes, not the one that comes to mind first.
+#
+# This was `\bChapters?\s+(\d+)\b` and therefore could not see `Ch.53` — the form
+# the LoveLogic corpus uses almost exclusively, under `CITATIONS: [Ch.53, Ch.6]`
+# lines beneath most Q&A entries. The cost was not hypothetical: the ch47 merge
+# found 46 instances of `Ch.47` that an inventory searching "chapter 47" had
+# missed, wrote "a consumer inventory must search every form a reference takes"
+# into the merge manifest, and left the LINTER matching one form. On 2026-09-10
+# the live LoveLogic master still carried six `Ch.30` references to a chapter
+# retired into ch23 months earlier, and this tool called the corpus CLEAN.
+#
+# A lesson written in prose and not encoded in the tool is the same defect the
+# ecosystem rule names: the rule existed, the gate did not enforce it.
+#
+# Case-sensitive `Ch` on purpose. Lowercase `chapter53` appears inside every
+# section FILENAME (`chapter53-section4 - ...`), and those are paths, not
+# sentences; matching them would indict the SUMMARIES' own file listing.
+CHAPTER_RE = re.compile(r"\bCh(?:apters?\s+|\.\s*|)(\d+)\b")
 DIR_NUM_RE = re.compile(r"^Chapter\s+(\d+)\b", re.IGNORECASE)
 # This book has 67 chapters. Other books are quoted in it and have their own: the
 # Dao De Jing's chapter 81 is not a dangling reference to ours, and reading it as
@@ -70,8 +87,15 @@ SKIP_PARTS = ("_audit-staging", "tools" + os.sep, "WORKLIST", "MASTERPLAN",
               "STRUCTURE-PROPOSAL", "-MANIFEST.md", "sermons" + os.sep)
 # A line may name a retired chapter deliberately, to record where something came
 # from. Provenance is not drift, so a line saying so is allowed to say so.
-PROVENANCE = ("demoted from", "formerly chapter", "former chapter", "was chapter",
-              "renumbered", "absorbed", "merged into", "dissolved", "legacy")
+#
+# The allowlist has to speak every form the PATTERN does, or widening the pattern
+# turns correct provenance into findings. "absorbs the former Ch. 6" matched
+# neither "former chapter" nor "absorbed" and was indicted the moment `Ch.N`
+# became visible — the index lines in the SUMMARIES that exist precisely to
+# record these merges.
+PROVENANCE = ("demoted from", "formerly chapter", "formerly ch.", "former chapter",
+              "former ch.", "former ch ", "was chapter", "was ch.", "renumbered",
+              "absorbs", "absorbed", "merged into", "dissolved", "legacy")
 
 # A reference can be WRONG without being DANGLING. Until 2026-09-09 this linter
 # only asked whether a referenced chapter still exists, so three references that
@@ -169,7 +193,29 @@ def misdirected(line: str, idx: dict[str, int]) -> list[tuple[str, int, int]]:
             if bound and (best is None or len(title) > len(best[0])):
                 best = (title, correct)
         if best and best[1] != cited:
-            out.append((best[0], cited, best[1]))
+            # A title can bind on BOTH sides at once, and in a LIST it always
+            # does: "Ch.21 Environmental Degradation, Ch.5 compounding crises"
+            # binds the title to 21 as a trailing form (correct) and to 5 as a
+            # leading form (spurious, because the comma is an item separator and
+            # not a binding). Indicting the second one is the wolf-crying
+            # regression in a new shape, so: a title that is correctly bound
+            # somewhere on this line is not misdirected anywhere on it.
+            t = best[0]
+            correct_num = best[1]
+            correctly_bound = False
+            for m2 in CHAPTER_RE.finditer(line):
+                if int(m2.group(1)) != correct_num:
+                    continue
+                b2 = low.rfind(t, 0, m2.start())
+                if b2 != -1 and all(c in LEAD for c in low[b2 + len(t):m2.start()]):
+                    correctly_bound = True
+                    break
+                a2 = low.find(t, m2.end())
+                if a2 != -1 and all(c in TRAIL for c in low[m2.end():a2]):
+                    correctly_bound = True
+                    break
+            if not correctly_bound:
+                out.append((t, cited, correct_num))
     return out
 
 
@@ -281,6 +327,24 @@ def selftest(doc: dict) -> int:
     ok &= spared
     print(f"  {'OK  ' if spared else 'FAIL'} a provenance line naming Chapter {gone} is spared")
 
+    # EVERY reference form, because for months this caught only one of them and
+    # reported CLEAN over six live `Ch.30` references to a retired chapter.
+    for label, ref in (("Ch. N", f"Ch. {gone}"), ("Ch.N", f"Ch.{gone}"), ("ChN", f"Ch{gone}")):
+        got = scan(doc, {f: f"CITATIONS: [{ref}, Ch.1]\n"})
+        seen = any(x["chapter"] == gone for x in got["findings"])
+        ok &= seen
+        print(f"  {'OK  ' if seen else 'FAIL'} the abbreviated form '{label}' is caught too")
+
+    # ...and the forms that must stay quiet, or the widened pattern indicts the
+    # SUMMARIES' own file listing and every lowercase mention in ops prose.
+    for label, text in (("section filename", f"--- chapter{gone}-section4 - Something.md ---"),
+                        ("lowercase ch", f"see ch{gone} for the argument"),
+                        ("no separator", f"Chapter{gone} is not a reference form")):
+        got = scan(doc, {f: text + "\n"})
+        quiet3 = not any(x["chapter"] == gone for x in got["findings"])
+        ok &= quiet3
+        print(f"  {'OK  ' if quiet3 else 'FAIL'} '{label}' is NOT treated as a reference")
+
     unmerged = sorted(set(retired) & source_chapters())
     if unmerged:
         n = unmerged[0]
@@ -322,6 +386,15 @@ def selftest(doc: dict) -> int:
         ok &= quiet4
         print(f"  {'OK  ' if quiet4 else 'FAIL'} an UNBOUND title in the same sentence is not "
               "indicted (the wolf-crying regression)")
+
+        # A LIST binds each title to its own number and, by the comma, to the
+        # next one as well. The correct binding wins: "Ch.N1 Title1, Ch.N2 x"
+        # must be silent, or every evidence list in the corpus is a finding.
+        got = scan(doc, {f: f"- Evidence: Ch.{n1} {t1}, Ch.{n2} compounding crises\n"})
+        quiet5 = not got.get("misdirected")
+        ok &= quiet5
+        print(f"  {'OK  ' if quiet5 else 'FAIL'} a title correctly bound to its OWN number is not "
+              "indicted by the next item in the list")
     else:
         print("  WARN the map has too few titled chapters to prove the misdirection rule")
         ok = False
