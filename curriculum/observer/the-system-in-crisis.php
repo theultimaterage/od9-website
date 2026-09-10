@@ -20,17 +20,24 @@ $lesson = [
   "cover"     => "atlas-vol1.jpg",
   "archivist" => "&ldquo;They hand you the crises one at a time &mdash; climate here, politics there, your own splintered attention somewhere else &mdash; so each one looks survivable alone. The manifesto&rsquo;s diagnosis is colder and far more useful: these are not separate problems. They&rsquo;re one failure wearing many masks &mdash; a species handed godlike tools while still running on obsolete wiring. Name it correctly and a hundred hopeless fights collapse into one solvable problem.&rdquo;",
   "canon" => [
-    /* "sec" = the manifesto section this passage is drawn from, per the source
-       line below (§1, §6, §8, §9). The Atlas lands a section satellite here. */
+    /* "sec" = the manifesto section this passage is drawn from. The Atlas lands a
+       section satellite here, so these MUST track the manifesto's live section
+       numbering or the satellite points at nothing.
+       REMAPPED 2026-09-10 for the ch5 consolidation (9 sections -> 3, executed
+       2026-09-09): old §6 (information failure) and old §8 (compound
+       interactions) both live in §II The Five Failure Domains, and old §9 (the
+       Great Filter) is now §III. Old §1 is unchanged. The consolidation updated
+       the manifesto and the map and left these pointers behind — the same
+       consumer-inventory miss that broke twenty references on the ch2 move. */
     ["sec" => 1, "p" => "Let us begin by considering what a civilization on the brink of either transcendence or catastrophe might look like. If we were approaching a Great Filter&mdash;that evolutionary hurdle proposed by economist Robin Hanson (1998) that may have ended countless civilizations before they could make their presence known in the cosmos&mdash;what signs would we expect to see?", "lead" => true],
 
     ["sec" => 1, "p" => "We would expect to see exactly what we see around us today: a convergence of existential threats coupled with systems seemingly incapable of addressing them. A civilization reaching for the stars while simultaneously undermining the very foundations of its existence. A species gaining godlike technological powers while remaining trapped in obsolete modes of thought and organization. As systems theorist Donella Meadows (2008) observed, this represents a fundamental mismatch between our problem-solving capabilities and the complexity of challenges we face."],
 
-    ["sec" => 6, "p" => "Information failure undermines all other systems by corrupting the feedback mechanisms necessary for adaptive function. As cyberneticist Norbert Wiener (1948) observed in his foundational work, accurate information flow is essential for system regulation and adaptation. When information systems become corrupted, all connected systems lose navigational capacity&mdash;like a ship whose instruments provide false readings."],
+    ["sec" => 2, "p" => "Information failure undermines all other systems by corrupting the feedback mechanisms necessary for adaptive function. As cyberneticist Norbert Wiener (1948) observed in his foundational work, accurate information flow is essential for system regulation and adaptation. When information systems become corrupted, all connected systems lose navigational capacity&mdash;like a ship whose instruments provide false readings."],
 
-    ["sec" => 9, "p" => "If other technological civilizations throughout the cosmos have faced similar convergence of environmental, technological, political, and social challenges during their development, many may have failed to navigate this turbulent passage. Astrobiologist David Grinspoon (2016) terms this the &ldquo;anthropocene bottleneck&rdquo;&mdash;the challenge of transitioning from unconscious planetary impact to conscious planetary stewardship."],
+    ["sec" => 3, "p" => "If other technological civilizations throughout the cosmos have faced similar convergence of environmental, technological, political, and social challenges during their development, many may have failed to navigate this turbulent passage. Astrobiologist David Grinspoon (2016) terms this the &ldquo;anthropocene bottleneck&rdquo;&mdash;the challenge of transitioning from unconscious planetary impact to conscious planetary stewardship."],
 
-    ["sec" => 8, "p" => "Understanding these compound interactions prevents both unwarranted optimism and fatalistic pessimism. While the interactions create dangers exceeding the sum of individual crises, they also reveal potential leverage points where positive interventions might similarly cascade through multiple systems."],
+    ["sec" => 2, "p" => "Understanding these compound interactions prevents both unwarranted optimism and fatalistic pessimism. While the interactions create dangers exceeding the sum of individual crises, they also reveal potential leverage points where positive interventions might similarly cascade through multiple systems."],
 
     ["affirm" => "The same interconnections that enable devastating collapse can also facilitate rapid positive transformation when properly engaged."],
   ],
