@@ -169,6 +169,14 @@
    },
    {
     "at": "2026-09-10",
+    "sha": "6c520a5",
+    "scope": "Ch 49, 54",
+    "kind": "feat",
+    "what": "Ch49's shipped half folds in — The Progression Economy",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
     "sha": "58dd863",
     "scope": "Ch 36, 48, 50",
     "kind": "refactor",
@@ -3427,7 +3435,7 @@
   {
    "id": "ch58",
    "num": "58",
-   "title": "Development Pathways Implementation",
+   "title": "Development Pathways",
    "vol": 5,
    "legacy": [
     58,
@@ -3438,16 +3446,23 @@
    "tier": "S3",
    "verdict": "ALIGN (p)",
    "bullets": [
-    "Clear trajectories from current state to transformed potential",
-    "Staged approaches for practical advancement",
-    "Individual and collective development integration",
-    "Transformation sequencing for optimal progress",
-    "How systematic pathways ensure stable advancement"
+    "The pathway system as it actually ships: enrolment, ordered steps, progress",
+    "What acceleration can and cannot mean, against the learning evidence",
+    "Mentorship, and the cold start that gates the upper tiers",
+    "Built and unused: the adoption problem, stated rather than avoided",
+    "Shipping the mechanism is not shipping the thing"
    ],
    "canon": [],
-   "note": "Absorbs ch56's learning-acceleration content.",
+   "note": "Absorbs the LEARNING half of ch56 — decided 2026-08-20, executed 2026-09-10. 106,973 words to 4,142. ch56's consciousness-expansion acceleration material goes to Future Deployments. Corrects the absorbed premise: arrival was never the rate-limiting step, so sequencing and spacing survive and 'acceleration' does not. Adds the volume's third category — BUILT, AND EMPTY: the mechanism ships and the pathways largely do not exist, which is a statement about where effort went. Survives as chapter 58.",
    "history": [],
-   "sections": [],
+   "sections": [
+    "I. What a Pathway Is For",
+    "II. The Pathway System as Shipped",
+    "III. What Acceleration Can and Cannot Mean",
+    "IV. Mentorship and the Cold Start",
+    "V. Built and Unused",
+    "VI. What This Requires, and What We Do Not Know"
+   ],
    "x": 132.5,
    "y": 865.0
   },
