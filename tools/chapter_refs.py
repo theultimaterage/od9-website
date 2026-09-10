@@ -265,8 +265,15 @@ def scan(doc: dict, extra: dict[Path, str] | None = None) -> dict:
 
     idx = title_index(doc)
     findings, gaps, wrong, scanned = [], [], [], 0
+    # .json as well as .md. The manuscript is markdown, but it is not the only
+    # thing that cites chapters: pdf1_foundation_data.json is the LoveLogic
+    # compendium's question bank and carries 394 `Ch.N` citations straight into
+    # a published PDF. Scanning only *.md made the largest single consumer in
+    # the corpus invisible — the same defect as matching only one reference
+    # FORM, one level up: the pattern missed a spelling, the glob missed a file
+    # type. (tools/ is skipped, so this tool's own fixtures stay out of it.)
     files = list((extra or {}).keys()) or [
-        p for p in MANIFESTO.rglob("*.md")
+        p for pat in ("*.md", "*.json") for p in MANIFESTO.rglob(pat)
         if not any(s in str(p.relative_to(MANIFESTO)) for s in SKIP_PARTS)]
 
     for p in files:
