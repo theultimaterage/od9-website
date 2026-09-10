@@ -53,6 +53,40 @@ def check(cond: bool, what: str) -> None:
         FAILS.append(what)
 
 
+def _section_only_probe(map_path: str = "data/manifesto-map.json"):
+    """(chapter number, 1-based section index, phrase) that find() can only
+    reach through a SECTION, or None.
+
+    atlas-find.js searches a chapter's sections only when the chapter itself did
+    not match (`if (!m && n.sections)`), so a probe for the section path has to
+    be a phrase the parent chapter does not carry in its title or bullets. The
+    TOC bullets often mirror the section titles — for ch5 they mirror all three,
+    which is why the old hardcoded probe became unsatisfiable — so this picks a
+    chapter where they do not, from the map itself. Deterministic: the first
+    qualifying chapter in map order, so the checks do not wobble run to run.
+    """
+    try:
+        with open(map_path, encoding="utf-8") as fh:
+            nodes = json.load(fh)["nodes"]
+    except (OSError, ValueError, KeyError):
+        return None
+    for n in nodes:
+        secs = n.get("sections") or []
+        num = n.get("num")
+        # Numbered chapters only — the preface renders its index as "P" and the
+        # result-line format is what this probe asserts against.
+        if not secs or not str(num or "").isdigit():
+            continue
+        hay = (n.get("title", "") + " " + " ".join(n.get("bullets", []))).lower()
+        for i, title in enumerate(secs, start=1):
+            words = re.findall(r"[a-z]{5,}", title.lower())
+            for a, b in zip(words, words[1:]):
+                phrase = f"{a} {b}"
+                if phrase in title.lower() and phrase not in hay:
+                    return str(num), i, phrase
+    return None
+
+
 def page(b, w=1440, h=900, errors=None, audio=False):
     args = ["--autoplay-policy=no-user-gesture-required"] if audio else []
     ctx = b.new_context(viewport={"width": w, "height": h}, user_agent=UA)
@@ -214,10 +248,26 @@ def run(base: str) -> int:
         pg.wait_for_timeout(2500)
         secs = pg.evaluate(LINES, "#atlas-card .atlas-sections li")
         check(len(secs) == 3, f"chapter 5 lists 3 sections (got {len(secs)})")
-        pg.click("#atlas-find")
-        pg.keyboard.type("great filter")
-        pg.wait_for_timeout(300)
-        check(any(x.startswith("5.3") for x in pg.evaluate(LINES, "#atlas-find-results li")), "find matches a section title (5.3)")
+
+        # Search-matches-a-section was hardcoded as ch5 + "great filter", and it
+        # became unsatisfiable the moment the map was rebuilt: the TOC bullets
+        # mirror ch5's section titles, and atlas-find.js only searches sections
+        # when the CHAPTER did not match first (`if (!m && n.sections)`). So every
+        # ch5 section phrase now matches the chapter and returns a whole-chapter
+        # hit with no section index. No search term can fix that for ch5.
+        # Derive the probe instead: ask the map for a phrase that appears in a
+        # section title and nowhere in that chapter's own title or bullets.
+        probe = _section_only_probe()
+        check(probe is not None, "the map still has a section-only phrase to search for")
+        if probe:
+            num, idx, phrase = probe
+            pg.click("#atlas-find")
+            pg.keyboard.type(phrase)
+            pg.wait_for_timeout(400)
+            hits = pg.evaluate(LINES, "#atlas-find-results li")
+            want = f"{num}.{idx}"
+            check(any(x.startswith(want) for x in hits),
+                  f"find matches a section title ({want} for {phrase!r})")
         ctx.close()
 
         # ---- your constellation (mocked endpoint) -----------------------------
@@ -246,15 +296,18 @@ def run(base: str) -> int:
         ctx, pg = page(b, errors=errors)
         pg.goto(base + "?arrival=0#ch5", wait_until="load")
         pg.wait_for_timeout(2000)
-        pg.click("#atlas-find")
-        # "great filter" matches a SECTION title and not the chapter, which matters:
-        # atlas-find.js only searches sections when the chapter itself did not match
-        # first (`if (!m && n.sections)`), so a term that hits the chapter returns a
-        # whole-chapter result with no section index and therefore no #sec-N anchor.
-        pg.keyboard.type("great filter")
-        pg.wait_for_timeout(400)
-        pg.keyboard.press("Enter")
-        pg.wait_for_timeout(1800)
+        # Light the section by CLICKING it in the card, which is the obvious way
+        # in and, until 2026-09-10, the one that did not work: the click handler
+        # set hiSection and toggled the highlight without re-rendering, so the
+        # Codex link kept the href it was drawn with and the reader opened at the
+        # top of the lesson. The anchor only ever fired for readers who arrived
+        # by search. js/atlas.js now repoints the Codex links on click, and this
+        # check drives that path rather than the search path, so the door most
+        # people actually use is the one under test.
+        pg.click("#atlas-card .atlas-sections li:nth-child(3)")
+        pg.wait_for_timeout(600)
+        check("hi" in (pg.evaluate("() => { const l = document.querySelector('#atlas-card .atlas-sections li:nth-child(3)'); return l ? l.className : ''; }") or ""),
+              "clicking a section lights it")
         href = pg.evaluate("() => { const a = document.querySelector('#atlas-card [data-lesson]'); return a ? a.getAttribute('href') : ''; }")
         check(href.endswith("#sec-3"), f"a lit section links at its anchor (href ends {href[-10:]!r})")
         pg.click("#atlas-card [data-lesson]")

@@ -278,6 +278,16 @@
       li.addEventListener("click", function () {
         hiSection = parseInt(li.getAttribute("data-si"), 10);
         Array.prototype.forEach.call(lis, function (x) { x.classList.toggle("hi", x === li); });
+        /* Repoint the Codex links at the lit section. The card is NOT re-rendered
+           on click — the highlight is toggled by hand — so without this the href
+           keeps whatever secHash it carried when the card was drawn, normally
+           none. The effect was that #sec-N worked when you ARRIVED by search and
+           silently did nothing when you clicked the section in the card, which is
+           the obvious way in. Same anchor, same rule, both paths. */
+        var secHref = "#sec-" + (hiSection + 1);
+        Array.prototype.forEach.call(card.querySelectorAll("a.atlas-canon-link[data-lesson]"), function (a) {
+          a.setAttribute("href", (a.getAttribute("href") || "").replace(/#sec-\d+$/, "") + secHref);
+        });
         if (window.AtlasSound) window.AtlasSound.cue("probe", "star");
       });
     });
