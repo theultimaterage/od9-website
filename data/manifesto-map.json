@@ -1,6 +1,6 @@
 {
  "skeleton_version": "2026-08-20",
- "generated_at": "2026-09-10T14:38:33Z",
+ "generated_at": "2026-09-10T14:59:51Z",
  "timeline": {
   "start": "2026-06-20",
   "end": "2026-08-23",
@@ -2006,7 +2006,14 @@
    "canon": [],
    "note": "The honest quarantine: unbuilt systems (physical deployment, advanced cryptography, neural interfaces) held as a research agenda under the volume's design-fiction preface.",
    "history": [],
-   "sections": [],
+   "sections": [
+    "What This Chapter Is",
+    "Physical Systems",
+    "Security, Privacy and Resilience",
+    "Neural Interfaces and Consciousness Measurement",
+    "The Token Economy",
+    "What Would Have to Be True"
+   ],
    "x": 297.5,
    "y": 865.0
   },
