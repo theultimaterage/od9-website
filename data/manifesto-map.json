@@ -144,6 +144,54 @@
   ],
   "work": [
    {
+    "at": "2026-09-10",
+    "sha": "b3bb9cd",
+    "scope": "Ch 32",
+    "kind": "fix",
+    "what": "Ch32 §11 sent ASCEND Development Pathways to Chapter 47",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "9afb321",
+    "scope": "Ch 23",
+    "kind": "feat",
+    "what": "Section V — the ethics that come first",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "8046ea4",
+    "scope": "Ch 23",
+    "kind": "feat",
+    "what": "Section IV — what we know about transferring knowledge",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "3db20be",
+    "scope": "Ch 23, 29-30",
+    "kind": "feat",
+    "what": "Ch29 and ch30 fold in — Enhancement, 188,568 words to 7,539",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "133dbf0",
+    "scope": "Ch 38",
+    "kind": "feat",
+    "what": "Sections II and III — scale, and what deliberation shows",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-10",
+    "sha": "060a5ae",
+    "scope": "Ch 23",
+    "kind": "feat",
+    "what": "Section III — what we know about changing the body",
+    "src": "git"
+   },
+   {
     "at": "2026-09-09",
     "sha": "ede5493",
     "scope": "Ch 5",
@@ -185,6 +233,22 @@
    },
    {
     "at": "2026-09-09",
+    "sha": "b7b4f80",
+    "scope": "Ch 47",
+    "kind": "fix",
+    "what": "Repair an off-by-five cascade in ch47 §11",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "b607d93",
+    "scope": "Ch 23",
+    "kind": "feat",
+    "what": "Section II — what we know about changing the brain",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
     "sha": "a0f66bf",
     "scope": "Ch 1-4, 7-8",
     "kind": "fix",
@@ -205,6 +269,14 @@
     "scope": "Ch 1, 3-4",
     "kind": "fix",
     "what": "Tier C — the woo-adjacent sourcing that survived the purge",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-09",
+    "sha": "59f0775",
+    "scope": "Ch 18-48",
+    "kind": "refactor",
+    "what": "Strip ch29/ch30 indices, repoint prose, fix 3 bad xrefs",
     "src": "git"
    },
    {
@@ -2867,7 +2939,7 @@
   {
    "id": "ch38",
    "num": "38",
-   "title": "Governance Transformation",
+   "title": "Governance at Every Scale",
    "vol": 4,
    "legacy": [
     38,
@@ -2878,32 +2950,22 @@
    "tier": "S2",
    "verdict": "CONVERT",
    "bullets": [
-    "Enhanced forms of collective decision-making",
-    "Consciousness-based political structures",
-    "Evolution of democracy through awareness expansion",
-    "Distributed governance without centralized control",
-    "How enhanced consciousness enables optimal governance"
+    "A decision belongs where its consequences land",
+    "Subsidiarity is a presumption, not an algorithm",
+    "Ostrom's design principles, and whether polycentricity scales",
+    "What sortition and citizens' assemblies have actually achieved",
+    "Why no method of aggregating preferences is neutral"
    ],
    "canon": [],
-   "note": "Absorbs ch47 — its scale dimension.",
+   "note": "Absorbs ch47 — its scale dimension — decided 2026-08-20, executed 2026-09-10. 181,521 words to 6,204. The finding: the decisions that determine an outcome are made BEFORE the decision anyone watches — which body owns the question, who is in the room and what they see, what the software is asked to do, and what rule converts the result. Removed and not to return: the 9,102-word 'Consciousness-Based Political Structures' section (Theory U, Collective Presencing). Survives as chapter 38 in the corpus.",
    "history": [],
    "sections": [
-    "Introduction - Governance Evolution as Civilizational Enabler",
-    "Theoretical Foundation and First Principles",
-    "Transformation Architecture Overview",
-    "Enhanced Collective Decision-Making Systems",
-    "Consciousness-Based Political Structures",
-    "Distributed Governance Networks",
-    "Integration Framework",
-    "Resource Requirements",
-    "Human-System Dynamics",
-    "Ethics, Governance, and Risk Management",
-    "Implementation Roadmap",
-    "Type 1 Civilization Integration",
-    "Introduction - Multi-Scale Governance as Civilizational Enabler",
-    "Bioregional Governance Frameworks",
-    "Planetary Coordination Systems",
-    "Interface Design Across Governance Scales"
+    "I. The Decision Before the Decision",
+    "II. Which Decisions Belong Where",
+    "III. What We Know About Deliberation",
+    "IV. What We Know About Digital Coordination",
+    "V. No Neutral Method",
+    "VI. What This Requires, and What We Do Not Know"
    ],
    "x": 1195.0,
    "y": 440.0
