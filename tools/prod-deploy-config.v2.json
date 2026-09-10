@@ -326,6 +326,31 @@
       "follow_redirects": false,
       "_why": "The second rule is a SHAPE (all|arc[1-9]) rather than a list of ids, so adding arc5 needs no edit — and a shape is exactly what a careless edit collapses into a literal without anyone noticing, because /tour itself would keep working.",
       "must_redirect_to": "/atlas?tour=all"
+    },
+    {
+      "url": "https://offda9.com/curriculum/observer/the-system-in-crisis.php?embed=1&host=atlas",
+      "expect_status": [
+        200
+      ],
+      "must_not_contain": [
+        "Fatal error",
+        "Parse error"
+      ],
+      "must_contain": [
+        "id=\"sec-1\"",
+        "id=\"sec-3\""
+      ],
+      "_why": "The Atlas's third zoom level is a DOOR: a lit section links into the lesson at #sec-N, and the click path that repoints those links shipped 2026-09-10. atlas_checks proves the anchors exist on LOCALHOST; nothing proved the deployed lesson carried them until someone curled it by hand after the deploy. sec-1 and sec-3 pin both ends of ch5's three sections, so a lesson re-render that drops the ids fails the deploy instead of shipping a door that opens onto the top of the page."
+    },
+    {
+      "url": "https://offda9.com/atlas",
+      "expect_status": [
+        200
+      ],
+      "must_contain": [
+        "Future Deployments"
+      ],
+      "_why": "MAP-DATA PIN, separate from the clean-URL pin above. The Atlas inlines data/manifesto-map.json server-side (data/ is web-blocked, so the file itself cannot be smoked), and the map is rebuilt on every manifesto merge. 'Future Deployments' is the campaign's final node (V·6, 2026-09-10): its presence proves the deployed map is the 52-chapter one and not the pre-campaign file rsync would silently leave in place if the JSON were ever excluded. Update this string only when the map's newest node changes."
     }
   ],
   "_smoke_note": "must_contain 'Off Da Nine' on the apex proves we reached OD9 and not a parked domain or a misrouted edge — status+200 alone cannot tell those apart.",
