@@ -4,8 +4,10 @@
  * research program: the instrument, the eight falsifiable hypotheses (H1–H7),
  * the plainly-stated limitations, partnership categories, and the four asks.
  *
- * Content mirrors docs/RESEARCH_STATEMENT.md v0.5 (2026-08-08), the canonical
+ * Content mirrors docs/RESEARCH_STATEMENT.md v0.6 (2026-09-11), the canonical
  * registry. Update from there — never edit numbers/statuses here independently.
+ * The evidence figures in "What we say plainly" are the generated block from
+ * tools/research_evidence_block.py (bot repo), stamped with its date.
  *
  * Mounted at https://offda9.com/research.php
  */
@@ -138,7 +140,7 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
         <div class="inst-grid">
             <div class="inst">
                 <h3><i class="fas fa-layer-group"></i>Discord progression bot</h3>
-                <span class="chip chip-green">Live &middot; 96 instrumented accounts</span>
+                <span class="chip chip-green">Live &middot; ~100 registered accounts &middot; a thirteen-person active core</span>
                 <p>
                     The five-tier ASCEND progression system: dimensional scoring, review workflow,
                     daily tier scheduler. Every credit-earning action, review decision, and tier
@@ -159,11 +161,13 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
                 <div class="inst-surface">Surface: H1 &middot; H5</div>
             </div>
             <div class="inst">
-                <h3><i class="fas fa-comments"></i>Daily Think Tank cadence</h3>
-                <span class="chip chip-green">Live &middot; daily 6pm Central since May 2026</span>
+                <h3><i class="fas fa-comments"></i>The room: Think Tank + Sunday service</h3>
+                <span class="chip chip-green">Tank nightly since May 2026 &middot; Sunday service since August 2026</span>
                 <p>
-                    Structured group deliberation every day: automated scheduling, attendance
-                    tracking, and facilitator workflow around a facilitated voice-channel agenda.
+                    The Think Tank convenes at 6 PM Central (auto-scheduled nightly, attendance
+                    tracked; 117 sessions and 13 distinct attendees by September 2026). The Sunday
+                    live show runs as a service whose lesson block teaches one manifesto chapter,
+                    discussed in the Tank the same evening and shown as preached on the Atlas.
                 </p>
                 <div class="inst-surface">Surface: H2</div>
             </div>
@@ -179,9 +183,9 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
             </div>
             <div class="inst">
                 <h3><i class="fas fa-tower-broadcast"></i>F.R.E.S.H. Stream Center</h3>
-                <span class="chip chip-green">Live in production for daily streams</span>
+                <span class="chip chip-green">Live in production for every show</span>
                 <p>
-                    OBS plugin powering the daily streams: multi-stream broadcasting, chat
+                    OBS plugin powering the Wednesday, Friday and Sunday shows: multi-stream broadcasting, chat
                     aggregation, and audio entrainment with per-session logging via
                     <code style="font-family:inherit">EntrainmentLogger</code>.
                 </p>
@@ -207,21 +211,26 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
         <p class="section-intro">
             Eight hypotheses across seven families, each with named measurement infrastructure and
             an honest status. Compressed here — the canonical registry with full constraints,
-            design notes, and corrections is the research statement (v0.5).
+            design notes, and corrections is the research statement (v0.6, 2026-09-11).
         </p>
         <div class="hyp-list">
             <div class="hyp">
                 <span class="hyp-id">H1</span>
                 <p>Tier-gated progression with reviewed written reflections improves argument
-                   quality and engagement durability, assessed against within-community baselines.</p>
-                <span class="chip chip-green">Accumulating data</span>
+                   quality and engagement durability, assessed against within-community baselines.
+                   Its activation premise measured null (317 asynchronous pushes &rarr; 0 completions);
+                   the live test now runs through H2.</p>
+                <span class="chip chip-gold">Activation premise null &middot; runs through H2</span>
             </div>
             <div class="hyp">
                 <span class="hyp-id">H2</span>
-                <p>Daily structured group deliberation — the 6pm Central Think Tank cadence —
-                   increases member-reported goal clarity and member-initiated collaborative
-                   projects over baseline.</p>
-                <span class="chip chip-gold">Partially instrumented</span>
+                <p>A weekly calendar — one manifesto chapter taught at the Sunday service, discussed
+                   in the Think Tank the same evening, shown as preached on the Atlas — with
+                   advancement earned by <em>witnessed participation across a season</em> converts
+                   room presence into tier progression where self-directed curriculum did not.
+                   Revised in v0.6; pre-registered as Arc 1 (six Sundays; three members keeping the
+                   season is the bar).</p>
+                <span class="chip chip-gold">Pre-registered &middot; Arc 1 starts when Sermon 001 is dated</span>
             </div>
             <div class="hyp">
                 <span class="hyp-id">H3</span>
@@ -274,17 +283,25 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
             <p class="kicker">What we say plainly</p>
             <p class="plain-quote">We would rather under-claim and be checked than over-claim and be caught.</p>
             <ul>
-                <li><strong>96 member accounts, honestly broken down.</strong> 93 Observer, 1 Theorist,
-                    2 Benefactor (July 2026). The Benefactor accounts are founder/supporter grants;
-                    the Theorist advancement (June 29, 2026) is our first non-founder progression —
-                    recorded under a documented beta-tester exception to the full content gate, so
-                    we count it as activation evidence, not yet a clean organic advancement.</li>
-                <li><strong>A documented null result — and its first break.</strong> Through May 2026 the
-                    instrument recorded essentially zero organic tier advancement. We treat that as
-                    data: passive onboarding into an instrumented progression system produced
-                    near-zero activation. Countermeasures deployed June&ndash;July 2026 produced the
-                    first advancement; curriculum actions are still a small share of logged
-                    activity, so the problem is narrowed, not solved. Documented, not buried.</li>
+                <li><strong>The numbers, generated from the live database (as of 2026-09-11).</strong>
+                    98 registered accounts, 2 above Observer. 12 members active in the last 30 days,
+                    8 in the last 7 (member activity only &mdash; system-grant events excluded).
+                    35 approved curriculum completions ever, from 7 members; none in the last week.
+                    117 Think Tank sessions since May 9, 2026, 13 distinct attendees ever, 9 in the
+                    last 30 days. This is a thirteen-person room with a hundred registered accounts,
+                    and we say so. (The block is regenerated from the instrument on a stamp; a stale
+                    stamp fails our own doc gate.)</li>
+                <li><strong>A documented null result, run to completion.</strong> Through May 2026 the
+                    instrument recorded essentially zero organic tier advancement &mdash; passive
+                    onboarding into an instrumented progression system produced near-zero
+                    activation. One advancement followed the June&ndash;July countermeasures (a Theorist
+                    on June 29, 2026, under a beta-tester exception to the full content gate). Then the
+                    countermeasures ran to completion: 317 asynchronous pushes delivered, no curriculum
+                    completion attributable to any of them, and a pre-registered three-week Think Tank
+                    lesson ritual also null. The one conversion ever recorded was preceded by 191
+                    voice-minutes in the room, so the program now runs through the room (H2).
+                    A correction, stated: our July figure of eighty-six active members counted
+                    launch-day system grants as member activity; the member figure was 13.</li>
                 <li><strong>We audit our own instrument and say so.</strong> The evaluation layer's first
                     version scored reflections without the source text and discarded rejected
                     attempts; fixed June 30, 2026, and disclosed — pre-fix scores are flagged in any
@@ -297,9 +314,16 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
                     designs at roughly 1,000+ — and scale with the data, not ahead of it.</li>
                 <li><strong>No IRB relationship yet.</strong> Telemetry is platform-operations data;
                     no member has been enrolled as a human research subject. H4 and H6b are
-                    explicitly gated on partner-institution IRB supervision.</li>
-                <li><strong>Pre-registered before inspection.</strong> From June 2026, analyses are
-                    pre-registered in a git-timestamped registry before any data inspection.</li>
+                    explicitly gated on partner-institution IRB supervision. Members opt in to
+                    research use of their data with <code style="font-family:inherit">/research consent</code>
+                    (revocable at any time) and can have their data erased on request &mdash; both
+                    built September 2026; nothing is analysed for publication without consent on file.</li>
+                <li><strong>Pre-registered before inspection &mdash; and honest about the registry.</strong>
+                    Analyses are pre-registered in a git-timestamped registry before any data
+                    inspection. The registry was stood up in June 2026 and held no entries until
+                    September 10, 2026, when the July Think Tank experiment was filed retroactively
+                    from its July 17 prediction text (the entry says so) and the next test, Arc 1,
+                    was pre-registered before it runs.</li>
             </ul>
         </div>
     </section>
@@ -385,7 +409,7 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
                 <i class="fas fa-envelope"></i> research@offda9.com
             </a>
             <p class="cta-note">
-                Full research statement (v0.4) and complete telemetry/schema inventory available on request.
+                Full research statement (v0.6, September 2026) and complete telemetry/schema inventory available on request.
             </p>
         </div>
     </section>
