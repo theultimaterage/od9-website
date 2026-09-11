@@ -628,6 +628,19 @@
     ping("me", { signed_in: !!j.signed_in, read: j.read_total || 0 });
     if (focusedId && nodeById[focusedId] && card && card.classList.contains("open")) openCard(nodeById[focusedId]);
   }).catch(function () { /* the map is whole without it */ });
+  /* FIFTY-TWO SUNDAYS (2026-09-11): the map is the calendar. DATA.schedule
+     comes from the sermon sheets (tools/build_manifesto_map.py); the next
+     entry whose status is "scheduled" with a date on or after today (Chicago)
+     is the next service, and the strip says so whenever nothing is live. */
+  function nextScheduled() {
+    var today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Chicago" });
+    var next = null;
+    (DATA.schedule || []).forEach(function (s) {
+      if (s.status !== "scheduled" || !s.date || s.date < today) return;
+      if (!next || s.date < next.date) next = s;
+    });
+    return next;
+  }
   function liveState(j) {
     var door = j.door || {}, show = j.show, last = j.last_live;
     var today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Chicago" });
@@ -636,6 +649,7 @@
       if (last && String(last.at || "").slice(0, 10) === new Date().toISOString().slice(0, 10)) return "replay";
       return "tonight";
     }
+    if (nextScheduled()) return "scheduled";
     return "";
   }
   function paintLive(j) {
@@ -647,10 +661,17 @@
     var show = j.show || {}, door = j.door || {}, last = j.last_live;
     var head = show.headline || door.title || "The No Cap Zone";
     var h = '<button type="button" class="x" aria-label="Dismiss">&times;</button>';
+    var sched = st === "scheduled" ? nextScheduled() : null;
+    var schedNode = sched && nodeById["ch" + sched.ch] ? nodeById["ch" + sched.ch] : null;
     if (st === "live") {
       h += '<div class="e">&#9679; Live now</div><b>' + esc(head) + "</b>";
     } else if (st === "tonight") {
       h += '<div class="e">Tonight &middot; 4 PM CT</div><b>' + esc(head) + "</b>";
+    } else if (st === "scheduled") {
+      /* "This Sunday" within the week, otherwise the date — the service is the appointment. */
+      var msAway = Date.parse(sched.date + "T12:00:00-05:00") - Date.now();
+      var when = msAway < 7 * 864e5 ? "This Sunday &middot; 4 PM CT" : "Next service &middot; " + esc(sched.date) + " &middot; 4 PM CT";
+      h += '<div class="e">' + when + "</div><b>Sermon " + esc(sched.sermon) + " &mdash; " + esc(sched.title) + "</b>";
     } else {
       h += '<div class="e">Tonight&rsquo;s show</div><b>' + esc(head) + "</b>";
     }
@@ -661,10 +682,16 @@
       h += '<a href="https://offda9.com/callin" target="_blank" rel="noopener">The line is open &rarr;</a>';
     } else if (st === "replay" && last && last.url) {
       h += '<a href="' + esc(last.url) + '" target="_blank" rel="noopener">Watch the VOD &rarr;</a>';
+    } else if (st === "scheduled") {
+      h += '<span class="e" style="color:var(--chrome)">' + esc(sched.date) + " &middot; the chapter is read at the service, then discussed in the Think Tank at 6 PM CT</span>";
     } else if (door.next_show_ct) {
       h += '<span class="e" style="color:var(--chrome)">' + esc(door.next_show_ct) + "</span>";
     }
-    if (liveNodeId) h += '<a href="#' + esc(liveNodeId) + '" id="atlas-live-go">Tonight&rsquo;s chapter &rarr;</a>';
+    if (st === "scheduled" && schedNode) {
+      h += '<a href="#' + esc(schedNode.id) + '" id="atlas-live-go">Chapter ' + esc(String(sched.ch)) + " on the map &rarr;</a>";
+    } else if (liveNodeId) {
+      h += '<a href="#' + esc(liveNodeId) + '" id="atlas-live-go">Tonight&rsquo;s chapter &rarr;</a>';
+    }
     h += "</div>";
     liveStrip.innerHTML = h;
     liveStrip.className = "on " + st;
@@ -676,8 +703,9 @@
       liveStrip.className = "";
       try { sessionStorage.setItem("atlas.live.dismissed", st); } catch (e) { /* private mode */ }
     });
+    var goTarget = (st === "scheduled" && schedNode) ? schedNode.id : liveNodeId;
     var go = document.getElementById("atlas-live-go");
-    if (go) go.addEventListener("click", function (e) { e.preventDefault(); focusNode(liveNodeId); });
+    if (go) go.addEventListener("click", function (e) { e.preventDefault(); focusNode(goTarget); });
   }
   function pollLive() {
     fetch("api/v1/atlas-live.php", { cache: "no-cache" }).then(function (r) {

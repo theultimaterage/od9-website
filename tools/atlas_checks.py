@@ -200,7 +200,20 @@ def run(base: str) -> int:
 
         # ---- live as an event (mocked endpoint) -------------------------------
         print("live strip")
-        for state, want in (("live", "on live"), ("tonight", "on tonight"), ("quiet", "")):
+        # Fifty-Two Sundays (2026-09-11): between shows the strip is the calendar.
+        # If the map the page inlines schedules a sermon on or after today, the
+        # "quiet" state reads "on scheduled" and names it; otherwise the strip is
+        # off. Read the schedule from the page's own data so this check never
+        # turns red with the calendar.
+        ctx, pg = page(b, errors=errors)
+        pg.goto(base + "?arrival=0", wait_until="load")
+        today_ct = datetime.datetime.now(zoneinfo.ZoneInfo("America/Chicago")).date().isoformat()
+        sched = pg.evaluate("() => JSON.parse(document.getElementById('atlas-data').textContent).schedule || []")
+        ctx.close()
+        upcoming = sorted((s for s in sched if s.get("status") == "scheduled" and (s.get("date") or "") >= today_ct),
+                          key=lambda s: s["date"])
+        quiet_want = "on scheduled" if upcoming else ""
+        for state, want in (("live", "on live"), ("tonight", "on tonight"), ("quiet", quiet_want)):
             # the page decides "tonight" on Chicago's calendar; take the date fresh per state, in that zone
             # (a run that started at 23:59 once built the fixture on yesterday's date and failed at 00:00)
             today = datetime.datetime.now(zoneinfo.ZoneInfo("America/Chicago")).date().isoformat()
@@ -216,6 +229,12 @@ def run(base: str) -> int:
             pg.goto(base + "?arrival=0", wait_until="load")
             pg.wait_for_timeout(1500)
             check(pg.evaluate("() => document.getElementById('atlas-live-strip').className") == want, f"live strip state '{state}' -> '{want}'")
+            if state == "quiet" and upcoming:
+                text = pg.evaluate("() => document.getElementById('atlas-live-strip').textContent")
+                check(f"Sermon {upcoming[0]['sermon']}" in text and "on the map" in text,
+                      f"the calendar strip names Sermon {upcoming[0]['sermon']} ({upcoming[0]['date']}) and links its chapter")
+                check(pg.evaluate("() => (document.getElementById('atlas-live-go') || {}).getAttribute('href')") == f"#ch{upcoming[0]['ch']}",
+                      "the strip's chapter link points at the scheduled chapter")
             ctx.close()
 
         # ---- the timeline ----------------------------------------------------

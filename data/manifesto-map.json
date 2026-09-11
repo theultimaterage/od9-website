@@ -1,9 +1,9 @@
 {
  "skeleton_version": "2026-08-20",
- "generated_at": "2026-09-10T19:25:37Z",
+ "generated_at": "2026-09-11T17:01:29Z",
  "timeline": {
   "start": "2026-06-20",
-  "end": "2026-08-23",
+  "end": "2026-09-20",
   "events": [
    {
     "at": "2026-06-23",
@@ -134,12 +134,12 @@
     "what": "Media and Information Crisis"
    },
    {
-    "at": "2026-08-23",
+    "at": "2026-09-20",
     "node": "ch22",
     "num": "22",
     "title": "Religious Institutions & Pseudoscience",
     "state": "forge",
-    "what": "Sermon 001 — The 62% Engine (attempted 2026-08-23 · redo TBD)"
+    "what": "Sermon 001 — The 62% Engine (redo scheduled 2026-09-20 (attempted 2026-08-23))"
    }
   ],
   "work": [
@@ -2652,8 +2652,8 @@
     },
     {
      "state": "forge",
-     "at": "2026-08-23",
-     "what": "Sermon 001 — The 62% Engine (attempted 2026-08-23 · redo TBD)"
+     "at": "2026-09-20",
+     "what": "Sermon 001 — The 62% Engine (redo scheduled 2026-09-20 (attempted 2026-08-23))"
     }
    ],
    "sections": [
@@ -3829,9 +3829,9 @@
    "sermon": "001",
    "title": "The 62% Engine",
    "ch": 22,
-   "date": "2026-08-23",
-   "status": "attempted",
-   "label": "attempted 2026-08-23 · redo TBD"
+   "date": "2026-09-20",
+   "status": "scheduled",
+   "label": "redo scheduled 2026-09-20 (attempted 2026-08-23)"
   },
   {
    "sermon": "002",
