@@ -38,6 +38,42 @@ See ~/.claude/skills/prod-deploy/SKILL.md for the schema, flags, and exit codes.
 import os
 import runpy
 import sys
+import glob
+import re
+
+
+def _route_crawl_candidates(repo: str) -> list:
+    """Where route_crawl.py may live. Under WSL — the way this deploy is run —
+    '~' is the WSL home, not C:/Users/<you>, so the Windows homes on the repo's
+    drive (/mnt/c/Users/*) are probed too. Until 2026-09-11 the wrapper looked
+    only at '~' and silently skipped the crawl on every WSL-driven deploy."""
+    out = []
+    env_dir = os.environ.get("CLAUDE_SKILLS_DIR")
+    if env_dir:
+        out.append(os.path.join(env_dir, "route-crawl", "route_crawl.py"))
+    out.append(os.path.expanduser("~/.claude/skills/route-crawl/route_crawl.py"))
+    m = re.match(r"^(/mnt/[a-z])/", repo.replace("\\", "/"))
+    if m:
+        out.extend(sorted(glob.glob(m.group(1) + "/Users/*/.claude/skills/route-crawl/route_crawl.py")))
+    return out
+
+
+def _find_route_crawl(repo: str):
+    for c in _route_crawl_candidates(repo):
+        if os.path.exists(c):
+            return c
+    return None
+
+
+if "--where-is-crawl" in sys.argv:
+    # Prover for the resolution above: exit 0 only when the crawl script resolves.
+    # Run it from Windows AND via `wsl bash -lc` — the second is the one that failed.
+    _repo0 = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    _found0 = _find_route_crawl(_repo0)
+    for _c in _route_crawl_candidates(_repo0):
+        print(("  found   " if os.path.exists(_c) else "  absent  ") + _c)
+    print("route_crawl.py: " + (_found0 or "NOT FOUND"))
+    sys.exit(0 if _found0 else 1)
 
 _CONFIG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prod-deploy-config.v2.json")
 
@@ -170,15 +206,22 @@ for _engine in _CANDIDATES:
                 _rc_deploy = _e.code or 0
         if _rc_deploy == 0 and not _dry_run and not _skip_crawl:
             import subprocess
-            _crawl = os.path.expanduser("~/.claude/skills/route-crawl/route_crawl.py")
             _repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            if os.path.exists(_crawl):
-                print("")
-                print("=== Route crawl (every page, and why any 5xx happened) ===", flush=True)
-                _cenv = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
-                if subprocess.run([sys.executable, _crawl], cwd=_repo, env=_cenv).returncode != 0:
-                    sys.exit("DEPLOYED, BUT A ROUTE IS RETURNING 5xx. The files are already live "
-                             "— fix forward, or roll back from the backup named above.")
+            _crawl = _find_route_crawl(_repo)
+            print("")
+            print("=== Route crawl (every page, and why any 5xx happened) ===", flush=True)
+            if not _crawl:
+                # A gate that cannot be found is a failure, not a skip: the files
+                # are live, so say so, exit non-zero, and name the by-hand command.
+                sys.exit("DEPLOYED, BUT THE ROUTE CRAWL DID NOT RUN — route_crawl.py was not found. Looked in:"
+                         + "".join(chr(10) + "  " + c for c in _route_crawl_candidates(_repo))
+                         + chr(10) + "Run it by hand from the repo root on Windows: "
+                         "python ~/.claude/skills/route-crawl/route_crawl.py  (or set CLAUDE_SKILLS_DIR).")
+            print("  script: " + _crawl, flush=True)
+            _cenv = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
+            if subprocess.run([sys.executable, _crawl], cwd=_repo, env=_cenv).returncode != 0:
+                sys.exit("DEPLOYED, BUT A ROUTE IS RETURNING 5xx. The files are already live "
+                         "— fix forward, or roll back from the backup named above.")
         sys.exit(_rc_deploy)
 else:
     sys.exit("prod-deploy engine not found. Looked in:" + "".join(
