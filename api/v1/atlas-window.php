@@ -56,6 +56,9 @@ $since = (string)($_GET['since'] ?? gmdate('Y-m-d\TH:i:s\Z', time() - 48 * 3600)
 try {
     $summary = atlas_window_summary($dir, $since, $until);
 } catch (InvalidArgumentException $e) {
+    // Refused, and said so twice: to the caller (400 + reason) and to the error log,
+    // so a bot misbuilding its window shows up here, not as a silent empty row.
+    error_log('atlas-window: refused window since=' . $since . ' until=' . $until . ': ' . $e->getMessage());
     http_response_code(400);
     header('Content-Type: text/plain');
     echo 'bad window: ' . $e->getMessage() . "\n";
