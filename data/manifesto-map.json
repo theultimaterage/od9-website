@@ -144,6 +144,14 @@
   ],
   "work": [
    {
+    "at": "2026-09-11",
+    "sha": "e2556aa",
+    "scope": "sermons",
+    "kind": "docs",
+    "what": "REDO scheduled 2026-09-20 -- Sunday 1 of Arc 1",
+    "src": "git"
+   },
+   {
     "at": "2026-09-10",
     "sha": "e1ea1bf",
     "scope": "Ch 51, 53, 57",
