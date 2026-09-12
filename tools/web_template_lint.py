@@ -23,11 +23,13 @@ Exit 0 = clean, 1 = drift found. Wire into a pre-commit hook and deploy.py.
 
 Usage:
     python tools/web_template_lint.py [--root public] [--quiet] [--list-ok]
+    python tools/web_template_lint.py --selftest   # prove every rule can see its own positive
 """
 from __future__ import annotations
 import argparse
 import re
 import sys
+import tempfile
 from pathlib import Path
 
 # Windows consoles default to cp1252, which can't encode the ✓/✗ in the RESULT
@@ -186,21 +188,11 @@ def find_dupes(tree: Path) -> dict[str, list[str]]:
     return dupes
 
 
-def main() -> int:
-    ap = argparse.ArgumentParser()
-    # The repo root IS the docroot since the public/ -> root restructure; the old
-    # default made every bare invocation exit "root not found" (2026-09-04).
-    ap.add_argument("--root", default=".", help="web root to scan (default: the repo root)")
-    ap.add_argument("--quiet", action="store_true")
-    ap.add_argument("--list-ok", action="store_true", help="also list compliant pages")
-    args = ap.parse_args()
-
-    repo = Path(__file__).resolve().parent.parent
-    root = (repo / args.root).resolve()
-    if not root.exists():
-        print(f"web-template-lint: root not found: {root}", file=sys.stderr)
-        return 2
-
+def scan(root: Path) -> tuple[dict[str, list[str]], list[str], dict[str, list[str]]]:
+    """Lint every non-exempt *.php under `root` (the web root, or a fixture tree
+    of the same shape). Returns (drifted page -> issues, compliant pages,
+    duplicate-chrome name -> paths). Never prints, so --selftest can run it
+    against known-positive / known-negative trees."""
     pages = sorted(p for p in root.rglob("*.php"))
     drifted, ok = {}, []
     for p in pages:
@@ -210,8 +202,189 @@ def main() -> int:
         text = p.read_text(encoding="utf-8", errors="replace")
         issues = lint_page(text) + check_includes(p, text) + check_unstyled(text, root)
         (drifted.__setitem__(rel, issues) if issues else ok.append(rel))
+    return drifted, ok, find_dupes(root)
 
-    dupes = find_dupes(root)
+
+# ---------------------------------------------------------------------------
+# --selftest — a scanner that prints "0 findings" is indistinguishable from a
+# broken one. Build a KNOWN-POSITIVE tree (every rule planted once, in each
+# input form scan() actually reads) and a KNOWN-NEGATIVE tree of the same
+# shape, run scan() on both, and assert each label fires / stays silent.
+# Exit 0 = every case passed, 2 = at least one rule cannot see its own positive.
+# Fixtures copy the SHAPE of the real chrome (includes/head.php linking
+# css/od9.css, includes/nav.php, includes/footer.php, includes/env.php, a
+# root page and a dashboard/ page at their real include depths), never content.
+# ---------------------------------------------------------------------------
+_FX_HEAD = ('<?php /* universal <head> partial: set $page_* before including */ ?>\n'
+            '<meta charset="utf-8">\n'
+            '<title><?= htmlspecialchars($page_title ?? "OD9") ?></title>\n'
+            '<link rel="stylesheet" href="<?= $_bp ?? "" ?>/css/od9.css">\n')
+_FX_NAV = ('<?php /* universal nav; set $current_page before including */ ?>\n'
+           '<nav class="od9-nav"><a class="nav-logo" href="/">OD9</a>'
+           '<a class="nav-link" href="/about.php">About</a></nav>\n')
+_FX_FOOTER = '<footer class="od9-footer"><div class="footer-grid">OD9</div></footer>\n'
+_FX_ENV = '<?php /* env + base-path detection lives here and nowhere else */ $_bp = ""; ?>\n'
+_FX_OD9_CSS = ('.od9-nav{display:flex}.nav-logo{height:40px}.nav-link{color:#fff}\n'
+               '.od9-footer{padding:2rem}.footer-grid{display:grid}\n'
+               '.hero{padding:4rem}.hero-title{font-size:2rem}.card{border:1px solid #333}\n')
+_FX_DASH_CSS = '.dash-card{border:1px solid #444}.dash-hello{font-weight:700}\n'
+
+_ROOT_HEAD = "<?php include __DIR__ . '/includes/head.php'; ?>"
+_ROOT_NAV  = "<?php $current_page = 'about'; include('includes/nav.php'); ?>"
+_ROOT_FOOT = "<?php include('includes/footer.php'); ?>"
+_DASH_HEAD = "<?php include __DIR__ . '/../includes/head.php'; ?>"
+_DASH_NAV  = "<?php $current_page = 'dashboard'; include('../includes/nav.php'); ?>"
+_DASH_FOOT = "<?php include('../includes/footer.php'); ?>"
+
+
+def _page(*, head: str = _ROOT_HEAD, nav: str = _ROOT_NAV, footer: str = _ROOT_FOOT,
+          body: str = '<section class="hero"><h1 class="hero-title">Hi</h1></section>',
+          pre: str = "", title: str = "", style: str = "") -> str:
+    return (pre + '<!doctype html>\n<html lang="en">\n<head>\n' + head + "\n" + title + style
+            + "</head>\n<body>\n" + nav + "\n" + body + "\n" + footer + "\n</body>\n</html>\n")
+
+
+def _write(root: Path, rel: str, text: str) -> None:
+    p = root / rel
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(text, encoding="utf-8")
+
+
+def _chrome(root: Path) -> None:
+    _write(root, "includes/head.php", _FX_HEAD)
+    _write(root, "includes/nav.php", _FX_NAV)
+    _write(root, "includes/footer.php", _FX_FOOTER)
+    _write(root, "includes/env.php", _FX_ENV)
+    _write(root, "css/od9.css", _FX_OD9_CSS)
+    _write(root, "css/dashboard.css", _FX_DASH_CSS)
+
+
+def _build_negative(root: Path) -> None:
+    _chrome(root)
+    _write(root, "about.php", _page())
+    _write(root, "dashboard/index.php",
+           _page(head=_DASH_HEAD + '\n<link rel="stylesheet" href="/css/dashboard.css">',
+                 nav=_DASH_NAV, footer=_DASH_FOOT,
+                 body='<div class="dash-card"><p class="dash-hello">Hi</p></div>'))
+    # An endpoint: no chrome at all, and exempt — must not count as a page.
+    _write(root, "api/ping.php", "<?php echo json_encode(['ok' => true]);\n")
+
+
+def _build_positive(root: Path) -> None:
+    _chrome(root)
+    _write(root, "about.php", _page())  # one clean page among the drifted ones
+    _write(root, "inline-chrome.php",
+           _page(style="<style>.od9-nav { position: sticky; } .footer-grid { gap: 1rem; }</style>\n"))
+    _write(root, "handrolled-head.php",
+           _page(head='<meta charset="utf-8">', title="<title>Hand-rolled</title>\n", nav="", footer=""))
+    _write(root, "bad-nav.php",
+           _page(nav='<nav class="od9-nav"><a class="nav-link" href="/">Home</a></nav>'))
+    _write(root, "nav-no-css.php", _page(head='<meta charset="utf-8">'))
+    _write(root, "own-env-xampp.php",
+           _page(pre="<?php $isLocal = strpos(__DIR__, 'xampp') !== false; ?>\n"))
+    _write(root, "own-env-server-name.php",
+           _page(pre="<?php $isLocal = ($_SERVER['SERVER_NAME'] ?? '') === 'localhost'; ?>\n"))
+    _write(root, "unstyled.php",
+           _page(body='<div class="settings-card"><label class="toggle-switch">'
+                      '<span class="toggle-slider"></span></label></div>'))
+    # The 2026-06-06 profile.php class: string-matches "includes/head.php" but
+    # points one directory too shallow, so dashboard/includes/head.php is missing.
+    _write(root, "dashboard/broken-include.php",
+           _page(head="<?php include __DIR__ . '/includes/head.php'; ?>", nav=_DASH_NAV, footer=_DASH_FOOT))
+    # DUP_CHROME: a second nav.php inside the web root (the stale dashboard copy).
+    _write(root, "dashboard/includes/nav.php",
+           '<nav class="od9-nav"><a class="nav-link" href="/think-tank.php">Think Tank</a></nav>\n')
+    # Exempt forms that LOOK drifted (own <title>, no chrome) and must be skipped.
+    _write(root, "api/endpoint.php", "<?php header('Content-Type: application/json'); ?><title>x</title>\n")
+    _write(root, "dashboard/api/thing.php", "<title>x</title>\n")
+
+
+def selftest() -> int:
+    print("web-template-lint --selftest")
+    cases: list[tuple[str, bool]] = []
+
+    def case(name: str, passed: bool) -> None:
+        cases.append((name, bool(passed)))
+
+    def fires(found: dict[str, list[str]], rel: str, label: str, needle: str = "") -> bool:
+        return any(i.startswith(label + "  ") and needle in i for i in found.get(rel, []))
+
+    with tempfile.TemporaryDirectory(prefix="web-template-lint-selftest-") as td:
+        pos, neg = Path(td) / "positive", Path(td) / "negative"
+        _build_positive(pos)
+        _build_negative(neg)
+
+        try:
+            found, ok, dupes = scan(pos)
+        except Exception as e:  # a crash is a FAIL line, not a traceback
+            print(f"  FAIL positive tree: scan() raised {type(e).__name__}: {e}")
+            found, ok, dupes = {}, [], {}
+        case("INLINE_CHROME: page carrying its own .od9-nav / .footer-grid CSS fires",
+             fires(found, "inline-chrome.php", "INLINE_CHROME"))
+        case("HANDROLLED_HEAD: page with <title> and no includes/head.php fires",
+             fires(found, "handrolled-head.php", "HANDROLLED_HEAD"))
+        case('BAD_NAV: inline <nav class="od9-nav"> without includes/nav.php fires',
+             fires(found, "bad-nav.php", "BAD_NAV"))
+        case("NAV_NO_CSS: nav.php included but neither head.php nor od9.css loaded fires",
+             fires(found, "nav-no-css.php", "NAV_NO_CSS"))
+        case("OWN_ENV: strpos(__DIR__, 'xampp') form fires",
+             fires(found, "own-env-xampp.php", "OWN_ENV"))
+        case("OWN_ENV: $_SERVER['SERVER_NAME'] ?? ... 'localhost' form fires",
+             fires(found, "own-env-server-name.php", "OWN_ENV"))
+        case("UNSTYLED: 3 content classes defined in no loaded stylesheet fires",
+             fires(found, "unstyled.php", "UNSTYLED", "3 content classes"))
+        case("BROKEN_INCLUDE: dashboard page including __DIR__ . '/includes/head.php' (wrong depth) fires",
+             fires(found, "dashboard/broken-include.php", "BROKEN_INCLUDE"))
+        case("DUP_CHROME: second nav.php under dashboard/includes/ is reported",
+             sorted(dupes.get("nav.php", [])) == ["dashboard/includes/nav.php", "includes/nav.php"]
+             and set(dupes) == {"nav.php"})
+        case("each planted positive fires ONLY its own rule (no cross-talk)",
+             all(len(found.get(r, [])) == 1 for r in (
+                 "inline-chrome.php", "handrolled-head.php", "bad-nav.php", "nav-no-css.php",
+                 "own-env-xampp.php", "own-env-server-name.php", "unstyled.php",
+                 "dashboard/broken-include.php")))
+        case("exempt forms (api/, dashboard/api/, includes/, dashboard/includes/) are not scanned",
+             not any(r.startswith(("api/", "dashboard/api/", "includes/", "dashboard/includes/"))
+                     for r in [*found, *ok]))
+        case(f"positive tree vacuity guard: 8 drifted + 1 compliant (got {len(found)} + {len(ok)})",
+             len(found) == 8 and ok == ["about.php"])
+
+        try:
+            found, ok, dupes = scan(neg)
+        except Exception as e:
+            print(f"  FAIL negative tree: scan() raised {type(e).__name__}: {e}")
+            found, ok, dupes = {"<crash>": [str(e)]}, [], {}
+        case("negative tree: root page + dashboard page on the shared chrome -> zero findings, no dupes "
+             f"(got {len(found)} drifted, {len(dupes)} dupes)",
+             found == {} and dupes == {} and ok == ["about.php", "dashboard/index.php"])
+
+    fails = [n for n, p in cases if not p]
+    for name, passed in cases:
+        print(("  OK   " if passed else "  FAIL ") + name)
+    print(f"\nSELFTEST: {'PASS' if not fails else 'FAIL'} ({len(cases) - len(fails)}/{len(cases)} cases)")
+    return 0 if not fails else 2
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    # The repo root IS the docroot since the public/ -> root restructure; the old
+    # default made every bare invocation exit "root not found" (2026-09-04).
+    ap.add_argument("--root", default=".", help="web root to scan (default: the repo root)")
+    ap.add_argument("--quiet", action="store_true")
+    ap.add_argument("--list-ok", action="store_true", help="also list compliant pages")
+    ap.add_argument("--selftest", action="store_true",
+                    help="prove every rule can see its own positive (exit 0 pass / 2 fail)")
+    args = ap.parse_args()
+    if args.selftest:
+        return selftest()
+
+    repo = Path(__file__).resolve().parent.parent
+    root = (repo / args.root).resolve()
+    if not root.exists():
+        print(f"web-template-lint: root not found: {root}", file=sys.stderr)
+        return 2
+
+    drifted, ok, dupes = scan(root)
 
     n_pages = len(drifted) + len(ok)
     print(f"web-template-lint: scanned {n_pages} page(s) under {args.root}/")
