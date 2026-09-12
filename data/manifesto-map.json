@@ -152,6 +152,22 @@
     "src": "git"
    },
    {
+    "at": "2026-09-11",
+    "sha": "665b7a1",
+    "scope": "sermons",
+    "kind": "docs",
+    "what": "Beat 4's clock reads seven weeks for the 2026-09-20 redo",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-11",
+    "sha": "292c4f3",
+    "scope": "sermons",
+    "kind": "docs",
+    "what": "The pre-air gate note reads the verified designation (84), not the stale 48",
+    "src": "git"
+   },
+   {
     "at": "2026-09-10",
     "sha": "e1ea1bf",
     "scope": "Ch 51, 53, 57",
