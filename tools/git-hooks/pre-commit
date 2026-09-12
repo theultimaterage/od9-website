@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# pre-commit hook: THE SECRET GATE (+ chain).
+# pre-commit hook: THE SECRET GATE (+ chain) + SAME-NAME TOMBSTONES (v3, 2026-09-11).
 #
 # Born 2026-08-12 from an audit, not an incident — which is the point. A repo's .gitignore
 # is a DENYLIST: it excludes secret-config.json and *.log by name, so a new
@@ -75,6 +75,30 @@ if [ "$RC" -ne 0 ]; then
   FAILED=1
 else
   printf '%s\n' "$OUT" | sed 's/^/  /'
+fi
+
+# ── 3. same-name tombstones (2026-09-11) ────────────────────────────────────
+# For every staged <stem>.py, run tests/test_<stem>*.py; for a staged test, run it.
+# Seconds, not the four-minute register. Born when a chore( commit changed a
+# founder rule and the tombstone that pinned the old rule sat RED for hours —
+# no commit-message gate looks at chore(, and the chain ran static scans only.
+# The runner lives ONCE in the fleet (~/.claude/skills/tools/); a missing runner
+# is said, never silently skipped. SKIP_TOMBSTONES=1 bypasses this step only.
+TOMB="$HOME/.claude/skills/tools/same_name_tombstones.py"
+if [ -n "${SKIP_TOMBSTONES:-}" ]; then
+  echo "  ~ pre-commit: same-name tombstones skipped (SKIP_TOMBSTONES set)"
+elif [ ! -f "$TOMB" ]; then
+  echo "  ! pre-commit: same_name_tombstones.py not found at $TOMB — tombstones NOT run (restore the fleet checkout)" >&2
+else
+  TOUT="$("$PY" "$TOMB" --repo "$REPO_ROOT" 2>&1)"
+  TRC=$?
+  if [ -n "$TOUT" ]; then printf '%s\n' "$TOUT" | sed 's/^/  /'; fi
+  if [ "$TRC" -eq 1 ]; then
+    echo "  ✖ pre-commit: a same-name tombstone FAILED — fix the test or the code (SKIP_TOMBSTONES=1 to bypass deliberately)" >&2
+    FAILED=1
+  elif [ "$TRC" -ne 0 ]; then
+    echo "  ! pre-commit: same-name tombstones could not run (exit $TRC) — see above" >&2
+  fi
 fi
 
 exit "$FAILED"
