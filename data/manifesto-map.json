@@ -145,6 +145,14 @@
   "work": [
    {
     "at": "2026-09-12",
+    "sha": "e3fe968",
+    "scope": "sermons",
+    "kind": "docs",
+    "what": "Every sheet states its lesson in one sentence",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-12",
     "sha": "93beef6",
     "scope": "sermons",
     "kind": "docs",
