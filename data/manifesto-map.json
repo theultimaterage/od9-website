@@ -144,6 +144,14 @@
   ],
   "work": [
    {
+    "at": "2026-09-12",
+    "sha": "93beef6",
+    "scope": "sermons",
+    "kind": "docs",
+    "what": "The Beat 4 receipt says its age once",
+    "src": "git"
+   },
+   {
     "at": "2026-09-11",
     "sha": "e2556aa",
     "scope": "sermons",
