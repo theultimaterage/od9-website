@@ -105,3 +105,10 @@ include __DIR__ . '/../includes/nav.php';
 Member-area content classes (`.settings-card`, `.stat-card`, `.toggle-switch`,
 `.activity-list`, etc.) already exist in `css/dashboard.css` — reuse them, and
 add any new ones THERE, not inline.
+
+## Prover
+
+A page this skill scaffolds is correct exactly when `python tools/web_template_lint.py`
+passes on it: the shared includes, no inline chrome, no hand-rolled head, styled
+content classes. Run it on the new page before committing; the lint's own
+`--selftest` proves it can see each violation (2026-09-12).
