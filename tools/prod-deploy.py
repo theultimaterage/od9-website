@@ -168,6 +168,30 @@ else:
     else:
         print("=== Manifesto map: builder not on this machine - UNCHECKED, not clean ===", flush=True)
 
+# CODEX ANCHORS (2026-09-14): a canon lesson declares the manifesto section each
+# passage came from, and the Atlas's section satellites link into the lesson at
+# that anchor. A merge renumbers sections underneath those declarations -- the
+# Volume 1 consolidation shifted two of ch7's by one (ethics inserted as the new
+# section II) and left six more pointing PAST THE END of a chapter cut from ~19
+# sections to 10. Nothing checked, so the Atlas offered landings that go nowhere.
+# Rides a ratchet: only a NEW wrong anchor fails, so known debt cannot hold the
+# deploy hostage. Runs on --dry (a text scan, ~2s), and does NOT block when the
+# manifesto is absent -- the tool says so itself and exits 0.
+# --skip-codex-anchors bypasses; say why in the commit.
+if "--skip-codex-anchors" in sys.argv:
+    sys.argv.remove("--skip-codex-anchors")
+else:
+    import subprocess
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    _ca = os.path.join(_root, "tools", "codex_anchors.py")
+    if os.path.exists(_ca):
+        print("=== Codex anchors (lesson landings vs the manifesto's sections) ===", flush=True)
+        _aenv = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
+        if subprocess.run([sys.executable, _ca, "--verify"], env=_aenv).returncode != 0:
+            sys.exit("ABORT: a canon lesson points at a manifesto section that does not "
+                     "exist. Fix the anchor (tools/codex_anchors.py --verify), or lower "
+                     "the ceiling with --ratchet after a real repair.")
+
 # CHAPTER REFERENCES (2026-09-09): the manifesto is consolidating 67 chapters to
 # 52, and 2,264 sentences say "Chapter N". Every merge invalidates the ones
 # pointing at what it absorbed -- demoting ch2 to Appendix A broke twenty in a

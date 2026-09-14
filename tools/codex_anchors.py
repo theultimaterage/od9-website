@@ -14,13 +14,27 @@ this tool derive it, because it resolves by TITLE against data/manifesto-map.jso
 which is the authority the map itself uses.
 
     python tools/codex_anchors.py             # coverage per lesson
-    python tools/codex_anchors.py --verify    # every declared anchor must match the manifesto (exit 1 if not)
+    python tools/codex_anchors.py --verify    # every declared anchor must match the manifesto
+    python tools/codex_anchors.py --ratchet   # …and record the current count as the ceiling
     python tools/codex_anchors.py --suggest   # derive placements for undeclared passages
     python tools/codex_anchors.py --apply     # …and write them into the lesson files
 
 A lesson that declares nothing still works: the link lands at the top of the
 page. So partial coverage is safe — the risk is that it stays partial silently,
 which the default report answers with a number.
+
+--verify rides a RATCHET (tools/codex_anchors_baseline.json), like chapter_refs'
+stale sections: the count may only go DOWN, and only a NEW wrong anchor fails the
+run. The six standing when the ratchet was set (2026-09-14) are not a numbering
+slip — the 2026-09-09 consolidation cut ch7 from ~19 sections to 10, and the
+passages those three Observer lessons quote as verbatim canon are gone from the
+manifesto (one migrated to ch32). Renumbering them would point at the wrong text
+and deleting the declarations would hide it, so they are recorded as debt and
+wait on a canon decision.
+
+An anchor PAST THE END of its chapter is a hard error even when the passage text
+cannot be matched — it is provably wrong, and treating it as "cannot confirm" is
+what let those six sit unreported.
 
 Verify and suggest need the manifesto (MANIFESTO_DIR, default
 C:\\Users\\Rage\\Documents\\The OD9 Manifesto); without it they skip, loudly.
@@ -40,6 +54,7 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 ROOT = Path(__file__).resolve().parents[1]
 MAP = ROOT / "data" / "manifesto-map.json"
+ANCHORS_BASELINE = ROOT / "tools" / "codex_anchors_baseline.json"
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _manifesto_path import manifesto_dir  # noqa: E402  (sibling tool, not a package)
 
@@ -53,6 +68,12 @@ CANON_RE = re.compile(r'"canon"\s*=>\s*\[(.*?)\n  \],', re.S)
 BLOCK_RE = re.compile(r'\[(?:"sec"\s*=>\s*(\d+),\s*)?"p"\s*=>\s*"(.*?)"(?:,\s*"lead"\s*=>\s*true)?\]', re.S)
 FILE_SEC_RE = re.compile(r"chapter(\d+)-section(\d+)\s*-\s*(.+)\.md$", re.I)
 PREFACE_SEC_RE = re.compile(r"preface-section(\d+)\s*-\s*(.+)\.md$", re.I)
+# ch2 became Appendix A on 2026-09-09 and its files were renamed with it. The
+# corpus walk below globbed only `Chapter *`, so the appendix's body text was
+# never loaded and every passage drawn from it read "source cannot confirm" —
+# making a lesson that quotes the appendix correctly indistinguishable from one
+# quoting text the book no longer contains.
+APPENDIX_SEC_RE = re.compile(r"appendix([A-Za-z])-section(\d+)\s*-\s*(.+)\.md$", re.I)
 
 
 def norm(s: str) -> str:
@@ -77,6 +98,11 @@ def load_manifesto() -> list[tuple[str, str]]:
         return out
     for p in MANIFESTO.glob("Volume */Chapter *  */Markdown Files/*.md"):
         m = FILE_SEC_RE.match(p.name)
+        if m:
+            out.append((re.sub(r"\s+", " ", m.group(3)).strip(),
+                        norm(p.read_text(encoding="utf-8", errors="replace"))))
+    for p in MANIFESTO.glob("Volume */Appendix *  */Markdown Files/*.md"):
+        m = APPENDIX_SEC_RE.match(p.name)
         if m:
             out.append((re.sub(r"\s+", " ", m.group(3)).strip(),
                         norm(p.read_text(encoding="utf-8", errors="replace"))))
@@ -118,6 +144,8 @@ def main() -> int:
     ap.add_argument("--missing", action="store_true", help="list only the lessons that declare nothing")
     ap.add_argument("--strict", action="store_true", help="exit 1 when a lesson declares nothing")
     ap.add_argument("--verify", action="store_true", help="check every declared anchor against the manifesto")
+    ap.add_argument("--ratchet", action="store_true",
+                    help="record the current wrong-anchor count as the new ceiling (it may only go down)")
     ap.add_argument("--suggest", action="store_true", help="derive placements for undeclared passages")
     ap.add_argument("--apply", action="store_true", help="write the derived placements into the lessons")
     a = ap.parse_args()
@@ -163,7 +191,17 @@ def main() -> int:
                 truth = place(norm(m.group(2)), sections, titles)
                 head = norm(m.group(2))[:54]
                 if says and a.verify:
-                    if truth is None:
+                    if says > len(secs):
+                        # Provably wrong without needing to match any text: the
+                        # chapter has no such section, so the landing cannot
+                        # exist. This used to fall into "cannot confirm" and be
+                        # counted as a non-failure, which is how ch7 kept three
+                        # anchors pointing past the end of a chapter that the
+                        # 2026-09-09 consolidation cut from ~19 sections to 10.
+                        print(f"  X  {n['id']:<11} §{says} declared, but the chapter has only "
+                              f"{len(secs)} section(s)   <- {head}…")
+                        wrong.append((n["id"], f.name, says, None))
+                    elif truth is None:
                         print(f"  ?  {n['id']:<11} §{says} declared, source cannot confirm   <- {head}…")
                     elif truth != says:
                         print(f"  X  {n['id']:<11} §{says} declared, source says §{truth} "
@@ -200,13 +238,41 @@ def main() -> int:
     if a.suggest:
         print(f"[codex-anchors] placed {placed}, could not place {unplaced}"
               + (" (written)" if a.apply else " (dry run — pass --apply to write)"))
+    # Wrong anchors ride a RATCHET, not a zero — the same shape chapter_refs uses
+    # for its stale section quotations, and for the same reason. The six standing
+    # on 2026-09-14 are not a numbering slip that can be corrected: the 2026-09-09
+    # consolidation cut ch7 from ~19 sections to 10, and the passages those
+    # lessons quote as VERBATIM canon are gone from the manifesto entirely (one
+    # migrated to ch32). Renumbering them would point at the wrong text and
+    # deleting the declarations would hide it, so the count is recorded and may
+    # only go DOWN. `--ratchet` writes the ceiling after a real repair; a commit
+    # that introduces a new wrong anchor fails.
+    over = False
     if a.verify:
-        print(f"[codex-anchors] verify: {len(wrong)} declared anchor(s) disagree with the manifesto.")
+        baseline = None
+        if ANCHORS_BASELINE.is_file():
+            try:
+                baseline = int(json.loads(ANCHORS_BASELINE.read_text(encoding="utf-8"))["wrong"])
+            except (ValueError, KeyError, TypeError):
+                baseline = None
+        if a.ratchet:
+            ANCHORS_BASELINE.write_text(json.dumps({"wrong": len(wrong)}, indent=2) + "\n",
+                                        encoding="utf-8")
+            print(f"[codex-anchors] anchor baseline written: {len(wrong)}")
+            baseline = len(wrong)
+        over = baseline is not None and len(wrong) > baseline
+        print(f"[codex-anchors] verify: {len(wrong)} declared anchor(s) disagree with the "
+              f"manifesto (ratchet {baseline if baseline is not None else 'unset'}).")
         if wrong:
             print("[codex-anchors] N is the section's POSITION in the Atlas list, not the manifesto's §N.")
+        if over:
+            print(f"[codex-anchors] RATCHET BROKEN: {len(wrong)} > {baseline}. A new wrong anchor "
+                  "was introduced; fix it, do not raise the ceiling.")
+        elif baseline is None:
+            print("[codex-anchors] (no baseline yet — run with --ratchet to set the ceiling)")
     if a.strict and bare:
         return 1
-    return 1 if (a.verify and wrong) else 0
+    return 1 if over else 0
 
 
 if __name__ == "__main__":
