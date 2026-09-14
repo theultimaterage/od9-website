@@ -287,6 +287,94 @@ if (PHP_SAPI === 'cli' && in_array('--selftest', $argv ?? [], true)) {
     $long = rail_label('zzz.vacuity', 'Kurzgesagt: Why Are You Alive – Life, Energy & ATP');
     if (mb_strlen($long) >= 49) { echo "  FAIL vacuity: shortener did not shorten\n"; $fail++; }
 
+    // -----------------------------------------------------------------------
+    // The CURRICULUM half (2026-09-14). Everything above proves a label FITS.
+    // None of it proves the rail still MATCHES the live curriculum, and that is
+    // the half that rots: RAIL_LABELS is keyed by content_id and RAIL_CHAPTERS
+    // is position ranges over each tier's ordered required modules, so seeding
+    // or retiring one module silently invalidates both. Measured clean on
+    // 2026-09-14 — 91 labels, 0 dead, 0 uncurated, spans exact — but clean by
+    // discipline is what the Atlas's canon set was that same morning, right up
+    // until somebody forgot. Reads whatever OD9_BOT_DB_PATH resolves to (local
+    // here, prod on the server) and says so when it cannot read one.
+    // -----------------------------------------------------------------------
+    $dbPath = null;
+    if (is_readable(__DIR__ . '/config.php')) {
+        require_once __DIR__ . '/config.php';
+        $dbPath = defined('OD9_BOT_DB_PATH') ? OD9_BOT_DB_PATH : null;
+    }
+    if ($dbPath === null || !is_readable((string)$dbPath)) {
+        printf("  SKIP curriculum: bot DB not readable (%s) — UNCHECKED, not clean\n",
+               $dbPath ?? 'no config');
+    } else {
+        $pdo = new PDO('sqlite:' . $dbPath, null, null,
+                       [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        $liveIds = [];
+        $reqByTier = [];
+        foreach ($pdo->query("SELECT content_id,
+                                     LOWER(COALESCE(tier_requirement,'')) AS tier,
+                                     COALESCE(is_required,1) AS req
+                              FROM content_library") as $r) {
+            $liveIds[(int)$r['content_id']] = true;
+            if ((int)$r['req'] === 1 && $r['tier'] !== '') {
+                $reqByTier[$r['tier']][] = (int)$r['content_id'];
+            }
+        }
+        $labelledIds = [];
+        $synthByTier = [];
+        foreach (RAIL_LABELS as $key => $_unused) {
+            $parts = explode('.', $key);
+            $tail  = end($parts);
+            if (ctype_digit($tail)) { $labelledIds[(int)$tail] = $key; }
+            else { $synthByTier[$parts[0]] = true; }
+        }
+
+        // (a) a label pointing at a module the curriculum no longer has
+        foreach ($labelledIds as $id => $key) {
+            if (!isset($liveIds[$id])) {
+                printf("  FAIL curated %-28s points at content_id %d, not in content_library\n",
+                       $key, $id);
+                $fail++;
+            }
+        }
+        // (b) a required module with no curated label. The fallback renders it,
+        //     but curation here is deliberate — "measured, not guessed".
+        foreach ($reqByTier as $tier => $ids) {
+            foreach ($ids as $id) {
+                if (!isset($labelledIds[$id])) {
+                    printf("  FAIL %s: required content_id %d has no curated label "
+                           . "(add '%s.<verb>.%d' to RAIL_LABELS)\n", $tier, $id, $tier, $id);
+                    $fail++;
+                }
+            }
+        }
+        // (c) the chapter ranges still span exactly the live required stops
+        $tiers = array_unique(array_merge(array_keys($reqByTier), array_keys(RAIL_CHAPTERS)));
+        sort($tiers);
+        foreach ($tiers as $tier) {
+            $n     = count($reqByTier[$tier] ?? []);
+            $synth = isset($synthByTier[$tier]) ? 1 : 0;
+            if (!isset(RAIL_CHAPTERS[$tier])) {
+                if ($n > RAIL_FLAT_MAX) {
+                    printf("  FAIL %s: flat rail with %d required stops (> RAIL_FLAT_MAX %d) "
+                           . "— spec 6.1 says this zone needs chapters\n", $tier, $n, RAIL_FLAT_MAX);
+                    $fail++;
+                }
+                continue;
+            }
+            $last = 0;
+            foreach (RAIL_CHAPTERS[$tier] as [$_lab, $_from, $to]) { $last = max($last, (int)$to); }
+            $expect = $last + 1 - $synth;
+            if ($expect !== $n) {
+                printf("  FAIL %s: RAIL_CHAPTERS spans %d content stop(s) but %d are required "
+                       . "— the rail will mis-segment\n", $tier, $expect, $n);
+                $fail++;
+            }
+        }
+        printf("  ok  curriculum: %d live module(s), %d curated label(s), spans match (%s)\n",
+               count($liveIds), count($labelledIds), basename((string)$dbPath));
+    }
+
     printf("\nrail-labels selftest: %d curated, %s\n",
            count(RAIL_LABELS), $fail ? "$fail FAILURE(S)" : 'PASS');
     exit($fail ? 1 : 0);

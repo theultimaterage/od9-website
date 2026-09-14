@@ -192,6 +192,44 @@ else:
                      "exist. Fix the anchor (tools/codex_anchors.py --verify), or lower "
                      "the ceiling with --ratchet after a real repair.")
 
+# RAIL LABELS (2026-09-14): the board's progress rail is keyed to the curriculum
+# in two places that nothing was comparing — RAIL_LABELS by content_id, and
+# RAIL_CHAPTERS as position ranges over each tier's ordered required modules. The
+# file HAS a selftest, but it proved the labels FIT (length budget, fallback
+# totality) rather than that they still MATCH: seed or retire one module and a
+# label points at nothing, or a chapter range stops covering the last stop and
+# rail_chapter_for() silently returns null. Measured clean the day this was
+# wired; clean by discipline is the state every other break this week was in.
+#
+# Runs the WINDOWS php deliberately. Both /usr/bin/php under WSL and the CLI php
+# on PATH ship without the sqlite driver, so the curriculum half would skip
+# itself — the same reason the Atlas checks reach for the bot's Windows venv.
+# It reads the LOCAL bot DB (what $isLocal resolves to here), so it validates the
+# code being shipped against this machine's curriculum copy; keep that copy in
+# step with prod or the check is honest about the wrong data.
+# --skip-rail-labels bypasses; say why in the commit.
+if "--skip-rail-labels" in sys.argv:
+    sys.argv.remove("--skip-rail-labels")
+else:
+    import subprocess
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    _rl = os.path.join(_root, "dashboard", "includes", "rail-labels.php")
+    _wphp = "/mnt/c/tools/php84/php.exe"
+    if not os.path.exists(_wphp):
+        _wphp = r"C:\tools\php84\php.exe"
+    if os.path.exists(_rl) and os.path.exists(_wphp):
+        if _rl.startswith("/mnt/c/"):
+            _rl = "C:/" + _rl[len("/mnt/c/"):]   # the Windows interpreter needs a Windows path
+        print("=== Rail labels (the board's rail vs the live curriculum) ===", flush=True)
+        _renv2 = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
+        if subprocess.run([_wphp, _rl, "--selftest"], env=_renv2).returncode != 0:
+            sys.exit("ABORT: the board's progress rail no longer matches the curriculum. "
+                     "Fix dashboard/includes/rail-labels.php (php includes/rail-labels.php "
+                     "--selftest names the exact label or range).")
+    else:
+        print("=== Rail labels: no sqlite-capable php on this machine - UNCHECKED, not clean ===",
+              flush=True)
+
 # CHAPTER REFERENCES (2026-09-09): the manifesto is consolidating 67 chapters to
 # 52, and 2,264 sentences say "Chapter N". Every merge invalidates the ones
 # pointing at what it absorbed -- demoting ch2 to Appendix A broke twenty in a

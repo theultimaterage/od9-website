@@ -70,6 +70,7 @@
     "dashboard/board.php:cohorts",
     "dashboard/board.php:content_completion",
     "dashboard/board.php:content_library",
+    "dashboard/includes/rail-labels.php:content_library",
     "dashboard/board.php:member_notifications",
     "dashboard/board.php:module_completions",
     "dashboard/board.php:modules",
