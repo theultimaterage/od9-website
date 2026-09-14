@@ -85,6 +85,7 @@
     "dashboard/bunker.php:users",
     "dashboard/faq.php:users",
     "dashboard/includes/world_consts.php:tier_gate_requirements",
+    "includes/tiers.php:tier_gate_requirements",
     "dashboard/index.php:achievement_definitions",
     "dashboard/index.php:member_notifications",
     "dashboard/index.php:user_dimensions",
