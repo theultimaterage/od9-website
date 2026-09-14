@@ -14,6 +14,7 @@ $page_robots = 'noindex, nofollow';
 
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/../includes/env.php';
+require_once __DIR__ . '/../includes/tiers.php';
 
 $current_page = 'dashboard';
 
@@ -571,7 +572,7 @@ include __DIR__ . '/../includes/nav.php';
 // the tier card. Routes the member to their current tier's section on the
 // library (anchors added there), where the curriculum + capstone docs live.
 $journeyTier = strtolower($progression['current_tier'] ?? 'observer');
-$_TSEQ = ['observer', 'theorist', 'architect', 'pioneer', 'benefactor'];
+$_TSEQ = od9_tier_order();
 $_ti = array_search($journeyTier, $_TSEQ, true);
 $journeyNext = ($_ti !== false && $_ti < count($_TSEQ) - 1) ? $_TSEQ[$_ti + 1] : null;
 $journeyHref = 'https://offda9.com/library.php#' . rawurlencode($journeyTier);

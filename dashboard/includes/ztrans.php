@@ -40,7 +40,7 @@ endif;
 
 if (!function_exists('od9_ztrans_body')):
 function od9_ztrans_body(): void {
-    require_once __DIR__ . '/env.php';
+    require_once __DIR__ . '/../../includes/env.php';
     $isLocal = od9_is_local();
     $vid = $isLocal ? '/od9/video/transitions' : '/video/transitions';
     ?>

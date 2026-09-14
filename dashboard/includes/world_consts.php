@@ -13,7 +13,12 @@
  */
 declare(strict_types=1);
 
-const TIER_ORDER = ['observer', 'theorist', 'architect', 'pioneer', 'benefactor'];
+// The progression order lives in ONE place now: includes/tiers.php,
+// od9_tier_order(), whose selftest checks it against the order the BOT
+// publishes live in tier_gate_requirements.position. define() rather than
+// const because the value now comes from a function call.
+require_once __DIR__ . '/../../includes/tiers.php';
+define('TIER_ORDER', od9_tier_order());
 
 // ---- Per-tier zone + guide (the world). Observer -> The Wake -> Archivist. ----
 // 'focus' = the plate's vertical focal point, used as CSS object-position on the

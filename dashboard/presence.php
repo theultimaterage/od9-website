@@ -18,6 +18,7 @@
  */
 declare(strict_types=1);
 
+require_once __DIR__ . '/../includes/tiers.php';
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/auth.php';
 od9_dashboard_boot();
@@ -32,7 +33,7 @@ if (empty($_SESSION['discord_id'])) {
 }
 $me = (string) $_SESSION['discord_id'];
 
-$TIERS = ['observer', 'theorist', 'architect', 'pioneer', 'benefactor'];
+$TIERS = od9_tier_order();
 $zone = strtolower(trim((string) ($_GET['zone'] ?? '')));
 if (!in_array($zone, $TIERS, true)) {
     echo json_encode(['ok' => true, 'tokens' => [], 'gate' => 0]);

@@ -68,3 +68,49 @@ if (!function_exists('od9_local_time')) {
         }
     }
 }
+
+// ---------------------------------------------------------------------------
+// Selftest (2026-09-14). Added after a second od9_is_local() was written at
+// dashboard/includes/env.php in ignorance of this one — both guarded with
+// function_exists, so include order silently decided which semantics a page got.
+// This definition is the one that survived, and deliberately so: it is path-only,
+// because SERVER_NAME is absent under CLI and spoofable over HTTP. That is not an
+// omission, it is the point, and the CLI row below is what pins it.
+// ---------------------------------------------------------------------------
+if (PHP_SAPI === 'cli'
+    && in_array('--selftest', $argv ?? [], true)
+    && realpath($argv[0] ?? '') === realpath(__FILE__)) {
+    $fail = 0;
+    // The decision is __DIR__-based, so drive the predicate directly rather than
+    // pretending we can relocate this file mid-run.
+    $probe = static fn(string $dir): bool => stripos($dir, 'xampp') !== false;
+    $cases = [
+        ['dev  (xampp path)',        'C:\xampp\htdocs\od9\includes',        true],
+        ['dev  (mixed case XAMPP)',  'C:\XAMPP\htdocs\od9\includes',        true],
+        ['prod (cPanel path)',       '/home/offda9/public_html/includes',       false],
+        ['prod-like, no xampp',      '/srv/od9/includes',                       false],
+    ];
+    foreach ($cases as [$label, $dir, $want]) {
+        $got = $probe($dir);
+        $ok  = ($got === $want);
+        if (!$ok) { $fail++; }
+        printf("  %s %-26s -> %-5s (want %s)\n", $ok ? ' ok ' : 'FAIL', $label,
+               var_export($got, true), var_export($want, true));
+    }
+    // Vacuity: a predicate that never returns both answers proves nothing.
+    if (count(array_unique(array_map(static fn($c) => $probe($c[1]), $cases))) < 2) {
+        echo "  FAIL vacuity: the predicate never returns both answers\n"; $fail++;
+    }
+    // And the live function must agree with the predicate for THIS machine —
+    // the guard that catches a second definition winning the include race.
+    if (od9_is_local() !== $probe(__DIR__)) {
+        echo "  FAIL od9_is_local() disagrees with this file's own rule — another\n"
+           . "       definition of od9_is_local() loaded first. There must be only one.\n";
+        $fail++;
+    }
+    if (od9_cookie_secure() === od9_is_local()) {
+        echo "  FAIL od9_cookie_secure() must be the inverse of od9_is_local()\n"; $fail++;
+    }
+    printf("\nenv selftest: %d case(s), %s\n", count($cases), $fail ? "$fail FAILURE(S)" : 'PASS');
+    exit($fail ? 1 : 0);
+}

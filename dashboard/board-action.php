@@ -11,6 +11,7 @@
  */
 declare(strict_types=1);
 
+require_once __DIR__ . '/../includes/tiers.php';
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/auth.php';
 od9_dashboard_boot();
@@ -48,7 +49,7 @@ $discordId = $_SESSION['discord_id'];
 // for Song-of-the-Week actions.
 $RETURN_TO = (($_POST['return_to'] ?? '') === 'bunker') ? 'bunker.php' : 'board.php';
 $_vt = strtolower(trim((string)($_POST['tier'] ?? '')));
-if (in_array($_vt, ['observer', 'theorist', 'architect', 'pioneer', 'benefactor'], true)) {
+if (od9_is_tier($_vt)) {
     $VIEW_TIER = $_vt;
 }
 
@@ -224,7 +225,7 @@ if ($action === 'gate_check') {
         $_SESSION['board_flash'] = ['kind' => 'ascend',
             'msg' => $txt !== '' ? $txt : 'The Gate recognizes your record. The world just got wider.'];
         $qs = ['ascended' => 1];
-        if (in_array($newTier, ['observer', 'theorist', 'architect', 'pioneer', 'benefactor'], true)) {
+        if (od9_is_tier($newTier)) {
             $qs['tier'] = $newTier;
         }
         header('Location: ' . DASHBOARD_BASE_URL . '/board.php?' . http_build_query($qs));

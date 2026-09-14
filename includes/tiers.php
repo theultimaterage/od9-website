@@ -76,3 +76,79 @@ if (!function_exists('od9_tier_css_vars')) {
         return $out;
     }
 }
+
+if (!function_exists('od9_tier_order')) {
+    /**
+     * THE canonical progression order for the web surface.
+     *
+     * This literal was written out in SIX places — world_consts.php,
+     * board-action.php twice, dashboard/index.php, dashboard/presence.php and
+     * here — every one of them a hand-kept mirror of the bot's
+     * config.TIER_ORDER, and the project rule is explicit that tier order is
+     * never hardcoded. They all agreed when measured on 2026-09-14, which is
+     * exactly the state the Atlas's canon set was in that same morning.
+     *
+     * NOT the same list as includes/patron_gate.php's TIER_ORDER, and they must
+     * not be merged: that one is the PATREON gating ladder and legitimately
+     * carries a sixth rank, `founding` ($100/mo Founding Patron), which is not a
+     * progression tier and is not in the bot's config.TIER_ORDER. Two
+     * vocabularies that share five names are still two vocabularies.
+     */
+    function od9_tier_order(): array
+    {
+        return $GLOBALS['OD9_TIER_ORDER'];
+    }
+
+    /** Is this one of the five progression tiers? Replaces in_array(..., [literal], true). */
+    function od9_is_tier(?string $slug): bool
+    {
+        return in_array(strtolower(trim((string)$slug)), $GLOBALS['OD9_TIER_ORDER'], true);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Selftest: the web's order must equal the BOT's, and the bot publishes it.
+// tier_gate_requirements carries a `position` column that the bot rewrites from
+// its loaded config on every startup, so the authority is live rather than
+// remembered — the same projection the board already reads its gates from.
+// Runtime stays pure (this file is included by public pages with no DB), so the
+// comparison happens only here, under CLI.
+// ---------------------------------------------------------------------------
+if (PHP_SAPI === 'cli'
+    && in_array('--selftest', $argv ?? [], true)
+    && realpath($argv[0] ?? '') === realpath(__FILE__)) {
+    $fail = 0;
+    $web  = od9_tier_order();
+    printf("  web order : %s\n", implode(' < ', $web));
+
+    if (count($web) !== count(array_unique($web)) || $web !== array_values(array_filter($web, 'is_string'))) {
+        echo "  FAIL the web order is not a clean list of unique strings\n"; $fail++;
+    }
+    foreach (['observer' => true, 'founding' => false] as $slug => $want) {
+        if (od9_is_tier($slug) !== $want) {
+            printf("  FAIL od9_is_tier('%s') should be %s\n", $slug, var_export($want, true));
+            $fail++;
+        }
+    }
+
+    $cfg = __DIR__ . '/../dashboard/includes/config.php';
+    $db  = null;
+    if (is_readable($cfg)) { require_once $cfg; $db = defined('OD9_BOT_DB_PATH') ? OD9_BOT_DB_PATH : null; }
+    if ($db === null || !is_readable((string)$db)) {
+        printf("  SKIP bot comparison: bot DB not readable (%s) — UNCHECKED, not clean\n", $db ?? 'no config');
+    } else {
+        $pdo = new PDO('sqlite:' . $db, null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        $bot = $pdo->query("SELECT target_tier FROM tier_gate_requirements ORDER BY position")
+                   ->fetchAll(PDO::FETCH_COLUMN);
+        printf("  bot order : %s  (%s)\n", implode(' < ', $bot), basename((string)$db));
+        if (!$bot) {
+            echo "  FAIL tier_gate_requirements is empty — the bot has not published an order\n"; $fail++;
+        } elseif ($bot !== $web) {
+            echo "  FAIL the web order does NOT match the bot's published order\n"; $fail++;
+        } else {
+            echo "  ok   the web order matches the bot's live projection exactly\n";
+        }
+    }
+    printf("\ntiers selftest: %s\n", $fail ? "$fail FAILURE(S)" : 'PASS');
+    exit($fail ? 1 : 0);
+}
