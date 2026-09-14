@@ -1,53 +1,65 @@
 <?php
 /**
- * THE CODEX — observer canon lesson: Responsible Transformation (Vol 1, Ch 6).
+ * THE CODEX — observer canon lesson: Responsible Transformation (Vol 1, Ch 7 §II).
  * Data array + the shared renderer (../_codex.php). Canon text is VERBATIM
  * manifesto; glosses + the Archivist's read are the editable teaching layer.
- * Do NOT edit the verbatim canon text.
+ * Do NOT edit verbatim canon.
  *
- * Anti-woo: Ch6 is clean — every claim is sourced (Meadows, Bostrom orthogonality
- * + differential development, Russell, Ord, Jonas, Maxwell). The chapter's §6
- * Eastern-wisdom is explicitly antitheist (wu-wei/dharma as operational philosophy,
- * no supernatural claims); this lesson stays on the risk-science/ethics spine.
- * Do NOT add invented precision, fabricated institutions, or metaphysical framing.
+ * RE-AUTHORED 2026-09-14. This lesson was built on Chapter 6, which the
+ * 2026-09-09 Volume 1 consolidation folded into Chapter 7 as §II — "ethics and
+ * safety before the architecture it binds". All five canon passages, the affirm
+ * and every study-layer quote but one ("the orthogonality thesis") were text the
+ * manifesto no longer contained: the lesson quoted a chapter that had stopped
+ * existing. Every canon string here was lifted from the source mechanically and
+ * round-trip verified, never transcribed.
+ *
+ * The ARGUMENT moved with the text and is stronger for it. The old lesson framed
+ * responsibility through AI-safety borrowings (orthogonality, differential
+ * technological development); §II frames it through the problem that is actually
+ * OD9's — a consciousness-transforming technology has no outside vantage point
+ * from which to evaluate it, so an error propagates into the faculty that would
+ * detect the error. Same discipline, on-thesis sourcing.
+ *
+ * Anti-woo: §II is clean — Churchland, Habermas, Kass, Ostrom, Toffler, all
+ * cited and argued with rather than deferred to; it states plainly that the
+ * framework is antitheist and that Kass's "wisdom of repugnance" is NOT accepted.
+ * Keep it grounded; no invented precision or fabrication.
  */
 declare(strict_types=1);
 
 $lesson = [
   "title"     => "Responsible Transformation",
-  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 6",
+  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 7",
   "subtitle"  => "Godlike tools don&rsquo;t make a wise civilization &mdash; new power without new wisdom magnifies the crisis. This is the discipline of changing things without making them worse.",
-  "sigil"     => "VI",
+  "sigil"     => "II",
   "cover"     => "atlas-vol1.jpg",
-  "archivist" => "&ldquo;The diagnosis is in: a species with godlike tools and obsolete wiring. The reflex is to reach for bigger tools &mdash; and that reflex is the trap. New capability without new wisdom doesn&rsquo;t close the gap; it widens it, faster. This chapter is the part nobody romanticizes: how to change a civilization without recreating the very failures you set out to fix.&rdquo;",
+  "archivist" => "&ldquo;The diagnosis is in: a species with godlike tools and obsolete wiring. The reflex is to reach for bigger tools &mdash; and that reflex is the trap. New capability without new wisdom doesn&rsquo;t close the gap; it widens it, faster. This is the part nobody romanticizes: how to change a civilization without recreating the very failures you set out to fix.&rdquo;",
   "canon" => [
-    ["sec" => 10, "p" => "Why must responsible frameworks precede implementation? The answer lies in what systems theorist Donella Meadows (2008) called &ldquo;the trap of technology as savior&rdquo;&mdash;the mistaken belief that technical solutions alone can resolve complex systemic problems. As our previous analysis of interconnected crises demonstrates, technological advancement without corresponding wisdom magnifies rather than resolves systemic dysfunction.", "lead" => true],
+    ["sec" => 2, "p" => "The previous section described what we intend to build. This one comes before the description of how, deliberately, because a proposal to modify consciousness at civilizational scale that leads with its architecture and appends its safety case has already told you what it values. The commitments below are constraints on everything that follows, not caveats attached to it. If the system described in the rest of this chapter cannot satisfy them, the system is wrong and not the constraints.", "lead" => true],
 
-    ["sec" => 10, "p" => "The integration of ethics and effectiveness in transformation design recognizes what philosopher Nick Bostrom (2012) calls &ldquo;the orthogonality thesis&rdquo;&mdash;the principle that intelligence and moral values represent independent variables. Advanced capabilities do not automatically generate beneficial outcomes, but require explicit alignment with human flourishing. This alignment cannot be retrofitted after capabilities develop but must be integrated from inception. As computer scientist Stuart Russell (2019) observes regarding artificial intelligence, &ldquo;You can&rsquo;t fetch the coffee if you&rsquo;re dead&rdquo;&mdash;highlighting how certain basic values (like human survival) necessarily precede and enable all other objectives."],
+    ["sec" => 2, "p" => "Conventional technologies alter the world outside the person using them. Their effects can be observed from a position the technology has not touched. Consciousness-transforming technologies have no such outside: they modify the apparatus we would use to evaluate them. Patricia Churchland's (2013) point about the self-referential character of awareness is the whole problem in one line &mdash; consciousness is the foundation on which every other human capability and value rests, so an error there propagates into the faculty that would detect the error."],
 
-    ["sec" => 10, "p" => "When facing potentially irreversible catastrophes, the precautionary principle advises restraint. Yet philosopher Toby Ord (2020) counters with what he calls &ldquo;the paralysis problem&rdquo;&mdash;the danger that excessive caution might itself constitute a moral failure by preventing the development of solutions to existing suffering. Navigating between these poles requires what philosopher Hans Jonas (1984) called &ldquo;the heuristics of fear&rdquo;&mdash;using realistic threat assessment to inform wise action rather than paralysis."],
+    ["sec" => 2, "p" => "Two further risks deserve naming because they are less obvious. The first is partial development: expanded capability without corresponding ethical development, which produces someone more effective and no better. The countermeasure is coupling capability enhancement to ethical development structurally, so the two cannot be separated by a user who would prefer only the first. The second is what Habermas (2003) calls the instrumentalization of the self &mdash; treating consciousness as a resource to be optimized rather than as the thing that has value. Against that: genuine informed consent about what a transformation implies, reversibility wherever the intervention permits it, agency preserved throughout rather than surrendered at the start, and enough continuity between the person before and after that the word &quot;recovery&quot; still means something."],
 
-    ["sec" => 12, "p" => "Differential technology development, proposed by philosopher Nick Bostrom (2014), offers strategic guidance for navigating these vulnerabilities. This approach prioritizes technologies that enhance safety and resilience over those that increase risk, creating what Bostrom calls &ldquo;the technological completion conjecture&rdquo;&mdash;the principle that civilizations reaching certain technological thresholds will either self-destruct or develop effective safety mechanisms."],
+    ["sec" => 2, "p" => "The architecture described through the rest of this chapter is bound by the following, and each is checkable rather than aspirational. Transformation is paced to integration capacity. Capability enhancement is coupled to ethical development rather than sold separately. Access is designed for baseline universality, and a version that cannot achieve it is a failure of the design rather than an acceptable compromise. Governance is polycentric, with overlapping decision centres and graduated rather than binary enforcement. Interventions are reversible where the technology permits and honestly labelled where it does not. And the strongest objections above are answered in the design, not in the marketing."],
 
-    ["sec" => 14, "p" => "Wisdom as ethical superintelligence represents what philosopher Nicholas Maxwell (2007) calls &ldquo;wisdom-inquiry&rdquo;&mdash;approaches that integrate factual knowledge with evaluative wisdom to guide technological development."],
-
-    ["affirm" => "Responsible frameworks serve as navigational tools, ensuring that our increasing powers enhance rather than diminish human flourishing."],
+    ["affirm" => "If the system described in the rest of this chapter cannot satisfy them, the system is wrong and not the constraints."],
   ],
   "study" => [
-    ["label" => "The Archivist's read"],
+    ["label" => "The Archivist&rsquo;s read"],
 
-    ["h3" => "The trap of technology as savior"],
-    ["p"  => "Coming straight off the diagnosis, the obvious move is to reach for bigger tools. That reflex is the trap Meadows named. Chapter&nbsp;5 already showed its shape: <em>&ldquo;technological advancement without corresponding wisdom magnifies rather than resolves systemic dysfunction.&rdquo;</em> So responsible frameworks aren&rsquo;t brakes on progress &mdash; they&rsquo;re the <b>steering</b>. Without them, more capability just drives the same failures faster."],
+    ["h3" => "Why this comes before the architecture"],
+    ["p"  => "Notice what the manifesto does with the running order. The safety case is placed <em>before</em> the description of the system, not appended after it, and the text says why: a proposal that leads with its architecture has already told you what it values. These are <em>&ldquo;constraints on everything that follows, not caveats attached to it&rdquo;</em> &mdash; and if the system can&rsquo;t satisfy them, it is the system that&rsquo;s wrong. That is a falsifiable commitment, which is the only kind worth making."],
 
-    ["h3" => "Capability is not wisdom"],
-    ["p"  => "This is the cornerstone, and it&rsquo;s why the chapter has to exist: the <b>orthogonality thesis</b> &mdash; intelligence and good values are <em>independent variables</em>. A more powerful system is not automatically a better one; alignment has to be built in from the start, never bolted on after. Stuart Russell&rsquo;s line is the whole point in eight words &mdash; <em>&ldquo;You can&rsquo;t fetch the coffee if you&rsquo;re dead&rdquo;</em> &mdash; some values come <em>before</em> every goal. It&rsquo;s also why OD9 gates the climb on demonstrated wisdom (verified contribution, the value dimensions), not raw capability or credits alone."],
+    ["h3" => "The technology with no outside"],
+    ["p"  => "Here is the part that makes this harder than ordinary engineering. A bridge can be judged from the riverbank. Consciousness-transforming technologies <em>&ldquo;modify the apparatus we would use to evaluate them&rdquo;</em> &mdash; an error introduced there propagates into the faculty that would catch it. This is why the framework refuses to treat safety as a later step. There is no later vantage point to check from."],
 
-    ["callout" => ["&#9670; Neither reckless nor frozen", "Two opposite failures, equally fatal: charge ahead &mdash; the hubris that magnifies the crisis &mdash; or freeze up, Ord&rsquo;s &ldquo;paralysis problem,&rdquo; where excessive caution lets present suffering continue. The discipline between them is Jonas&rsquo;s &ldquo;heuristics of fear&rdquo;: use a clear-eyed read of real risk to act <em>wisely</em>, not to stall. In practice that means <b>safety before capability</b> &mdash; sequenced, defended, reversible."]],
+    ["callout" => ["&#9670; More effective, and no better", "The risk the manifesto names as partial development: capability that grows while ethics doesn&rsquo;t, producing someone <em>&ldquo;more effective and no better.&rdquo;</em> The countermeasure isn&rsquo;t a warning label &mdash; it&rsquo;s structural, coupling the two so a user cannot take only the first."]],
 
-    ["h3" => "How it connects"],
-    ["p"  => "Chapter&nbsp;5 named the disease; this is the Hippocratic oath for the cure &mdash; <em>first, don&rsquo;t make it worse.</em> It&rsquo;s the bridge to the Solution Framework that follows: the principles and guardrails live here, the concrete architecture comes next. And it&rsquo;s the logic running under the whole progression you&rsquo;re climbing &mdash; the <b>Evidence Standard</b> and the dimension gates are this chapter operationalized: a system that advances people on demonstrated wisdom, not merely on how much they can do."],
+    ["h3" => "Checkable, not aspirational"],
+    ["p"  => "The section closes with commitments it insists are <em>&ldquo;checkable rather than aspirational&rdquo;</em>: pacing to integration capacity, enhancement coupled to ethical development, access designed for baseline universality, polycentric governance, reversibility where the technology permits and honest labelling where it doesn&rsquo;t. Then the line to hold the whole framework to &mdash; the strongest objections are <em>&ldquo;answered in the design, not in the marketing.&rdquo;</em> Read the rest of Chapter&nbsp;7 against that standard, and hold this one to it too."]
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; Chapter&nbsp;6 (<em>Responsible Transformation Frameworks</em>) &mdash; &sect;1 <em>Introduction: The Ethics of Conscious Evolution</em>, &sect;3 <em>Safety Frameworks for Technological Development</em>, and &sect;5 <em>Ethical Frameworks for Transformation</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; Chapter&nbsp;7 (<em>The Solution Framework</em>), &sect;II <em>Ethics and Safety Before Architecture</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
 ];
 
 require __DIR__ . '/../_codex.php';
