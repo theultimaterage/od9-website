@@ -144,6 +144,14 @@
   ],
   "work": [
    {
+    "at": "2026-09-14",
+    "sha": "3274555",
+    "scope": "Ch 13",
+    "kind": "fix",
+    "what": "Two sections were .txt in a directory called Markdown Files",
+    "src": "git"
+   },
+   {
     "at": "2026-09-12",
     "sha": "e3fe968",
     "scope": "sermons",
