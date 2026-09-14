@@ -31,11 +31,29 @@ foreach ([__DIR__ . '/includes/patron_gate.php', __DIR__ . '/../includes/patron_
 if ($gatePath !== null) {
     require_once $gatePath;
 } else {
-    // local-only fallback so the page still renders if includes/ is missing
+    // Fallback so the page still renders if the patron gate is missing. The gate
+    // itself is fail-CLOSED here (no user, nothing satisfied), which is the safe
+    // direction for a page whose whole job is deciding what to show.
     function tier_at_least(string $r): bool { return false; }
     function current_user(): ?array { return null; }
     if (!defined('TIER_ORDER')) {
-        define('TIER_ORDER', ['observer'=>0,'theorist'=>1,'architect'=>2,'pioneer'=>3,'benefactor'=>4,'founding'=>5]);
+        // Do NOT restate patron_gate.php's rank map. This file carried a verbatim
+        // copy of it until 2026-09-14 — `founding` and all — which is a second
+        // map of the same facts and therefore a drift waiting to happen. It is
+        // derived from the canonical progression order instead. `founding` is
+        // deliberately absent: it is a PATREON rank, it belongs to the gate's
+        // ladder rather than to progression, and $LIBRARY never looks it up.
+        $tiersPath = __DIR__ . '/includes/tiers.php';
+        if (!is_file($tiersPath)) {
+            // Refuse rather than guess. The lock logic below reads
+            // `TIER_ORDER[$tier] ?? 0` against `TIER_ORDER[FIRST_GATED_TIER] ?? 2`,
+            // so an EMPTY or absent map ranks every tier 0, gates nothing, and
+            // silently publishes the gated sections. Fail loudly, not open.
+            http_response_code(500);
+            exit('library unavailable: neither includes/patron_gate.php nor includes/tiers.php is present');
+        }
+        require_once $tiersPath;
+        define('TIER_ORDER', array_flip(od9_tier_order()));
     }
 }
 
