@@ -40,7 +40,8 @@ endif;
 
 if (!function_exists('od9_ztrans_body')):
 function od9_ztrans_body(): void {
-    $isLocal = (($_SERVER['SERVER_NAME'] ?? '') === 'localhost') || strpos(__DIR__, 'xampp') !== false;
+    require_once __DIR__ . '/env.php';
+    $isLocal = od9_is_local();
     $vid = $isLocal ? '/od9/video/transitions' : '/video/transitions';
     ?>
 <!-- click-triggered zone transition: <a class="ztrans-link" data-ztrans="…"> plays the clip, then navigates -->

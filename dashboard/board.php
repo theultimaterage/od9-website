@@ -13,6 +13,7 @@
  */
 declare(strict_types=1);
 
+require_once __DIR__ . '/includes/env.php';
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/ztrans.php';
@@ -332,7 +333,7 @@ $RM_QUEUED = (int)($q("SELECT COUNT(*) c FROM roadmap_triggers WHERE status = 'A
 
 /* local mirror serves at /od9 (the /od9/public layout is retired — this path
    404'd every board image in local QA) */
-$IMG = (($_SERVER['SERVER_NAME'] ?? '') === 'localhost' || strpos(__DIR__, 'xampp') !== false) ? '/od9/images/board' : '/images/board';
+$IMG = od9_is_local() ? '/od9/images/board' : '/images/board';
 $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
 ?>
 <!DOCTYPE html>
@@ -755,7 +756,7 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
         include_once __DIR__ . '/../guide-registry.php';
         $wKey = (string)($wfocus['media_key'] ?? '');
         $wFile = isset($VIDEO_MAP[$wKey]) ? (string)$VIDEO_MAP[$wKey][0] : '';
-        $wIsLocal = (($_SERVER['SERVER_NAME'] ?? '') === 'localhost' || strpos(__DIR__, 'xampp') !== false);
+        $wIsLocal = od9_is_local();
         $wSrc = $wFile !== '' ? ($wIsLocal ? '/od9' : '') . '/guide-videos/' . rawurlencode($wFile) : '';
         $wDone = !empty($wfocus['module_completed_at']); ?>
       <div class="questdock">
@@ -857,7 +858,7 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
 <div class="codex-trans" id="codexTrans" hidden><video class="codex-vid" id="codexVid" muted playsinline preload="none"></video></div>
 <script>
 (function(){
-  var VID = <?= json_encode(((($_SERVER['SERVER_NAME'] ?? '') === 'localhost') || strpos(__DIR__, 'xampp') !== false) ? '/od9/video/transitions' : '/video/transitions', JSON_UNESCAPED_SLASHES) ?>;
+  var VID = <?= json_encode(od9_is_local() ? '/od9/video/transitions' : '/video/transitions', JSON_UNESCAPED_SLASHES) ?>;
   var reader = document.getElementById('reader');
   var rframe = reader ? reader.querySelector('.reader-frame') : null;
   var rtitle = reader ? reader.querySelector('.reader-title') : null;

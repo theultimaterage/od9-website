@@ -15,6 +15,7 @@
  */
 declare(strict_types=1);
 
+require_once __DIR__ . '/includes/env.php';
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/ztrans.php';
@@ -105,7 +106,7 @@ if (!empty($_SESSION['board_flash']) && is_array($_SESSION['board_flash'])) {
     unset($_SESSION['board_flash']);
 }
 
-$isLocal = (($_SERVER['SERVER_NAME'] ?? '') === 'localhost') || strpos(__DIR__, 'xampp') !== false;
+$isLocal = od9_is_local();
 $IMG = $isLocal ? '/od9/public/images' : '/images';
 $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
 $cssv = fn($p) => @filemtime(__DIR__ . '/../css/' . $p) ?: '1';

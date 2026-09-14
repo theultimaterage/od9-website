@@ -12,6 +12,7 @@
  */
 declare(strict_types=1);
 
+require_once __DIR__ . '/includes/env.php';
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/auth.php';
 od9_dashboard_boot();
@@ -51,7 +52,7 @@ if ($loggedIn) {
     } catch (Throwable $e) { /* default private */ }
 }
 
-$IMG = (($_SERVER['SERVER_NAME'] ?? '') === 'localhost' || strpos(__DIR__, 'xampp') !== false) ? '/od9/public/images/board' : '/images/board';
+$IMG = od9_is_local() ? '/od9/public/images/board' : '/images/board';
 $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES);
 ?>
 <!DOCTYPE html>

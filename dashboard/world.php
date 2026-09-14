@@ -31,6 +31,7 @@
  */
 declare(strict_types=1);
 
+require_once __DIR__ . '/includes/env.php';
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/ztrans.php';
@@ -109,7 +110,7 @@ $WORLD_STATE = [
 ];
 
 // ---- Env-aware bases (local XAMPP mirror serves under /od9). ----
-$isLocalReq = (($_SERVER['SERVER_NAME'] ?? '') === 'localhost') || strpos(__DIR__, 'xampp') !== false;
+$isLocalReq = od9_is_local();
 $BP  = $isLocalReq ? '/od9' : '';
 $IMG = $BP . '/images/board';
 $VID = $BP . '/video/zones';
