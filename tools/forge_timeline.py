@@ -53,7 +53,14 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 ROOT = Path(__file__).resolve().parents[1]
 MAP = ROOT / "data" / "manifesto-map.json"
-MANIFESTO = Path(os.environ.get("MANIFESTO_DIR", r"C:\Users\Rage\Documents\The OD9 Manifesto"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _manifesto_path import manifesto_dir  # noqa: E402  (sibling tool, not a package)
+
+# Resolved for whichever OS is asking. The documented deploy is
+# `wsl python3 tools/prod-deploy.py`, where the hardcoded Windows path this used
+# to carry does not exist -- so this gate announced "no manifesto checkout" and
+# checked nothing on every real deploy until 2026-09-14. See _manifesto_path.py.
+MANIFESTO = manifesto_dir()
 
 # A commit counts as work on the book when it touches the book. Ops docs
 # (worklists, the masterplan, tools/) are how we talk ABOUT the work; they

@@ -71,7 +71,14 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / ".claude" / "citation-gate.json"
-MANIFESTO = Path(os.environ.get("MANIFESTO_DIR", r"C:\Users\Rage\Documents\The OD9 Manifesto"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _manifesto_path import manifesto_dir  # noqa: E402  (sibling tool, not a package)
+
+# Resolved for whichever OS is asking. The documented deploy is
+# `wsl python3 tools/prod-deploy.py`, where the hardcoded Windows path this used
+# to carry does not exist -- so this gate announced "no manifesto checkout" and
+# checked nothing on every real deploy until 2026-09-14. See _manifesto_path.py.
+MANIFESTO = manifesto_dir()
 NAME = r"[A-Z][A-Za-z'\u2019\-]{2,}"
 # A \u2014 narrative: "Fermi (1950)", "Meadows et al. (2008)"
 NARRATIVE_RE = re.compile(rf"\b({NAME})\s*(?:et al\.?)?\s*\((\d{{4}})\)")
