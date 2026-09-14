@@ -253,7 +253,13 @@ function rail_chapter_for(string $zone, int $position): ?int
 // halves here: every curated label is within budget, AND the fallback is total
 // against the ugliest real titles in the live curriculum.
 // ---------------------------------------------------------------------------
-if (PHP_SAPI === 'cli' && in_array('--selftest', $argv ?? [], true)) {
+// realpath() test: board.php includes this file, so without it a `--selftest`
+// in someone else's $argv would fire this block from inside their run and exit.
+// env.php learned that the hard way on 2026-09-14 — it hijacked THIS selftest
+// and made the deploy gate pass while checking nothing.
+if (PHP_SAPI === 'cli'
+    && in_array('--selftest', $argv ?? [], true)
+    && realpath($argv[0] ?? '') === realpath(__FILE__)) {
     $fail = 0;
     foreach (RAIL_LABELS as $id => $label) {
         $n = mb_strlen($label);

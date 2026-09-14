@@ -63,7 +63,16 @@ function od9_is_local(): bool
 // exists, INCLUDING the one that was wrong: prod under CLI. A detector that
 // only ever sees the passing case is the failure this file was created to fix.
 // ---------------------------------------------------------------------------
-if (PHP_SAPI === 'cli' && in_array('--selftest', $argv ?? [], true)) {
+// The realpath() test is load-bearing, not belt-and-braces. config.php requires
+// this file and EVERY dashboard page requires config.php, so without it a
+// `--selftest` anywhere in $argv made this block fire from inside someone else's
+// run and exit(0) before they finished. That is exactly what happened the moment
+// config.php adopted the helper: `rail-labels.php --selftest` started reporting
+// "env selftest: PASS" and returning 0 while its own curriculum checks never
+// executed — a deploy gate passing without checking anything.
+if (PHP_SAPI === 'cli'
+    && in_array('--selftest', $argv ?? [], true)
+    && realpath($argv[0] ?? '') === realpath(__FILE__)) {
     $dev  = 'C:\\xampp\\htdocs\\od9\\dashboard\\includes';
     $prod = '/home/offda9/public_html/dashboard/includes';
     $cases = [
