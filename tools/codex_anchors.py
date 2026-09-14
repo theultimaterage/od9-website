@@ -23,18 +23,33 @@ A lesson that declares nothing still works: the link lands at the top of the
 page. So partial coverage is safe — the risk is that it stays partial silently,
 which the default report answers with a number.
 
---verify rides a RATCHET (tools/codex_anchors_baseline.json), like chapter_refs'
-stale sections: the count may only go DOWN, and only a NEW wrong anchor fails the
-run. The six standing when the ratchet was set (2026-09-14) are not a numbering
-slip — the 2026-09-09 consolidation cut ch7 from ~19 sections to 10, and the
-passages those three Observer lessons quote as verbatim canon are gone from the
-manifesto (one migrated to ch32). Renumbering them would point at the wrong text
-and deleting the declarations would hide it, so they are recorded as debt and
-wait on a canon decision.
+WHAT --verify FAILS ON, in order of severity:
 
-An anchor PAST THE END of its chapter is a hard error even when the passage text
-cannot be matched — it is provably wrong, and treating it as "cannot confirm" is
-what let those six sit unreported.
+  * the passage is NOT IN THE MANIFESTO AT ALL. The lesson presents text as
+    VERBATIM canon that the book does not contain. This covers `"p"` blocks, the
+    `affirm` (verbatim canon too, by house rule) and the Creed's `$P` principles.
+  * an anchor PAST THE END of its chapter — provably wrong without matching any
+    text, since the landing cannot exist.
+  * an anchor naming a different section than the source does.
+
+"Source cannot confirm" is ADVISORY and does not fail: it means the text exists
+but could not be placed unambiguously in this node, which is a cosmetic anchor
+problem rather than a false quotation. Conflating that with absence is what hid
+the 2026-09-14 damage — the consolidation had deleted passages out from under
+three published Observer lessons and every one of them printed the same
+indifferent "?" as a merely ambiguous placement. All three are re-authored and
+the ratchet (tools/codex_anchors_baseline.json) now stands at ZERO, so any new
+false quotation fails a deploy rather than being recorded as debt.
+
+NOT gated: quotes inside the study layer. Measured 2026-09-14 — 12 of 35 are
+legitimately not manifesto text (rhetorical framing like "what this means for
+you", named fallacies like "grow now, clean up later", external quotations), so
+a gate there would be a false-alarm generator. Audit those by hand.
+
+A lesson whose canon this tool cannot parse reports `!  UNCHECKED, not clean`
+rather than passing silently — the-creed.php sets "canon" => $canon from a
+variable, and for that reason the nine Creed principles, the most load-bearing
+canon in the curriculum, went entirely unverified until they were wired in.
 
 Verify and suggest need the manifesto (MANIFESTO_DIR, default
 C:\\Users\\Rage\\Documents\\The OD9 Manifesto); without it they skip, loudly.
@@ -65,6 +80,12 @@ from _manifesto_path import manifesto_dir  # noqa: E402  (sibling tool, not a pa
 MANIFESTO = manifesto_dir()
 SEC_RE = re.compile(r'["\']sec["\']\s*=>\s*(\d+)')
 CANON_RE = re.compile(r'"canon"\s*=>\s*\[(.*?)\n  \],', re.S)
+AFFIRM_RE = re.compile(r'\["affirm"\s*=>\s*"(.*?)"\s*\]', re.S)
+# The Creed assembles its canon from a $P array of [name, VERBATIM, gloss]
+# triples rather than literal "p" blocks, so BLOCK_RE saw none of it and the
+# most load-bearing canon in the curriculum went unverified (2026-09-14).
+PRINCIPLES_RE = re.compile(r'\$P\s*=\s*\[(.*?)\n\];', re.S)
+PRINCIPLE_RE = re.compile(r'\["([^"]+)",\s*"(.*?)",\s*"(.*?)"\]', re.S)
 BLOCK_RE = re.compile(r'\[(?:"sec"\s*=>\s*(\d+),\s*)?"p"\s*=>\s*"(.*?)"(?:,\s*"lead"\s*=>\s*true)?\]', re.S)
 FILE_SEC_RE = re.compile(r"chapter(\d+)-section(\d+)\s*-\s*(.+)\.md$", re.I)
 PREFACE_SEC_RE = re.compile(r"preface-section(\d+)\s*-\s*(.+)\.md$", re.I)
@@ -125,9 +146,23 @@ def probes(t: str) -> list[str]:
     return [t[mid - 40:mid + 40], t[20:100], t[-90:-10]]
 
 
-def place(passage: str, sections: list[tuple[str, str]], titles: dict[str, int]) -> int | None:
-    """The 1-based map position of the section containing this passage, or None
-    when the source does not answer it unambiguously."""
+def locate(passage: str, sections: list[tuple[str, str]],
+           titles: dict[str, int]) -> tuple[bool, int | None]:
+    """(is this text in the manifesto AT ALL, its 1-based position in THIS node).
+
+    These are two different questions and conflating them is what hid the
+    2026-09-14 damage. `place()` returned None for three unrelated situations:
+    the text is absent from the book; the text exists but in a chapter this node
+    does not carry; the text exists in more than one of this node's sections. All
+    three printed "source cannot confirm" and none failed, so a lesson quoting a
+    passage the consolidation had DELETED looked exactly like one whose placement
+    was merely ambiguous. Three published lessons sat that way for five days.
+
+    Absence is the severe one and it is answered by `hits` alone, before any
+    placement logic: if no section body in the entire corpus contains a probe,
+    the lesson is presenting as VERBATIM canon something the manifesto does not
+    say. Ambiguous placement is a cosmetic anchor problem and stays advisory.
+    """
     hits: set[str] = set()
     for pr in probes(passage):
         for title, body in sections:
@@ -136,7 +171,13 @@ def place(passage: str, sections: list[tuple[str, str]], titles: dict[str, int])
         if hits:
             break
     idxs = {titles[t.lower()] for t in hits if t.lower() in titles}
-    return (idxs.pop() + 1) if len(idxs) == 1 else None
+    return bool(hits), ((idxs.pop() + 1) if len(idxs) == 1 else None)
+
+
+def place(passage: str, sections: list[tuple[str, str]], titles: dict[str, int]) -> int | None:
+    """The 1-based map position of the section containing this passage, or None
+    when the source does not answer it unambiguously. Used by --suggest."""
+    return locate(passage, sections, titles)[1]
 
 
 def main() -> int:
@@ -167,6 +208,8 @@ def main() -> int:
             print(f"[codex-anchors] {len(sections)} manifesto section file(s) loaded\n")
 
     rows, bare, wrong, placed, unplaced = [], [], [], 0, 0
+    unreadable: list = []
+    checked = 0
     for n in nodes:
         secs = [re.sub(r"\s+", " ", s).strip() for s in (n.get("sections") or [])]
         titles = {t.lower(): i for i, t in enumerate(secs)}
@@ -182,15 +225,57 @@ def main() -> int:
 
             if not (a.verify or a.suggest) or not secs:
                 continue
+
+            # Principle-shaped canon (the Creed) FIRST, before the literal-array
+            # check below can `continue` past this lesson. the-creed.php sets
+            # "canon" => $canon — a variable, not a literal array — so CANON_RE
+            # misses it, and for that reason the nine Creed principles, the most
+            # load-bearing canon in the curriculum, went unverified entirely.
+            pm = PRINCIPLES_RE.search(src)
+            if a.verify and pm:
+                for pname, verbatim, _gloss in PRINCIPLE_RE.findall(pm.group(1)):
+                    checked += 1
+                    if not locate(norm(verbatim), sections, titles)[0]:
+                        print(f"  X  {n['id']:<11} PRINCIPLE {pname!r} is not in the manifesto"
+                              f"   <- {norm(verbatim)[:44]}…")
+                        wrong.append((n["id"], f.name, "principle", None))
+
             blk = CANON_RE.search(src)
             if not blk:
+                # UNCHECKED is not clean: a lesson whose canon this tool cannot
+                # read must say so rather than be counted as a silent pass.
+                if a.verify and not pm:
+                    print(f"  !  {n['id']:<11} {f.name}: canon is not in a shape this tool "
+                          f"reads — UNCHECKED, not clean")
+                    unreadable.append(f.name)
                 continue
             edits = []
+            # The affirm is VERBATIM canon too (house rule, and the precedent is
+            # System-in-Crisis) — but nothing checked it until 2026-09-14, when
+            # all three re-authored lessons turned out to carry a DEAD one and
+            # only a hand audit found them.
+            if a.verify:
+                for am in AFFIRM_RE.finditer(blk.group(1)):
+                    text = norm(am.group(1))
+                    if not locate(text, sections, titles)[0]:
+                        print(f"  X  {n['id']:<11} AFFIRM is not in the manifesto"
+                              f"            <- {text[:54]}…")
+                        wrong.append((n["id"], f.name, "affirm", None))
+
             for m in BLOCK_RE.finditer(blk.group(1)):
+                checked += 1
                 says = int(m.group(1)) if m.group(1) else None
-                truth = place(norm(m.group(2)), sections, titles)
+                exists, truth = locate(norm(m.group(2)), sections, titles)
                 head = norm(m.group(2))[:54]
-                if says and a.verify:
+                if a.verify and not exists:
+                    # THE SEVERE CLASS. Not a misplaced anchor — a passage the
+                    # book does not contain, presented to members as verbatim
+                    # canon. Reported whether or not a section is declared,
+                    # because an undeclared passage can be just as dead.
+                    print(f"  X  {n['id']:<11} passage is not in the manifesto"
+                          f"           <- {head}…")
+                    wrong.append((n["id"], f.name, says, None))
+                elif says and a.verify:
                     if says > len(secs):
                         # Provably wrong without needing to match any text: the
                         # chapter has no such section, so the landing cannot
