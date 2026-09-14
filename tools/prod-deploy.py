@@ -130,6 +130,44 @@ else:
             sys.exit("ABORT: the Forge's work log is behind the manifesto. "
                      "Run: python tools/forge_timeline.py, then commit the map.")
 
+# MANIFESTO MAP FRESHNESS (2026-09-14): data/manifesto-map.json is a BUILD
+# ARTIFACT of the bot repo's tools/build_manifesto_map.py, but it is committed
+# and DEPLOYED from here -- so the guard and the artifact lived in different
+# repos, and od9 could ship a stale map any time nobody happened to run the bot's
+# test suite. That matters now because the map's inputs finally move on their
+# own: canon state comes from curriculum/lessons.json (this repo) and preached
+# state from the manifesto's sermon beat sheets, so preaching a sermon or seeding
+# a lesson makes this artifact stale without touching a single file the deploy
+# would otherwise notice. Publishing the Atlas while it is behind is the exact
+# failure the page exists to refuse -- a chapter that was preached still reading
+# "awaiting its sermon".
+#
+# Like the Forge gate above, it does NOT block when the builder or the manifesto
+# is absent: a machine without the book cannot know, and saying so out loud beats
+# failing forever. It writes nothing -- a checker that repaired the artifact it
+# judges would make every deploy pass by fixing itself.
+# --skip-map-freshness bypasses; say why in the commit.
+if "--skip-map-freshness" in sys.argv:
+    sys.argv.remove("--skip-map-freshness")
+else:
+    import subprocess
+    _bot = "/mnt/c/Users/Rage/IdeaProjects/OD9-Discord-Bot"
+    if not os.path.exists(_bot):
+        _bot = r"C:\Users\Rage\IdeaProjects\OD9-Discord-Bot"
+    _bmm = os.path.join(_bot, "tools", "build_manifesto_map.py")
+    _bpy = os.path.join(_bot, "venv", "Scripts", "python.exe")
+    if os.path.exists(_bmm) and os.path.exists(_bpy):
+        if _bmm.startswith("/mnt/c/"):
+            _bmm = "C:/" + _bmm[len("/mnt/c/"):]   # the Windows interpreter needs a Windows path
+        print("=== Manifesto map (the Atlas vs the lesson registry + sermon sheets) ===", flush=True)
+        _menv = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
+        if subprocess.run([_bpy, _bmm, "--check"], env=_menv).returncode != 0:
+            sys.exit("ABORT: the Atlas map is behind its sources. Run: "
+                     "python tools/build_manifesto_map.py (in the bot repo), "
+                     "then commit data/manifesto-map.json here.")
+    else:
+        print("=== Manifesto map: builder not on this machine - UNCHECKED, not clean ===", flush=True)
+
 # CHAPTER REFERENCES (2026-09-09): the manifesto is consolidating 67 chapters to
 # 52, and 2,264 sentences say "Chapter N". Every merge invalidates the ones
 # pointing at what it absorbed -- demoting ch2 to Appendix A broke twenty in a
