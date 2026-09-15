@@ -170,6 +170,19 @@ def sections_index(doc: dict) -> dict[int, tuple[str, set[str]]]:
     return out
 
 
+def _norm_amp(s: str) -> str:
+    """Fold '&' and 'and' so a title spelled either way compares equal.
+
+    The registry spells two chapter titles with '&' ("Infrastructure & Resource
+    Distribution", "Media & Information System Transformation") while the chapter
+    DIRECTORIES on disk — and therefore the prose that quotes them — spell them
+    "and". Neither string contains the other, so the substring test called two
+    correct chapter-title quotations stale. Rewriting correct prose to satisfy a
+    spelling gap in a tool would have been the wrong repair.
+    """
+    return re.sub(r"\s+", " ", s.replace("&", " and ")).strip()
+
+
 def stale_sections(line: str, sidx: dict[int, tuple[str, set[str]]]) -> list[tuple[int, str]]:
     """(chapter, quoted title) for every `Ch.N's 'Title'` on the line where
     Title is neither one of Chapter N's sections nor Chapter N's own title.
@@ -185,11 +198,12 @@ def stale_sections(line: str, sidx: dict[int, tuple[str, set[str]]]) -> list[tup
         num = int(m.group(1))
         if num not in OUR_RANGE or num not in sidx:
             continue
-        quoted = m.group(2).strip().lower()
+        quoted = _norm_amp(m.group(2).strip().lower())
         title, secs = sidx[num]
+        title = _norm_amp(title)
         if title and (quoted in title or title in quoted):
             continue
-        if any(quoted in s or s in quoted for s in secs):
+        if any(quoted in _norm_amp(s) or _norm_amp(s) in quoted for s in secs):
             continue
         out.append((num, m.group(2).strip()))
     return out
