@@ -1,0 +1,11 @@
+{
+  "rule_excludes": {
+    "unscoped-tenant-query": ["curriculum/*"]
+  },
+
+  "_rule_excludes_note": "curriculum/ holds LESSON PROSE, not database code — 18 PHP files, zero of which contain a PDO handle, a ->query(), a ->prepare(), a mysqli call or getDatabaseConnection(). unscoped-tenant-query is a line-based heuristic that fires on `FROM|UPDATE|INTO|DELETE FROM <tenant table>` with no site_id on the same line, and those words are also ordinary English: curriculum/theorist/economic-dysfunction.php:44 reads 'planned obsolescence engineered into products', where `into` + `products` is the whole match. Lessons are written continuously, so 'from events', 'from customers' and 'into orders' will keep landing — this is a recurring class, not one bad line.",
+
+  "_why_not_the_other_levers": "disable_rules would silence the heuristic across the WHOLE repo, including subscribe.php, verify.php, unsubscribe.php and api/drip/, which are exactly the files it exists to watch. walk_excludes/file_excludes would silence EVERY rule for curriculum/, taking the three error-severity rules (idempotency-randomized, hardcoded-freshthaband-path, legacy-db-prefix) down with them — a lesson can absolutely hardcode a path in an href. rule_excludes narrows the one heuristic on the one path and leaves everything else biting. guardrail_lint.py --selftest asserts that: the excluded lesson still reports hardcoded-freshthaband-path, and the heuristic still fires outside curriculum/.",
+
+  "_scope_check": "Re-verify before widening this: `grep -rlE '(->query\\(|->prepare\\(|->exec\\(|PDO|mysqli|getDatabaseConnection)' curriculum/` must stay empty. The moment a curriculum file takes a database handle, this exemption is hiding a real question and the file belongs somewhere else — or this key does."
+}
