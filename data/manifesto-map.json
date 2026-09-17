@@ -1,6 +1,6 @@
 {
  "skeleton_version": "2026-08-20",
- "generated_at": "2026-09-15T17:13:18Z",
+ "generated_at": "tools/chapter_map.py --build",
  "timeline": {
   "start": "2026-06-20",
   "end": "2026-09-20",
@@ -1905,7 +1905,7 @@
   },
   {
    "id": "ch3",
-   "num": "3",
+   "num": "2",
    "title": "A Labor of Love",
    "vol": 1,
    "legacy": [
@@ -1953,7 +1953,7 @@
   },
   {
    "id": "ch4",
-   "num": "4",
+   "num": "3",
    "title": "The Great Awakening",
    "vol": 1,
    "legacy": [
@@ -2001,7 +2001,7 @@
   },
   {
    "id": "ch5",
-   "num": "5",
+   "num": "4",
    "title": "The System In Crisis",
    "vol": 1,
    "legacy": [
@@ -2041,7 +2041,7 @@
   },
   {
    "id": "ch7",
-   "num": "7",
+   "num": "5",
    "title": "The Solution Framework",
    "vol": 1,
    "legacy": [
@@ -2154,7 +2154,7 @@
   },
   {
    "id": "ch9",
-   "num": "9",
+   "num": "6",
    "title": "Media and Information Crisis",
    "vol": 2,
    "legacy": [
@@ -2204,7 +2204,7 @@
   },
   {
    "id": "ch10",
-   "num": "10",
+   "num": "7",
    "title": "Mental Health",
    "vol": 2,
    "legacy": [
@@ -2254,7 +2254,7 @@
   },
   {
    "id": "ch11",
-   "num": "11",
+   "num": "8",
    "title": "Educational System Collapse",
    "vol": 2,
    "legacy": [
@@ -2293,7 +2293,7 @@
   },
   {
    "id": "ch12",
-   "num": "12",
+   "num": "9",
    "title": "Family and Community Breakdown",
    "vol": 2,
    "legacy": [
@@ -2335,7 +2335,7 @@
   },
   {
    "id": "ch13",
-   "num": "13",
+   "num": "10",
    "title": "Scientific Institution Analysis",
    "vol": 2,
    "legacy": [
@@ -2385,7 +2385,7 @@
   },
   {
    "id": "ch14",
-   "num": "14",
+   "num": "11",
    "title": "Technological Ecosystem Dysfunction",
    "vol": 2,
    "legacy": [
@@ -2423,7 +2423,7 @@
   },
   {
    "id": "ch15",
-   "num": "15",
+   "num": "12",
    "title": "Infrastructure & Resource Distribution",
    "vol": 2,
    "legacy": [
@@ -2461,7 +2461,7 @@
   },
   {
    "id": "ch16",
-   "num": "16",
+   "num": "13",
    "title": "Economic Dysfunction",
    "vol": 2,
    "legacy": [
@@ -2511,7 +2511,7 @@
   },
   {
    "id": "ch17",
-   "num": "17",
+   "num": "14",
    "title": "Crime and Social Disorder",
    "vol": 2,
    "legacy": [
@@ -2549,7 +2549,7 @@
   },
   {
    "id": "ch18",
-   "num": "18",
+   "num": "15",
    "title": "Criminal Justice Failures",
    "vol": 2,
    "legacy": [
@@ -2587,7 +2587,7 @@
   },
   {
    "id": "ch19",
-   "num": "19",
+   "num": "16",
    "title": "Political System Corruption",
    "vol": 2,
    "legacy": [
@@ -2636,7 +2636,7 @@
   },
   {
    "id": "ch20",
-   "num": "20",
+   "num": "17",
    "title": "Healthcare System Failures",
    "vol": 2,
    "legacy": [
@@ -2674,7 +2674,7 @@
   },
   {
    "id": "ch21",
-   "num": "21",
+   "num": "18",
    "title": "Environmental Degradation",
    "vol": 2,
    "legacy": [
@@ -2724,7 +2724,7 @@
   },
   {
    "id": "ch22",
-   "num": "22",
+   "num": "19",
    "title": "Religious Institutions & Pseudoscience",
    "vol": 2,
    "legacy": [
@@ -2780,7 +2780,7 @@
   },
   {
    "id": "v3-mind",
-   "num": "III·1",
+   "num": "20",
    "title": "Engineering the Mind: Enhancement, Learning, Longevity",
    "vol": 3,
    "legacy": [
@@ -2815,7 +2815,7 @@
   },
   {
    "id": "v3-commons",
-   "num": "III·2",
+   "num": "21",
    "title": "The Information Commons",
    "vol": 3,
    "legacy": [
@@ -2849,7 +2849,7 @@
   },
   {
    "id": "v3-energy",
-   "num": "III·3",
+   "num": "22",
    "title": "Energy, Resources & Planetary Infrastructure",
    "vol": 3,
    "legacy": [
@@ -2885,7 +2885,7 @@
   },
   {
    "id": "v3-space",
-   "num": "III·4",
+   "num": "23",
    "title": "The Space Frontier",
    "vol": 3,
    "legacy": [
@@ -2925,7 +2925,7 @@
   },
   {
    "id": "v3-quantum",
-   "num": "III·5",
+   "num": "24",
    "title": "Quantum Technologies",
    "vol": 3,
    "legacy": [
@@ -2958,7 +2958,7 @@
   },
   {
    "id": "v3-ai",
-   "num": "III·6",
+   "num": "25",
    "title": "AI Integration",
    "vol": 3,
    "legacy": [
@@ -2997,7 +2997,7 @@
   },
   {
    "id": "v3-safety",
-   "num": "III·7",
+   "num": "26",
    "title": "Getting There Safely: Integration & Security",
    "vol": 3,
    "legacy": [
@@ -3033,7 +3033,7 @@
   },
   {
    "id": "ch36",
-   "num": "36",
+   "num": "27",
    "title": "Breaking All Chains",
    "vol": 4,
    "legacy": [
@@ -3072,7 +3072,7 @@
   },
   {
    "id": "ch37",
-   "num": "37",
+   "num": "28",
    "title": "Economic System Evolution",
    "vol": 4,
    "legacy": [
@@ -3106,7 +3106,7 @@
   },
   {
    "id": "ch38",
-   "num": "38",
+   "num": "29",
    "title": "Governance Transformation",
    "vol": 4,
    "legacy": [
@@ -3140,7 +3140,7 @@
   },
   {
    "id": "ch39",
-   "num": "39",
+   "num": "30",
    "title": "Media & Information System Transformation",
    "vol": 4,
    "legacy": [
@@ -3179,7 +3179,7 @@
   },
   {
    "id": "ch41",
-   "num": "41",
+   "num": "31",
    "title": "Healthcare Transformation",
    "vol": 4,
    "legacy": [
@@ -3218,7 +3218,7 @@
   },
   {
    "id": "ch42",
-   "num": "42",
+   "num": "32",
    "title": "Community Evolution",
    "vol": 4,
    "legacy": [
@@ -3257,7 +3257,7 @@
   },
   {
    "id": "ch43",
-   "num": "43",
+   "num": "33",
    "title": "Education Reimagined",
    "vol": 4,
    "legacy": [
@@ -3296,7 +3296,7 @@
   },
   {
    "id": "ch44",
-   "num": "44",
+   "num": "34",
    "title": "Justice System Transformation",
    "vol": 4,
    "legacy": [
@@ -3335,7 +3335,7 @@
   },
   {
    "id": "ch45",
-   "num": "45",
+   "num": "35",
    "title": "Arts and Cultural Expression",
    "vol": 4,
    "legacy": [
@@ -3373,7 +3373,7 @@
   },
   {
    "id": "ch46",
-   "num": "46",
+   "num": "36",
    "title": "Consciousness Practice Evolution",
    "vol": 4,
    "legacy": [
@@ -3412,7 +3412,7 @@
   },
   {
    "id": "ch48",
-   "num": "48",
+   "num": "37",
    "title": "Environmental Restoration",
    "vol": 4,
    "legacy": [
@@ -3451,7 +3451,7 @@
   },
   {
    "id": "ch50",
-   "num": "50",
+   "num": "38",
    "title": "Core Technology Platform Deployment",
    "vol": 5,
    "legacy": [
@@ -3492,7 +3492,7 @@
   },
   {
    "id": "ch52",
-   "num": "52",
+   "num": "40",
    "title": "Governance Architecture Implementation",
    "vol": 5,
    "legacy": [
@@ -3534,7 +3534,7 @@
   },
   {
    "id": "ch54",
-   "num": "54",
+   "num": "41",
    "title": "The Progression Economy",
    "vol": 5,
    "legacy": [
@@ -3568,7 +3568,7 @@
   },
   {
    "id": "ch55",
-   "num": "55",
+   "num": "42",
    "title": "Community Integration Systems",
    "vol": 5,
    "legacy": [
@@ -3610,7 +3610,7 @@
   },
   {
    "id": "ch58",
-   "num": "58",
+   "num": "43",
    "title": "Development Pathways Implementation",
    "vol": 5,
    "legacy": [
@@ -3644,7 +3644,7 @@
   },
   {
    "id": "v5-future",
-   "num": "V·6",
+   "num": "39",
    "title": "Future Deployments",
    "vol": 5,
    "legacy": [
@@ -3679,7 +3679,7 @@
   },
   {
    "id": "ch59",
-   "num": "59",
+   "num": "44",
    "title": "The Revolution Begins with Music",
    "vol": 6,
    "legacy": [
@@ -3705,7 +3705,7 @@
   },
   {
    "id": "ch60",
-   "num": "60",
+   "num": "45",
    "title": "Cultural Renaissance & Consciousness Shift",
    "vol": 6,
    "legacy": [
@@ -3731,7 +3731,7 @@
   },
   {
    "id": "ch61",
-   "num": "61",
+   "num": "46",
    "title": "Personal Implementation Guide",
    "vol": 6,
    "legacy": [
@@ -3757,7 +3757,7 @@
   },
   {
    "id": "ch62",
-   "num": "62",
+   "num": "47",
    "title": "Network Building & Community Catalysis",
    "vol": 6,
    "legacy": [
@@ -3783,7 +3783,7 @@
   },
   {
    "id": "ch63",
-   "num": "63",
+   "num": "48",
    "title": "Movement Evolution Strategy",
    "vol": 6,
    "legacy": [
@@ -3809,7 +3809,7 @@
   },
   {
    "id": "ch64",
-   "num": "64",
+   "num": "49",
    "title": "Navigating Opposition & Setbacks",
    "vol": 6,
    "legacy": [
@@ -3835,7 +3835,7 @@
   },
   {
    "id": "ch65",
-   "num": "65",
+   "num": "50",
    "title": "Timing, Sequencing & Critical Mass",
    "vol": 6,
    "legacy": [
@@ -3861,7 +3861,7 @@
   },
   {
    "id": "ch66",
-   "num": "66",
+   "num": "51",
    "title": "Resource Generation Framework",
    "vol": 6,
    "legacy": [
@@ -3887,7 +3887,7 @@
   },
   {
    "id": "ch67",
-   "num": "67",
+   "num": "52",
    "title": "Beyond Type 1 — Ultimate Potential",
    "vol": 6,
    "legacy": [
@@ -3993,5 +3993,6 @@
   "chapters_target": 52,
   "legacy_accounted": 67,
   "canon_lessons": 16
- }
+ },
+ "numbering_source": "manifesto repo tools/manifesto-map.json (canonical; this file derives)"
 }
