@@ -103,7 +103,18 @@ OUR_RANGE = range(1, 68)
 # "OD9 Manifesto Table of Contents.md" and "OD9-MANIFESTO-SUMMARIES.md" — the two files
 # that most need checking. The selftest pins that they are still scanned.
 SKIP_PARTS = ("_audit-staging", "tools" + os.sep, "WORKLIST", "MASTERPLAN",
-              "STRUCTURE-PROPOSAL", "-MANIFEST.md", "sermons" + os.sep)
+              "STRUCTURE-PROPOSAL", "-MANIFEST.md", "sermons" + os.sep, "REBUILD-STATE")
+# A citation of ANOTHER book is not a manifesto reference: "(Ames & Hall, 2003,
+# Chapter 63)" is the Dao De Jing. A year inside the same parenthetical marks it.
+CITATION_YEAR_RE = re.compile(r"\b(1[5-9]\d\d|20\d\d)\b")
+
+
+def in_external_citation(line: str, start: int) -> bool:
+    open_at = line.rfind("(", 0, start)
+    if open_at < 0 or ")" in line[open_at:start]:
+        return False
+    close_at = line.find(")", start)
+    return bool(CITATION_YEAR_RE.search(line[open_at:close_at if close_at >= 0 else len(line)]))
 # A line may name a retired chapter deliberately, to record where something came
 # from. Provenance is not drift, so a line saying so is allowed to say so.
 #
@@ -157,16 +168,25 @@ def title_index(doc: dict) -> dict[str, int]:
 
 
 def sections_index(doc: dict) -> dict[int, tuple[str, set[str]]]:
-    """{chapter number -> (lowercased chapter title, {lowercased section titles})},
-    keyed by EVERY number a node answers to, so a quotation credited to retired
-    ch8 is judged against ch7's sections -- where the words would be if the
-    section survived the fold."""
+    """{chapter number -> (lowercased chapter title, {lowercased section titles})}.
+
+    Keyed by TODAY'S number first (2026-09-26). Until then it was keyed only by
+    legacy numbers, which was right while the book kept its old numbers and wrong
+    after the 09-16 renumber: a doc citing today's Ch.13 was judged against the
+    sections of the chapter that USED to be 13, and the LoveLogic master alone read
+    170 stale quotes. A number that no longer exists (a retired one) still maps to
+    its survivor, so a quotation credited to retired ch8 is judged against ch7's
+    sections -- where the words would be if the section survived the fold."""
     out: dict[int, tuple[str, set[str]]] = {}
-    for n in doc.get("nodes", []):
-        secs = {s.strip().lower() for s in (n.get("sections") or []) if s}
-        title = (n.get("title") or "").strip().lower()
+    nodes = doc.get("nodes", [])
+    for n in nodes:
+        if str(n.get("num")).isdigit():
+            out[int(n["num"])] = ((n.get("title") or "").strip().lower(),
+                                  {s.strip().lower() for s in (n.get("sections") or []) if s})
+    for n in nodes:
         for old in (n.get("legacy") or []):
-            out[int(old)] = (title, secs)
+            out.setdefault(int(old), ((n.get("title") or "").strip().lower(),
+                                      {s.strip().lower() for s in (n.get("sections") or []) if s}))
     return out
 
 
@@ -333,7 +353,14 @@ def scan(doc: dict, extra: dict[Path, str] | None = None) -> dict:
     live, retired = registry(doc)
     still_on_disk = source_chapters()
     # Retired AND gone from disk = the move happened, so references must have moved too.
-    broken = {n: lbl for n, lbl in retired.items() if n not in still_on_disk}
+    # BUT NOT A NUMBER THAT EXISTS TODAY (2026-09-26). After the 09-16 renumber, 44-52
+    # are both "retired" (old 44 was Justice, now 34) and live (today's 44 is The
+    # Revolution Begins with Music), and this flagged every correct "Chapter 44": Vol 6's
+    # own headings, the generated TOC and summaries, 141 findings in all. Docs written
+    # in the old numbering were converted with the renumber's mapping (manifesto
+    # tools/renumber_refs.py), so a live number now means today's chapter; a title
+    # bound to the wrong number is still caught by misdirected().
+    broken = {n: lbl for n, lbl in retired.items() if n not in still_on_disk and n not in live}
 
     idx = title_index(doc)
     sidx = sections_index(doc)
@@ -368,7 +395,7 @@ def scan(doc: dict, extra: dict[Path, str] | None = None) -> dict:
                               "text": line.strip()[:150]})
             for m in CHAPTER_RE.finditer(line):
                 num = int(m.group(1))
-                if num not in OUR_RANGE:
+                if num not in OUR_RANGE or in_external_citation(line, m.start()):
                     continue
                 if num in broken:
                     findings.append({"file": rel, "line": i, "chapter": num,
@@ -391,12 +418,57 @@ def selftest(doc: dict) -> int:
     """A linter that cannot fail is decoration. Prove both directions."""
     live, retired = registry(doc)
     ok = True
-    moved = [n for n in retired if n not in source_chapters()]
+    # a number that is retired AND no longer exists today (53-67 after the renumber)
+    moved = sorted(n for n in retired if n not in source_chapters() and n not in live)
     if not moved:
         print("  selftest: no chapter has actually moved yet — nothing to prove against")
         return 2
     gone, alive = moved[0], next(iter(sorted(live)))
     f = MANIFESTO / "SELFTEST.md"
+
+    # A number both retired (old meaning) and live (today's meaning) is today's chapter.
+    # The regression case for the 141 false findings on Vol 6's headings and the TOC.
+    # Take one with NO directory on disk (Vol 6's one-file chapters, 44-52): a number
+    # still on disk is spared by the older rule anyway, so it would prove nothing.
+    on_disk = source_chapters()
+    reused = sorted(set(live) & set(retired))
+    reused_gone = [x for x in reused if x not in on_disk]
+    if reused and reused_gone:
+        n = reused_gone[0]
+        got = scan(doc, {f: f"### Chapter {n}: {live[n]}\n"})
+        quiet_reused = not any(x["chapter"] == n for x in got["findings"])
+        ok &= quiet_reused
+        print(f"  {'OK  ' if quiet_reused else 'FAIL'} live-again Chapter {n} (retired as an old number) "
+              f"is today's chapter, NOT flagged")
+        # ...and a reused number's SECTIONS are today's chapter's too: quoting a real
+        # section of today's Chapter k must be silent. Under the old legacy-keyed index
+        # this read as stale (170 false quotes in the LoveLogic master). Needs a reused
+        # number whose chapter HAS sections, and a missing one fails loudly.
+        with_secs = [(k, [s for s in (nd.get("sections") or []) if s])
+                     for k in reused for nd in doc.get("nodes", []) if str(nd.get("num")) == str(k)]
+        with_secs = [(k, secs) for k, secs in with_secs if secs]
+        if with_secs:
+            k, secs = with_secs[0]
+            got = scan(doc, {f: f"Ch.{k}'s '{secs[0]}' covers it.\n"})
+            quiet_secs = not got.get("stale_sections")
+            ok &= quiet_secs
+            print(f"  {'OK  ' if quiet_secs else 'FAIL'} a section of today's Chapter {k} is judged "
+                  f"against today's chapter, not the old {k}")
+        else:
+            print("  WARN no reused chapter number has sections; the section rule is unproven")
+            ok = False
+    else:
+        print("  WARN no number is both retired and live; the post-renumber rule is unproven")
+        ok = False
+
+    # Another book's chapter is not ours; our own retired number still fires.
+    got = scan(doc, {f: f"The sage acts small (Ames & Hall, 2003, Chapter {gone}).\n"})
+    cited = not any(x["chapter"] == gone for x in got["findings"])
+    got = scan(doc, {f: f"The method is set out in (see Chapter {gone}).\n"})
+    ours = any(x["chapter"] == gone for x in got["findings"])
+    ok &= cited and ours
+    print(f"  {'OK  ' if cited and ours else 'FAIL'} an external book citation is skipped, a "
+          f"parenthetical manifesto reference is not")
 
     got = scan(doc, {f: f"A sentence pointing at Chapter {gone} for its methods.\n"})
     hit = any(x["chapter"] == gone for x in got["findings"])
