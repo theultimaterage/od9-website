@@ -130,43 +130,49 @@ else:
             sys.exit("ABORT: the Forge's work log is behind the manifesto. "
                      "Run: python tools/forge_timeline.py, then commit the map.")
 
-# MANIFESTO MAP FRESHNESS (2026-09-14): data/manifesto-map.json is a BUILD
-# ARTIFACT of the bot repo's tools/build_manifesto_map.py, but it is committed
-# and DEPLOYED from here -- so the guard and the artifact lived in different
-# repos, and od9 could ship a stale map any time nobody happened to run the bot's
-# test suite. That matters now because the map's inputs finally move on their
-# own: canon state comes from curriculum/lessons.json (this repo) and preached
-# state from the manifesto's sermon beat sheets, so preaching a sermon or seeding
-# a lesson makes this artifact stale without touching a single file the deploy
-# would otherwise notice. Publishing the Atlas while it is behind is the exact
-# failure the page exists to refuse -- a chapter that was preached still reading
-# "awaiting its sermon".
+# MANIFESTO MAP FRESHNESS (2026-09-14): data/manifesto-map.json is committed and
+# DEPLOYED from here but DERIVED from the manifesto, so preaching a sermon or
+# seeding a lesson makes it stale without touching a single file the deploy would
+# otherwise notice. Canon state comes from curriculum/lessons.json (this repo),
+# preached/forge state and the Fifty-Two Sundays schedule from the manifesto's
+# sermon beat sheets. Publishing the Atlas while it is behind is the exact failure
+# the page exists to refuse -- a chapter that was preached still reading "awaiting
+# its sermon", or the strip naming a Sunday that has moved.
 #
-# Like the Forge gate above, it does NOT block when the builder or the manifesto
-# is absent: a machine without the book cannot know, and saying so out loud beats
-# failing forever. It writes nothing -- a checker that repaired the artifact it
-# judges would make every deploy pass by fixing itself.
+# THE CHECKER MOVED (2026-09-26). This gate used to run the bot repo's
+# tools/build_manifesto_map.py --check. After the 09-16 renumber that builder could
+# no longer reproduce the map the manuscript owns, its check failed forever, and
+# this gate refused EVERY deploy. It was retired; the manifesto repo's
+# tools/sync_website_map.py owns every derived field now (numbers, sections and the
+# editorial state) and answers --check the same way: 0 current, 1 stale, 2 cannot
+# tell. It is run with this interpreter against THIS checkout (OD9_WEB_DIR), so it
+# judges the tree being deployed, under WSL or Windows alike.
+#
+# Like the Forge gate above, it does NOT block when the manifesto is absent: a
+# machine without the book cannot know, and saying so out loud beats failing
+# forever. It writes nothing -- a checker that repaired the artifact it judges
+# would make every deploy pass by fixing itself.
 # --skip-map-freshness bypasses; say why in the commit.
 if "--skip-map-freshness" in sys.argv:
     sys.argv.remove("--skip-map-freshness")
 else:
     import subprocess
-    _bot = "/mnt/c/Users/Rage/IdeaProjects/OD9-Discord-Bot"
-    if not os.path.exists(_bot):
-        _bot = r"C:\Users\Rage\IdeaProjects\OD9-Discord-Bot"
-    _bmm = os.path.join(_bot, "tools", "build_manifesto_map.py")
-    _bpy = os.path.join(_bot, "venv", "Scripts", "python.exe")
-    if os.path.exists(_bmm) and os.path.exists(_bpy):
-        if _bmm.startswith("/mnt/c/"):
-            _bmm = "C:/" + _bmm[len("/mnt/c/"):]   # the Windows interpreter needs a Windows path
-        print("=== Manifesto map (the Atlas vs the lesson registry + sermon sheets) ===", flush=True)
-        _menv = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
-        if subprocess.run([_bpy, _bmm, "--check"], env=_menv).returncode != 0:
-            sys.exit("ABORT: the Atlas map is behind its sources. Run: "
-                     "python tools/build_manifesto_map.py (in the bot repo), "
-                     "then commit data/manifesto-map.json here.")
+    _here = os.path.dirname(os.path.abspath(__file__))
+    if _here not in sys.path:
+        sys.path.insert(0, _here)
+    from _manifesto_path import manifesto_dir
+    _root = os.path.dirname(_here)
+    _sync = os.path.join(str(manifesto_dir()), "tools", "sync_website_map.py")
+    if os.path.exists(_sync):
+        print("=== Manifesto map (the Atlas vs the manuscript, sermon sheets and lesson registry) ===",
+              flush=True)
+        _menv = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1", "OD9_WEB_DIR": _root}
+        if subprocess.run([sys.executable, _sync, "--check"], env=_menv).returncode != 0:
+            sys.exit("ABORT: the Atlas map is behind its sources, or cannot be checked. Run in the "
+                     "manifesto repo: python tools/sync_website_map.py --apply, then commit "
+                     "data/manifesto-map.json here.")
     else:
-        print("=== Manifesto map: builder not on this machine - UNCHECKED, not clean ===", flush=True)
+        print("=== Manifesto map: manifesto not on this machine - UNCHECKED, not clean ===", flush=True)
 
 # CODEX ANCHORS (2026-09-14): a canon lesson declares the manifesto section each
 # passage came from, and the Atlas's section satellites link into the lesson at

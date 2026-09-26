@@ -9,8 +9,8 @@
  * + the published Codex lessons; the live beacon reads the designated
  * lesson through api/v1/atlas-live.php.
  *
- * Data: data/manifesto-map.json — a BUILD ARTIFACT written only by
- * tools/build_manifesto_map.py (guarded by tests/test_manifesto_map.py).
+ * Data: data/manifesto-map.json — a BUILD ARTIFACT written only by the
+ * manifesto repo's tools/sync_website_map.py (guarded by its --check at deploy).
  * Inlined server-side below, so no .json URL is ever fetched (the CF WAF
  * 403s *.json paths). The generator refuses to emit JSON containing "</",
  * which is what makes the inline <script> block safe.

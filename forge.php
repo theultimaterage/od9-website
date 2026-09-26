@@ -8,8 +8,8 @@
  * chapters reading "awaiting its sermon" and no way to tell whether that is a
  * plan or an abandonment.
  *
- * Everything here is GENERATED from data/manifesto-map.json, which the bot's
- * tools/build_manifesto_map.py writes from the manifesto itself. Nothing on
+ * Everything here is GENERATED from data/manifesto-map.json, which the manifesto
+ * repo's tools/sync_website_map.py writes from the manifesto itself. Nothing on
  * this page is hand-maintained, so it cannot drift from the book the way a
  * written status page always does — including the uncomfortable parts: if
  * nothing has moved in weeks, the page says that in its own headline.

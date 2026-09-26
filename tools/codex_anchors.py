@@ -194,7 +194,8 @@ def main() -> int:
         a.suggest = True
 
     if not MAP.is_file():
-        sys.exit(f"no map at {MAP} — run the bot's tools/build_manifesto_map.py first")
+        sys.exit(f"no map at {MAP}; it is committed here and kept current by the manifesto "
+                 f"repo's tools/sync_website_map.py --apply")
     nodes = json.loads(MAP.read_text(encoding="utf-8")).get("nodes", [])
 
     sections: list[tuple[str, str]] = []
