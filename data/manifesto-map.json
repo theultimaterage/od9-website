@@ -144,6 +144,374 @@
   ],
   "work": [
    {
+    "at": "2026-09-26",
+    "sha": "8733c6e",
+    "scope": "sermons",
+    "kind": "sermon",
+    "what": "The redo moves to 2026-10-11",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-18",
+    "sha": "ace9294",
+    "scope": "Preface",
+    "kind": "draft",
+    "what": "What Persists, in the Morpheus register",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-18",
+    "sha": "24f0438",
+    "scope": "Preface",
+    "kind": "draft",
+    "what": "Replacing the Plank While Sailing, in the Morpheus register",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-18",
+    "sha": "20f054e",
+    "scope": "Preface",
+    "kind": "draft",
+    "what": "The Ship, in the Morpheus register",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-18",
+    "sha": "091fbb1",
+    "scope": "Preface",
+    "kind": "draft",
+    "what": "The Window, in the Morpheus register",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "f3b0ba4",
+    "scope": "Ch 23",
+    "kind": "draft",
+    "what": "Living and Working Beyond Earth: the rehearsal, the radiation number, the town",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "e6ac416",
+    "scope": "Ch 23",
+    "kind": "draft",
+    "what": "Why Space",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "cb3c681",
+    "scope": "Preface",
+    "kind": "draft",
+    "what": "What Persists",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "c7258f7",
+    "scope": "Ch 23",
+    "kind": "fix",
+    "what": "The origami claim is cited where it is made, and every entailed claim is held to that",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "c0838d4",
+    "scope": "Ch 23",
+    "kind": "draft",
+    "what": "The loop closed: a shipyard, a foundry and a station lit by their own collector",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "ad70998",
+    "scope": "Ch 23",
+    "kind": "draft",
+    "what": "Why Space: what surface heat does to people, and the second home",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "aa8cd62",
+    "scope": "Ch 23",
+    "kind": "draft",
+    "what": "Living and Working Beyond Earth",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "a8e4ec5",
+    "scope": "Preface",
+    "kind": "draft",
+    "what": "Replacing the Plank While Sailing",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "9da71c7",
+    "scope": "Ch 23",
+    "kind": "draft",
+    "what": "Getting Off the Ground",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "9c75568",
+    "scope": "Ch 23",
+    "kind": "draft",
+    "what": "The readability pass, and two claims bound to a NASA flight record",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "99475f1",
+    "scope": "Ch 23",
+    "kind": "fix",
+    "what": "The NASA robotics quotation reads as the abstract does",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "7ad6a92",
+    "scope": "Preface",
+    "kind": "draft",
+    "what": "The Ship: Locke as one answer, the manifesto's own stated",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "75b58ff",
+    "scope": "Ch 23",
+    "kind": "draft",
+    "what": "Getting Off the Ground: what the kilogram price buys on the ground",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "65e29c8",
+    "scope": "Ch 23",
+    "kind": "draft",
+    "what": "The quantum thread taken to its conclusion, from the texts",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "63a6307",
+    "scope": "Ch 23",
+    "kind": "chore",
+    "what": "The ledger, plan and draft follow the approved spine's numbering",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "639d8d6",
+    "scope": "Ch 23",
+    "kind": "fix",
+    "what": "The meta-commentary is gone, and a gate refuses its return",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "4ae92b3",
+    "scope": "Ch 23",
+    "kind": "draft",
+    "what": "Building in Orbit",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "2eb4905",
+    "scope": "Ch 23",
+    "kind": "draft",
+    "what": "Why Space: the July that did not kill evenly, in Klinenberg's own words",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "23d4bef",
+    "scope": "Ch 23",
+    "kind": "draft",
+    "what": "Rules for a Second Frontier: the commons under everyone's phone",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "23bad8e",
+    "scope": "Ch 23",
+    "kind": "fix",
+    "what": "The review's findings closed -- eleven rows bound, the pool complete, the authors restored",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "20b52e0",
+    "scope": "Ch 23",
+    "kind": "draft",
+    "what": "Why Space: the July that did not kill evenly",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "0aa07ee",
+    "scope": "Ch 23",
+    "kind": "draft",
+    "what": "Building in Orbit: the protein-crystal proof, the foundry, the railway",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "07d1733",
+    "scope": "Ch 23",
+    "kind": "draft",
+    "what": "Rules for a Second Frontier",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "056c6cc",
+    "scope": "Preface",
+    "kind": "draft",
+    "what": "The Window",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-17",
+    "sha": "0460565",
+    "scope": "Preface",
+    "kind": "draft",
+    "what": "The Ship",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-16",
+    "sha": "adbdf15",
+    "scope": "Ch 28",
+    "kind": "feat",
+    "what": "Bind every claim to the text that licenses it",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-16",
+    "sha": "7c7a505",
+    "scope": "Ch 28",
+    "kind": "feat",
+    "what": "Folding is an artifact of ground manufacture, not a law",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-16",
+    "sha": "6f22610",
+    "scope": "Ch 28",
+    "kind": "feat",
+    "what": "Section VI drafted from the plan, 21 of 21 claims carried",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-16",
+    "sha": "6741156",
+    "scope": "Vols 1-6",
+    "kind": "refactor",
+    "what": "Renumber the book 1-52, closing fifteen holes",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-16",
+    "sha": "48209d7",
+    "scope": "Vols 1-6",
+    "kind": "refactor",
+    "what": "Drop the redundant \"Markdown Files\" layer",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-16",
+    "sha": "0659ed6",
+    "scope": "Vols 1-4",
+    "kind": "fix",
+    "what": "Converge 415 more works on their verified publication year",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-15",
+    "sha": "cc30f29",
+    "scope": "Vols 1-4",
+    "kind": "fix",
+    "what": "Converge 293 works on their verified publication year",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-15",
+    "sha": "ca4d4d9",
+    "scope": "Vols 2-4",
+    "kind": "fix",
+    "what": "Three ratchets to zero — 14 uncited stats, 74 orphans, 72 stale quotes",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-15",
+    "sha": "bb58b90",
+    "scope": "Ch 39",
+    "kind": "fix",
+    "what": "Repair four defects the burndown agents surfaced",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-15",
+    "sha": "ae6ab1b",
+    "scope": "Vols 1-5",
+    "kind": "fix",
+    "what": "Delete 922 bibliography entries that supported nothing",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-15",
+    "sha": "7df8a31",
+    "scope": "Vols 2-4",
+    "kind": "fix",
+    "what": "Clear 47 more invented ranges; the remaining 139 are ARGUMENT",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-15",
+    "sha": "6f66f43",
+    "scope": "Ch 32",
+    "kind": "fix",
+    "what": "Clear 13 more invented ranges; two rules were still too narrow",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-15",
+    "sha": "4edca29",
+    "scope": "Ch 32-48",
+    "kind": "fix",
+    "what": "Chapter 32's numbers were generated; they are gone",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-15",
+    "sha": "49e0427",
+    "scope": "Vols 1-4",
+    "kind": "fix",
+    "what": "Apply 32 verified corrections — not one claim survived as written",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-15",
+    "sha": "2b50794",
+    "scope": "Vols 2-4",
+    "kind": "fix",
+    "what": "Delete 482 invented effect sizes rather than source them",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-15",
+    "sha": "19c0521",
+    "scope": "Vols 2-4",
+    "kind": "fix",
+    "what": "Stats_weak 204 -> 10, and five detector defects behind it",
+    "src": "git"
+   },
+   {
     "at": "2026-09-14",
     "sha": "3274555",
     "scope": "Ch 13",
