@@ -145,6 +145,14 @@
   "work": [
    {
     "at": "2026-09-26",
+    "sha": "f2a3bc2",
+    "scope": "Ch 4",
+    "kind": "fix",
+    "what": "Docs written before the renumber cite today's chapters",
+    "src": "git"
+   },
+   {
+    "at": "2026-09-26",
     "sha": "8733c6e",
     "scope": "sermons",
     "kind": "sermon",
