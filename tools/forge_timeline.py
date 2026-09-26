@@ -47,6 +47,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -182,8 +183,12 @@ def apply(doc: dict, work: list[dict]) -> dict:
     return doc
 
 
-def write(doc: dict) -> None:
-    MAP.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+def write(doc: dict, path: Path = MAP) -> None:
+    # newline="\n": Path.write_text in text mode turns every "\n" into os.linesep,
+    # so on Windows it wrote CRLF into a repo pinned to LF, and the deploy rsyncs
+    # the working tree (not the commit) while its clean-tree gate normalises CRLF
+    # away. Found 2026-09-26 when this wrote 4,361 CRLF lines into the map.
+    path.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
 
 
 def selftest() -> int:
@@ -225,6 +230,13 @@ def selftest() -> int:
     unchanged = fresh["timeline"]["work"] == work
     ok &= unchanged
     print(f"  {'OK  ' if unchanged else 'FAIL'} a regenerated map reads current")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        probe = Path(tmp) / "map.json"
+        write({"timeline": {"work": work[:3]}, "note": "line one\nline two"}, probe)
+        lf_only = b"\r" not in probe.read_bytes()
+    ok &= lf_only
+    print(f"  {'OK  ' if lf_only else 'FAIL'} the writer emits LF only (the repo is pinned to LF)")
 
     print("  selftest: " + ("the check can fail, so a pass means something" if ok
                             else "THE CHECK CANNOT FAIL — it is decoration"))
