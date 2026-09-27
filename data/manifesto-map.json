@@ -160,6 +160,14 @@
     "src": "git"
    },
    {
+    "at": "2026-09-26",
+    "sha": "55600b5",
+    "scope": "Ch 16, 31, 35",
+    "kind": "fix",
+    "what": "Three section files carry their own heading's title",
+    "src": "git"
+   },
+   {
     "at": "2026-09-18",
     "sha": "ace9294",
     "scope": "Preface",
@@ -2996,7 +3004,7 @@
    "sections": [
     "Introduction - Political Corruption as Civilizational Barrier",
     "Legal Architecture of Corruption",
-    "Legal Architecture of Corruption",
+    "Institutionalized Corruption Mechanisms",
     "The Think Tank Pipeline and Policy Capture",
     "Election System Manipulation and Democratic Subversion",
     "Military-Industrial Complex as Corruption Superstructure",
@@ -3570,7 +3578,7 @@
    "sections": [
     "Introduction - Healthcare Evolution as Civilizational Enabler",
     "Theoretical Foundation and First Principles",
-    "Evolving Beyond Industrial Models",
+    "Transformation Architecture Overview",
     "Prevention-Centered Health Optimization",
     "Consciousness-Based Healing Modalities",
     "Advanced Diagnostics and Personalized Medicine",
@@ -3729,7 +3737,7 @@
     "Transformation Architecture Overview",
     "Creative Production Systems",
     "Aesthetic Experience Design",
-    "Aesthetic Experience Design",
+    "Cultural Co-creation Networks",
     "Integration Framework",
     "Resource Requirements",
     "Human-System Dynamics",
