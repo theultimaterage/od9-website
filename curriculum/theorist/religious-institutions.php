@@ -28,9 +28,9 @@ $lesson = [
 
     ["sec" => 3, "p" => "Scientific understanding demonstrates cumulative progress through continuous correction, while religious frameworks exhibit remarkable stability across centuries despite accumulating contradictory evidence. As physicist Richard Feynman observed: &ldquo;Religion is a culture of faith; science is a culture of doubt&rdquo; (Feynman, 1999)."],
 
-    ["sec" => 8, "p" => "These diverse apocalyptic frameworks share crucial characteristics despite theological differences: they reframe global catastrophe as fulfillment rather than failure, interpret increasing instability as validation rather than warning, and often prioritize afterlife outcomes over present world preservation. This consistent pattern suggests cognitive vulnerabilities potentially functioning as Great Filter mechanisms."],
+    ["sec" => 9, "p" => "These diverse apocalyptic frameworks share crucial characteristics despite theological differences: they reframe global catastrophe as fulfillment rather than failure, interpret increasing instability as validation rather than warning, and often prioritize afterlife outcomes over present world preservation. This consistent pattern suggests cognitive vulnerabilities potentially functioning as Great Filter mechanisms."],
 
-    ["sec" => 11, "p" => "Developing these alternatives represents perhaps the most crucial task for enabling civilization advancement beyond the evolutionary bottleneck created by pre-scientific epistemologies in an age of exponentially advancing technological capability."],
+    ["sec" => 12, "p" => "Developing these alternatives represents perhaps the most crucial task for enabling civilization advancement beyond the evolutionary bottleneck created by pre-scientific epistemologies in an age of exponentially advancing technological capability."],
 
     ["affirm" => "The evidence demonstrates that humans can flourish without religious frameworks when alternative structures effectively address the psychological and social functions these institutions evolved to serve."],
   ],

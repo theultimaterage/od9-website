@@ -27,9 +27,9 @@ $lesson = [
 
     ["p" => "As Princeton researchers Gilens and Page (2014) demonstrated in their landmark study of 1,779 policy issues, &ldquo;economic elites and organized groups representing business interests have substantial independent impacts on U.S. government policy, while average citizens and mass-based interest groups have little or no independent influence.&rdquo; This empirical finding reveals a profound truth: what appears as democracy increasingly functions as a sophisticated system for converting economic power into political outcomes while maintaining the illusion of popular representation."],
 
-    ["sec" => 7, "p" => "Our political system maintains power not despite its inefficiencies but through them. What appears as dysfunction actually represents sophisticated mechanisms for preventing genuine progress while maintaining the illusion of democracy."],
+    ["sec" => 8, "p" => "Our political system maintains power not despite its inefficiencies but through them. What appears as dysfunction actually represents sophisticated mechanisms for preventing genuine progress while maintaining the illusion of democracy."],
 
-    ["sec" => 7, "p" => "When both major parties work together to block even basic accountability for the Pentagon&rsquo;s trillion-dollar budget, it demonstrates that the system isn&rsquo;t broken&mdash;it operates exactly as designed to prevent the kind of resource optimization and consciousness evolution needed for civilization advancement."],
+    ["sec" => 8, "p" => "When both major parties work together to block even basic accountability for the Pentagon&rsquo;s trillion-dollar budget, it demonstrates that the system isn&rsquo;t broken&mdash;it operates exactly as designed to prevent the kind of resource optimization and consciousness evolution needed for civilization advancement."],
 
     ["affirm" => "These pathways are not utopian imaginings but evidence-based approaches drawn from both theoretical foundations and practical implementation examples&mdash;representing feasible directions for genuine evolution beyond current limitations."],
   ],
