@@ -182,7 +182,10 @@ else:
 # sections to 10. Nothing checked, so the Atlas offered landings that go nowhere.
 # Rides a ratchet: only a NEW wrong anchor fails, so known debt cannot hold the
 # deploy hostage. Runs on --dry (a text scan, ~2s), and does NOT block when the
-# manifesto is absent -- the tool says so itself and exits 0.
+# manifesto is absent -- the tool says so itself and exits 0. It DOES block when the
+# manifesto is present but yields no sections (exit 2): from 2026-09-16 to 09-26 a
+# stale glob loaded nothing, the tool read that as "absent", and this gate passed
+# every deploy blind -- including one that broke six lesson landings.
 # --skip-codex-anchors bypasses; say why in the commit.
 if "--skip-codex-anchors" in sys.argv:
     sys.argv.remove("--skip-codex-anchors")

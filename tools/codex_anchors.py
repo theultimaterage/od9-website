@@ -8,8 +8,9 @@ the canon block, the section the passage was drawn from:
     ["sec" => 8, "p" => "These diverse apocalyptic frameworks share…"]
 
 N IS THE SECTION'S POSITION IN THE ATLAS'S OWN LIST, which is not always the
-manifesto's §N: chapter 22's files skip §6, so its Doomsday section is file §9
-and map position 8. Do not copy the number out of a lesson's source line — let
+manifesto's §N: node ch22's Doomsday section is file §9, and it sat at map position
+8 until the 2026-09-26 section sync moved it to 9 (six lesson landings shifted that
+day). Do not copy the number out of a lesson's source line — let
 this tool derive it, because it resolves by TITLE against data/manifesto-map.json,
 which is the authority the map itself uses.
 
@@ -112,28 +113,52 @@ def lesson_path(url: str) -> Path | None:
     return p if p.suffix == ".php" and p.is_file() else None
 
 
-def load_manifesto() -> list[tuple[str, str]]:
-    """[(section title, normalised body)] across the whole manifesto."""
+# The manuscript's own pruning rule (manifesto tools/corpus_rules.py EXCLUDE_DIRS, plus
+# anything dot- or underscore-prefixed). archive/ holds a rebuilt chapter's superseded
+# originals, and the rest is never the book. Copied, not imported: the repos share no library.
+EXCLUDE_DIRS = frozenset({".git", "__pycache__", ".idea", ".vs", ".vscode", ".claude", "tools",
+                          "scratchpad", "email-templates", "covers", "archive"})
+REBUILT_RE = re.compile(r"^REBUILT\s*-\s*(.+)$", re.I)
+
+
+def _title(raw: str) -> str:
+    """A section's title as the Atlas shows it: one space, no REBUILT marker."""
+    t = re.sub(r"\s+", " ", raw).strip()
+    m = REBUILT_RE.match(t)
+    return m.group(1).strip() if m else t
+
+
+def load_manifesto(root: Path | None = None) -> list[tuple[str, str]]:
+    """[(section title, normalised body)] across the whole manifesto.
+
+    LAYOUT-FREE (2026-09-26). This used to glob `Volume */Chapter *  */Markdown
+    Files/*.md`. The manuscript's 2026-09-16 restructure dropped the "Markdown Files"
+    layer, so the glob matched NOTHING, and main() read the empty corpus as "manifesto
+    not readable", switched --verify off and exited 0. Every deploy since passed this
+    gate blind, including the one that shipped the REBUILT preface. Now every chapter,
+    appendix and preface folder is walked whole, pruned exactly as the manuscript's own
+    tools prune, and a REBUILT draft's title loses its marker, matching the Atlas.
+    """
+    root = root or MANIFESTO
     out: list[tuple[str, str]] = []
-    if not MANIFESTO.is_dir():
+    if not root.is_dir():
         return out
-    for p in MANIFESTO.glob("Volume */Chapter *  */Markdown Files/*.md"):
-        m = FILE_SEC_RE.match(p.name)
-        if m:
-            out.append((re.sub(r"\s+", " ", m.group(3)).strip(),
-                        norm(p.read_text(encoding="utf-8", errors="replace"))))
-    for p in MANIFESTO.glob("Volume */Appendix *  */Markdown Files/*.md"):
-        m = APPENDIX_SEC_RE.match(p.name)
-        if m:
-            out.append((re.sub(r"\s+", " ", m.group(3)).strip(),
-                        norm(p.read_text(encoding="utf-8", errors="replace"))))
-    pre = MANIFESTO / "Preface - The Paradox of Transformation" / "Markdown Files"
-    if pre.is_dir():
-        for p in pre.glob("*.md"):
-            m = PREFACE_SEC_RE.match(p.name)
-            if m:
-                out.append((re.sub(r"\s+", " ", m.group(2)).strip(),
-                            norm(p.read_text(encoding="utf-8", errors="replace"))))
+    tops = [d for d in root.glob("Volume */*")
+            if d.is_dir() and d.name.startswith(("Chapter ", "Appendix "))]
+    tops += [d for d in root.glob("Preface*") if d.is_dir()]
+    for top in tops:
+        for dirpath, dirs, files in os.walk(top):
+            dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS and not d.startswith((".", "_"))]
+            for name in sorted(files):
+                m = FILE_SEC_RE.match(name) or APPENDIX_SEC_RE.match(name)
+                title = m.group(3) if m else None
+                if title is None:
+                    mp = PREFACE_SEC_RE.match(name)
+                    title = mp.group(2) if mp else None
+                if title is None:
+                    continue
+                body = (Path(dirpath) / name).read_text(encoding="utf-8", errors="replace")
+                out.append((_title(title), norm(body)))
     return out
 
 
@@ -180,7 +205,51 @@ def place(passage: str, sections: list[tuple[str, str]], titles: dict[str, int])
     return locate(passage, sections, titles)[1]
 
 
-def main() -> int:
+def selftest() -> int:
+    """The loader must see the layout the manuscript actually has, and a manuscript that
+    yields nothing must make --verify REFUSE, not pass. Both failed silently for ten days."""
+    import tempfile
+    global MANIFESTO
+    ok = True
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp) / "book"
+        ch = root / "Volume 2 - Diagnostic Analysis" / "Chapter 16  Political System Corruption"
+        (ch / "archive").mkdir(parents=True)
+        (ch / "chapter16-section1 - Opening Moves.md").write_text("alpha beta", encoding="utf-8")
+        (ch / "chapter16-section2-REBUILT - The New Spine.md").write_text("gamma delta", encoding="utf-8")
+        (ch / "archive" / "chapter16-section1 - The Old Opening.md").write_text("retired", encoding="utf-8")
+        (ch / "notes.md").write_text("not a section", encoding="utf-8")
+        app = root / "Volume 1 - Foundation and Vision" / "Appendix A  Methods" / "deep"
+        app.mkdir(parents=True)
+        (app / "appendixA-section1 - The Evidence Standard.md").write_text("ladder", encoding="utf-8")
+        pre = root / "Preface - The Paradox of Transformation"
+        pre.mkdir()
+        (pre / "preface-section1-REBUILT - The Ship.md").write_text("ship", encoding="utf-8")
+        titles = sorted(t for t, _ in load_manifesto(root))
+        want = ["Opening Moves", "The Evidence Standard", "The New Spine", "The Ship"]
+        good = titles == want
+        ok &= good
+        print(f"  {'OK  ' if good else 'FAIL'} sections load from the folder root, nested folders, the "
+              f"preface and an appendix; REBUILT marker stripped; archive/ skipped ({titles})")
+
+        empty = Path(tmp) / "empty-book"
+        (empty / "Volume 1 - Foundation and Vision" / "Chapter 1  X").mkdir(parents=True)
+        saved = MANIFESTO
+        MANIFESTO = empty
+        try:
+            rc = main(["--verify"])
+        finally:
+            MANIFESTO = saved
+        refused = rc == 2
+        ok &= refused
+        print(f"  {'OK  ' if refused else 'FAIL'} a manuscript on disk that yields no sections makes "
+              f"--verify refuse (exit {rc}), not pass blind")
+    print("  selftest: " + ("the loader sees the real layout and blindness fails loudly" if ok
+                            else "THE CHECK CAN GO BLIND AGAIN"))
+    return 0 if ok else 1
+
+
+def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--missing", action="store_true", help="list only the lessons that declare nothing")
     ap.add_argument("--strict", action="store_true", help="exit 1 when a lesson declares nothing")
@@ -189,7 +258,10 @@ def main() -> int:
                     help="record the current wrong-anchor count as the new ceiling (it may only go down)")
     ap.add_argument("--suggest", action="store_true", help="derive placements for undeclared passages")
     ap.add_argument("--apply", action="store_true", help="write the derived placements into the lessons")
-    a = ap.parse_args()
+    ap.add_argument("--selftest", action="store_true", help="prove the loader sees the real layout")
+    a = ap.parse_args(argv)
+    if a.selftest:
+        return selftest()
     if a.apply:
         a.suggest = True
 
@@ -201,9 +273,15 @@ def main() -> int:
     sections: list[tuple[str, str]] = []
     if a.verify or a.suggest:
         sections = load_manifesto()
+        if not sections and MANIFESTO.is_dir():
+            # The book is HERE and nothing loaded: the loader is blind, not the machine.
+            # This case exited 0 from 2026-09-16 to 09-26 and every deploy passed unchecked.
+            print(f"[codex-anchors] BLIND: the manifesto is on disk at {MANIFESTO} but no section "
+                  "file loaded; its layout changed under the loader. Refusing to pass.")
+            return 2
         if not sections:
-            print(f"[codex-anchors] manifesto not readable at {MANIFESTO} — set MANIFESTO_DIR.")
-            print("[codex-anchors] verify/suggest need the source text; skipping those modes.")
+            print(f"[codex-anchors] no manifesto checkout at {MANIFESTO} — set MANIFESTO_DIR.")
+            print("[codex-anchors] verify/suggest need the source text; UNCHECKED, not clean.")
             a.verify = a.suggest = a.apply = False
         else:
             print(f"[codex-anchors] {len(sections)} manifesto section file(s) loaded\n")
