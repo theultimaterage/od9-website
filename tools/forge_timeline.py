@@ -233,10 +233,18 @@ def selftest() -> int:
 
     with tempfile.TemporaryDirectory() as tmp:
         probe = Path(tmp) / "map.json"
-        write({"timeline": {"work": work[:3]}, "note": "line one\nline two"}, probe)
-        lf_only = b"\r" not in probe.read_bytes()
+        probe_doc = {"timeline": {"work": work[:3]}, "note": "line one\nline two — dash"}
+        write(probe_doc, probe)
+        raw = probe.read_bytes()
+        lf_only = b"\r" not in raw
     ok &= lf_only
     print(f"  {'OK  ' if lf_only else 'FAIL'} the writer emits LF only (the repo is pinned to LF)")
+    # The manifesto repo's tools/sync_website_map.py writes this same file and its
+    # selftest pins the same bytes. Until 2026-09-26 it left the final newline off,
+    # so each writer's commit flipped the map's last byte.
+    same = raw == (json.dumps(probe_doc, indent=1, ensure_ascii=False) + "\n").encode("utf-8")
+    ok &= same
+    print(f"  {'OK  ' if same else 'FAIL'} the writer's bytes are the sync's: indent 1, unescaped, one final newline")
 
     print("  selftest: " + ("the check can fail, so a pass means something" if ok
                             else "THE CHECK CANNOT FAIL — it is decoration"))
