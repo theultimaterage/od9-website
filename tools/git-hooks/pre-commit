@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# pre-commit hook: THE SECRET GATE (+ chain) + SAME-NAME TOMBSTONES (v3, 2026-09-11).
+# pre-commit hook: THE SECRET GATE (+ chain) + SAME-NAME TOMBSTONES + INTEGRATION SOURCES (v4, 2026-10-01).
 #
 # Born 2026-08-12 from an audit, not an incident — which is the point. A repo's .gitignore
 # is a DENYLIST: it excludes secret-config.json and *.log by name, so a new
@@ -98,6 +98,29 @@ else
     FAILED=1
   elif [ "$TRC" -ne 0 ]; then
     echo "  ! pre-commit: same-name tombstones could not run (exit $TRC) — see above" >&2
+  fi
+fi
+
+# ── 4. integration sources (2026-10-01) ─────────────────────────────────────
+# A file this commit ADDS that calls an outside service must cite the vendor's
+# page in the file. The founder's spec-first rule was prose until a timeout that
+# is in Square's own documentation was missed (2026-09-24). The runner lives ONCE
+# in the fleet; a missing runner is said, never silently skipped.
+# SKIP_INTEGRATION_SOURCES=1 bypasses this step only.
+SOURCES="$HOME/.claude/skills/tools/integration_sources.py"
+if [ -n "${SKIP_INTEGRATION_SOURCES:-}" ]; then
+  echo "  ~ pre-commit: integration sources skipped (SKIP_INTEGRATION_SOURCES set)"
+elif [ ! -f "$SOURCES" ]; then
+  echo "  ! pre-commit: integration_sources.py not found at $SOURCES — new integrations NOT checked (restore the fleet checkout)" >&2
+else
+  SOUT="$("$PY" "$SOURCES" --staged --repo "$REPO_ROOT" 2>&1)"
+  SRC_RC=$?
+  if [ -n "$SOUT" ]; then printf '%s\n' "$SOUT" | sed 's/^/  /'; fi
+  if [ "$SRC_RC" -eq 1 ]; then
+    echo "  ✖ pre-commit: a new file calls an outside service and cites no vendor page — INTEGRATION SOURCES (SKIP_INTEGRATION_SOURCES=1 to bypass deliberately)" >&2
+    FAILED=1
+  elif [ "$SRC_RC" -ne 0 ]; then
+    echo "  ! pre-commit: integration sources could not run (exit $SRC_RC) — see above" >&2
   fi
 fi
 

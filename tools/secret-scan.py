@@ -94,6 +94,34 @@ NAMES_A_THING = re.compile(r"(?:_NAME|_FIELD|_HEADER|_PARAM|_COOKIE|_PREFIX|_LAB
 # read as a credential, or the gate gets switched off within a week.
 LINT_MARKER = re.compile(r"^[a-z0-9][a-z0-9._-]*:[a-z0-9][a-z0-9._-]*$", re.I)
 
+# A value that is itself the NAME of a credential variable: TOKEN_KEY = "FB_PAGE_TOKEN"
+# says which environment variable holds the token; it holds no token. Refused in NCZ on
+# 2026-10-01 (the code was renamed to get past it) and refused again the same day in
+# claude-config, where a memory note quoted that line. All capitals, words joined by
+# underscores, ending in a credential word: no provider issues a secret shaped like that.
+NAMES_A_VARIABLE = re.compile(
+    r"^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*_(?:TOKEN|KEY|SECRET|PASSWORD|PASS|PWD|CREDENTIALS?|WEBHOOK)$")
+
+
+def echoes_own_name(name: str, val: str) -> bool:
+    """True when the value is just the constant's own name in lower snake_case.
+
+    Status-enum constants are written this way all over the fleet —
+    GEMINI_NO_CREDENTIALS = "no_credentials", CREDIT_AUTH_ERROR = "auth_error" —
+    and the name matches SECRET_NAME (…CREDENTIAL…, …AUTH_KEY…), so the
+    name-based rule fires on every one of them. A real credential is never equal
+    to a suffix of its own variable name; a vocabulary token almost always is.
+    Comparing against SUFFIXES rather than the whole name keeps the rule tight:
+    ``API_KEY = "api_key"`` is still let through as an obvious placeholder by
+    this rule, while ``API_KEY = "sk-live-..."`` is untouched and still blocks.
+    (Written in NCZ on 2026-09-01; merged into the fleet copy on 2026-10-01.)
+    """
+    v = val.strip().lower()
+    if not v or not re.fullmatch(r"[a-z][a-z0-9_]*", v):
+        return False
+    parts = name.strip().lower().split("_")
+    return any("_".join(parts[i:]) == v for i in range(len(parts)))
+
 # A filesystem path is not a secret — e.g. PRIVATE_KEY_PATH = "~/.ssh/id_rsa".
 IS_PATH = re.compile(
     r"^[a-zA-Z]:[\\/]|^[/~]|[\\/].+[\\/]|\.(?:pem|key|crt|p12|pfx|exe|sh|py|php|json|ini|cnf)$", re.I)
@@ -168,6 +196,8 @@ def scan(path: str, text: str) -> tuple[list[str], list[str]]:
                     continue
                 if NAMES_A_THING.search(name):
                     continue
+                if echoes_own_name(name, val) or NAMES_A_VARIABLE.match(val.strip()):
+                    continue
                 if label == "code assign" and IS_PATH.search(val):
                     continue
                 if (name, val) in seen:
@@ -227,6 +257,27 @@ FIXTURES = [
     ("mysql --platform", "a.sh",   "docker run --platform linux/amd64 mysql:8", False),
     ("public clientid",  "a.py",   "client_id = 'sq0idp-HJIx7E5OcNjh9Fy22Y3VSg'", False),
     ("plain code",       "a.py",   "def deploy(host, key):\n    return run(['ssh', host])", False),
+    # Status-enum constants — the value IS the constant's own name, lowercased.
+    # The name matches SECRET_NAME (…CREDENTIAL…, …AUTH_KEY…), so these blocked
+    # every commit touching the Gemini backend on 2026-09-01. A real credential
+    # is never equal to a suffix of its own variable name.
+    ("status enum",      "a.py",   _J(["GEMINI_NO_CRE", "DENTIALS"]) + ' = "'
+                                   + _J(["no_cre", "dentials"]) + '"', False),
+    ("status enum 2",    "a.py",   _J(["CREDIT_AUTH", "_ERROR"]) + ' = "'
+                                   + _J(["auth", "_error"]) + '"', False),
+    # ...but a REAL value under one of those same names must STILL block. Without
+    # this case the rule above could quietly degrade into "any constant whose name
+    # contains CREDENTIAL is exempt", which is a blind spot, not an allowlist.
+    ("enum-named real",  "a.py",   _J(["GEMINI_NO_CRE", "DENTIALS"]) + ' = "'
+                                   + _J(["AIzaSyC8n4Kd93mQzR", "0vLpXw7bTfHy2Ee1Uu5Ii"]) + '"', True),
+    # A value that NAMES a credential variable is a reference to one (2026-10-01).
+    ("names a variable", "a.py",   _J(["TOKEN", "_KEY"]) + ' = "' + _J(["FB_PAGE", "_TOKEN"]) + '"', False),
+    ("names a var, md",  "notes.md", "refused on `" + _J(["TOKEN", "_KEY"]) + ' = "' + _J(["IG_PAGE", "_TOKEN"]) + '"` (a name)', False),
+    # ...and the same constant holding anything else must still block: a real token, an
+    # all-capitals password with no credential word at its end, capitals that end in digits.
+    ("var-named real",   "a.py",   _J(["TOKEN", "_KEY"]) + ' = "' + _J(["EAAGm0PX4ZCps", "BAZb8k2LqT9wYxN"]) + '"', True),
+    ("caps password",    "a.py",   _J(["DB_PASS", "WORD"]) + ' = "' + _J(["HUNTERTWO", "ISLONG"]) + '"', True),
+    ("caps, digit tail", "a.py",   _J(["API_SE", "CRET"]) + ' = "' + _J(["A1B2_C3D4", "_KEY9"]) + '"', True),
 ]
 
 
@@ -303,7 +354,7 @@ def main() -> int:
         skip_suffix = (".min.js", ".min.css", ".lock", "-lock.json", ".bundle.js")
         MAX = 1_000_000
         paths = []
-        for dp, dns, fns in os.walk(root):
+        for dp, dns, fns in os.walk(root):  # not a corpus walk: secrets anywhere matter
             dns[:] = [d for d in dns if d not in skip_d]
             for f in fns:
                 fl = f.lower()
