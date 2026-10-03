@@ -8,7 +8,6 @@
     "api/drip/sender.php|swallowed-catch|catch (Exception $e) { no log, no rethrow } \u2014 the failure re": 1,
     "api/v1/atlas-live.php|swallowed-catch|catch (Throwable $e) { empty } \u2014 the failure reaches nobody": 1,
     "api/v1/pulse.php|swallowed-catch|catch (Throwable $e) { no log, no rethrow } \u2014 the failure re": 4,
-    "contact-handler.php|error-suppression|@mail() \u2014 suppression turns a diagnosable failure into a wro": 1,
     "curriculum/view-beacon.php|error-suppression|@curl_exec() \u2014 suppression turns a diagnosable failure into ": 1,
     "dashboard/bunker.php|error-suppression|@file_get_contents() \u2014 suppression turns a diagnosable failu": 2,
     "dashboard/welcome.php|swallowed-catch|catch (Throwable $e) { empty } \u2014 the failure reaches nobody": 1,

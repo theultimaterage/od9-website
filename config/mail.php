@@ -2,10 +2,13 @@
 /**
  * OD9 Mail Configuration — environment-aware.
  *
- *  - PROD: F.R.E.S.H. platform (Brevo) primary, then authenticated SMTP via the
- *    host mailserver (noreply@offda9.com, DKIM-signed by exim), then PHP mail()
- *    as last resort. (The platform route is enabled in config/platform.config.php
- *    and handled in includes/mail.php; the SMTP fallback uses the creds below.)
+ *  - PROD: mail for a domain this server hosts (MAIL_LOCAL_DOMAINS below) goes to
+ *    PHP mail(), whose sendmail delivers it into the mailbox here. Everything else:
+ *    the F.R.E.S.H. platform (Brevo) first, then authenticated SMTP to
+ *    smtp-relay.brevo.com:2525 as noreply@offda9.com (the creds below — this is
+ *    Brevo too, verified on prod 2026-10-02; an older comment here called it the
+ *    host mailserver), then PHP mail() as last resort. (The platform route is
+ *    enabled in config/platform.config.php and handled in includes/mail.php.)
  *  - LOCAL (XAMPP): the 'file' sink — writes the rendered .eml to logs/mail-outbox/
  *    instead of sending. No external service, no quota, no network hang; inspect
  *    captured mail on disk (logs/mail-outbox/_latest.eml is always the newest).
@@ -26,6 +29,10 @@ $_od9_mail_is_local = (
 define('MAIL_FROM_EMAIL', 'noreply@offda9.com');
 define('MAIL_FROM_NAME',  'The OD9 Movement');
 define('MAIL_REPLY_TO',   'contact@offda9.com');
+
+// MAIL_LOCAL_DOMAINS (the domains whose mailboxes live on this server) is defined in
+// includes/mail.php, NOT here: this file is excluded from the deploy (prod keeps its
+// own copy), so a define here would never reach production.
 
 // Load secrets (defines SMTP_* if present).
 $_secretsPath = __DIR__ . '/mail.config.php';

@@ -2,13 +2,18 @@
 /**
  * OD9 mail helper — the ONE send path for the whole site.
  *
- * od9_send_mail() routes through a driver chosen by config/mail.php's MAIL_DRIVER:
- *   - 'smtp'             (prod) : authenticated SMTP to the host mailserver
- *                                  (offda9.com:465 SSL, or :587 STARTTLS) as
- *                                  noreply@offda9.com. exim DKIM-signs outbound
- *                                  with offda9.com's published key. Sends a
- *                                  multipart/alternative body (text + html) and
- *                                  a List-Unsubscribe header.
+ * od9_send_mail() picks a route with od9_mail_route():
+ *   - 'local'    mail for a domain this server hosts (MAIL_LOCAL_DOMAINS in
+ *                config/mail.php) goes to PHP mail(), whose sendmail delivers it
+ *                into the mailbox on this server. It never touches Brevo, which
+ *                accepts mail for @offda9.com and never delivers it (2026-07-16,
+ *                2026-10-02).
+ *   - 'platform' everything else goes to the F.R.E.S.H. platform engine (Brevo),
+ *                and falls back to MAIL_DRIVER when the platform fails:
+ *   - 'smtp'             (prod) : authenticated SMTP to smtp-relay.brevo.com:2525
+ *                                  as noreply@offda9.com (config/mail.config.php,
+ *                                  verified on prod 2026-10-02 — it is Brevo, not
+ *                                  the host mailserver an older comment named).
  *   - 'file'             (local): write the rendered .eml to logs/mail-outbox/
  *                                  (capture only — no send, no quota, no network).
  *   - 'mail_function'    (fallback): PHP mail() / exim.
@@ -28,6 +33,16 @@ $_od9_mail_cfg = __DIR__ . '/../config/mail.php';
 if (!file_exists($_od9_mail_cfg)) $_od9_mail_cfg = __DIR__ . '/config/mail.php';
 require_once $_od9_mail_cfg;
 
+// The domains whose mailboxes live on this server. Mail to them is delivered by the
+// server's own sendmail and never handed to Brevo, which accepts mail for @offda9.com
+// and never delivers it (inbound canary 2026-07-16; every contact-form notice from
+// 2026-06-16 to 2026-10-02). Defined HERE because config/mail.php is excluded from
+// the deploy: a define there would never reach production, and the route would
+// silently keep sending to Brevo. tests/test_mail_route.php pins both facts.
+if (!defined('MAIL_LOCAL_DOMAINS')) {
+    define('MAIL_LOCAL_DOMAINS', ['offda9.com', 'freshthaband.com', 'freshthaplatform.com']);
+}
+
 
 function od9_send_mail(string $to, string $subject, string $html, array $opts = []): bool
 {
@@ -37,6 +52,20 @@ function od9_send_mail(string $to, string $subject, string $html, array $opts = 
     $text       = $opts['text']       ?? od9_html_to_text($html);
     $listUnsub  = $opts['list_unsubscribe'] ?? null;
     $extra      = $opts['headers'] ?? [];
+
+    // ---- Mail for this server's own domains never leaves the box (2026-10-02) ----
+    // Brevo accepts mail for @offda9.com and never delivers it: seen on the inbound
+    // canary 2026-07-16, and on 2026-10-02 all 236 contact-form notices sent since the
+    // 06-14 cutover were found missing from contact@. BOTH routes below go through Brevo
+    // on prod: the platform engine, and the 'smtp' driver. PHP mail() hands the message
+    // to the server's own sendmail, which delivers it straight into the mailbox here.
+    if (od9_mail_route($to, $opts) === 'local') {
+        $ok = _od9_mail_via_mailfunc($to, $subject, $html, $text, $from_email, $from_name, $reply_to, $listUnsub, $extra);
+        if (!$ok) {
+            error_log('[od9_send_mail] local delivery failed (to=' . $to . '): mail() returned false');
+        }
+        return $ok;
+    }
 
     // ---- Platform-primary route (transitional cutover, 2026-06-14) ----
     // Send the fully-rendered, already-branded HTML through the F.R.E.S.H. platform
@@ -80,6 +109,32 @@ function od9_send_mail(string $to, string $subject, string $html, array $opts = 
         default:
             return _od9_mail_via_mailfunc($to, $subject, $html, $text, $from_email, $from_name, $reply_to, $listUnsub, $extra);
     }
+}
+
+
+/**
+ * The route od9_send_mail() takes for $to:
+ *   'file'     local development: everything is captured to logs/mail-outbox/
+ *   'local'    the recipient's domain is hosted on this server (MAIL_LOCAL_DOMAINS):
+ *              PHP mail() to the local sendmail, never Brevo
+ *   'platform' the F.R.E.S.H. engine (its own fallback is MAIL_DRIVER)
+ *   MAIL_DRIVER when the caller passed _no_platform
+ * Pure given its arguments; the defaults read config/mail.php. tests/test_mail_route.php
+ * pins every branch, and the daily form canary on the bot proves the 'local' one end to end.
+ */
+function od9_mail_route(string $to, array $opts = [], ?string $driver = null, ?array $localDomains = null): string
+{
+    $driver = $driver ?? (defined('MAIL_DRIVER') ? MAIL_DRIVER : 'mail_function');
+    if ($driver === 'file') {
+        return 'file';
+    }
+    $localDomains = $localDomains ?? (defined('MAIL_LOCAL_DOMAINS') ? MAIL_LOCAL_DOMAINS : []);
+    $at = strrpos($to, '@');
+    $domain = $at === false ? '' : strtolower(trim(substr($to, $at + 1), " >\t\r\n"));
+    if ($domain !== '' && in_array($domain, array_map('strtolower', $localDomains), true)) {
+        return 'local';
+    }
+    return empty($opts['_no_platform']) ? 'platform' : $driver;
 }
 
 
