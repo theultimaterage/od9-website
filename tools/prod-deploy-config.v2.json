@@ -215,6 +215,23 @@
       ]
     },
     {
+      "_why": "Added 2026-10-02 with the contact form's guard: the page must render and carry the guard's trap and proof, or every message a person sends is refused as a program's.",
+      "url": "https://offda9.com/contact.php",
+      "expect_status": [
+        200
+      ],
+      "must_not_contain": [
+        "Fatal error",
+        "Parse error",
+        "Warning:"
+      ],
+      "must_contain": [
+        "name=\"fg_ref\"",
+        "name=\"fg_proof\"",
+        "data-fg=\""
+      ]
+    },
+    {
       "url": "https://offda9.com/about.php",
       "expect_status": [
         200
