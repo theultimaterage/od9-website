@@ -6,7 +6,7 @@
 -- (through the owning migration lineage), then regenerate and commit both.
 --
 -- Source database: offda9_od9_tickets
--- 150 base table(s), 0 view(s).
+-- 151 base table(s), 0 view(s).
 --
 -- Regenerate:  python ~/.claude/skills/schema-usage-lint/regen_prod_schema.py --repo od9-web
 -- Verify:      python ~/.claude/skills/schema-usage-lint/regen_prod_schema.py --repo od9-web --check
@@ -834,6 +834,27 @@ CREATE TABLE `customer_assets` (
   KEY `idx_valid_until` (`valid_until`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- ---- customer_saved_cards
+CREATE TABLE `customer_saved_cards` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `customer_id` int(10) unsigned NOT NULL COMMENT 'customers.id of the signed-in customer who saved the card',
+  `square_customer_id` varchar(255) NOT NULL COMMENT 'The Square customer the card is stored on; a card-on-file charge must name it',
+  `square_card_id` varchar(255) NOT NULL COMMENT 'Square Cards API id (ccof:...); never a card number',
+  `card_brand` varchar(40) DEFAULT NULL,
+  `last_4` char(4) DEFAULT NULL,
+  `exp_month` tinyint(3) unsigned DEFAULT NULL,
+  `exp_year` smallint(5) unsigned DEFAULT NULL,
+  `consent_text` varchar(500) NOT NULL COMMENT 'The words the customer agreed to when saving the card',
+  `consented_at` datetime NOT NULL COMMENT 'UTC',
+  `source_order_id` int(10) unsigned DEFAULT NULL COMMENT 'orders.id whose payment stored the card (informational)',
+  `disabled_at` datetime DEFAULT NULL COMMENT 'UTC; set when the customer removed the card (after Square DisableCard)',
+  `is_test` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Saved during a sandbox checkout',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_square_card_id` (`square_card_id`),
+  KEY `idx_customer_active` (`customer_id`,`disabled_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- ---- customer_subscriptions
 CREATE TABLE `customer_subscriptions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1295,6 +1316,7 @@ CREATE TABLE `events` (
   `custom_ticket_design` varchar(255) DEFAULT NULL,
   `created_by` int(10) unsigned DEFAULT NULL,
   `is_featured` tinyint(1) DEFAULT 0,
+  `is_unlisted` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Never on the storefront, press page or agent feed; sold only through its private /cart?event=<slug> link',
   `is_platform_featured` tinyint(1) NOT NULL DEFAULT 0,
   `display_order` int(11) DEFAULT 0,
   `deleted_at` timestamp NULL DEFAULT NULL,
@@ -2264,6 +2286,7 @@ CREATE TABLE `products` (
   `options` longtext DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT 1,
   `is_featured` tinyint(1) DEFAULT 0,
+  `is_unlisted` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Never on the storefront, press page or agent feed; bought only through its private /cart?add=<slug> link',
   `display_order` int(11) DEFAULT 0,
   `updated_at` timestamp NULL DEFAULT current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL,
@@ -2813,8 +2836,6 @@ CREATE TABLE `ticket_types` (
   `min_per_order` int(11) DEFAULT 1,
   `max_per_order` int(11) DEFAULT 10,
   `quantity_reserved` int(11) DEFAULT 0,
-  `min_purchase` int(10) unsigned DEFAULT 1,
-  `max_purchase` int(10) unsigned DEFAULT 10,
   `available_from` datetime DEFAULT NULL,
   `available_until` datetime DEFAULT NULL,
   `display_order` int(11) DEFAULT 0,
