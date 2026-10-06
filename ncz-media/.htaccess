@@ -1,0 +1,40 @@
+# ncz-media/ is a drop box, not site content.
+#
+# Threads publishes a video only from a public URL its servers fetch, so the
+# NCZ pipeline (NCZ-Content-Pipelines) places each clip here under a random
+# 32-hex-character name for the minutes that takes, then deletes it. NCZ writes
+# through an SSH key that can run one program, /home/offda9/bin/ncz-media-gate,
+# which can only put or remove files of that shape in this folder.
+#
+# This repository owns the folder: this file creates it on deploy, and
+# tools/prod-deploy-config.v2.json declares it (_ncz_media_note): the deploy
+# never ships a video into it, the drift gate allows only that file shape here,
+# and the backup leaves it out. Two smoke pins prove the rules below are live.
+
+Options -Indexes
+
+# Deny by default; serve only the gate's file shape. A <FilesMatch> section is
+# merged after the directory's own rules, so it overrides the deny for the
+# files it matches and nothing else.
+<IfModule mod_authz_core.c>
+    Require all denied
+    <FilesMatch "^[0-9a-f]{32}\.mp4$">
+        Require all granted
+    </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order Deny,Allow
+    Deny from all
+    <FilesMatch "^[0-9a-f]{32}\.mp4$">
+        Allow from all
+    </FilesMatch>
+</IfModule>
+
+# Nothing keeps a copy. Each file lives for minutes and is deleted once Threads
+# has it; no-store keeps Cloudflare and any other cache from serving it after.
+# "always" covers the 403 and 404 answers too: Cloudflare caches a 404 for a
+# video-shaped URL for minutes by default.
+<IfModule mod_headers.c>
+    Header always set Cache-Control "no-store"
+    Header always set X-Robots-Tag "noindex, nofollow"
+</IfModule>

@@ -56,3 +56,7 @@ logs/
 
 # Runtime state the bot publishes beside the call-in door (cogs/callin_door.py); never a source file.
 callin/state.json
+
+# NCZ's Threads drop box (ncz-media/.htaccess explains it). Only the folder's
+# rules are source; a video placed there while testing is never committed.
+ncz-media/*.mp4

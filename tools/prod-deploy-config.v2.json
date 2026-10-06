@@ -139,10 +139,12 @@
         "*.bak-*",
         "*.orig",
         "*~",
-        ".DS_Store"
+        ".DS_Store",
+        "ncz-media/*.mp4"
       ]
     }
   ],
+  "_ncz_media_note": "ncz-media/ is a folder another system writes to (added 2026-10-06). Threads publishes a video only from a public URL its servers fetch, so the NCZ pipeline (NCZ-Content-Pipelines) places each clip here under a random 32-hex-character name for the minutes that takes, then deletes it. This repository owns the folder; NCZ owns only the videos in it. The folder's .htaccess is tracked here and ships with every deploy: it denies everything except that file shape and sends no-store. NCZ writes through a key pinned to one program, /home/offda9/bin/ncz-media-gate (NCZ tools/server/ncz_media_gate.sh), which can only put or remove files of that shape and refuses to run when the folder is missing, so deleting the folder from this repository stops NCZ loudly rather than letting it write somewhere the site does not know about. Here: the mapping excludes ncz-media/*.mp4, so the deploy never ships a video left in the working tree (rsync sends the working tree, not the commit), and the drift gate reads that exclude as 'untracked on purpose'; the backup leaves the videos out but keeps the .htaccess; two smoke pins prove the rules are live. NCZ's tests/test_media_host.py fails if any of these declarations disappears.",
   "skip_always": {
     "_doc": "Human-readable summary of the exclude list above — why each class never ships.",
     "credentials": "config/database.php, config/mail.php, config/sp-credentials.php, dashboard/includes/config.php and the *.config.php glob (platform.config.php, mail.config.php, secrets.config.php, api/v1/pulse_secret.config.php). Several of these are TRACKED IN THE REPO with local-dev values AND live on prod with real credentials — deploying the repo copy would overwrite prod's working config. The *.config.php glob deliberately does NOT match *.config.example.php, so the examples still ship.",
@@ -151,7 +153,8 @@
     "runtime_artifacts": "logs/ (70 .eml mail-outbox captures from smoke runs), cache/.",
     "dev_scratch": "_sof_board_harness.php, _ztrans_test.html, _ztrans_dest.html and the root *.md docs.",
     "legacy_never_deploy": "dashboard/includes/db.php, founding_patron_launch_sender.php and .htpasswd are carried over from the retired tools/deploy.py's `never_deploy` list. The first --dry run of this config would have shipped all three — porting that list is not optional when replacing a deployer.",
-    "diagnostics": "check_db.php and check-admin.php are DB/admin diagnostics that the first dry run would have newly created in a public webroot — the same class as the _phpinfo.php found serving on freshthaband.com. They stay local."
+    "diagnostics": "check_db.php and check-admin.php are DB/admin diagnostics that the first dry run would have newly created in a public webroot — the same class as the _phpinfo.php found serving on freshthaband.com. They stay local.",
+    "ncz_media": "ncz-media/*.mp4 — videos the NCZ pipeline puts on the server for Threads to fetch and deletes minutes later (see _ncz_media_note). A video in the local ncz-media/ is a test leftover and must never ship; the folder's .htaccess does ship."
   },
   "pre_deploy": {
     "_note": "Brought to gate parity 2026-09-01, following this block's own instruction: each gate was RUN against od9 first, and is enabled only where it proved meaningful and either passed or had its findings fixed. od9 had been the least-gated repo in the fleet while carrying a database-backed dashboard, Discord OAuth and a drip mailer.",
@@ -378,6 +381,22 @@
         "Future Deployments"
       ],
       "_why": "MAP-DATA PIN, separate from the clean-URL pin above. The Atlas inlines data/manifesto-map.json server-side (data/ is web-blocked, so the file itself cannot be smoked), and the map is rebuilt on every manifesto merge. 'Future Deployments' is the campaign's final node (V·6, 2026-09-10): its presence proves the deployed map is the 52-chapter one and not the pre-campaign file rsync would silently leave in place if the JSON were ever excluded. Update this string only when the map's newest node changes."
+    },
+    {
+      "url": "https://offda9.com/ncz-media/probe.txt",
+      "expect_status": [
+        403
+      ],
+      "follow_redirects": false,
+      "_why": "NCZ DROP-BOX PIN, deny half (see _ncz_media_note). The file does not exist, so without ncz-media/.htaccess this URL would answer 404; 403 proves the folder's deny-by-default rule is live, which is what keeps anything but a video of the gate's shape from being served from a folder another system writes to."
+    },
+    {
+      "url": "https://offda9.com/ncz-media/00000000000000000000000000000000.mp4",
+      "expect_status": [
+        404
+      ],
+      "follow_redirects": false,
+      "_why": "NCZ DROP-BOX PIN, allow half. A name of the gate's shape must get past the deny and reach the filesystem, so an absent one answers 404. A 403 here means the allow rule broke and Threads can fetch nothing: every Threads post would fail at the container step."
     }
   ],
   "_smoke_note": "must_contain 'Off Da Nine' on the apex proves we reached OD9 and not a parked domain or a misrouted edge — status+200 alone cannot tell those apart.",
@@ -390,7 +409,8 @@
       "public_html/guide-videos",
       "public_html/library",
       "public_html/cache",
-      "public_html/logs"
+      "public_html/logs",
+      "public_html/ncz-media/*.mp4"
     ],
     "_exclude_note": "Large out-of-band media and runtime dirs are omitted from the pre-deploy tar to keep it small and fast. They are also never written by the deploy (excluded from the mapping, and rsync runs without --delete), so nothing that changes goes un-backed-up.",
     "retention_days": 30
