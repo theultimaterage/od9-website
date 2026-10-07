@@ -54,6 +54,7 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
 
 /* ── Status chips ── */
 .chip{display:inline-block;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:1.5px;text-transform:uppercase;padding:0.15rem 0.6rem;border-radius:3px;white-space:nowrap}
+@media(max-width:600px){.chip{white-space:normal}}
 .chip-green{color:var(--green);border:1px solid rgba(0,232,154,0.45);background:rgba(0,232,154,0.08)}
 .chip-gold{color:var(--gold);border:1px solid rgba(255,215,0,0.45);background:rgba(255,215,0,0.08)}
 .chip-orange{color:var(--orange);border:1px solid rgba(255,138,61,0.45);background:rgba(255,138,61,0.08)}

@@ -141,7 +141,7 @@ $atlas_og_mode  = isset($_GET['og']);
   .atlas-timeline .tl-label #atlas-tl-date{color:#fff;font-weight:700;letter-spacing:2px;min-width:8.5rem}
   .atlas-timeline.past #atlas-tl-date{color:var(--gold)}
   .atlas-timeline .tl-label #atlas-tl-stat{opacity:0.75}
-  @media (max-width:700px){.atlas-timeline{flex-wrap:wrap;margin-top:-1rem;padding:0.4rem 1rem 0} .atlas-timeline .tl-label{width:100%;justify-content:space-between}}
+  @media (max-width:700px){.atlas-timeline{flex-wrap:wrap;margin-top:-1rem;padding:0.4rem 1rem 0} .atlas-timeline .tl-label{width:100%;justify-content:space-between;white-space:normal;flex-wrap:wrap} .atlas-timeline .tl-label #atlas-tl-stat{min-width:0}}
   /* the guides (2026-09-05): four presences at the map's edge, each owning a layer */
   .atlas-guides{position:absolute;left:12px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:3}
   .atlas-guide{width:46px;height:46px;border-radius:50%;border:1px solid var(--zone-violet);background:rgba(10,10,10,0.75);padding:0;cursor:pointer;overflow:hidden;position:relative;transition:box-shadow .2s,border-color .2s;color:var(--zone-cyan);font-family:'Orbitron',sans-serif;font-size:1rem}

@@ -109,7 +109,7 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
 .wrap{max-width:840px;margin:0 auto}
 header{text-align:center;margin-bottom:3rem}
 .logo{display:inline-block;margin-bottom:1.25rem}
-.logo img{height:60px;filter:drop-shadow(var(--g))}
+.logo img{height:60px;width:auto;filter:drop-shadow(var(--g))}
 h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,5vw,2.6rem);font-weight:900;color:#fff;letter-spacing:3px;margin-bottom:0.5rem;text-shadow:var(--g)}
 .tag{font-family:'Rajdhani',sans-serif;color:var(--b);letter-spacing:4px;font-size:0.95rem;text-transform:uppercase;margin-bottom:0.75rem}
 .sub{color:#888;font-size:1rem;line-height:1.6;max-width:560px;margin:0 auto}

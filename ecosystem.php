@@ -28,7 +28,7 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
 .wrap{max-width:880px;margin:0 auto}
 header{text-align:center;margin-bottom:3rem}
 .logo{display:inline-block;margin-bottom:1.25rem}
-.logo img{height:60px;filter:drop-shadow(var(--g))}
+.logo img{height:60px;width:auto;filter:drop-shadow(var(--g))}
 h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,5vw,2.6rem);font-weight:900;color:#fff;letter-spacing:3px;margin-bottom:0.5rem;text-shadow:var(--g);line-height:1.2}
 .tag{font-family:'Rajdhani',sans-serif;color:var(--b);letter-spacing:4px;font-size:0.9rem;text-transform:uppercase;margin-bottom:0.75rem}
 .lede{color:#bbb;font-size:1.05rem;max-width:600px;margin:0 auto;line-height:1.6}

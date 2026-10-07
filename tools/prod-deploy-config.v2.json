@@ -194,6 +194,11 @@
         "name": "site provers: contact form guard, mail route, wiring; nav sections (tests/test_form_guard.php, test_mail_route.php, test_contact_wiring.php, test_nav_sections.php)",
         "cmd": "/mnt/c/tools/php84/php.exe tests/test_form_guard.php && /mnt/c/tools/php84/php.exe tests/test_mail_route.php && /mnt/c/tools/php84/php.exe tests/test_contact_wiring.php && /mnt/c/tools/php84/php.exe tests/test_nav_sections.php",
         "timeout": 180
+      },
+      {
+        "name": "no page wider than a phone (tests/check_phone_overflow.py: every sitemap page at 390px on local XAMPP, selftest first)",
+        "cmd": "/mnt/c/Users/Rage/AppData/Local/Programs/Python/Python312/python.exe tests/check_phone_overflow.py --selftest && /mnt/c/Users/Rage/AppData/Local/Programs/Python/Python312/python.exe tests/check_phone_overflow.py",
+        "timeout": 300
       }
     ],
     "_commands_note": "Added 2026-10-02. od9 has no PHPUnit suite (see _phpunit_why_absent), so its first behavioural gate is three standalone scripts that each exit non-zero on a failure. They pin the contact form's fix: from 2026-06-16 to 2026-10-02 every notice went to Brevo, which accepted and dropped all 236 while the form reported success. test_mail_route.php also refuses a deploy that would keep the home-domain list only in config/mail.php, which this deploy EXCLUDES, so a fix there would never reach production. Ten deliberate breakages were each caught before this gate was added.",

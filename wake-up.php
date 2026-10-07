@@ -16,7 +16,7 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
 .landing{max-width:680px;margin:0 auto;padding:2rem 1.5rem 3rem;width:100%}
 
 .logo-row{text-align:center;margin-bottom:2rem;padding-top:1.5rem}
-.logo-row img{height:60px;filter:drop-shadow(var(--g))}
+.logo-row img{height:60px;width:auto;filter:drop-shadow(var(--g))}
 .logo-row span{display:block;font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--b);letter-spacing:3px;margin-top:0.5rem;text-shadow:var(--g)}
 
 .hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,5vw,2.6rem);font-weight:900;color:#fff;text-align:center;line-height:1.2;margin-bottom:0.75rem}
