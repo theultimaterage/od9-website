@@ -101,3 +101,22 @@ body{padding-top:var(--nav-height)}
 .mobile-menu a:hover,.mobile-menu a.active{color:var(--b);background:rgba(0,191,255,.1)}
 .mobile-menu .mobile-discord{background:linear-gradient(135deg,var(--b),var(--eb));color:var(--d);margin:1rem;border-radius:4px;text-align:center;border-bottom:none}
 @media(max-width:900px){.nav-menu{display:none}.mobile-toggle{display:block}}
+/* Section menus (2026-10-07): the fifteen-link row became three menus, About and
+   the Discord button. A menu opens on hover or focus for a mouse and on click
+   for touch and keyboard (includes/nav.php adds .open). */
+.nav-menu{gap:1.6rem}
+.nav-group{position:relative}
+.nav-group-btn{background:none;border:0;cursor:pointer;display:flex;align-items:center;gap:.4rem}
+.nav-caret{width:.45rem;height:.45rem;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .2s}
+.nav-dropdown{position:absolute;top:calc(100% + .6rem);left:-1rem;min-width:13rem;padding:.5rem 0;background:linear-gradient(180deg,rgba(13,13,13,.98),rgba(26,26,26,.98));border:1px solid rgba(0,191,255,.35);border-top:2px solid var(--b);border-radius:0 0 6px 6px;box-shadow:var(--g);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .18s,transform .18s,visibility .18s;z-index:10000}
+.nav-dropdown::before{content:'';position:absolute;left:0;right:0;top:-.8rem;height:.8rem}
+.nav-group:hover .nav-dropdown,.nav-group:focus-within .nav-dropdown,.nav-group.open .nav-dropdown{opacity:1;visibility:visible;transform:none}
+.nav-group:hover .nav-caret,.nav-group.open .nav-caret{transform:rotate(-135deg) translateY(-1px)}
+.nav-dropdown a{display:block;padding:.6rem 1.2rem;color:var(--c);font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;transition:color .2s,background .2s}
+.nav-dropdown a:hover,.nav-dropdown a:focus-visible,.nav-dropdown a.active{color:var(--b);background:rgba(0,191,255,.1)}
+.nav-group-btn:focus-visible,.nav-dropdown a:focus-visible{outline:2px solid var(--b);outline-offset:2px}
+.mobile-menu{max-height:calc(100vh - var(--nav-height));overflow-y:auto}
+.mobile-section{padding-top:.4rem}
+.mobile-section-label{padding:.9rem 2rem .3rem;color:var(--b);font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:3px;text-transform:uppercase}
+.mobile-section a{padding:.8rem 2rem .8rem 2.8rem}
+@media (prefers-reduced-motion: reduce){.nav-dropdown,.nav-caret{transition:none}}

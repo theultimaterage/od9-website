@@ -188,8 +188,8 @@
     "release_warden": true,
     "commands": [
       {
-        "name": "contact form provers: guard, mail route, wiring (tests/test_form_guard.php, test_mail_route.php, test_contact_wiring.php)",
-        "cmd": "/mnt/c/tools/php84/php.exe tests/test_form_guard.php && /mnt/c/tools/php84/php.exe tests/test_mail_route.php && /mnt/c/tools/php84/php.exe tests/test_contact_wiring.php",
+        "name": "site provers: contact form guard, mail route, wiring; nav sections (tests/test_form_guard.php, test_mail_route.php, test_contact_wiring.php, test_nav_sections.php)",
+        "cmd": "/mnt/c/tools/php84/php.exe tests/test_form_guard.php && /mnt/c/tools/php84/php.exe tests/test_mail_route.php && /mnt/c/tools/php84/php.exe tests/test_contact_wiring.php && /mnt/c/tools/php84/php.exe tests/test_nav_sections.php",
         "timeout": 180
       }
     ],

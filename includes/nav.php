@@ -21,10 +21,9 @@ $nav_url = function(string $path) use ($nav_base): string {
     return $nav_base . '/' . ltrim($path, '/');
 };
 
-// Belonging-first ordering (BELONGING_FIRST_RESEQUENCE_SPEC web change #7):
-// the people surfaces (Events, Da Crew, Music, NCZ) come before the content
-// block (Framework, Roadmap, Tiers, Library). Full dropdown collapse to a
-// "Deep End" group is a follow-up needing od9.css work (nav is markup-only).
+// Every page the nav reaches. Grouped below into sections (founder, 2026-10-07:
+// fifteen links in one row had outgrown the header). Belonging-first order is
+// kept: the people section (Community) comes before the content (Learn).
 $nav_links = [
     'index'      => ['href' => $nav_url('index.php'),      'label' => 'Home'],
     'events'     => ['href' => $nav_url('events.php'),     'label' => 'Events'],
@@ -43,23 +42,82 @@ $nav_links = [
     'support'    => ['href' => $nav_url('support.php'),    'label' => 'Support'],
 ];
 if (!isset($current_page)) $current_page = '';
+
+// The sections. Desktop shows them as menus that open on hover or click; the
+// phone panel shows the same sections as labeled groups. Home is the logo.
+// A page missing from every section is unreachable from the nav, so every key
+// of $nav_links except 'index' must appear exactly once (tests/test_nav_sections.php).
+$nav_sections = [
+    'community' => ['label' => 'Community',   'items' => ['events', 'da-crew', 'music', 'ncz']],
+    'learn'     => ['label' => 'Learn',       'items' => ['framework', 'atlas', 'forge', 'library', 'roadmap']],
+    'backing'   => ['label' => 'Support OD9', 'items' => ['tiers', 'join', 'support', 'downloads']],
+];
+$nav_top = ['about'];   // plain links beside the menus
+$nav_discord = 'https://discord.gg/spgmrXVMWq';
 ?>
 <?php include __DIR__ . '/topbar.php'; ?>
-<nav class="od9-nav"><div class="nav-container">
-<a href="<?= $nav_url('index.php') ?>" class="nav-logo"><img src="<?= $nav_url('images/logos/od9-logo-nav-hd.png') ?>" alt="OD9" width="66" height="36"><span class="nav-logo-text">OD9</span></a>
-<ul class="nav-menu" style="gap:0.7rem">
-<?php foreach ($nav_links as $key => $link): ?>
-<li><a href="<?= $link['href'] ?>" class="nav-link <?= $current_page === $key ? 'active' : '' ?>" style="font-size:0.85rem"><?= $link['label'] ?></a></li>
+<nav class="od9-nav" aria-label="Main"><div class="nav-container">
+<a href="<?= $nav_url('index.php') ?>" class="nav-logo" aria-label="OD9 home"><img src="<?= $nav_url('images/logos/od9-logo-nav-hd.png') ?>" alt="OD9" width="66" height="36"><span class="nav-logo-text">OD9</span></a>
+<ul class="nav-menu">
+<?php foreach ($nav_sections as $sid => $section): $here = in_array($current_page, $section['items'], true); ?>
+<li class="nav-group">
+<button type="button" class="nav-link nav-group-btn<?= $here ? ' active' : '' ?>" aria-expanded="false" aria-controls="nav-sec-<?= $sid ?>"><?= $section['label'] ?><span class="nav-caret" aria-hidden="true"></span></button>
+<ul class="nav-dropdown" id="nav-sec-<?= $sid ?>">
+<?php foreach ($section['items'] as $key): $link = $nav_links[$key]; ?>
+<li><a href="<?= $link['href'] ?>"<?= $current_page === $key ? ' class="active" aria-current="page"' : '' ?>><?= $link['label'] ?></a></li>
 <?php endforeach; ?>
-<li><a href="https://discord.gg/spgmrXVMWq" target="_blank" class="nav-btn"><i class="fab fa-discord"></i> Discord</a></li>
+<?php if ($sid === 'community'): ?><li><a href="<?= $nav_discord ?>" target="_blank" rel="noopener">Discord</a></li><?php endif; ?>
 </ul>
-<button class="mobile-toggle" id="hamburger"><span></span><span></span><span></span></button>
+</li>
+<?php endforeach; ?>
+<?php foreach ($nav_top as $key): $link = $nav_links[$key]; ?>
+<li><a href="<?= $link['href'] ?>" class="nav-link<?= $current_page === $key ? ' active' : '' ?>"<?= $current_page === $key ? ' aria-current="page"' : '' ?>><?= $link['label'] ?></a></li>
+<?php endforeach; ?>
+<li><a href="<?= $nav_discord ?>" target="_blank" rel="noopener" class="nav-btn"><i class="fab fa-discord"></i> Discord</a></li>
+</ul>
+<button type="button" class="mobile-toggle" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span></button>
 </div></nav>
 <div class="mobile-menu" id="mobileMenu">
-<?php foreach ($nav_links as $key => $link): ?>
-<a href="<?= $link['href'] ?>" class="<?= $current_page === $key ? 'active' : '' ?>"><?= $link['label'] ?></a>
+<a href="<?= $nav_url('index.php') ?>"<?= $current_page === 'index' ? ' class="active"' : '' ?>>Home</a>
+<?php foreach ($nav_sections as $sid => $section): ?>
+<div class="mobile-section"><div class="mobile-section-label"><?= $section['label'] ?></div>
+<?php foreach ($section['items'] as $key): $link = $nav_links[$key]; ?>
+<a href="<?= $link['href'] ?>"<?= $current_page === $key ? ' class="active"' : '' ?>><?= $link['label'] ?></a>
 <?php endforeach; ?>
-<a href="https://discord.gg/spgmrXVMWq" target="_blank" class="mobile-discord"><i class="fab fa-discord"></i> Join Discord</a>
 </div>
-<script>document.getElementById('hamburger').addEventListener('click',function(){this.classList.toggle('active');document.getElementById('mobileMenu').classList.toggle('active');});</script>
+<?php endforeach; ?>
+<?php foreach ($nav_top as $key): $link = $nav_links[$key]; ?>
+<a href="<?= $link['href'] ?>"<?= $current_page === $key ? ' class="active"' : '' ?>><?= $link['label'] ?></a>
+<?php endforeach; ?>
+<a href="<?= $nav_discord ?>" target="_blank" rel="noopener" class="mobile-discord"><i class="fab fa-discord"></i> Join Discord</a>
+</div>
+<script>
+(function () {
+  var burger = document.getElementById('hamburger'), panel = document.getElementById('mobileMenu');
+  burger.addEventListener('click', function () {
+    var open = panel.classList.toggle('active');
+    burger.classList.toggle('active', open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  // Section menus: click toggles (touch and keyboard); hover opens via CSS.
+  var groups = Array.prototype.slice.call(document.querySelectorAll('.od9-nav .nav-group'));
+  function closeAll(except) {
+    groups.forEach(function (g) {
+      if (g !== except) { g.classList.remove('open'); g.querySelector('.nav-group-btn').setAttribute('aria-expanded', 'false'); }
+    });
+  }
+  groups.forEach(function (g) {
+    var btn = g.querySelector('.nav-group-btn');
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = !g.classList.contains('open');
+      closeAll(g);
+      g.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+  document.addEventListener('click', function () { closeAll(null); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(null); });
+})();
+</script>
 <?php include __DIR__ . '/email-popup.php'; ?>
