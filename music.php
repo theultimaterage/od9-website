@@ -164,8 +164,18 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.6rem;color:#fff;margin:2.5rem 0
 @keyframes pulse{0%,100%{box-shadow:0 0 10px rgba(0,191,255,0.5)}50%{box-shadow:0 0 25px rgba(0,191,255,0.8)}}
 
 /* Full SoundCloud catalog (slice 2) */
-.sc-catalog{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:1.25rem;margin-bottom:1rem}
+.sc-catalog{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(360px,100%),1fr));gap:1.25rem;margin-bottom:1rem}
 .sc-track iframe{border-radius:8px;display:block;box-shadow:0 0 12px rgba(0,191,255,0.12)}
+/* Click to load (2026-10-07 audit): each SoundCloud player pulls ~2.4 MB of script,
+   four of them made this page 12 MB. The real player replaces this on click. */
+.sc-facade{display:flex;align-items:center;gap:1rem;width:100%;height:166px;padding:0 1.25rem;border:1px solid rgba(0,191,255,.25);border-radius:8px;background:linear-gradient(135deg,#0d1820,#111);color:#fff;cursor:pointer;text-align:left;box-shadow:0 0 12px rgba(0,191,255,0.12)}
+.sc-facade:hover,.sc-facade:focus-visible{border-color:var(--b)}
+.sc-facade:focus-visible{outline:2px solid var(--b);outline-offset:2px}
+.sc-facade-play{flex:none;width:56px;height:56px;border-radius:50%;background:#ff5500;position:relative}
+.sc-facade-play::after{content:'';position:absolute;left:22px;top:17px;border-style:solid;border-width:11px 0 11px 17px;border-color:transparent transparent transparent #fff}
+.sc-facade-text{min-width:0;font-family:'Rajdhani',sans-serif}
+.sc-facade-text b{display:block;font-size:1.15rem;overflow-wrap:anywhere}
+.sc-facade-text span{color:#aaa;font-size:.9rem;letter-spacing:1px;text-transform:uppercase}
 
 @media(max-width:768px){
 .featured-grid,.release-grid{grid-template-columns:1fr;text-align:center}
@@ -268,10 +278,21 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.6rem;color:#fff;margin:2.5rem 0
 <?php if (!empty($sc_tracks)): ?>
 <div class="sc-catalog" style="margin-top:1.5rem">
 <?php foreach ($sc_tracks as $t):
-    $__u = 'https://w.soundcloud.com/player/?url=' . urlencode($t['permalink_url']) . '&color=%2300bfff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false';
+    $__u = 'https://w.soundcloud.com/player/?url=' . urlencode($t['permalink_url']) . '&color=%2300bfff&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false';
+    $__t = htmlspecialchars($t['title'] ?? 'OD9 track', ENT_QUOTES);
 ?>
-<div class="sc-track"><iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy" title="<?= htmlspecialchars($t['title'] ?? 'OD9 track', ENT_QUOTES) ?>" src="<?= htmlspecialchars($__u, ENT_QUOTES) ?>"></iframe></div>
+<div class="sc-track"><button type="button" class="sc-facade" data-src="<?= htmlspecialchars($__u, ENT_QUOTES) ?>" data-title="<?= $__t ?>" aria-label="Play <?= $__t ?> on SoundCloud"><span class="sc-facade-play" aria-hidden="true"></span><span class="sc-facade-text"><b><?= $__t ?></b><span>Play on SoundCloud</span></span></button></div>
 <?php endforeach; ?>
+<script>
+document.addEventListener("click", function (e) {
+  var b = e.target.closest(".sc-facade");
+  if (!b) return;
+  var f = document.createElement("iframe");
+  f.width = "100%"; f.height = "166"; f.title = b.dataset.title; f.src = b.dataset.src;
+  f.setAttribute("scrolling", "no"); f.setAttribute("frameborder", "no"); f.setAttribute("allow", "autoplay");
+  b.parentNode.replaceChild(f, b);
+});
+</script>
 </div>
 <?php endif; ?>
 </div>
