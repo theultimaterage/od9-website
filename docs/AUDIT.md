@@ -20,21 +20,19 @@ folder, each a small change with an obvious fix.
 
 ## Needs the founder
 
-1. **Deploy the phone fix** (5070bc8): the deploy now refuses any page wider than a phone.
-2. **Move the three config backups out of the webroot** (finding 2): a production change.
-3. **Security headers** (finding 3): the safe four now; a content security policy later, page by page.
-4. **Music page weight** (finding 4): compress the cover, stop the promo video autoloading.
+The founder said "Go on all of them"; findings 1 to 6 shipped the same day. Left for a
+later decision: a content security policy (page by page), and findings 7 and 8.
 
 ## Findings and status
 
 | # | Sev | Finding | Status |
 |---|-----|---------|--------|
-| 1 | P1 | 8 of 29 pages wider than a 390px phone: ecosystem, insights, progress, wake-up by ~1,034px (logo set to 60px tall, its width="1408" never reset); atlas 77px (timeline label nowrap); research 42px (status chips nowrap); music 39px | FIXED 5070bc8 (local; deploy on go) + gate tests/check_phone_overflow.py |
-| 2 | P2 | Three `dashboard/includes/config.php.bak-*` files (2026-06-30, 09-14) in the live webroot, 7 secret-shaped lines each, mode 644. The root .htaccess answers 403 for them, so they are not served, but credentials in a webroot depend on one rule | OPEN (founder #2) |
-| 3 | P2 | No security headers on any page: no Strict-Transport-Security, X-Content-Type-Options, X-Frame-Options / frame-ancestors, Referrer-Policy | OPEN (founder #3) |
-| 4 | P2 | Music page loads 18 MB: an autoplaying 3.2 MB promo video, a 2,048x2,048 2.9 MB cover JPEG (prod-only file), several SoundCloud players | OPEN (founder #4) |
-| 5 | P3 | Support (4.8 MB) and NCZ (4.6 MB) load YouTube's full player (~3.7 MB of script) before anyone presses play; a click-to-load preview cuts that to one thumbnail | OPEN |
-| 6 | P3 | images/logos/od9-logo.png is 949 KB (1408x768) and is shown 60px tall on four pages and as the default share image | OPEN |
+| 1 | P1 | 8 of 29 pages wider than a 390px phone: ecosystem, insights, progress, wake-up by ~1,034px (logo set to 60px tall, its width="1408" never reset); atlas 77px (timeline label nowrap); research 42px (status chips nowrap); music 39px | FIXED 5070bc8 + 122a90f, deployed; gate tests/check_phone_overflow.py |
+| 2 | P2 | Three `dashboard/includes/config.php.bak-*` files (2026-06-30, 09-14) in the live webroot, 7 secret-shaped lines each, mode 644. The root .htaccess answers 403 for them, so they are not served, but credentials in a webroot depend on one rule | FIXED: moved to ~/_offweb_archive/dashboard-config-backups (mode 600, sha256 verified, 0 left in the webroot) |
+| 3 | P2 | No security headers on any page: no Strict-Transport-Security, X-Content-Type-Options, X-Frame-Options / frame-ancestors, Referrer-Policy | FIXED 113440f, deployed; tests/test_security_headers.php gate (10/10 on production) |
+| 4 | P2 | Music page loads 18 MB: an autoplaying 3.2 MB promo video, a 2,048x2,048 2.9 MB cover JPEG (prod-only file), several SoundCloud players | FIXED d431118, 122a90f, 1da3a7b: 800px cover (142 KB), promo loads when seen (also on Da Crew), SoundCloud on click; 18 MB -> 1.7 MB |
+| 5 | P3 | Support (4.8 MB) and NCZ (4.6 MB) load YouTube's full player (~3.7 MB of script) before anyone presses play; a click-to-load preview cuts that to one thumbnail | FIXED 71c78f9: NCZ 4.6 MB -> 244 KB, Support 4.8 MB -> 511 KB (Support also left the retired user_uploads embed) |
+| 6 | P3 | images/logos/od9-logo.png is 949 KB (1408x768) and is shown 60px tall on four pages and as the default share image | FIXED 8a19c21: a 57 KB 220x120 copy on those pages (the original stays the share image) |
 | 7 | P3 | AGENTS.md and OD9_AUDIT_INVENTORY.md describe the February layout (public/, private/admin) the August restructure removed; the sentinel also reports the inventory differs from prod. Agents reading them are misled | OPEN |
 | 8 | P3 | deploy-coverage warns agent-card.php is deployed but nothing links to it (possible orphan) | OPEN |
 
@@ -50,7 +48,13 @@ dashboard/includes/config.php executes and prints nothing (0 bytes); the docroot
 |--------|------|
 | 3a60f3d | The sectioned nav (tests/test_nav_sections.php, a deploy gate) |
 | b0d6d44 | Old nav files retired; merch.php on the shared head |
-| 5070bc8 | No page wider than a phone, with tests/check_phone_overflow.py as a deploy gate (not deployed yet) |
+| 5070bc8 | No page wider than a phone, with tests/check_phone_overflow.py as a deploy gate |
+| 113440f | Baseline security headers, tests/test_security_headers.php gate |
+| 71c78f9 | YouTube loads on click (includes/yt-facade.php) |
+| d431118 | 800px album cover; promo video loads when seen |
+| 8a19c21 | 57 KB logo where the 949 KB one was shown 60px tall |
+| 122a90f | SoundCloud players load on click; the track grid fits a phone |
+| 1da3a7b | One lazy promo clip for Music and Da Crew (includes/lazy-video.php) |
 
 ## Cross-repo notes
 
@@ -64,4 +68,8 @@ dashboard/includes/config.php executes and prints nothing (0 bytes); the docroot
 - Phone fix: tests/check_phone_overflow.py on local XAMPP, 29 pages, 0 overflow; its selftest
   passes; with ecosystem.php's fix removed it reported 1,034px, so it can fail.
 - Backups: `ls` on the server (offda9 account) and a 403 from https://offda9.com for each path.
-- Headers: `curl -I https://offda9.com/` returns only server and cf-cache-status headers.
+- Headers: before, `curl -I` showed only server and cf-cache-status; after the deploy,
+  tests/test_security_headers.php against https://offda9.com passes 10/10.
+- After all deploys: the live sweep found the site's 29 pages at 16 MB in total (41 MB
+  before), 0 pages wider than a phone, 0 script errors, 97/97 links; the SoundCloud and
+  promo-video behaviour was exercised on production with Playwright.
