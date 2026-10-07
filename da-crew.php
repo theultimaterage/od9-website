@@ -249,9 +249,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.8rem;color:#fff;margin:3rem 0 1
 <h2>MUSIC</h2>
 <div class="music-section">
 <div class="ep-promo">
-<video autoplay loop muted playsinline>
-<source src="images/music/supreme-elevation-promo.mp4" type="video/mp4">
-</video>
+<?php require_once __DIR__ . '/includes/lazy-video.php'; echo od9_lazy_video('images/music/supreme-elevation-promo.mp4'); ?>
 <div class="ep-info">
 <h3>SUPREME ELEVATION</h3>
 <p style="color:#aaa;margin-bottom:1rem;line-height:1.6">The collective speaks. The first full-crew project from OD9 - every voice, every perspective, one coordinated strike.</p>
