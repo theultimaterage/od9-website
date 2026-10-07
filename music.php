@@ -215,7 +215,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.6rem;color:#fff;margin:2.5rem 0
 <!-- Phuryous Stylez - Discord Exclusive -->
 <div class="exclusive-release">
 <div class="featured-grid">
-<img width="2048" height="2048" src="images/bunker/phuryous-cover.jpg" alt="Phuryous Stylez Vol. 1" class="album-cover">
+<img width="800" height="800" src="images/bunker/phuryous-cover-800.jpg" alt="Phuryous Stylez Vol. 1" class="album-cover" loading="lazy">
 <div class="album-info">
 <h3>PHURYOUS STYLEZ VOL. 1</h3>
 <p class="artist">The Ultimate Rage</p>
@@ -302,9 +302,22 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.6rem;color:#fff;margin:2.5rem 0
 <h2>COMING SOON</h2>
 <div class="upcoming-section">
 <div class="ep-promo">
-<video autoplay loop muted playsinline>
-<source src="images/music/supreme-elevation-promo.mp4" type="video/mp4">
-</video>
+<?php /* 3.2 MB promo: it used to download on every visit, near the bottom of an
+   18 MB page (2026-10-07 audit). Now nothing loads until it scrolls into view,
+   then it plays silent and looped as before. */ ?>
+<video class="lazy-promo" loop muted playsinline preload="none" data-src="images/music/supreme-elevation-promo.mp4"></video>
+<script>
+(function () {
+  var v = document.querySelector("video.lazy-promo");
+  if (!v) return;
+  function start() { if (!v.src) { v.src = v.dataset.src; v.play().catch(function () {}); } }
+  if (!("IntersectionObserver" in window)) { start(); return; }
+  var io = new IntersectionObserver(function (entries) {
+    if (entries.some(function (e) { return e.isIntersecting; })) { start(); io.disconnect(); }
+  }, { rootMargin: "200px" });
+  io.observe(v);
+})();
+</script>
 <div class="ep-info">
 <h3>SUPREME ELEVATION EP</h3>
 <p style="color:#aaa;margin-bottom:1rem;line-height:1.6">The collective speaks. Supreme Elevation is the first full-crew project from OD9 - every voice, every perspective, one mission. This isn't a compilation. It's a coordinated strike.</p>
