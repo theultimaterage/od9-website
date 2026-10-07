@@ -13,9 +13,10 @@ od9_dashboard_boot();
 
 require_once __DIR__ . '/../includes/config.php';
 
-// TEMP diag (2026-06-15, _souled0ut Safari hang): did Safari return with state+code,
-// and did the session/cookie survive the Discord round-trip? Remove once pinned.
-error_log(sprintf('[oauth-dbg] hit cookie=%s sess_state=%s get_state=%s get_code=%s err=%s ua=%s',
+// Login diagnostic (2026-06-15, _souled0ut Safari hang): did the browser return with
+// state+code, and did the session/cookie survive the Discord round-trip? Kept in
+// logs/oauth-flow.log via od9_oauth_log(), not the error log (2026-10-07).
+od9_oauth_log(sprintf('hit cookie=%s sess_state=%s get_state=%s get_code=%s err=%s ua=%s',
     isset($_COOKIE['PHPSESSID']) ? 'y' : 'n', empty($_SESSION['oauth_state']) ? 'n' : 'y',
     isset($_GET['state']) ? 'y' : 'n', isset($_GET['code']) ? 'y' : 'n',
     $_GET['error'] ?? '-', substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 50)));
@@ -146,7 +147,7 @@ try {
         $botUser['current_tier'] = 'observer';
     }
     
-    error_log('[oauth-dbg] membership ' . ($botUser ? 'FOUND' : 'NOT_FOUND') . ' id=' . $discordId);
+    od9_oauth_log('membership ' . ($botUser ? 'FOUND' : 'NOT_FOUND') . ' id=' . $discordId);
     if (!$botUser) {
         // User not found in bot database - not an OD9 member
         showError(
@@ -175,7 +176,7 @@ try {
     $redirectTo = $_SESSION['auth_redirect'] ?? DASHBOARD_BASE_URL;
     unset($_SESSION['auth_redirect']);
 
-    error_log('[oauth-dbg] success id=' . $discordId . ' -> ' . $redirectTo);
+    od9_oauth_log('success id=' . $discordId . ' -> ' . $redirectTo);
     header('Location: ' . $redirectTo);
     exit;
 

@@ -122,7 +122,7 @@ od9_dashboard_boot();
 // diag shows he NEVER reaches callback.php — this line shows whether he even
 // reaches the start, and from which browser. Pair with [oauth-dbg] in callback.
 $ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
-error_log(sprintf('[oauth-dbg] start ua=%s', substr($ua, 0, 80)));
+od9_oauth_log(sprintf('start ua=%s', substr($ua, 0, 80)));   // logs/oauth-flow.log, not the error log
 
 // In-app browsers (Discord-Android WebView, Facebook, Instagram, generic wv)
 // break the OAuth round-trip: the flow starts in the embedded browser but the

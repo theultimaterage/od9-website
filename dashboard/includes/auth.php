@@ -30,6 +30,31 @@ const OD9_REMEMBER_TTL    = 2592000;     // 30 days, in seconds (sliding)
 const OD9_REMEMBER_PATH   = '/dashboard/';
 
 /**
+ * Discord login diagnostics ([oauth-dbg]), kept in their own file.
+ *
+ * They used to go to error_log(), and every visit to the login page wrote one
+ * with the visitor's browser in it. The bot's error-log sentinel alerts on any
+ * line shape it has not seen, and it does not collapse browser names, so each
+ * new browser was a "new fault" on the production board (2026-10-07). This
+ * keeps the login trail for the next "I can't connect" case and the error log
+ * for errors. On prod: /home/offda9/logs/oauth-flow.log (outside the webroot,
+ * a name the sentinel's *error_log* / *.error.log patterns do not read); local:
+ * the repo's gitignored logs/. Falls back to error_log() only if neither is
+ * writable, so a diagnostic is never silently lost.
+ */
+function od9_oauth_log(string $message): void
+{
+    $line = '[' . gmdate('d-M-Y H:i:s') . ' UTC] [oauth-dbg] ' . $message . "\n";
+    foreach ([dirname(__DIR__, 3) . '/logs', dirname(__DIR__, 2) . '/logs'] as $dir) {
+        if (is_dir($dir) && is_writable($dir)
+            && @file_put_contents($dir . '/oauth-flow.log', $line, FILE_APPEND | LOCK_EX) !== false) {
+            return;
+        }
+    }
+    error_log('[oauth-dbg] ' . $message);
+}
+
+/**
  * Start the session with consistent secure cookie params, then — if there is no
  * live session — try to rebuild one from the remember cookie. Call once at the
  * very top of every dashboard entry point (before any output).
