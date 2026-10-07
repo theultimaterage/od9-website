@@ -47,7 +47,7 @@ function od9_oauth_log(string $message): void
     $line = '[' . gmdate('d-M-Y H:i:s') . ' UTC] [oauth-dbg] ' . $message . "\n";
     foreach ([dirname(__DIR__, 3) . '/logs', dirname(__DIR__, 2) . '/logs'] as $dir) {
         if (is_dir($dir) && is_writable($dir)
-            && @file_put_contents($dir . '/oauth-flow.log', $line, FILE_APPEND | LOCK_EX) !== false) {
+            && file_put_contents($dir . '/oauth-flow.log', $line, FILE_APPEND | LOCK_EX) !== false) {
             return;
         }
     }
