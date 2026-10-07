@@ -183,6 +183,17 @@ function ncz_render_embed(): string {
         $embedUrl = 'https://www.youtube.com/embed?listType=user_uploads&list=theultimaterage';
     }
 
+    // Not live: a thumbnail that loads the player on click (includes/yt-facade.php),
+    // so the page no longer pulls YouTube's ~3.7 MB player for every visitor.
+    // Live: the player loads at once, because watching is the point of the visit.
+    if (!$embed['isLive']) {
+        require_once __DIR__ . '/yt-facade.php';
+        $raw = $embed['videoId']
+            ? 'https://www.youtube.com/embed/' . rawurlencode($embed['videoId'])
+            : 'https://www.youtube.com/embed?listType=user_uploads&list=theultimaterage';
+        return od9_yt_facade($raw, $embed['title'], $embed['videoId'] ?: null);
+    }
+
     $title = htmlspecialchars($embed['title']);
 
     return <<<HTML

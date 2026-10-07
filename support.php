@@ -107,9 +107,7 @@ body{background:var(--d);background-image:linear-gradient(45deg,#111 25%,transpa
 <h2>SEE WHAT YOU'RE SUPPORTING</h2>
 <div class="grid">
 <div class="card">
-<div class="embed-wrap">
-<iframe src="https://www.youtube.com/embed?listType=user_uploads&list=theultimaterage" title="Latest NCZ content" allowfullscreen></iframe>
-</div>
+<?php require_once __DIR__ . '/includes/youtube-helper.php'; echo ncz_render_embed(); ?>
 <h3>THE NO CAP ZONE</h3>
 <p>This is what your support produces. Live streams, auto-generated clips, news critiques through the Four Lenses, and the content that drives the movement forward.</p>
 <a class="btn" href="ncz.php">Explore NCZ</a>

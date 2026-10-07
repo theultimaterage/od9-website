@@ -120,3 +120,11 @@ body{padding-top:var(--nav-height)}
 .mobile-section-label{padding:.9rem 2rem .3rem;color:var(--b);font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:3px;text-transform:uppercase}
 .mobile-section a{padding:.8rem 2rem .8rem 2.8rem}
 @media (prefers-reduced-motion: reduce){.nav-dropdown,.nav-caret{transition:none}}
+/* Click-to-load YouTube (includes/yt-facade.php): fills the page's .embed-wrap box. */
+.yt-facade-btn{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;cursor:pointer;background:radial-gradient(circle at 50% 45%,#10283a,#050505);overflow:hidden}
+.yt-facade-btn img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85;transition:opacity .2s}
+.yt-facade-btn:hover img,.yt-facade-btn:focus-visible img{opacity:1}
+.yt-facade-play{position:absolute;left:50%;top:50%;width:72px;height:50px;margin:-25px 0 0 -36px;border-radius:12px;background:rgba(0,191,255,.9);box-shadow:var(--g)}
+.yt-facade-play::after{content:'';position:absolute;left:29px;top:15px;border-style:solid;border-width:10px 0 10px 17px;border-color:transparent transparent transparent #0D0D0D}
+.yt-facade-title{position:absolute;left:0;right:0;bottom:0;padding:.6rem .9rem;text-align:left;color:#fff;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1rem;background:linear-gradient(transparent,rgba(0,0,0,.8))}
+.yt-facade-btn:focus-visible{outline:2px solid var(--b);outline-offset:-2px}
