@@ -38,6 +38,21 @@ RewriteRule (.+)\.(jpe?g|png)$ $1.webp [T=image/webp,E=webp:1,L]
   </Files>
 </IfModule>
 
+# Baseline security headers (2026-10-07 website audit, finding 3: the site sent
+# none). HSTS without includeSubDomains or preload, so no subdomain is bound to
+# HTTPS by this; nosniff stops a file being run as a type it was not served as;
+# SAMEORIGIN lets the Atlas keep framing its own lessons while no other site can
+# frame a page here (nothing in the fleet does, checked); referrers keep only the
+# origin when they leave the site. "always" covers error answers too.
+# Pinned by tests/test_security_headers.php; a content security policy is a
+# separate, page-by-page job.
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
 # Serve the filesystem-generated sitemap at the conventional /sitemap.xml
 RewriteRule ^sitemap\.xml$ sitemap.php [L]
 

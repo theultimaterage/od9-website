@@ -191,8 +191,8 @@
     "release_warden": true,
     "commands": [
       {
-        "name": "site provers: contact form guard, mail route, wiring; nav sections (tests/test_form_guard.php, test_mail_route.php, test_contact_wiring.php, test_nav_sections.php)",
-        "cmd": "/mnt/c/tools/php84/php.exe tests/test_form_guard.php && /mnt/c/tools/php84/php.exe tests/test_mail_route.php && /mnt/c/tools/php84/php.exe tests/test_contact_wiring.php && /mnt/c/tools/php84/php.exe tests/test_nav_sections.php",
+        "name": "site provers: contact form guard, mail route, wiring; nav sections; security headers on local Apache (tests/test_form_guard.php, test_mail_route.php, test_contact_wiring.php, test_nav_sections.php, test_security_headers.php)",
+        "cmd": "/mnt/c/tools/php84/php.exe tests/test_form_guard.php && /mnt/c/tools/php84/php.exe tests/test_mail_route.php && /mnt/c/tools/php84/php.exe tests/test_contact_wiring.php && /mnt/c/tools/php84/php.exe tests/test_nav_sections.php && /mnt/c/tools/php84/php.exe tests/test_security_headers.php",
         "timeout": 180
       },
       {
