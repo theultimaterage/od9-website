@@ -64,7 +64,7 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,5vw,2.6rem);font-wei
 <?php $current_page = ''; include('includes/nav.php'); ?>
 <div class="wrap">
   <header>
-    <a href="index.php" class="logo"><img width="1408" height="768" src="images/logos/od9-logo.png" alt="OD9"></a>
+    <a href="index.php" class="logo"><img width="220" height="120" src="images/logos/od9-logo-120h.png" alt="OD9"></a>
     <p class="tag">5 entities, one mission</p>
     <h1>The OD9 Ecosystem</h1>
     <p class="lede">
