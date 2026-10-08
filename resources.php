@@ -189,7 +189,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:#fff;margin:2.5rem 0
 <h3>OD9 YouTube</h3>
 <p>Video content exploring OD9 concepts, music, and community updates.</p>
 <span class="tag">Video</span><span class="tag">All Levels</span>
-<br><a href="https://youtube.com/@theultimaterage" target="_blank" class="resource-link"><i class="fab fa-youtube"></i> Subscribe on YouTube</a>
+<br><a href="https://www.youtube.com/@OffDa9" target="_blank" class="resource-link"><i class="fab fa-youtube"></i> Subscribe on YouTube</a>
 <br><a href="https://www.twitch.tv/theultimaterage" target="_blank" class="resource-link"><i class="fab fa-twitch"></i> Watch on Twitch</a>
 </div>
 

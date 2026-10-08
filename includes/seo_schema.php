@@ -24,6 +24,9 @@
   },
   "sameAs": [
     "https://discord.gg/spgmrXVMWq",
+    "https://www.facebook.com/offda9",
+    "https://www.instagram.com/offda9official",
+    "https://www.youtube.com/@OffDa9",
     "https://youtube.com/@theultimaterage",
     "https://www.twitch.tv/theultimaterage",
     "https://instagram.com/theultimaterage",

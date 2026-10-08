@@ -50,9 +50,10 @@ if (file_exists($_od9_analytics_config)) {
 <p>A coordination framework disguised as a brand. We build culture that encodes solutions &mdash; music, media, and community infrastructure designed to push humanity past its current failure modes.</p>
 <div class="footer-socials">
 <a href="https://discord.gg/spgmrXVMWq" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
-<a href="https://youtube.com/@theultimaterage" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+<a href="https://www.facebook.com/offda9" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+<a href="https://www.instagram.com/offda9official" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+<a href="https://www.youtube.com/@OffDa9" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
 <a href="https://www.twitch.tv/theultimaterage" target="_blank" title="Twitch"><i class="fab fa-twitch"></i></a>
-<a href="https://instagram.com/theultimaterage" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
 <a href="https://open.spotify.com/artist/0QvH8H7obaMerk1UkfFGaD" target="_blank" title="Spotify"><i class="fab fa-spotify"></i></a>
 </div>
 </div>

@@ -25,8 +25,11 @@ $page_og_description = 'A framework for accelerating human progress through STEA
       "genre": ["Hip-Hop", "R&B", "Funk", "Alternative"],
       "sameAs": [
         "https://discord.gg/spgmrXVMWq",
+        "https://www.facebook.com/offda9",
+        "https://www.instagram.com/offda9official",
+        "https://www.youtube.com/@OffDa9",
         "https://youtube.com/@theultimaterage",
-"https://www.patreon.com/c/TheUltimateRage"
+        "https://www.patreon.com/c/TheUltimateRage"
       ],
       "foundingDate": "2024",
       "foundingLocation": {
