@@ -53,5 +53,27 @@ echo ($ok ? 'PASS' : 'FAIL') . " resources.php: the OD9 YouTube card exists and 
 if (!$ok) {
     $fail++;
 }
+// Every link that opens a new tab carries rel="noopener" (no tabnabbing), and every icon-only
+// link names itself for screen readers; until 2026-10-08 the footer and contact grids had neither.
+foreach (['includes/topbar.php', 'includes/footer.php', 'contact.php'] as $file) {
+    $html  = (string) @file_get_contents("$root/$file");
+    $blank = preg_match_all('/<a\s[^>]*target="_blank"[^>]*>/i', $html, $m) ? $m[0] : [];
+    $bare  = array_filter($blank, fn($a) => stripos($a, 'rel="noopener"') === false);
+    $ok    = count($blank) > 0 && count($bare) === 0;
+    echo ($ok ? 'PASS' : 'FAIL') . " $file: " . count($blank) . " new-tab link(s), " . count($bare) . " without rel=\"noopener\"\n";
+    if (!$ok) {
+        $fail++;
+    }
+}
+foreach (['includes/topbar.php', 'includes/footer.php'] as $file) {
+    $html  = (string) @file_get_contents("$root/$file");
+    $icons = preg_match_all('/<a\s[^>]*>\s*<i class="fab [^"]+"><\/i>\s*<\/a>/i', $html, $m) ? $m[0] : [];
+    $mute  = array_filter($icons, fn($a) => stripos($a, 'aria-label="') === false);
+    $ok    = count($icons) > 0 && count($mute) === 0;
+    echo ($ok ? 'PASS' : 'FAIL') . " $file: " . count($icons) . " icon-only link(s), " . count($mute) . " without aria-label\n";
+    if (!$ok) {
+        $fail++;
+    }
+}
 echo $fail ? "FAIL ($fail)\n" : "ALL PASS\n";
 exit($fail ? 1 : 0);

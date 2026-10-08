@@ -156,19 +156,19 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:#fff;margin:2rem 0 1
 
 <h2>OFFICIAL OD9 CHANNELS</h2>
 <div class="social-grid">
-<a href="https://discord.gg/spgmrXVMWq" target="_blank" class="social-card discord">
+<a href="https://discord.gg/spgmrXVMWq" target="_blank" rel="noopener" class="social-card discord">
 <i class="fab fa-discord"></i>
 <span>Discord</span>
 </a>
-<a href="https://www.facebook.com/offda9" target="_blank" class="social-card facebook">
+<a href="https://www.facebook.com/offda9" target="_blank" rel="noopener" class="social-card facebook">
 <i class="fab fa-facebook"></i>
 <span>Facebook</span>
 </a>
-<a href="https://www.instagram.com/offda9official" target="_blank" class="social-card instagram">
+<a href="https://www.instagram.com/offda9official" target="_blank" rel="noopener" class="social-card instagram">
 <i class="fab fa-instagram"></i>
 <span>Instagram</span>
 </a>
-<a href="https://www.youtube.com/@OffDa9" target="_blank" class="social-card youtube">
+<a href="https://www.youtube.com/@OffDa9" target="_blank" rel="noopener" class="social-card youtube">
 <i class="fab fa-youtube"></i>
 <span>YouTube</span>
 </a>
@@ -176,31 +176,31 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:#fff;margin:2rem 0 1
 
 <h2>THE ULTIMATE RAGE</h2>
 <div class="social-grid">
-<a href="https://instagram.com/theultimaterage" target="_blank" class="social-card instagram">
+<a href="https://instagram.com/theultimaterage" target="_blank" rel="noopener" class="social-card instagram">
 <i class="fab fa-instagram"></i>
 <span>Instagram</span>
 </a>
-<a href="https://www.twitch.tv/theultimaterage" target="_blank" class="social-card twitch">
+<a href="https://www.twitch.tv/theultimaterage" target="_blank" rel="noopener" class="social-card twitch">
 <i class="fab fa-twitch"></i>
 <span>Twitch</span>
 </a>
-<a href="https://youtube.com/@theultimaterage" target="_blank" class="social-card youtube">
+<a href="https://youtube.com/@theultimaterage" target="_blank" rel="noopener" class="social-card youtube">
 <i class="fab fa-youtube"></i>
 <span>YouTube</span>
 </a>
-<a href="https://open.spotify.com/artist/0QvH8H7obaMerk1UkfFGaD" target="_blank" class="social-card spotify">
+<a href="https://open.spotify.com/artist/0QvH8H7obaMerk1UkfFGaD" target="_blank" rel="noopener" class="social-card spotify">
 <i class="fab fa-spotify"></i>
 <span>Spotify</span>
 </a>
-<a href="https://soundcloud.com/theultimaterage" target="_blank" class="social-card soundcloud">
+<a href="https://soundcloud.com/theultimaterage" target="_blank" rel="noopener" class="social-card soundcloud">
 <i class="fab fa-soundcloud"></i>
 <span>SoundCloud</span>
 </a>
-<a href="https://facebook.com/theultimaterage" target="_blank" class="social-card facebook">
+<a href="https://facebook.com/theultimaterage" target="_blank" rel="noopener" class="social-card facebook">
 <i class="fab fa-facebook"></i>
 <span>Facebook</span>
 </a>
-<a href="https://twitter.com/theultimat63157" target="_blank" class="social-card twitter">
+<a href="https://twitter.com/theultimat63157" target="_blank" rel="noopener" class="social-card twitter">
 <i class="fab fa-x-twitter"></i>
 <span>X / Twitter</span>
 </a>

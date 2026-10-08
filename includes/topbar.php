@@ -48,11 +48,11 @@
         <i class="fas fa-bolt"></i> Join the List
       </button>
       <div class="od9-topbar-socials">
-        <a href="https://discord.gg/spgmrXVMWq" target="_blank" rel="noopener" title="Discord"><i class="fab fa-discord"></i></a>
-        <a href="https://www.facebook.com/offda9" target="_blank" rel="noopener" title="Facebook"><i class="fab fa-facebook"></i></a>
-        <a href="https://www.instagram.com/offda9official" target="_blank" rel="noopener" title="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.youtube.com/@OffDa9" target="_blank" rel="noopener" title="YouTube"><i class="fab fa-youtube"></i></a>
-        <a href="https://www.patreon.com/c/TheUltimateRage" target="_blank" rel="noopener" title="Patreon"><i class="fab fa-patreon"></i></a>
+        <a href="https://discord.gg/spgmrXVMWq" target="_blank" rel="noopener" title="Discord" aria-label="Discord"><i class="fab fa-discord"></i></a>
+        <a href="https://www.facebook.com/offda9" target="_blank" rel="noopener" title="Facebook" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.instagram.com/offda9official" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.youtube.com/@OffDa9" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="https://www.patreon.com/c/TheUltimateRage" target="_blank" rel="noopener" title="Patreon" aria-label="Patreon"><i class="fab fa-patreon"></i></a>
       </div>
     </div>
   </div>
