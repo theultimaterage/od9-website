@@ -84,7 +84,7 @@ if (file_exists($_od9_analytics_config)) {
 <li><a href="resources.php">Resources</a></li>
 <li><a href="research.php">Research</a></li>
 <li><a href="contact.php">Contact</a></li>
-<li><a href="https://discord.gg/spgmrXVMWq" target="_blank">Discord Server &rarr;</a></li>
+<li><a href="https://discord.gg/spgmrXVMWq" target="_blank" rel="noopener">Discord Server &rarr;</a></li>
 </ul>
 </div>
 </div>

@@ -105,7 +105,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:#fff;margin:2rem 0 1
 <i class="fab fa-discord"></i>
 <h3>Discord</h3>
 <p>Join our community for direct access</p>
-<a href="https://discord.gg/spgmrXVMWq" target="_blank">Join Server</a>
+<a href="https://discord.gg/spgmrXVMWq" target="_blank" rel="noopener">Join Server</a>
 </div>
 
 <div class="contact-card">
@@ -115,7 +115,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:#fff;margin:2rem 0 1
 <a href="mailto:contact@offda9.com">contact@offda9.com</a>
 </div>
 
-<a href="https://www.twitch.tv/theultimaterage" target="_blank" class="contact-card"><i class="fab fa-twitch"></i><h3>Twitch</h3><p>Live NCZ streams and community interaction</p></a>
+<a href="https://www.twitch.tv/theultimaterage" target="_blank" rel="noopener" class="contact-card"><i class="fab fa-twitch"></i><h3>Twitch</h3><p>Live NCZ streams and community interaction</p></a>
 </div>
 
 <h2>SEND A MESSAGE</h2>
