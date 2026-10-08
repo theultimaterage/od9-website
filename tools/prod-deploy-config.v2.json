@@ -192,7 +192,8 @@
     "commands": [
       {
         "name": "site provers: contact form guard, mail route, wiring; nav sections; security headers on local Apache; login diagnostics out of the error log (tests/test_form_guard.php, test_mail_route.php, test_contact_wiring.php, test_nav_sections.php, test_security_headers.php, test_oauth_log.php)",
-        "cmd": "/mnt/c/tools/php84/php.exe tests/test_form_guard.php && /mnt/c/tools/php84/php.exe tests/test_mail_route.php && /mnt/c/tools/php84/php.exe tests/test_contact_wiring.php && /mnt/c/tools/php84/php.exe tests/test_nav_sections.php && /mnt/c/tools/php84/php.exe tests/test_security_headers.php && /mnt/c/tools/php84/php.exe tests/test_oauth_log.php",
+        "cmd": "/mnt/c/tools/php84/php.exe tests/test_form_guard.php && /mnt/c/tools/php84/php.exe tests/test_mail_route.php && /mnt/c/tools/php84/php.exe tests/test_contact_wiring.php && /mnt/c/tools/php84/php.exe tests/test_nav_sections.php && /mnt/c/tools/php84/php.exe tests/test_security_headers.php && /mnt/c/tools/php84/php.exe tests/test_oauth_log.php && WSLENV=OD9_BOT_DIR OD9_BOT_DIR=C:/Users/Rage/IdeaProjects/OD9-Discord-Bot /mnt/c/tools/php84/php.exe tests/test_remember_auth.php",
+        "_why_remember": "Added 2026-10-08: the dashboard's remember-me lifecycle (issue, consume+rotate, theft purge, membership re-check via the bot's read seam, logout) runs against local MySQL and the bot checkout's SQLite. It had crashed on stale include paths since August with no gate running it; a seam the test cannot reach is a loud failure, never a pass.",
         "timeout": 180
       },
       {
