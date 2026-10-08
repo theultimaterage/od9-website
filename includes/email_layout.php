@@ -136,9 +136,9 @@ if (!function_exists('od9_email_layout')) {
                 <td align="left" valign="middle" style="font-family:'Rajdhani',Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:.24em;color:#00BFFF;text-transform:uppercase;line-height:1.6;">Level Up or<br>Get Left Behind</td>
                 <td align="right" valign="middle">
             <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
-              <td style="padding-left:16px;"><a href="https://www.youtube.com/@TheUltimateRage" style="text-decoration:none;"><img src="{$base}social-youtube.png" width="26" height="26" alt="YouTube" style="display:block;border:0;outline:none;"></a></td>
-              <td style="padding-left:16px;"><a href="https://www.instagram.com/theultimaterage/" style="text-decoration:none;"><img src="{$base}social-instagram.png" width="26" height="26" alt="Instagram" style="display:block;border:0;outline:none;"></a></td>
-              <td style="padding-left:16px;"><a href="https://www.facebook.com/profile.php?id=100085460577398" style="text-decoration:none;"><img src="{$base}social-facebook.png" width="26" height="26" alt="Facebook" style="display:block;border:0;outline:none;"></a></td>
+              <td style="padding-left:16px;"><a href="https://www.youtube.com/@OffDa9" style="text-decoration:none;"><img src="{$base}social-youtube.png" width="26" height="26" alt="YouTube" style="display:block;border:0;outline:none;"></a></td>
+              <td style="padding-left:16px;"><a href="https://www.instagram.com/offda9official" style="text-decoration:none;"><img src="{$base}social-instagram.png" width="26" height="26" alt="Instagram" style="display:block;border:0;outline:none;"></a></td>
+              <td style="padding-left:16px;"><a href="https://www.facebook.com/offda9" style="text-decoration:none;"><img src="{$base}social-facebook.png" width="26" height="26" alt="Facebook" style="display:block;border:0;outline:none;"></a></td>
               <td style="padding-left:16px;"><a href="https://x.com/theultimat63157" style="text-decoration:none;"><img src="{$base}social-x.png" width="26" height="26" alt="X" style="display:block;border:0;outline:none;"></a></td>
             </tr></table>
                 </td>

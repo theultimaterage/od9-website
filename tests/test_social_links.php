@@ -18,9 +18,10 @@ $links = [
     'https://www.youtube.com/@OffDa9',
 ];
 $files = [
-    'includes/topbar.php'     => $links,
-    'includes/footer.php'     => $links,
-    'contact.php'             => $links,
+    'includes/topbar.php'       => $links,
+    'includes/footer.php'       => $links,
+    'includes/email_layout.php' => $links,   // the member drip emails' footer (founder, 2026-10-08: "with the email footer")
+    'contact.php'               => $links,
     'includes/seo_schema.php' => $links,
     'index.php'               => $links,
     'resources.php'           => ['https://www.youtube.com/@OffDa9'],
