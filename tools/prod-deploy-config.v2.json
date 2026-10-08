@@ -239,8 +239,12 @@
       "must_contain": [
         "name=\"fg_ref\"",
         "name=\"fg_proof\"",
-        "data-fg=\""
-      ]
+        "data-fg=\"",
+        "https://www.facebook.com/offda9",
+        "https://www.instagram.com/offda9official",
+        "https://www.youtube.com/@OffDa9"
+      ],
+      "_why_profiles": "Added 2026-10-08 with the rebrand: the Official OD9 Channels grid carries the collective's Facebook, Instagram and YouTube. The deploy reads the served page for the three URLs, so a regression (or a stale edge) is a failed smoke, not something a person notices later."
     },
     {
       "url": "https://offda9.com/about.php",
@@ -343,9 +347,12 @@
       ],
       "must_contain": [
         "od9-errors.js",
-        "data-endpoint"
+        "data-endpoint",
+        "https://www.facebook.com/offda9",
+        "https://www.instagram.com/offda9official",
+        "https://www.youtube.com/@OffDa9"
       ],
-      "_why": "Every page reports its own JS faults via includes/head.php. If that script tag ever stops rendering, the whole site goes silent again and nothing else would say so — the failure mode of a reporter is silence, which looks exactly like health. Checking a page OTHER than the Atlas proves the shared head carries it."
+      "_why": "Every page reports its own JS faults via includes/head.php. If that script tag ever stops rendering, the whole site goes silent again and nothing else would say so — the failure mode of a reporter is silence, which looks exactly like health. Checking a page OTHER than the Atlas proves the shared head carries it. Since 2026-10-08 the same page also proves the shared top bar and footer carry the collective's three profiles."
     },
     {
       "url": "https://offda9.com/tour",
