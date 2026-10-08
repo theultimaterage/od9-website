@@ -49,6 +49,9 @@ foreach (['/about.php' => 'a page', '/no-such-page-od9-header-test' => 'a 404'] 
     $h = headers_of($base . $path);
     ok($h !== null, "{$base}{$path} answered");
     if ($h === null) {
+        // No response at all is the server, not the headers: on 2026-10-08 a deploy was refused
+        // for an hour because local XAMPP Apache was simply not running.
+        echo "     no response from {$base}: is the server running? (local XAMPP: C:\\xampp\\apache_start.bat)\n";
         continue;
     }
     foreach ($want as $name => $value) {
