@@ -5,9 +5,9 @@
  * 2026-10-08: the rebrand created facebook.com/offda9, instagram.com/offda9official and
  * youtube.com/@OffDa9, and the site still pointed only at the founder's artist accounts; the
  * resources card titled "OD9 YouTube" sent people to the artist channel. This pins every
- * surface that carries the collective's profiles: the shared footer, the contact page's
- * "Official OD9 channels" grid, the Organization structured data (site-wide and home page),
- * and that resources card.
+ * surface that carries the collective's profiles: the top bar's icon row, the shared footer,
+ * the contact page's "Official OD9 channels" grid, the Organization structured data
+ * (site-wide and home page), and that resources card.
  *
  *   php tests/test_social_links.php        (exit 0 = all pass)
  */
@@ -18,6 +18,7 @@ $links = [
     'https://www.youtube.com/@OffDa9',
 ];
 $files = [
+    'includes/topbar.php'     => $links,
     'includes/footer.php'     => $links,
     'contact.php'             => $links,
     'includes/seo_schema.php' => $links,
@@ -34,6 +35,14 @@ foreach ($files as $file => $want) {
             $fail++;
         }
     }
+}
+// The top bar's icon row is the collective's: Discord, Facebook, Instagram, YouTube, Patreon.
+// Its YouTube icon sent people to the artist channel until 2026-10-08.
+$top = (string) @file_get_contents("$root/includes/topbar.php");
+$ok  = $top !== '' && strpos($top, '@theultimaterage') === false;
+echo ($ok ? 'PASS' : 'FAIL') . " includes/topbar.php: the icon row does not link the artist channel\n";
+if (!$ok) {
+    $fail++;
 }
 // The resources card titled "OD9 YouTube" must not send people to the artist channel.
 $res  = (string) @file_get_contents("$root/resources.php");

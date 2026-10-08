@@ -6,7 +6,9 @@
  * before includes/nav.php.
  *
  * Layout (desktop):
- *   [85 SECONDS TO MIDNIGHT]                [JOIN THE LIST]  [D] [Y] [P] [S]
+ *   [85 SECONDS TO MIDNIGHT]                [JOIN THE LIST]  [D] [F] [I] [Y] [P]
+ *   (the socials are the collective's own since 2026-10-08: facebook.com/offda9,
+ *   instagram.com/offda9official, youtube.com/@OffDa9; Patreon stays the founder's)
  * Layout (mobile, ≤600px):
  *   [85 SEC TO MIDNIGHT]              [JOIN]  (icons hidden — chrome budget)
  *
@@ -47,7 +49,9 @@
       </button>
       <div class="od9-topbar-socials">
         <a href="https://discord.gg/spgmrXVMWq" target="_blank" rel="noopener" title="Discord"><i class="fab fa-discord"></i></a>
-        <a href="https://youtube.com/@theultimaterage" target="_blank" rel="noopener" title="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="https://www.facebook.com/offda9" target="_blank" rel="noopener" title="Facebook"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.instagram.com/offda9official" target="_blank" rel="noopener" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.youtube.com/@OffDa9" target="_blank" rel="noopener" title="YouTube"><i class="fab fa-youtube"></i></a>
         <a href="https://www.patreon.com/c/TheUltimateRage" target="_blank" rel="noopener" title="Patreon"><i class="fab fa-patreon"></i></a>
       </div>
     </div>
