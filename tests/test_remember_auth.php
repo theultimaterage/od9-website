@@ -15,8 +15,8 @@ chdir(dirname(__DIR__));
 $_SERVER['HTTP_USER_AGENT'] = 'OD9-RememberTest';
 
 require 'config/database.php';
-require 'public/includes/env.php';
-require 'public/dashboard/includes/auth.php';
+require 'includes/env.php';            // the public/ -> root restructure moved these; the old paths threw
+require 'dashboard/includes/auth.php';
 
 $pdo = getDatabaseConnection();
 $member = $pdo->query('SELECT discord_user_id FROM od9_members LIMIT 1')->fetchColumn();
