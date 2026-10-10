@@ -1,15 +1,18 @@
 # ncz-media/ is a drop box, not site content.
 #
-# Threads publishes a video only from a public URL its servers fetch, so the
-# NCZ pipeline (NCZ-Content-Pipelines) places each clip here under a random
-# 32-hex-character name for the minutes that takes, then deletes it. NCZ writes
-# through an SSH key that can run one program, /home/offda9/bin/ncz-media-gate,
-# which can only put or remove files of that shape in this folder.
+# Threads publishes a video only from a public URL its servers fetch, and
+# Instagram fetches a Reel's cover image the same way, so the NCZ pipeline
+# (NCZ-Content-Pipelines) places each clip (.mp4) or cover (.jpg) here under a
+# random 32-hex-character name for the minutes that takes, then deletes it. NCZ
+# writes through an SSH key that can run one program,
+# /home/offda9/bin/ncz-media-gate, which can only put or remove files of those
+# two shapes in this folder.
 #
 # This repository owns the folder: this file creates it on deploy, and
 # tools/prod-deploy-config.v2.json declares it (_ncz_media_note): the deploy
-# never ships a video into it, the drift gate allows only that file shape here,
-# and the backup leaves it out. Two smoke pins prove the rules below are live.
+# never ships a clip or cover into it, the drift gate allows only those shapes
+# here, and the backup leaves them out. Three smoke pins prove the rules below
+# are live.
 
 Options -Indexes
 
@@ -18,14 +21,14 @@ Options -Indexes
 # files it matches and nothing else.
 <IfModule mod_authz_core.c>
     Require all denied
-    <FilesMatch "^[0-9a-f]{32}\.mp4$">
+    <FilesMatch "^[0-9a-f]{32}\.(mp4|jpg)$">
         Require all granted
     </FilesMatch>
 </IfModule>
 <IfModule !mod_authz_core.c>
     Order Deny,Allow
     Deny from all
-    <FilesMatch "^[0-9a-f]{32}\.mp4$">
+    <FilesMatch "^[0-9a-f]{32}\.(mp4|jpg)$">
         Allow from all
     </FilesMatch>
 </IfModule>
