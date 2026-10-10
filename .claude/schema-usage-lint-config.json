@@ -98,7 +98,8 @@
     "dashboard/profile.php:users",
     "dashboard/world.php:user_dimensions",
     "dashboard/world.php:users",
-    "includes/od9_sqlite.php:users"
+    "includes/od9_sqlite.php:users",
+    "tests/test_remember_auth.php:users"
   ],
   "_phantom_table_baseline_note": "Shrink-only ledger for the PHANTOM-TABLE rule, shape path:table, opened 2026-09-02 when the rule was added. Every key names a table absent from database/schema.prod.sql: the Discord bot's tables (users, user_settings, credit_transactions, content_*, qotd_*, think_tank_*, bunker_*, cohorts, achievements, modules, …) read by api/v1 and dashboard/ through a second connection, plus admins in check-admin.php. Burn-down: commit a dump of the bot's database and list it in schemas — then these become column-checked and every key here must be deleted — or repoint the queries. The lint FAILS on a stale key."
 }
