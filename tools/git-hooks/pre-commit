@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# pre-commit hook: THE SECRET GATE (+ chain) + SAME-NAME TOMBSTONES + INTEGRATION SOURCES (v4, 2026-10-01).
+# pre-commit hook: THE SECRET GATE (+ chain) + SAME-NAME TOMBSTONES + INTEGRATION SOURCES + JSONL READERS (v5, 2026-10-11).
 #
 # Born 2026-08-12 from an audit, not an incident — which is the point. A repo's .gitignore
 # is a DENYLIST: it excludes secret-config.json and *.log by name, so a new
@@ -121,6 +121,30 @@ else
     FAILED=1
   elif [ "$SRC_RC" -ne 0 ]; then
     echo "  ! pre-commit: integration sources could not run (exit $SRC_RC) — see above" >&2
+  fi
+fi
+
+# ── 5. JSONL readers (2026-10-11) ───────────────────────────────────────────
+# A commit may not add a JSON parse fed from str.splitlines(): splitlines() also
+# breaks at U+2028, U+2029 and U+0085, which json.dumps(ensure_ascii=False) leaves
+# raw inside a record, and one such character in a fetched page crashed the
+# manifesto rebuild. Readers a file already has are counted, not refused; a file
+# that gains one is refused. The runner lives ONCE in the fleet; a missing runner
+# is said, never silently skipped. SKIP_JSONL_SPLITLINES=1 bypasses this step only.
+JSONL="$HOME/.claude/skills/tools/jsonl_splitlines.py"
+if [ -n "${SKIP_JSONL_SPLITLINES:-}" ]; then
+  echo "  ~ pre-commit: JSONL readers skipped (SKIP_JSONL_SPLITLINES set)"
+elif [ ! -f "$JSONL" ]; then
+  echo "  ! pre-commit: jsonl_splitlines.py not found at $JSONL — JSONL readers NOT checked (restore the fleet checkout)" >&2
+else
+  JOUT="$("$PY" "$JSONL" --staged --repo "$REPO_ROOT" 2>&1)"
+  JRC=$?
+  if [ -n "$JOUT" ]; then printf '%s\n' "$JOUT" | sed 's/^/  /'; fi
+  if [ "$JRC" -eq 1 ]; then
+    echo "  ✖ pre-commit: a file gains a JSON parse fed from str.splitlines() — JSONL READERS (SKIP_JSONL_SPLITLINES=1 to bypass deliberately)" >&2
+    FAILED=1
+  elif [ "$JRC" -ne 0 ]; then
+    echo "  ! pre-commit: JSONL readers could not run (exit $JRC) — see above" >&2
   fi
 fi
 
