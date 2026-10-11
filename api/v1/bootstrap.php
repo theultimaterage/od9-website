@@ -237,7 +237,8 @@ function requireAuth(): string {
 function verifyGuildMembership(string $discordId): bool {
     $db = getBotDatabase();
     $guildId = OD9_GUILD_ID ?? '1146833684952006769';
-    
+
+    // schema-usage-lint:ignore — the Discord bot's own database (getBotDatabase), whose users table od9's schema does not describe
     $stmt = $db->prepare("SELECT 1 FROM users WHERE user_id = ? AND guild_id = ? LIMIT 1");
     $stmt->execute([$discordId, $guildId]);
     
