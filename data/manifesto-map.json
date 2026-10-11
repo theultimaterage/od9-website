@@ -144,6 +144,14 @@
   ],
   "work": [
    {
+    "at": "2026-10-11",
+    "sha": "9434fd1",
+    "scope": "sermons",
+    "kind": "fix",
+    "what": "The sheet shows the chapter number the Atlas shows",
+    "src": "git"
+   },
+   {
     "at": "2026-09-26",
     "sha": "f2a3bc2",
     "scope": "Ch 4",
