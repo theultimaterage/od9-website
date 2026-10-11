@@ -31,8 +31,9 @@ define('MAIL_FROM_NAME',  'The OD9 Movement');
 define('MAIL_REPLY_TO',   'contact@offda9.com');
 
 // MAIL_LOCAL_DOMAINS (the domains whose mailboxes live on this server) is defined in
-// includes/mail.php, NOT here: this file is excluded from the deploy (prod keeps its
-// own copy), so a define here would never reach production.
+// includes/mail.php, NOT here. This file was excluded from the deploy until 2026-10-11
+// (prod kept its own copy), so a define here never reached production; it ships now,
+// and the list keeps its one definition there. tests/test_mail_route.php pins it.
 
 // Load secrets (defines SMTP_* if present).
 $_secretsPath = __DIR__ . '/mail.config.php';

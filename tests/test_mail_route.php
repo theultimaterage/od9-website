@@ -34,9 +34,10 @@ ok(od9_mail_route('no-at-sign', [], 'smtp', $home) === 'platform', 'an address w
 ok(defined('MAIL_LOCAL_DOMAINS') && is_array(MAIL_LOCAL_DOMAINS), 'MAIL_LOCAL_DOMAINS is defined once mail.php is loaded');
 ok(defined('MAIL_LOCAL_DOMAINS') && array_diff($home, MAIL_LOCAL_DOMAINS) === [], 'all three home domains are in MAIL_LOCAL_DOMAINS');
 
-// The list has to live in a file the deploy SHIPS. config/mail.php is excluded (prod
-// keeps its own copy), so a list kept only there would never reach production and the
-// route would silently stay on Brevo.
+// The list has to live in a file the deploy SHIPS. config/mail.php was excluded until
+// 2026-10-11 (prod kept its own copy), so a list kept only there never reached production
+// and the route silently stayed on Brevo. It ships now, and the list keeps one definition,
+// in includes/mail.php; if config/mail.php is ever excluded again this still holds.
 $deploy = json_decode((string) file_get_contents('tools/prod-deploy-config.v2.json'), true);
 $excluded = [];
 foreach (($deploy['mappings'] ?? []) as $mapping) {

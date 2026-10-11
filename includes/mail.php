@@ -36,9 +36,10 @@ require_once $_od9_mail_cfg;
 // The domains whose mailboxes live on this server. Mail to them is delivered by the
 // server's own sendmail and never handed to Brevo, which accepts mail for @offda9.com
 // and never delivers it (inbound canary 2026-07-16; every contact-form notice from
-// 2026-06-16 to 2026-10-02). Defined HERE because config/mail.php is excluded from
-// the deploy: a define there would never reach production, and the route would
-// silently keep sending to Brevo. tests/test_mail_route.php pins both facts.
+// 2026-06-16 to 2026-10-02). Defined HERE because config/mail.php was excluded from
+// the deploy until 2026-10-11: a define there never reached production, and the route
+// silently kept sending to Brevo. It ships now; the list keeps this one definition, and
+// tests/test_mail_route.php pins both facts.
 if (!defined('MAIL_LOCAL_DOMAINS')) {
     define('MAIL_LOCAL_DOMAINS', ['offda9.com', 'freshthaband.com', 'freshthaplatform.com']);
 }
