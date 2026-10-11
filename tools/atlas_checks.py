@@ -229,6 +229,16 @@ def run(base: str) -> int:
             pg.goto(base + "?arrival=0", wait_until="load")
             pg.wait_for_timeout(1500)
             check(pg.evaluate("() => document.getElementById('atlas-live-strip').className") == want, f"live strip state '{state}' -> '{want}'")
+            if state == "live":
+                # The chip names tonight's chapter by the number its star SHOWS. Until
+                # 2026-10-11 it read the legacy id: "CH 22" beside a star labelled 19, on stream.
+                chip, shown = pg.evaluate("""() => {
+                    const d = JSON.parse(document.getElementById('atlas-data').textContent);
+                    const n = (d.nodes || []).find(x => (x.canon || []).some(c => c.content_id === 84));
+                    return [document.getElementById('atlas-live-chip').textContent, n ? String(n.num) : null];
+                }""")
+                check(shown is not None and chip.endswith("CH " + shown),
+                      f"the live chip names the chapter by the number its star shows ({chip!r}; the star shows {shown})")
             if state == "quiet" and upcoming:
                 text = pg.evaluate("() => document.getElementById('atlas-live-strip').textContent")
                 check(f"Sermon {upcoming[0]['sermon']}" in text and "on the map" in text,

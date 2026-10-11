@@ -720,8 +720,11 @@
           liveNodeId = nid;
           if (liveChip) {
             var n = nodeById[nid];
+            /* The number the star shows (n.num), never the legacy id: until
+               2026-10-11 this read n.legacy[0] and put "CH 22" beside a star
+               labelled 19, on stream. tools/atlas_checks.py pins it. */
             liveChip.textContent = "● LIVE LESSON — " +
-              (n.num === "P" ? "PREFACE" : "CH " + n.legacy[0]);
+              (n.num === "P" ? "PREFACE" : "CH " + n.num);
             liveChip.classList.add("on");
             liveChip.addEventListener("click", function () { focusNode(nid); });
           }
