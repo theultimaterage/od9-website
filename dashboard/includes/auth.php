@@ -75,9 +75,9 @@ function od9_dashboard_boot(): void
     // files sat in cPanel's shared folder, where root's cleaner deletes by the GLOBAL
     // lifetime and ignores this value (the remember token was the only thing holding a
     // login). In the dashboard's own folder PHP's gc runs with THIS lifetime.
-    @ini_set('session.gc_maxlifetime', (string) OD9_REMEMBER_TTL);
     require_once __DIR__ . '/../../includes/session_store.php';
-    od9_session_store('dashboard');
+    od9_session_store();
+    @ini_set('session.gc_maxlifetime', (string) OD9_REMEMBER_TTL);
     session_start();
 
     if (empty($_SESSION['discord_id'])) {

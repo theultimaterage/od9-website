@@ -58,18 +58,42 @@ if (!function_exists('od9_session_dir')) {
     }
 }
 
+if (!function_exists('od9_session_app')) {
+    /**
+     * The folder a session NAME belongs to. Every od9 session (the public forms, the
+     * dashboard's Discord login, the API, the patron gate) runs under PHP's default
+     * cookie name, so they are ONE session per visitor and must share ONE folder: a
+     * folder per call site would have had a form submission start a fresh session
+     * under the same cookie and sign the dashboard out (use_strict_mode regenerates
+     * an id whose file is not in the current folder). Any other name gets its own.
+     */
+    function od9_session_app(?string $name = null): string
+    {
+        $name = $name ?? session_name();
+        $safe = strtolower(preg_replace('/[^A-Za-z0-9_-]+/', '_', (string) $name) ?: '');
+        return ($safe === '' || $safe === 'phpsessid') ? 'site' : $safe;
+    }
+}
+
 if (!function_exists('od9_session_store')) {
     /**
-     * Point PHP's session files at this account's own folder for `$app`, before
-     * session_start(). Returns the folder, or null when it could not be prepared
+     * Point PHP's session files at this account's own folder, before session_start().
+     * The folder follows the session name in force (od9_session_app), so call it after
+     * any session_name(). Returns the folder, or null when it could not be prepared
      * (logged; PHP then stays on its default path).
+     *
+     * The lifetime is raised to a week for every session in the folder, because PHP's
+     * gc deletes by the CURRENT request's gc_maxlifetime: with the public forms at the
+     * default 24 minutes, a form submission would have swept the dashboard's logins.
+     * The dashboard raises its own lifetime further after this call; the remember
+     * token restores a login the sweep did take, as before.
      */
-    function od9_session_store(string $app = 'site', ?string $root = null): ?string
+    function od9_session_store(?string $app = null, ?string $root = null): ?string
     {
         if (session_status() === PHP_SESSION_ACTIVE) {
             return null;                              // too late to move a running session
         }
-        $dir = od9_session_dir($app, $root);
+        $dir = od9_session_dir($app ?? od9_session_app(), $root);
         if (!is_dir($dir) && !@mkdir($dir, 0700, true) && !is_dir($dir)) {
             error_log("od9_session_store: cannot create {$dir}; sessions stay on PHP's default path");
             return null;
@@ -85,6 +109,9 @@ if (!function_exists('od9_session_store')) {
         }
         ini_set('session.gc_probability', '1');       // cPanel's cleaner never looks here
         ini_set('session.gc_divisor', '100');
+        if ((int) ini_get('session.gc_maxlifetime') < 604800) {
+            ini_set('session.gc_maxlifetime', '604800');   // a week, the public forms' own cookie lifetime
+        }
         return $dir;
     }
 }

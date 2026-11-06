@@ -11,7 +11,7 @@ require_once __DIR__ . '/../includes/auth.php';
 // is the one found; a session started on PHP's default path would be a fresh, empty one).
 if (session_status() === PHP_SESSION_NONE) {
     require_once __DIR__ . '/../../includes/session_store.php';
-    od9_session_store('dashboard');
+    od9_session_store();
     session_start();
 }
 

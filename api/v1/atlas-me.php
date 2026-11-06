@@ -27,7 +27,7 @@ if (session_status() === PHP_SESSION_NONE) {
         'samesite' => 'Lax',
     ]);
     require_once dirname(__DIR__, 2) . '/includes/session_store.php';
-    od9_session_store('dashboard');                   // the dashboard login's own folder
+    od9_session_store();                              // the same folder the dashboard login writes
     session_start();
 }
 $discordId = (string)($_SESSION['discord_id'] ?? '');

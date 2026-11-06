@@ -31,6 +31,9 @@ ok(od9_account_home('C:\\xampp\\htdocs\\od9\\includes') === null, 'no account ho
 ok(od9_session_root('/home/offda9/public_html/includes') === '/home/offda9/tmp/php_sessions', 'the root is under the account home');
 ok(strpos(od9_session_root('C:/xampp/htdocs/od9/includes'), '/var/cpanel') === false, "the local root is never cPanel's shared folder");
 ok(od9_session_dir('odd name/', '/r') === '/r/odd_name_', 'an app label cannot carry path characters');
+ok(od9_session_app('PHPSESSID') === 'site' && od9_session_app('') === 'site', "PHP's default cookie name is the one site folder");
+ok(od9_session_app('OTHER_NAME') === 'other_name', 'another session name gets its own folder');
+ok(od9_session_dir(od9_session_app(), '/r') === '/r/site', 'with no label the folder follows the session name in force');
 
 $root = rtrim(sys_get_temp_dir(), '/\\') . '/od9_ss_' . bin2hex(random_bytes(4));
 $savedPath = ini_get('session.save_path');

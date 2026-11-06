@@ -214,7 +214,7 @@ function requireAuth(): string {
             'samesite' => 'Lax'
         ]);
         require_once dirname(__DIR__, 2) . '/includes/session_store.php';
-        od9_session_store('dashboard');               // the same folder the dashboard login writes
+        od9_session_store();                          // the same folder the dashboard login writes
         session_start();
     }
     
