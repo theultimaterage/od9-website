@@ -144,6 +144,22 @@
   ],
   "work": [
    {
+    "at": "2026-10-30",
+    "sha": "aa2b699",
+    "scope": "Ch 14",
+    "kind": "fix",
+    "what": "The Global Peace Index rank is 134th of 163, with its trajectory; six more measures in section 8",
+    "src": "git"
+   },
+   {
+    "at": "2026-10-30",
+    "sha": "250da72",
+    "scope": "Preface",
+    "kind": "data",
+    "what": "The thesis chain in section IV; the gathered record on reason, feeling and the measure",
+    "src": "git"
+   },
+   {
     "at": "2026-10-11",
     "sha": "9434fd1",
     "scope": "sermons",
