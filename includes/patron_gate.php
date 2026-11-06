@@ -32,6 +32,8 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
         'httponly' => true,
         'samesite' => 'Lax',
     ]);
+    require_once __DIR__ . '/session_store.php';
+    od9_session_store('dashboard');                   // the Discord login lives in the dashboard's folder
     session_start();
 }
 

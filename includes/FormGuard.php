@@ -82,6 +82,8 @@ final class FormGuard
             'httponly' => true,
             'samesite' => 'Lax',
         ]);
+        require_once __DIR__ . '/session_store.php';
+        od9_session_store('site');                    // this account's own folder, never cPanel's shared one
         session_start();
     }
 

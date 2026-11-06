@@ -7,8 +7,11 @@
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/auth.php';
 
-// Start session if not started
+// Start session if not started, in the dashboard's own folder (so the login being ended
+// is the one found; a session started on PHP's default path would be a fresh, empty one).
 if (session_status() === PHP_SESSION_NONE) {
+    require_once __DIR__ . '/../../includes/session_store.php';
+    od9_session_store('dashboard');
     session_start();
 }
 
