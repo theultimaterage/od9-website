@@ -201,6 +201,36 @@ else:
                      "exist. Fix the anchor (tools/codex_anchors.py --verify), or lower "
                      "the ceiling with --ratchet after a real repair.")
 
+# PROSE GATE (2026-11-07): does the copy READ? The founder, on the prose gate built
+# for the manifesto that morning: "apply this skill to Lens and any kind of copy
+# that we come up with for anything in regards to the ecosystem." tools/prose_check.py
+# renders every public page's visible copy and every Codex lesson's study layer to
+# markdown and judges it with the fleet's one prose engine (the prose-craft skill,
+# profile "announce": the book's bar, plus a refusal when 120+ words never say "you"
+# or "we"). The baseline (tools/prose_baseline.json) is SHRINK-ONLY: a unit may not
+# read worse than it did, and a new unit must be clean. Day one it held 88 refusals
+# over 46 units; nothing was blocked, and nothing can get worse from here. Runs on
+# --dry too (a second). A machine without the skill cannot know: the tool exits 2,
+# this says UNCHECKED, not clean, and goes on. --skip-prose-gate bypasses; say why
+# in the commit.
+if "--skip-prose-gate" in sys.argv:
+    sys.argv.remove("--skip-prose-gate")
+else:
+    import subprocess
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    _pg = os.path.join(_root, "tools", "prose_check.py")
+    if os.path.exists(_pg):
+        print("=== Prose gate (page copy and Codex study text vs the shrink-only baseline) ===", flush=True)
+        _penv = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
+        _prc = subprocess.run([sys.executable, _pg, "--check"], env=_penv).returncode
+        if _prc == 2:
+            print("=== Prose gate: the prose-craft skill is not on this machine - UNCHECKED, not clean ===",
+                  flush=True)
+        elif _prc != 0:
+            sys.exit("ABORT: a page or lesson reads worse than its baseline, or a new one does not "
+                     "read. python tools/prose_check.py --unit <label> spells out each refusal; "
+                     "rewrite the copy, then --baseline records the smaller number.")
+
 # RAIL LABELS (2026-09-14): the board's progress rail is keyed to the curriculum
 # in two places that nothing was comparing — RAIL_LABELS by content_id, and
 # RAIL_CHAPTERS as position ranges over each tier's ordered required modules. The

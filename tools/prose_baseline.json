@@ -1,0 +1,345 @@
+{
+ "_doc": "Shrink-only baseline for tools/prose_check.py --check: a unit may not carry more prose refusals than recorded here, and a unit this file never saw must carry none. Rewrite the copy, then run --baseline to record the smaller number; never raise one by hand.",
+ "profile": "announce",
+ "written": "2026-11-07",
+ "units": {
+  "about.php": {
+   "kind": "page",
+   "refusals": 0,
+   "codes": {}
+  },
+  "atlas.php": {
+   "kind": "page",
+   "refusals": 2,
+   "codes": {
+    "PASSIVE": 1,
+    "TIE": 1
+   }
+  },
+  "awaken.php": {
+   "kind": "page",
+   "refusals": 3,
+   "codes": {
+    "TIE": 3
+   }
+  },
+  "da-crew.php": {
+   "kind": "page",
+   "refusals": 0,
+   "codes": {}
+  },
+  "ecosystem.php": {
+   "kind": "page",
+   "refusals": 1,
+   "codes": {
+    "ADDRESS": 1
+   }
+  },
+  "events.php": {
+   "kind": "page",
+   "refusals": 2,
+   "codes": {
+    "RHYTHM": 1,
+    "TIE": 1
+   }
+  },
+  "faq.php": {
+   "kind": "page",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
+  },
+  "forge.php": {
+   "kind": "page",
+   "refusals": 2,
+   "codes": {
+    "TIE": 2
+   }
+  },
+  "founders.php": {
+   "kind": "page",
+   "refusals": 1,
+   "codes": {
+    "PASSIVE": 1
+   }
+  },
+  "framework.php": {
+   "kind": "page",
+   "refusals": 6,
+   "codes": {
+    "EASE": 1,
+    "RHYTHM": 1,
+    "TIE": 4
+   }
+  },
+  "funding.php": {
+   "kind": "page",
+   "refusals": 5,
+   "codes": {
+    "ACRONYM": 2,
+    "TIE": 3
+   }
+  },
+  "index.php": {
+   "kind": "page",
+   "refusals": 4,
+   "codes": {
+    "EASE": 1,
+    "GRADE": 1,
+    "ACRONYM": 1,
+    "TIE": 1
+   }
+  },
+  "join.php": {
+   "kind": "page",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
+  },
+  "library.php": {
+   "kind": "page",
+   "refusals": 0,
+   "codes": {}
+  },
+  "me.php": {
+   "kind": "page",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
+  },
+  "merch.php": {
+   "kind": "page",
+   "refusals": 0,
+   "codes": {}
+  },
+  "music.php": {
+   "kind": "page",
+   "refusals": 0,
+   "codes": {}
+  },
+  "ncz.php": {
+   "kind": "page",
+   "refusals": 2,
+   "codes": {
+    "OPENERS": 1,
+    "TIE": 1
+   }
+  },
+  "privacy.php": {
+   "kind": "page",
+   "refusals": 2,
+   "codes": {
+    "RHYTHM": 1,
+    "TIE": 1
+   }
+  },
+  "progress.php": {
+   "kind": "page",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
+  },
+  "research.php": {
+   "kind": "page",
+   "refusals": 6,
+   "codes": {
+    "EASE": 1,
+    "GRADE": 1,
+    "ACRONYM": 2,
+    "TIE": 2
+   }
+  },
+  "resources.php": {
+   "kind": "page",
+   "refusals": 4,
+   "codes": {
+    "EASE": 1,
+    "GRADE": 1,
+    "ACRONYM": 1,
+    "TIE": 1
+   }
+  },
+  "roadmap.php": {
+   "kind": "page",
+   "refusals": 2,
+   "codes": {
+    "EASE": 1,
+    "TIE": 1
+   }
+  },
+  "support.php": {
+   "kind": "page",
+   "refusals": 4,
+   "codes": {
+    "ACRONYM": 1,
+    "TIE": 3
+   }
+  },
+  "terms.php": {
+   "kind": "page",
+   "refusals": 2,
+   "codes": {
+    "RHYTHM": 1,
+    "TIE": 1
+   }
+  },
+  "think-tank.php": {
+   "kind": "page",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
+  },
+  "tiers.php": {
+   "kind": "page",
+   "refusals": 5,
+   "codes": {
+    "EASE": 1,
+    "GRADE": 1,
+    "RHYTHM": 1,
+    "NOMINAL": 1,
+    "TIE": 1
+   }
+  },
+  "wake-up.php": {
+   "kind": "page",
+   "refusals": 2,
+   "codes": {
+    "ACRONYM": 1,
+    "TIE": 1
+   }
+  },
+  "zones.php": {
+   "kind": "page",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
+  },
+  "callin/index.php": {
+   "kind": "page",
+   "refusals": 3,
+   "codes": {
+    "RHYTHM": 1,
+    "TIE": 2
+   }
+  },
+  "curriculum/observer/from-vision-to-action.php": {
+   "kind": "lesson",
+   "refusals": 0,
+   "codes": {}
+  },
+  "curriculum/observer/love-as-infrastructure.php": {
+   "kind": "lesson",
+   "refusals": 0,
+   "codes": {}
+  },
+  "curriculum/observer/responsible-transformation.php": {
+   "kind": "lesson",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
+  },
+  "curriculum/observer/the-creed.php": {
+   "kind": "lesson",
+   "refusals": 1,
+   "codes": {
+    "RHYTHM": 1
+   }
+  },
+  "curriculum/observer/the-evidence-standard.php": {
+   "kind": "lesson",
+   "refusals": 1,
+   "codes": {
+    "WEASEL": 1
+   }
+  },
+  "curriculum/observer/the-solution-framework.php": {
+   "kind": "lesson",
+   "refusals": 4,
+   "codes": {
+    "EASE": 1,
+    "GRADE": 1,
+    "TIE": 2
+   }
+  },
+  "curriculum/observer/the-system-in-crisis.php": {
+   "kind": "lesson",
+   "refusals": 0,
+   "codes": {}
+  },
+  "curriculum/observer/the-thesean-method.php": {
+   "kind": "lesson",
+   "refusals": 0,
+   "codes": {}
+  },
+  "curriculum/observer/the-twin-singularities.php": {
+   "kind": "lesson",
+   "refusals": 0,
+   "codes": {}
+  },
+  "curriculum/theorist/economic-dysfunction.php": {
+   "kind": "lesson",
+   "refusals": 3,
+   "codes": {
+    "EASE": 1,
+    "GRADE": 1,
+    "TIE": 1
+   }
+  },
+  "curriculum/theorist/environmental-degradation.php": {
+   "kind": "lesson",
+   "refusals": 5,
+   "codes": {
+    "EASE": 1,
+    "GRADE": 1,
+    "ACRONYM": 2,
+    "TIE": 1
+   }
+  },
+  "curriculum/theorist/political-corruption.php": {
+   "kind": "lesson",
+   "refusals": 2,
+   "codes": {
+    "EASE": 1,
+    "GRADE": 1
+   }
+  },
+  "curriculum/theorist/religious-institutions.php": {
+   "kind": "lesson",
+   "refusals": 1,
+   "codes": {
+    "EASE": 1
+   }
+  },
+  "curriculum/theorist/scientific-institutions.php": {
+   "kind": "lesson",
+   "refusals": 2,
+   "codes": {
+    "EASE": 1,
+    "GRADE": 1
+   }
+  },
+  "curriculum/theorist/the-collective-psyche.php": {
+   "kind": "lesson",
+   "refusals": 2,
+   "codes": {
+    "EASE": 1,
+    "GRADE": 1
+   }
+  },
+  "curriculum/theorist/the-information-crisis.php": {
+   "kind": "lesson",
+   "refusals": 2,
+   "codes": {
+    "EASE": 1,
+    "GRADE": 1
+   }
+  }
+ }
+}
