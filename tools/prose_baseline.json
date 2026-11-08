@@ -340,6 +340,376 @@
     "EASE": 1,
     "GRADE": 1
    }
+  },
+  "email-templates/achievement-first.html": {
+   "kind": "email",
+   "refusals": 1,
+   "codes": {
+    "NOMINAL": 1
+   }
+  },
+  "email-templates/founding-patron-launch.html": {
+   "kind": "email",
+   "refusals": 3,
+   "codes": {
+    "TIE": 3
+   }
+  },
+  "email-templates/patreon-welcome.html": {
+   "kind": "email",
+   "refusals": 2,
+   "codes": {
+    "TIE": 2
+   }
+  },
+  "email-templates/streak-14day.html": {
+   "kind": "email",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
+  },
+  "email-templates/streak-30day.html": {
+   "kind": "email",
+   "refusals": 2,
+   "codes": {
+    "TIE": 2
+   }
+  },
+  "email-templates/streak-7day.html": {
+   "kind": "email",
+   "refusals": 2,
+   "codes": {
+    "TIE": 2
+   }
+  },
+  "email-templates/tier-architect.html": {
+   "kind": "email",
+   "refusals": 0,
+   "codes": {}
+  },
+  "email-templates/tier-benefactor.html": {
+   "kind": "email",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
+  },
+  "email-templates/tier-observer.html": {
+   "kind": "email",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
+  },
+  "email-templates/tier-pioneer.html": {
+   "kind": "email",
+   "refusals": 2,
+   "codes": {
+    "EASE": 1,
+    "TIE": 1
+   }
+  },
+  "email-templates/tier-theorist.html": {
+   "kind": "email",
+   "refusals": 2,
+   "codes": {
+    "EASE": 1,
+    "TIE": 1
+   }
+  },
+  "email-templates/welcome-day0.html": {
+   "kind": "email",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
+  },
+  "email-templates/welcome-day1.html": {
+   "kind": "email",
+   "refusals": 0,
+   "codes": {}
+  },
+  "email-templates/welcome-day10.html": {
+   "kind": "email",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
+  },
+  "email-templates/welcome-day12.html": {
+   "kind": "email",
+   "refusals": 2,
+   "codes": {
+    "TIE": 2
+   }
+  },
+  "email-templates/welcome-day14.html": {
+   "kind": "email",
+   "refusals": 2,
+   "codes": {
+    "RHYTHM": 1,
+    "OPENERS": 1
+   }
+  },
+  "email-templates/welcome-day3.html": {
+   "kind": "email",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
+  },
+  "email-templates/welcome-day5.html": {
+   "kind": "email",
+   "refusals": 0,
+   "codes": {}
+  },
+  "email-templates/welcome-day7.html": {
+   "kind": "email",
+   "refusals": 0,
+   "codes": {}
+  },
+  "email-templates/lovelogic-weekly/email-week-01-core-civilizational-purpose-and-mission.md": {
+   "kind": "weekly",
+   "refusals": 4,
+   "codes": {
+    "TIE": 4
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-02-civilizational-ontology-and-system-mapping.md": {
+   "kind": "weekly",
+   "refusals": 3,
+   "codes": {
+    "OPENERS": 1,
+    "TIE": 2
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-03-foundational-axioms-and-human-assumptions.md": {
+   "kind": "weekly",
+   "refusals": 2,
+   "codes": {
+    "TIE": 2
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-04-harm-suffering-struggle-and-flourishing.md": {
+   "kind": "weekly",
+   "refusals": 2,
+   "codes": {
+    "TIE": 2
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-05-needs-rights-baselines-and-provisioning.md": {
+   "kind": "weekly",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-06-agency-autonomy-consent-and-exit.md": {
+   "kind": "weekly",
+   "refusals": 3,
+   "codes": {
+    "OPENERS": 1,
+    "TIE": 2
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-07-power-legibility-and-governance.md": {
+   "kind": "weekly",
+   "refusals": 3,
+   "codes": {
+    "OPENERS": 1,
+    "TIE": 2
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-08-language-meaning-and-epistemic-infrastructure.md": {
+   "kind": "weekly",
+   "refusals": 2,
+   "codes": {
+    "TIE": 2
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-09-incentives-economics-and-anti-extraction-design.md": {
+   "kind": "weekly",
+   "refusals": 4,
+   "codes": {
+    "OPENERS": 1,
+    "TIE": 3
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-10-relationship-architecture-family-intimacy-and-comm.md": {
+   "kind": "weekly",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-11-education-development-and-cognitive-diversity.md": {
+   "kind": "weekly",
+   "refusals": 3,
+   "codes": {
+    "TIE": 3
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-12-work-contribution-leisure-and-meaning.md": {
+   "kind": "weekly",
+   "refusals": 3,
+   "codes": {
+    "TIE": 3
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-13-justice-repair-safety-and-reintegration.md": {
+   "kind": "weekly",
+   "refusals": 3,
+   "codes": {
+    "TIE": 3
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-14-information-ecology-media-and-truth-maintenance.md": {
+   "kind": "weekly",
+   "refusals": 4,
+   "codes": {
+    "TIE": 4
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-15-technology-ai-data-and-automation.md": {
+   "kind": "weekly",
+   "refusals": 2,
+   "codes": {
+    "WEASEL": 1,
+    "TIE": 1
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-16-embodiment-health-disability-and-care.md": {
+   "kind": "weekly",
+   "refusals": 2,
+   "codes": {
+    "OPENERS": 1,
+    "TIE": 1
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-17-environment-ecology-and-nonhuman-obligations.md": {
+   "kind": "weekly",
+   "refusals": 2,
+   "codes": {
+    "TIE": 2
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-18-identity-pluralism-and-coordination-across-differe.md": {
+   "kind": "weekly",
+   "refusals": 4,
+   "codes": {
+    "TIE": 4
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-19-ritual-memory-symbol-and-cultural-narrative.md": {
+   "kind": "weekly",
+   "refusals": 7,
+   "codes": {
+    "OPENERS": 1,
+    "TIE": 6
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-20-failure-resilience-and-adaptive-learning.md": {
+   "kind": "weekly",
+   "refusals": 4,
+   "codes": {
+    "OPENERS": 1,
+    "TIE": 3
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-21-scale-locality-federalism-and-global-coordination.md": {
+   "kind": "weekly",
+   "refusals": 3,
+   "codes": {
+    "ACRONYM": 1,
+    "TIE": 2
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-22-transition-strategy-adoption-and-institutional-mig.md": {
+   "kind": "weekly",
+   "refusals": 4,
+   "codes": {
+    "ACRONYM": 1,
+    "TIE": 3
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-23-adversarial-threats-capture-and-corruption-resista.md": {
+   "kind": "weekly",
+   "refusals": 5,
+   "codes": {
+    "ACRONYM": 1,
+    "TIE": 4
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-24-measurement-metrics-and-audit.md": {
+   "kind": "weekly",
+   "refusals": 2,
+   "codes": {
+    "TIE": 2
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-25-rule-hierarchy-and-priority-logic.md": {
+   "kind": "weekly",
+   "refusals": 5,
+   "codes": {
+    "OPENERS": 1,
+    "TIE": 4
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-26-final-compression-questions-for-decision-makers.md": {
+   "kind": "weekly",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-27-optional-answer-this-like-a-brief-prompts.md": {
+   "kind": "weekly",
+   "refusals": 2,
+   "codes": {
+    "TIE": 2
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-28-minimal-answer-set-if-time-is-limited.md": {
+   "kind": "weekly",
+   "refusals": 2,
+   "codes": {
+    "TIE": 2
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-29-spirituality-metaphysics-and-the-sacred.md": {
+   "kind": "weekly",
+   "refusals": 2,
+   "codes": {
+    "TIE": 2
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-30-sexuality-gender-desire-and-reproductive-governanc.md": {
+   "kind": "weekly",
+   "refusals": 3,
+   "codes": {
+    "OPENERS": 1,
+    "TIE": 2
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-31-migration-borders-citizenship-and-belonging.md": {
+   "kind": "weekly",
+   "refusals": 2,
+   "codes": {
+    "TIE": 2
+   }
+  },
+  "email-templates/lovelogic-weekly/email-week-32-violence-defense-force-and-the-legitimate-use-of-c.md": {
+   "kind": "weekly",
+   "refusals": 0,
+   "codes": {}
+  },
+  "email-templates/lovelogic-weekly/email-week-33-meta-design-disagreement-iteration-and-constitutio.md": {
+   "kind": "weekly",
+   "refusals": 1,
+   "codes": {
+    "TIE": 1
+   }
   }
  }
 }

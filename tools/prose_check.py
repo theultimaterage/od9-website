@@ -22,6 +22,13 @@ words that never say "you" or "we" are refused, because a web page talks to its 
     blocks are verbatim manifesto text and belong to the manifesto's own gate; they are not judged
     here (tools/codex_anchors.py holds them to the book). A lesson whose study array cannot be
     parsed is reported UNCHECKED, not clean.
+  * an EMAIL: every drip fragment api/drip/sender.php can send (email-templates/*.html; the shared
+    chrome in includes/email_layout.php is judged nowhere), its {{placeholders}} read as "Reader".
+  * a WEEKLY: every LoveLogic weekly api/drip/weekly_lovelogic_sender.php can send
+    (email-templates/lovelogic-weekly/email-week-*.md): the front matter is dropped, the Subject
+    becomes the title heading (so an undefined acronym or a weasel in the subject is refused), and
+    the markdown body is judged as the engine reads markdown. The design samples and the archive
+    under email-templates/ are sent by nothing and are not judged.
 
     python tools/prose_check.py --report              # every unit: measures and refusal codes
     python tools/prose_check.py --unit about.php      # one unit, every refusal spelled out
@@ -74,6 +81,10 @@ ENGINE_PATH = _engine_path()
 PROFILE = "announce"
 PAGE_DIRS = ("", "t", "callin")             # where public pages live, relative to ROOT
 LESSON_GLOB = os.path.join("curriculum", "*", "*.php")
+EMAIL_GLOB = os.path.join("email-templates", "*.html")
+WEEKLY_GLOB = os.path.join("email-templates", "lovelogic-weekly", "email-week-*.md")
+PLACEHOLDER = re.compile(r"\{\{\s*\w+\s*\}\}")
+PLACEHOLDER_READS_AS = "Reader"
 MIN_BLOCK_WORDS = 8                        # a block shorter than this is a label, not prose
 MIN_PAGE_WORDS = 60                        # a page with less copy is a handler, not a page
 EXIT_NO_ENGINE = 2
@@ -242,6 +253,29 @@ def lesson_markdown(src: str) -> tuple:
     return "\n\n".join(out), True
 
 
+def email_markdown(src: str) -> str:
+    """A drip fragment's copy: the page extractor over the HTML, placeholders read as a name."""
+    return page_markdown(PLACEHOLDER.sub(PLACEHOLDER_READS_AS, src))
+
+
+FRONT_MATTER = re.compile(r"\A\s*---\s*\n(.*?)\n---\s*\n", re.S)
+SUBJECT_LINE = re.compile(r"^\*{0,2}Subject:?\*{0,2}:?\s*(.+?)\s*$", re.M | re.I)
+
+
+def weekly_markdown(src: str) -> tuple:
+    """(markdown, subject) for a LoveLogic weekly: front matter dropped, the Subject as the title
+    heading, placeholders read as a name. subject is "" when the front matter has none."""
+    subject = ""
+    m = FRONT_MATTER.match(src)
+    body = src
+    if m:
+        body = src[m.end():]
+        s = SUBJECT_LINE.search(m.group(1))
+        subject = s.group(1).strip() if s else ""
+    body = PLACEHOLDER.sub(PLACEHOLDER_READS_AS, body).strip()
+    return (("# " + subject + "\n\n") if subject else "") + body, subject
+
+
 # ---------------------------------------------------------------- the walk
 def pages() -> list:
     """(label, path) for every public .php page, in a stable order."""
@@ -281,6 +315,15 @@ def units_on_disk() -> list:
                                                         "subtitle and read are judged"))
         else:
             out.append((label, "lesson", md, ""))
+    import glob
+    for path in sorted(glob.glob(os.path.join(ROOT, EMAIL_GLOB))):
+        label = os.path.relpath(path, ROOT).replace("\\", "/")
+        md = email_markdown(io.open(path, encoding="utf-8", errors="replace").read())
+        out.append((label, "email", md or None, "" if md else "no copy"))
+    for path in sorted(glob.glob(os.path.join(ROOT, WEEKLY_GLOB))):
+        label = os.path.relpath(path, ROOT).replace("\\", "/")
+        md, subject = weekly_markdown(io.open(path, encoding="utf-8", errors="replace").read())
+        out.append((label, "weekly", md or None, "" if subject else "UNCHECKED: no Subject in the front matter"))
     return out
 
 
@@ -506,6 +549,21 @@ def selftest() -> int:
     _, found2 = lesson_markdown(LESSON_FIXTURE.replace('"study" => [', '"study" => $study,').replace("  ],\n  \"source\"", "  \"source\""))
     case("lesson: a study array that is a variable is reported not found (UNCHECKED), never clean", not found2)
 
+    email_md = email_markdown('<div style="x">Welcome to the Movement</div>\n<h2>You\'re in, {{username}}.</h2>\n<p>'
+                              + GOOD_PARA + '</p>\n<table><tr><td><a href="https://offda9.com/wake-up">WATCH THE BRIEFING</a>'
+                              '</td></tr></table>\n<p>&mdash; Rage</p>')
+    case("email: the fragment's copy is read, a placeholder reads as a name, the button and sign-off are dropped",
+         "## You're in, Reader." in email_md and GOOD_PARA in email_md
+         and all(x not in email_md for x in ("{{", "WATCH THE BRIEFING", "Welcome to the Movement", "— Rage")))
+    wk = ("---\n**Week:** 1\n**Category:** Fixture\n**Subject:** What's left after OD9?\n**Send Date:** April 14, 2026\n---\n\n"
+          "# What's left after OD9?\n\nHey {{FIRST_NAME}},\n\n" + GOOD_PARA + "\n\n## A section\n\n" + GOOD_PARA + "\n")
+    wk_md, wk_subject = weekly_markdown(wk)
+    case("weekly: the front matter is dropped, the Subject leads as the title, the body and placeholder are read",
+         wk_subject == "What's left after OD9?" and wk_md.startswith("# What's left after OD9?\n\n# What's left after OD9?")
+         and "Hey Reader," in wk_md and "Send Date" not in wk_md and "**Week:**" not in wk_md and wk_md.count(GOOD_PARA) == 2)
+    case("weekly: a file with no Subject in its front matter is reported UNCHECKED, never clean",
+         weekly_markdown("---\n**Week:** 2\n---\n\nbody\n")[1] == "")
+
     eng = engine()
     case("the prose engine is installed and loads", eng is not None)
     if eng is None:
@@ -552,7 +610,12 @@ def selftest() -> int:
     case("VACUITY: the walk finds at least 20 pages with copy (%d) and 15 lessons (%d)" % (len(judged_pages), len(judged_lessons)),
          len(judged_pages) >= 20 and len(judged_lessons) >= 15)
     case("every lesson's study array was found (none UNCHECKED)", all(not u[3] for u in judged_lessons))
-    print("prose_check selftest: %d check(s), %d failure(s) (engine at %s)" % (25, len(fails), ENGINE_PATH))
+    judged_emails = [u for u in live if u[1] == "email" and u[2] is not None]
+    judged_weekly = [u for u in live if u[1] == "weekly" and u[2] is not None]
+    case("VACUITY: the walk finds at least 15 drip fragments (%d) and 30 weeklies (%d), every weekly with a Subject"
+         % (len(judged_emails), len(judged_weekly)),
+         len(judged_emails) >= 15 and len(judged_weekly) >= 30 and all(not u[3] for u in judged_weekly))
+    print("prose_check selftest: %d check(s), %d failure(s) (engine at %s)" % (29, len(fails), ENGINE_PATH))
     return 1 if fails else 0
 
 
