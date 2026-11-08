@@ -7,7 +7,7 @@
   "lessons": 16,
   "manuscript_files": 518,
   "units": 52,
-  "bare_numbers": 28
+  "bare_numbers": 29
  },
  "units": {
   "curriculum/observer/from-vision-to-action.php": {
@@ -111,9 +111,6 @@
   },
   "email-week-29-spirituality-metaphysics-and-the-sacred.md": {
    "RENUMBERED": 1
-  },
-  "welcome-day3.html": {
-   "UNSOURCED_QUOTE": 1
   }
  }
 }
