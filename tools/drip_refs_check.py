@@ -102,8 +102,11 @@ class Repo:
     def __post_init__(self):
         self.registry = self.registry or os.path.join(self.root, "data", "manifesto-map.json")
         self.curriculum = self.curriculum or os.path.join(self.root, "curriculum")
+        # DRIP_WEEKLY_DIR lets a migration's selftest judge a temp copy of the weeklies
+        # against the live registry and manuscript (tools/migrate_weekly_citations_*.py).
         self.weekly_glob = self.weekly_glob or os.path.join(
-            self.root, "email-templates", "lovelogic-weekly", "email-week-*.md")
+            os.environ.get("DRIP_WEEKLY_DIR") or os.path.join(self.root, "email-templates", "lovelogic-weekly"),
+            "email-week-*.md")
         self.email_glob = self.email_glob or os.path.join(self.root, "email-templates", "*.html")
         self.baseline = self.baseline or os.path.join(self.root, "tools", "drip_refs_baseline.json")
 
@@ -323,13 +326,19 @@ def judge_line(line: str, reg: Registry, curriculum: str) -> tuple[list[dict], i
         current = reg.by_num.get(str(n))
         absorbed_by = reg.by_legacy.get(n)
         # The line's own evidence of which chapter it means: a title; else the one linked lesson
-        # whose chapter absorbed this number; else the only linked lesson.
+        # whose chapter absorbed this number; else the one linked lesson whose chapter carries
+        # this number now (a line that links two lessons and cites both by their current
+        # numbers is confirmed, not bare); else the only linked lesson. Legacy before current,
+        # so an old number is still caught when another linked chapter wears it now.
         evidence = reg.node_for_title(cited) if cited else None
         if evidence is None:
             by_legacy = [x for x in linked_nodes if n in reg.legacy_of(x)]
+            by_num = [x for x in linked_nodes if str(x.get("num")) == str(n)]
             distinct = {id(x): x for x in linked_nodes}
             if len({id(x) for x in by_legacy}) == 1:
                 evidence = by_legacy[0]
+            elif len({id(x) for x in by_num}) == 1:
+                evidence = by_num[0]
             elif len(distinct) == 1:
                 evidence = next(iter(distinct.values()))
 
@@ -499,7 +508,7 @@ def write_baseline(repo: Repo) -> int:
                     "copy, then --baseline records the smaller number. Never edit by hand to raise a count.",
             "written": dt.date.today().isoformat(), "summary": summary,
             "units": {u: dict(sorted(c.items())) for u, c in sorted(codes.items())}}
-    with open(repo.baseline, "w", encoding="utf-8") as fh:
+    with open(repo.baseline, "w", encoding="utf-8", newline="\n") as fh:  # LF into an LF tree, on Windows too
         json.dump(data, fh, indent=1, ensure_ascii=False)
         fh.write("\n")
     print(f"baseline written: {len(findings)} finding(s) over {len(codes)} unit(s) -> {repo.baseline}")
@@ -611,6 +620,8 @@ FIX_WEEKLY_GOOD = """---
 
 **Ch.3** of the Manifesto (*The Great Awakening*) argues another.
 
+[**Ch.4**](https://offda9.com/curriculum/observer/the-system-in-crisis.php) and [**Ch.19**](https://offda9.com/curriculum/theorist/religious-institutions.php) of the Manifesto take this seriously.
+
 The Manifesto says: "Coordination is not a vibe; it is infrastructure, channels and incentives and feedback loops."
 """
 FIX_EMAIL_BAD = """<p>{{username}}, a thought.</p>
@@ -684,6 +695,8 @@ def selftest() -> int:
         ok(any(f["code"] == "LINKABLE" and f["chapter"] == 4 for f in bad),
            "LINKABLE: Ch.4 confirmed by its title (The System In Crisis, which has a lesson), unlinked")
         # Two bare numbers in the fixture: the Ch.22 sentence and the "Read Manifesto Ch.3" action item.
+        # The good weekly's "Ch.4 and Ch.19" line, two links and no titles, is confirmed by the
+        # linked chapters' current numbers; without that rule this count would read 4.
         ok(not any(f["chapter"] == 22 and f["code"] != "RENUMBERED" for f in bad) and summary["bare_numbers"] == 2,
            f"a bare Ch.22 with no title and no link is taken at face value and counted, not flagged "
            f"(bare={summary['bare_numbers']})")

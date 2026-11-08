@@ -23,7 +23,7 @@ This is the part most people skip. The instinct after a failure is to either (a)
 
 ## What the Manifesto pushes on
 
-[**Ch.6**](https://offda9.com/curriculum/observer/responsible-transformation.php) (*Responsible Transformation Frameworks*) and **Ch.54** of the Manifesto make a position that's honestly rare in ambitious movements: **a system that can't fail safely cannot improve.** Failure has to be *expected*, *visible*, *survivable*, and *learnable* from — or the system locks in its first wrong guess and dies optimizing for it.
+[**Ch.5**](https://offda9.com/curriculum/observer/responsible-transformation.php) (*Responsible Transformation Frameworks*) and **Ch.54** of the Manifesto make a position that's honestly rare in ambitious movements: **a system that can't fail safely cannot improve.** Failure has to be *expected*, *visible*, *survivable*, and *learnable* from — or the system locks in its first wrong guess and dies optimizing for it.
 
 Most institutions punish visible failure so reliably that the rational move for anyone inside them is to hide it. That's the death loop: hidden failure means no learning, which means more failure, which means more hiding. Universities, corporations, governments, churches — all run this loop, in different cadences. Breaking it requires institutional design that explicitly rewards naming what didn't work.
 

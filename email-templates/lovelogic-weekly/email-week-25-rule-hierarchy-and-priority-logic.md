@@ -25,7 +25,7 @@ This is the hardest design question in any ethical framework. Most belief system
 
 ## What the Manifesto pushes on
 
-[**Ch.6**](https://offda9.com/curriculum/observer/responsible-transformation.php) of the Manifesto and **Ch.25** take a position that's unusually honest for an ethics-adjacent project: **principles WILL conflict, in concrete cases, predictably.** A system that doesn't tell you which principle wins WHEN — and HOW the priority gets re-evaluated as new evidence arrives — is a system that just dumps the decision on whoever's holding the bag.
+[**Ch.5**](https://offda9.com/curriculum/observer/responsible-transformation.php) of the Manifesto and **Ch.25** take a position that's unusually honest for an ethics-adjacent project: **principles WILL conflict, in concrete cases, predictably.** A system that doesn't tell you which principle wins WHEN — and HOW the priority gets re-evaluated as new evidence arrives — is a system that just dumps the decision on whoever's holding the bag.
 
 The actual design move isn't to remove the conflict. It's to **make the priority logic explicit, defendable, and updateable.** "We protect agency by default. The threshold for overriding is X. Here's who decides. Here's how the decision gets reviewed." That's an institutional design choice, not a vibe.
 

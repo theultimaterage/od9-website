@@ -26,7 +26,7 @@ Political philosophers sometimes call this *captive consent* or *manufactured co
 
 ## Why this matters for what we're building
 
-[**Ch.7**](https://offda9.com/curriculum/observer/the-solution-framework.php) and [**Ch.16**](https://offda9.com/curriculum/theorist/economic-dysfunction.php) of the Manifesto take this seriously in a way most movements don't. The argument runs roughly: **any system that can't be exited safely is at risk of becoming coercive over time**, regardless of the intent of its founders. Without exit, internal critique loses its teeth. Without internal critique, the system can't update. Without update, it dies — and takes the people inside it down with it.
+[**Ch.5**](https://offda9.com/curriculum/observer/the-solution-framework.php) and [**Ch.13**](https://offda9.com/curriculum/theorist/economic-dysfunction.php) of the Manifesto take this seriously in a way most movements don't. The argument runs roughly: **any system that can't be exited safely is at risk of becoming coercive over time**, regardless of the intent of its founders. Without exit, internal critique loses its teeth. Without internal critique, the system can't update. Without update, it dies — and takes the people inside it down with it.
 
 So if OD9 ever scales — if it becomes a real coordination institution rather than a Discord server — we have to design exit in from the start. Members must be able to leave with their data, their reputation, their contributions intact. The Patreon should be cancelable in two clicks. The community should have no "you can never come back" mechanism. The rules should never assume anyone is locked in.
 

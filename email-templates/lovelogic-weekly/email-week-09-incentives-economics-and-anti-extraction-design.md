@@ -19,7 +19,7 @@ This isn't a personal failing. It's a *system property*: when the optimization t
 
 ## Why this is THE economics question
 
-[**Ch.13** of the Manifesto](https://offda9.com/curriculum/theorist/scientific-institutions.php) (*Scientific Institution Analysis*) makes a claim a lot of mainstream economic thinking dances around: **most "extraction" in the modern world is the mathematically predictable result of measuring the wrong thing**.
+[**Ch.10** of the Manifesto](https://offda9.com/curriculum/theorist/scientific-institutions.php) (*Scientific Institution Analysis*) makes a claim a lot of mainstream economic thinking dances around: **most "extraction" in the modern world is the mathematically predictable result of measuring the wrong thing**.
 
 When you measure something, you create the incentive to optimize for *that thing* — even if it's a poor proxy for the actual goal. Schools measure test scores → kids learn to game tests, not to think. Hospitals measure procedure billing codes → doctors learn to optimize for billing, not health. Apps measure engagement → engineers learn to maximize compulsion, not value. Cops measure arrests → policing optimizes for arrest counts, not safety.
 

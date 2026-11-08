@@ -32,7 +32,7 @@ None of those are obviously right. All of them have failure modes. That's the po
 
 ## What the Manifesto pushes on
 
-[**Ch.7** of the Manifesto](https://offda9.com/curriculum/observer/the-solution-framework.php) (*The Solution Framework*) takes a position that most political theory dodges: **the *texture* of civic rules — whether enforcement is automatic or discretionary, whether transparency is default or opt-in, whether decisions are reviewable or final — matters more than the rules' specific content.** Two cities with identical rules but different enforcement texture end up living in completely different worlds.
+[**Ch.5** of the Manifesto](https://offda9.com/curriculum/observer/the-solution-framework.php) (*The Solution Framework*) takes a position that most political theory dodges: **the *texture* of civic rules — whether enforcement is automatic or discretionary, whether transparency is default or opt-in, whether decisions are reviewable or final — matters more than the rules' specific content.** Two cities with identical rules but different enforcement texture end up living in completely different worlds.
 
 So the work isn't picking the "right" three rules. It's picking three rules whose *texture* is right — that self-enforce, that're hard to capture, that survive bad actors. That's the actual founding-team conversation worth having.
 

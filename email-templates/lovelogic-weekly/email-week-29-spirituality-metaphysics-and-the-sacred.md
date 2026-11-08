@@ -29,7 +29,7 @@ Now here's the harder question. The dominant culture tends to treat almost nothi
 
 ## What the Manifesto pushes on
 
-[**Ch.3**](https://offda9.com/curriculum/observer/love-as-infrastructure.php) of the Manifesto and **Ch.46** take a position that may surprise people who came to OD9 expecting pure rationalism: **the sacred is not optional infrastructure for human civilization.** Even fully secular societies have sacred categories — they just often refuse to admit which ones, which means the sacred categories drift unconsciously and end up serving whoever has cultural power that decade.
+[**Ch.2**](https://offda9.com/curriculum/observer/love-as-infrastructure.php) of the Manifesto and **Ch.46** take a position that may surprise people who came to OD9 expecting pure rationalism: **the sacred is not optional infrastructure for human civilization.** Even fully secular societies have sacred categories — they just often refuse to admit which ones, which means the sacred categories drift unconsciously and end up serving whoever has cultural power that decade.
 
 A Type-I civilization that doesn't deliberately curate its sacred categories ends up with the sacred categories chosen for it by markets, algorithms, or ambient politics. None of those are good at this. All of them produce sacred categories that serve their own optimization, not human flourishing.
 

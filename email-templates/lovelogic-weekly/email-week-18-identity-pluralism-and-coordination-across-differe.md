@@ -29,7 +29,7 @@ This is the most fundamental design question facing any civilization-scale proje
 
 ## What the Manifesto pushes on
 
-[**Ch.22**](https://offda9.com/curriculum/theorist/religious-institutions.php) of the Manifesto and **Ch.25** take a position that's honestly uncomfortable for everyone, regardless of where they sit politically: **a successful Type-I civilization will have to coordinate across kinds of difference that we don't currently know how to coordinate across — including kinds of difference that the present moment treats as zero-sum.**
+[**Ch.19**](https://offda9.com/curriculum/theorist/religious-institutions.php) of the Manifesto and **Ch.25** take a position that's honestly uncomfortable for everyone, regardless of where they sit politically: **a successful Type-I civilization will have to coordinate across kinds of difference that we don't currently know how to coordinate across — including kinds of difference that the present moment treats as zero-sum.**
 
 Not "tolerance" in the soft sense. Not "agree to disagree" while continuing to fight. Something harder: institutions and habits that let people who'd never share a meal still share a working coordination mechanism on a specific shared interest. Federalism is one design move toward this. Subsidiarity is another. Pluralist constitutional design is another. None of them solve it. All of them are necessary infrastructure.
 

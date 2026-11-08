@@ -23,7 +23,7 @@ This isn't a complaint about capitalism specifically. It's a structural observat
 
 ## What the Manifesto says
 
-[**Ch.16**](https://offda9.com/curriculum/theorist/economic-dysfunction.php) and **Ch.40** of the Manifesto don't pretend this is an easy fix. They argue something specific: **a Type-I civilization will have to find a way to decouple "income" from "contribution" without destroying either incentive**. Not because work is bad. Because the *current* coupling reliably misallocates human time at planetary scale.
+[**Ch.13**](https://offda9.com/curriculum/theorist/economic-dysfunction.php) and **Ch.40** of the Manifesto don't pretend this is an easy fix. They argue something specific: **a Type-I civilization will have to find a way to decouple "income" from "contribution" without destroying either incentive**. Not because work is bad. Because the *current* coupling reliably misallocates human time at planetary scale.
 
 Universal basic income is one proposed move. Tier-based contribution recognition (the OD9 ASCEND model) is another. So is making caregiving, open-source maintenance, and community work first-class economic categories instead of unpaid externalities. None of these are solved problems. All of them are necessary if the long-horizon capabilities of the species are going to track our actual needs.
 

@@ -21,7 +21,7 @@ But here's the harder part: a few of those things you named are *actually fine*.
 
 ## Why this matters more than usual
 
-[**Ch.5**](https://offda9.com/curriculum/observer/the-system-in-crisis.php) of the Manifesto (*The System in Crisis*) makes a claim a lot of comfortable people don't want to hear: **most institutional harm in the modern world isn't intent — it's the byproduct of systems optimizing for things other than human flourishing**. Schools optimize for measurable test outcomes. Hospitals optimize for billing codes. Cities optimize for property tax base. Apps optimize for engagement.
+[**Ch.4**](https://offda9.com/curriculum/observer/the-system-in-crisis.php) of the Manifesto (*The System in Crisis*) makes a claim a lot of comfortable people don't want to hear: **most institutional harm in the modern world isn't intent — it's the byproduct of systems optimizing for things other than human flourishing**. Schools optimize for measurable test outcomes. Hospitals optimize for billing codes. Cities optimize for property tax base. Apps optimize for engagement.
 
 When the optimization target isn't "humans flourish," harm becomes background. Invisible. Normal. And then nobody is responsible because nobody chose it.
 

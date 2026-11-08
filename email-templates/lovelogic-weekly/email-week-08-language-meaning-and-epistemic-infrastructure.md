@@ -24,7 +24,7 @@ When the words people use to think with get hollowed out, **the thinking itself 
 
 ## Why this matters
 
-[**Ch.9** of the Manifesto](https://offda9.com/curriculum/theorist/the-information-crisis.php) (*Media and Information Crisis*) makes the case directly: **language is the substrate of coordination**. Capture the language, capture the thinking. Capture the thinking, capture the coordination. Capture the coordination, capture the future.
+[**Ch.6** of the Manifesto](https://offda9.com/curriculum/theorist/the-information-crisis.php) (*Media and Information Crisis*) makes the case directly: **language is the substrate of coordination**. Capture the language, capture the thinking. Capture the thinking, capture the coordination. Capture the coordination, capture the future.
 
 This is why authoritarian movements always invest heavily in redefining basic vocabulary, why advertising campaigns try to *own* words ("just do it," "think different"), why platforms redefine "engagement" to mean things that aren't engagement, why every regime in history has had a cleanup crew for inconvenient terminology.
 
