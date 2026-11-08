@@ -16,7 +16,7 @@ declare(strict_types=1);
 
 $lesson = [
   "title"     => "Economic Dysfunction",
-  "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 16",
+  "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 13",
   "subtitle"  => "The second barrier under the hood: an economy that rewards capturing value over creating it, manufactures scarcity amid technical abundance, and measures success with an instrument that can&rsquo;t see most of what matters.",
   "sigil"     => "XVI",
   "cover"     => "atlas-vol2.jpg",
@@ -48,7 +48,7 @@ $lesson = [
     ["h3" => "How it connects"],
     ["p"  => "This barrier interlocks with the other three. <b>Religious institutions</b> pioneered tax-free extraction on unverifiable claims; <b>information control</b> keeps the extraction invisible (who profits from your attention?); <b>cognitive impairment</b> keeps you too depleted to object. And Boulding&rsquo;s madman-or-economist line is the bridge to the whole Kardashev arc you started as an Observer: a Type&nbsp;1 civilization is, before anything else, an economy that can coordinate planetary resources &mdash; something a capture-rewarding, growth-addicted system structurally cannot do. Diagnosis first. The redesign is Volume&nbsp;3&rsquo;s work, and the Architect tier is where you&rsquo;ll take it on."],
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;2 &middot; Chapter&nbsp;16 (<em>Economic Dysfunction</em>) &mdash; &sect;3 <em>Wealth Concentration and Inequality Systems</em>, &sect;4 <em>Artificial Scarcity Mechanisms</em>, &sect;5 <em>Financial System Failures</em>, &sect;7 <em>Financial Extraction Mechanisms</em>, &sect;10 <em>Type 1 Civilization Requirements</em>, and &sect;11 <em>Transformation Pathways</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;2 &middot; Chapter&nbsp;13 (<em>Economic Dysfunction</em>) &mdash; &sect;3 <em>Wealth Concentration and Inequality Systems</em>, &sect;4 <em>Artificial Scarcity Mechanisms</em>, &sect;5 <em>Financial System Failures</em>, &sect;7 <em>Financial Extraction Mechanisms</em>, &sect;10 <em>Type 1 Civilization Requirements</em>, and &sect;11 <em>Transformation Pathways</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
 ];
 
 require __DIR__ . '/../_codex.php';

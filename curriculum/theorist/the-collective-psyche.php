@@ -18,7 +18,7 @@ declare(strict_types=1);
 
 $lesson = [
   "title"     => "Mental Health and Collective Psyche",
-  "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 10",
+  "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 7",
   "subtitle"  => "The fourth barrier lives between your ears: a civilization&rsquo;s exterior power racing ahead of its interior development &mdash; minds systematically depleted, distracted, and stalled by the very systems the other three barriers built.",
   "sigil"     => "X",
   "cover"     => "atlas-vol2.jpg",
@@ -48,7 +48,7 @@ $lesson = [
     ["h3" => "How it connects"],
     ["p"  => "This closes the circuit of the Four Barriers: <b>religious institutions</b> install the epistemology, <b>economic dysfunction</b> sets the extraction incentives, <b>information systems</b> aim the machinery at your attention &mdash; and this chapter is the bill: what all three do to the minds that would otherwise resist them. The &ldquo;Type 0 psychology&rdquo; line is the volume&rsquo;s thesis in miniature: you cannot bolt Type&nbsp;1 tools onto Type&nbsp;0 minds and expect survival. Which is why OD9&rsquo;s progression tracks a <em>consciousness practice</em> dimension at all &mdash; and why the transformation menu here (evidence-based therapy at scale, prevention, institutional redesign; active research, not settled magic) is diagnosis handing you a workbench. <b>Synergy of Barriers</b> is next: the four machines, running as one."],
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;2 &middot; Chapter&nbsp;10 (<em>Mental Health and Collective Psyche</em>) &mdash; &sect;1 <em>Introduction: Mental Health as Civilizational Foundation</em>, &sect;7 <em>Addiction Systems and Their Neurological Impacts</em>, &sect;8 <em>Consciousness Restriction Through Psychological Manipulation</em>, &sect;10 <em>Type 1 Civilization Requirements</em>, and &sect;11 <em>Transformation Pathways</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;2 &middot; Chapter&nbsp;7 (<em>Mental Health and Collective Psyche</em>) &mdash; &sect;1 <em>Introduction: Mental Health as Civilizational Foundation</em>, &sect;7 <em>Addiction Systems and Their Neurological Impacts</em>, &sect;8 <em>Consciousness Restriction Through Psychological Manipulation</em>, &sect;10 <em>Type 1 Civilization Requirements</em>, and &sect;11 <em>Transformation Pathways</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
 ];
 
 require __DIR__ . '/../_codex.php';

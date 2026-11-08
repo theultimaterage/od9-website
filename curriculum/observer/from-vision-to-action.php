@@ -7,6 +7,8 @@
  *
  * RE-AUTHORED 2026-09-14. This lesson was built on Chapter 8, which the
  * 2026-09-09 Volume 1 consolidation folded into Chapter 7 ("ch8's implementation
+ * 2026-11-08: the registry renumbered Volume 1 after that consolidation; the numbers in
+ * the note above are the 2026-09 numbering, and this lesson's chapter is Chapter 5 now.
  * folded into the sections it implements"). All four canon passages, the affirm
  * and two study-layer quotes were text the manifesto no longer contained — the
  * lesson was quoting a book that had stopped existing. The knowing-doing material
@@ -24,7 +26,7 @@ declare(strict_types=1);
 
 $lesson = [
   "title"     => "From Vision to Action",
-  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 7",
+  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 5",
   "subtitle"  => "The hardest gap isn&rsquo;t understanding &mdash; it&rsquo;s doing. Volume&nbsp;I ends here, where theory becomes practice and you stop reading and start climbing.",
   "sigil"     => "VIII",
   "cover"     => "atlas-vol1.jpg",
@@ -54,7 +56,7 @@ $lesson = [
     ["h3" => "Where Volume I ends"],
     ["p"  => "The chapter is honest about the limit of what it has earned: Volume&nbsp;I argued that conscious evolution is possible, described what would have to be built, and stated the constraints binding it &mdash; and it has <em>not</em> yet made the case that the current arrangement is failing badly enough to justify the effort. That is Volume&nbsp;2&rsquo;s work. The distinction matters, because a framework that skipped it would be asking for belief. This one asks you to keep reading, and to start moving while you do."]
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; Chapter&nbsp;7 (<em>The Solution Framework</em>), &sect;VIII <em>Development Pathways: From Theory to Practice</em> and &sect;X <em>From ASCEND to Type I Civilization</em> &mdash; the closing chapter of Volume&nbsp;I. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; Chapter&nbsp;5 (<em>The Solution Framework</em>), &sect;VIII <em>Development Pathways: From Theory to Practice</em> and &sect;X <em>From ASCEND to Type I Civilization</em> &mdash; the closing chapter of Volume&nbsp;I. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
 ];
 
 require __DIR__ . '/../_codex.php';

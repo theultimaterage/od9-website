@@ -16,7 +16,7 @@ declare(strict_types=1);
 
 $lesson = [
   "title"     => "Media and Information Crisis",
-  "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 9",
+  "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 6",
   "subtitle"  => "The third barrier is the one you&rsquo;re soaking in: an information system that stopped describing reality and started manufacturing it &mdash; optimized to harvest your attention, not to help you see.",
   "sigil"     => "IX",
   "cover"     => "atlas-vol2.jpg",
@@ -46,7 +46,7 @@ $lesson = [
     ["h3" => "How it connects"],
     ["p"  => "Notice the affirmation: this dysfunction is <em>contingent</em> &mdash; the product of specific choices at specific junctures, not an iron law of technology. That&rsquo;s the most hopeful sentence in the chapter, because chosen systems can be re-chosen. It also interlocks with the other barriers: <b>religious institutions</b> ran reality-construction for millennia before algorithms industrialized it; <b>economic dysfunction</b> explains who profits from the projector; and the next chapter, <b>the collective psyche</b>, shows what the machinery does to the minds inside it. OD9&rsquo;s own bet &mdash; verified value, evidence-gated claims, a community that checks its sources &mdash; is a working prototype of the alternative information architecture this chapter says must be built."],
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;2 &middot; Chapter&nbsp;9 (<em>Media and Information Crisis</em>) &mdash; &sect;1 <em>Introduction: Information Systems as Civilizational Foundation</em>, &sect;2 <em>Historical Development of Media Dysfunction</em>, &sect;4 <em>Attention Extraction and Engagement Optimization</em>, and &sect;5 <em>Algorithmic Amplification and Reality Fragmentation</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;2 &middot; Chapter&nbsp;6 (<em>Media and Information Crisis</em>) &mdash; &sect;1 <em>Introduction: Information Systems as Civilizational Foundation</em>, &sect;2 <em>Historical Development of Media Dysfunction</em>, &sect;4 <em>Attention Extraction and Engagement Optimization</em>, and &sect;5 <em>Algorithmic Amplification and Reality Fragmentation</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
 ];
 
 require __DIR__ . '/../_codex.php';

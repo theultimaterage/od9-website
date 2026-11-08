@@ -16,7 +16,7 @@ declare(strict_types=1);
 
 $lesson = [
   "title"     => "The Solution Framework",
-  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 7",
+  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 5",
   "subtitle"  => "Diagnosis and caution aren&rsquo;t a plan. ASCEND is the plan &mdash; a coordination system you upgrade while it runs, built around meaning instead of metrics.",
   "sigil"     => "VII",
   "cover"     => "atlas-vol1.jpg",
@@ -47,14 +47,14 @@ $lesson = [
     ["p"  => "The progression you&rsquo;re climbing is the first parts made real: <b>Achievement</b> (the tiers + capstones), <b>Community</b> (cohorts + the daily Live), and <b>Development Pathways</b> (this curriculum)."],
 
     ["h3" => "Meaning before metrics"],
-    ["p"  => "&ldquo;Consciousness-first&rdquo; sounds mystical; it&rsquo;s the opposite. The manifesto is explicit &mdash; treat consciousness <em>&ldquo;neither as mystical substance nor as mere byproduct.&rdquo;</em> It means the system is designed around what people actually <em>value and experience</em>, not around whatever is easiest to measure. That&rsquo;s the deep difference between OD9&rsquo;s progression and a Skinner-box app: an engagement-maximizer optimizes <em>your</em> attention for <em>its</em> numbers; ASCEND&rsquo;s achievement system is built to align the two &mdash; to solve Schelling&rsquo;s trap, where everyone acting rationally still produces a collectively irrational mess (which is exactly the crisis of Chapter&nbsp;5)."],
+    ["p"  => "&ldquo;Consciousness-first&rdquo; sounds mystical; it&rsquo;s the opposite. The manifesto is explicit &mdash; treat consciousness <em>&ldquo;neither as mystical substance nor as mere byproduct.&rdquo;</em> It means the system is designed around what people actually <em>value and experience</em>, not around whatever is easiest to measure. That&rsquo;s the deep difference between OD9&rsquo;s progression and a Skinner-box app: an engagement-maximizer optimizes <em>your</em> attention for <em>its</em> numbers; ASCEND&rsquo;s achievement system is built to align the two &mdash; to solve Schelling&rsquo;s trap, where everyone acting rationally still produces a collectively irrational mess (which is exactly the crisis of Chapter&nbsp;4)."],
 
     ["callout" => ["&#9670; Build the new model", "Buckminster Fuller&rsquo;s line is the whole strategy: don&rsquo;t fight the broken system &mdash; build a working alternative that makes it obsolete. That&rsquo;s what you&rsquo;re inside of. OD9 isn&rsquo;t a protest; it&rsquo;s a <b>prototype</b> &mdash; a small, real instance of the coordination system the manifesto argues civilization needs."]],
 
     ["h3" => "How it connects"],
-    ["p"  => "Three chapters, one argument: Chapter&nbsp;5 named the disease (coordination failure), Chapter&nbsp;6 set the guardrails (capability isn&rsquo;t wisdom; upgrade, don&rsquo;t demolish), and this is the answer that fits inside them. <b>Creative transformation</b> is the Thesean Method at civilizational scale &mdash; replacing the planks while the ship sails &mdash; precisely the responsible path Chapter&nbsp;6 demanded. What remains is turning the framework into a roadmap: that&rsquo;s the next chapter."],
+    ["p"  => "Two chapters, one argument: Chapter&nbsp;4 named the disease (coordination failure), this chapter&rsquo;s opening section set the guardrails (capability isn&rsquo;t wisdom; upgrade, don&rsquo;t demolish), and the architecture is the answer that fits inside them. <b>Creative transformation</b> is the Thesean Method at civilizational scale &mdash; replacing the planks while the ship sails &mdash; precisely the responsible path those guardrails demand. What remains is turning the framework into a roadmap: that&rsquo;s the chapter&rsquo;s closing sections."],
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; Chapter&nbsp;7 (<em>The Solution Framework</em>) &mdash; &sect;1 <em>Introduction: Beyond Critique to Creation</em>, &sect;2 <em>Architectural Principles of the ASCEND System</em>, and &sect;3 <em>Achievement System: Capability Through Conscious Action</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; Chapter&nbsp;5 (<em>The Solution Framework</em>) &mdash; &sect;1 <em>Introduction: Beyond Critique to Creation</em>, &sect;2 <em>Architectural Principles of the ASCEND System</em>, and &sect;3 <em>Achievement System: Capability Through Conscious Action</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
 ];
 
 require __DIR__ . '/../_codex.php';

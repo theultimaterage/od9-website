@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 $lesson = [
   "title"     => "Political System Corruption",
-  "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 19",
+  "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 16",
   "subtitle"  => "Not a fifth barrier &mdash; the enforcement layer. The machinery that takes everything the Four Barriers extract and converts it into one product: a society structurally unable to act on problems it already understands.",
   "sigil"     => "XIX",
   "cover"     => "atlas-vol2.jpg",
@@ -47,7 +47,7 @@ $lesson = [
     ["h3" => "How it connects"],
     ["p"  => "This closes the loop the Four Barriers opened: <b>religion</b> supplies the obedient epistemology, <b>economics</b> supplies the purchase money, <b>information control</b> manufactures the consent, <b>cognitive depletion</b> removes the resistance &mdash; and the captured state converts all four into law and budget. The stakes chapter ahead (<b>Environmental Degradation</b>) shows what this costs on a deadline: a civilization that cannot steer, running out of road. And the affirmation is earned, not decorative &mdash; participatory and digital-democracy experiments in real jurisdictions (Taiwan&rsquo;s vTaiwan, Estonia&rsquo;s e-governance, participatory budgeting) already demonstrate that better coordination machinery exists. The question isn&rsquo;t whether it works. It&rsquo;s who builds it, and how fast."],
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;2 &middot; Chapter&nbsp;19 (<em>Political System Corruption</em>) &mdash; &sect;1 <em>Introduction: Political Corruption as Civilizational Barrier</em>, &sect;8 <em>Systemic Inefficiency as Control Mechanism</em>, and &sect;11 <em>Transformation Pathways</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;2 &middot; Chapter&nbsp;16 (<em>Political System Corruption</em>) &mdash; &sect;1 <em>Introduction: Political Corruption as Civilizational Barrier</em>, &sect;8 <em>Systemic Inefficiency as Control Mechanism</em>, and &sect;11 <em>Transformation Pathways</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
 ];
 
 require __DIR__ . '/../_codex.php';

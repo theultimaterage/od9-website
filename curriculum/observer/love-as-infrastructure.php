@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 $lesson = [
   "title"     => "Love as Infrastructure",
-  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 3",
+  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 2",
   "subtitle"  => "Not a feeling you wait for &mdash; the coordination layer civilization runs on, and a skill you can train.",
   "sigil"     => "III",
   "cover"     => "atlas-vol1.jpg",
@@ -48,7 +48,7 @@ $lesson = [
     ["h3" => "How it connects"],
     ["p"  => "Remember the Creed&rsquo;s third principle, <b>Collective Achievement</b>: a coordinated group out-thinks any lone genius. This lesson is the <em>why underneath it</em>. Cooperation isn&rsquo;t a nice-to-have bolted onto smart individuals &mdash; D.S. Wilson&rsquo;s multilevel selection shows it&rsquo;s the evolutionary engine that built us, and Tomasello&rsquo;s &ldquo;shared intentionality&rdquo; shows it&rsquo;s how our largest achievements actually happen. Love is the substrate that makes coordination possible at all &mdash; which is exactly why the path to a Type&nbsp;1 civilization runs <em>through</em> it, not around it."],
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; Chapter&nbsp;3 (<em>A Labor of Love</em>), §III: <em>Love as Evolutionary Force</em> and §IX: <em>Conclusion &mdash; The Heart of Transformation</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; Chapter&nbsp;2 (<em>A Labor of Love</em>), §III: <em>Love as Evolutionary Force</em> and §IX: <em>Conclusion &mdash; The Heart of Transformation</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
 ];
 
 require __DIR__ . '/../_codex.php';

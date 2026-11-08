@@ -18,7 +18,7 @@ declare(strict_types=1);
 
 $lesson = [
   "title"     => "Religious Institutions and Pseudoscience",
-  "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 22",
+  "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 19",
   "subtitle"  => "The first of the Four Barriers at institutional scale: structures that began as scaffolding for early civilizations calcified into machinery that holds wisdom static while technology accelerates &mdash; and, at the extreme, teaches billions to read catastrophe as prophecy.",
   "sigil"     => "XXII",
   "cover"     => "atlas-vol2.jpg",
@@ -48,7 +48,7 @@ $lesson = [
     ["h3" => "How it connects"],
     ["p"  => "This is the first barrier of four, and it&rsquo;s the <em>root</em> one: corrupt the way a society decides what&rsquo;s true, and every downstream system inherits the corruption. <b>Information Control</b> will show you the secular version of the same machinery. <b>Economic Exploitation</b> shows who profits from it. And the chapter&rsquo;s closing move &mdash; that the psychological functions of religion can be rebuilt on evidence &mdash; is not an abstraction. A community learning verified truth together, with ritual, awe, and shared purpose but without faith claims? You&rsquo;re standing in the attempt. OD9 is church 2.0 &mdash; the alternative structure this chapter says must exist."],
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;2 &middot; Chapter&nbsp;22 (<em>Religious Institutions and Pseudoscience</em>) &mdash; &sect;1 <em>Introduction: Religious Institutions as Civilizational Barriers</em>, &sect;3 <em>Epistemological Failure and Reality Distortion</em>, &sect;9 <em>The Doomsday Doctrine and Eschatology as the Great Filter</em>, and &sect;12 <em>Transformation Pathways</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;2 &middot; Chapter&nbsp;19 (<em>Religious Institutions and Pseudoscience</em>) &mdash; &sect;1 <em>Introduction: Religious Institutions as Civilizational Barriers</em>, &sect;3 <em>Epistemological Failure and Reality Distortion</em>, &sect;9 <em>The Doomsday Doctrine and Eschatology as the Great Filter</em>, and &sect;12 <em>Transformation Pathways</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
 ];
 
 require __DIR__ . '/../_codex.php';
