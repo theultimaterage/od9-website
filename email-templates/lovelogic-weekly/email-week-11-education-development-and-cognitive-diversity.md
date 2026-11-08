@@ -27,7 +27,7 @@ Most people, doing this honestly, end up with answers that look nothing like the
 
 ## What the Manifesto pushes on
 
-[**Ch.5**](https://offda9.com/curriculum/observer/from-vision-to-action.php) (*From Vision to Action*) and **Ch.11** of the Manifesto take this seriously. The argument is roughly: **public education in most modern societies is optimizing for industrial-era compliance and credentialing, not for the actual capabilities a Type-I civilization needs**.
+[**{{ch:ch7}}**](https://offda9.com/curriculum/observer/from-vision-to-action.php) (*From Vision to Action*) and **{{ch:ch11}}** of the Manifesto take this seriously. The argument is roughly: **public education in most modern societies is optimizing for industrial-era compliance and credentialing, not for the actual capabilities a Type-I civilization needs**.
 
 Type-I needs: collaborative problem-solvers, long-horizon thinkers, people who can update their beliefs on evidence, people who can coordinate across difference, people who can build and maintain coordination institutions. None of those are what current schooling primarily produces. We get them despite the system, not because of it — and only some of us, unevenly distributed.
 

@@ -25,7 +25,7 @@ When the two answers agree, belonging is easy. When they conflict, it's one of t
 
 ## What the Manifesto pushes on
 
-**Ch.36, Ch.38, Ch.42, Ch.47** of the Manifesto, plus [**Ch.1**](https://offda9.com/curriculum/observer/the-creed.php), take a position on belonging that doesn't fit either standard political camp:
+**{{ch:ch36}}, {{ch:ch38}}, {{ch:ch42}}, {{ch:ch38}}** of the Manifesto, plus [**{{ch:ch1}}**](https://offda9.com/curriculum/observer/the-creed.php), take a position on belonging that doesn't fit either standard political camp:
 
 - **Open-borders maximalism is wrong** because it ignores the fact that high-trust communities take generations to build, can be dissolved by faster inflow than the community can absorb, and replacement communities don't always emerge.
 - **Closed-borders restrictionism is wrong** because it pretends that geographically-bounded "belonging" is the only legitimate kind, ignoring that humans have always migrated, mixed, and reconstituted communities in ways that create more capability than they destroy.

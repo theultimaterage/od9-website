@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 $lesson = [
   "title"     => "The Twin Singularities",
-  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 3",
+  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; {{chapter:ch4}}",
   "subtitle"  => "We just gained the power to end ourselves. The real question is whether our <em>wisdom</em> can grow fast enough to match it.",
   "sigil"     => "IV",
   "cover"     => "atlas-vol1.jpg",
@@ -31,7 +31,7 @@ $lesson = [
     ["h3" => "Where you come in"],
     ["p" => "This is the whole reason OD9 exists. A system that rewards <em>verified</em> contribution, mentorship, and coordination is a machine for growing the wisdom curve&mdash;deliberately, together, fast. Every tier you climb adds one more unit of the second singularity. <b>You&rsquo;re not just learning the stakes&mdash;you&rsquo;re closing the gap.</b>"],
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; Chapter&nbsp;3 (<em>The Great Awakening</em>), §IV: <em>The Twin Singularities</em>, with the bottleneck synthesis from §IX: <em>The Cosmic Stakes</em>. The two indented passages are reproduced verbatim; the Archivist's read is the study layer. The stakes it builds on&mdash;the Kardashev transition (~Type&nbsp;0.7), the Great Filter, the narrowing window&mdash;are covered in the earlier Observer readings.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; {{chapter_nbsp:ch4}} (<em>{{chtitle:ch4}}</em>), §IV: <em>The Twin Singularities</em>, with the bottleneck synthesis from §IX: <em>The Cosmic Stakes</em>. The two indented passages are reproduced verbatim; the Archivist's read is the study layer. The stakes it builds on&mdash;the Kardashev transition (~Type&nbsp;0.7), the Great Filter, the narrowing window&mdash;are covered in the earlier Observer readings.",
 ];
 
 require __DIR__ . '/../_codex.php';

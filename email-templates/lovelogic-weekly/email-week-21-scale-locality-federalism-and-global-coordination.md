@@ -29,7 +29,7 @@ None of those are obviously right. All of them are *coordination problems* dress
 
 ## What the Manifesto pushes on
 
-**Ch.24** and **Ch.47** of the Manifesto take a position that most political movements never quite articulate: **subsidiarity isn't a left-vs-right question — it's a design question, and the right answer depends on the texture of the specific problem.**
+**{{ch:v3-commons}}** and **{{ch:ch38}}** of the Manifesto take a position that most political movements never quite articulate: **subsidiarity isn't a left-vs-right question — it's a design question, and the right answer depends on the texture of the specific problem.**
 
 Where you place authority for any given decision should be the *lowest* layer at which the decision can be made well — given the information available, the externalities involved, and the affected parties. This is harder than it sounds because you have to be willing to be wrong in BOTH directions: sometimes the answer is "this is too local to scale up," sometimes it's "this is too global to keep local." Movements that always pick "local good, global bad" are wrong about half the time. Same for the reverse.
 

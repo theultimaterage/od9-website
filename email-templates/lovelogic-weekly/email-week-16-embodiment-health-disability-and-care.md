@@ -23,7 +23,7 @@ The gap between **medical-system health** and **actual capacity-for-life** is wh
 
 ## What the Manifesto pushes on
 
-[**Ch.7**](https://offda9.com/curriculum/theorist/the-collective-psyche.php) and **Ch.42** of the Manifesto don't argue against modern medicine. (Modern medicine is one of humanity's greatest achievements. It saved most of us reading this.) The argument is more specific: **a Type-I civilization needs to define health in capacity terms, not absence terms** — because absence-of-disease optimizes for treatment, not for human flourishing.
+[**{{ch:ch10}}**](https://offda9.com/curriculum/theorist/the-collective-psyche.php) and **{{ch:ch42}}** of the Manifesto don't argue against modern medicine. (Modern medicine is one of humanity's greatest achievements. It saved most of us reading this.) The argument is more specific: **a Type-I civilization needs to define health in capacity terms, not absence terms** — because absence-of-disease optimizes for treatment, not for human flourishing.
 
 This shows up everywhere once you see it. Cities designed around car infrastructure — *technically* "no disease," literally physically incapable of supporting healthy bodies. Work cultures designed for industrial-era extraction — *technically* "no diagnosis," predictably destroying decades of life. Food systems optimized for shelf life — *technically* "safe," delivering chronic micronutrient deficiency at population scale.
 

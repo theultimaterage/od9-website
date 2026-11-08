@@ -21,7 +21,7 @@ If you can answer that, you've answered the only question that actually matters:
 
 Most movements organize against something. Easier to mobilize against a thing than around an absence. They spend years fighting, win some battles, then collapse — because being against something doesn't tell you what to build.
 
-OD9 is supposed to be the opposite. [**Ch.1**](https://offda9.com/curriculum/observer/the-creed.php) of the Manifesto puts it like this: humanity needs to consciously evolve toward Type 1 Kardashev civilization, navigating the Great Filter through systematic transformation of technology, social systems, and consciousness.
+OD9 is supposed to be the opposite. [**{{ch:ch1}}**](https://offda9.com/curriculum/observer/the-creed.php) of the Manifesto puts it like this: humanity needs to consciously evolve toward Type 1 Kardashev civilization, navigating the Great Filter through systematic transformation of technology, social systems, and consciousness.
 
 Translated: we're not running from the dumpster fire. We're trying to build what comes after.
 

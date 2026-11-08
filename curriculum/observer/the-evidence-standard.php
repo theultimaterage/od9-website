@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 $lesson = [
   "title"     => "The Evidence Standard",
-  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Appendix A",
+  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; {{chapter:appendix-a}}",
   "subtitle"  => "How OD9 weighs every claim&mdash;including its own. The rule that separates us from both dogma and woo.",
   "sigil"     => "II",
   "cover"     => "atlas-vol1.jpg",
@@ -36,7 +36,7 @@ $lesson = [
     ["h3" => "You&rsquo;re already living it"],
     ["p" => "This is why your <em>value</em> on the board is verified, not vibes&mdash;and why OD9 says &ldquo;evidence over ideology&rdquo; even when the comfortable answer would convert better. The standard points at us too. When we cross from fact into speculation, you should be able to <em>see</em> the label. If you ever can&rsquo;t&mdash;call it out."],
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; Appendix&nbsp;A (<em>Methods and the Evidence Standard</em>), §III: <em>Systems of Evidence &mdash; From Established Fact to Reasoned Speculation</em> (the four tiers + the Popper passage are reproduced verbatim; Kahneman&rsquo;s line is from §III.B). The Archivist's read is the study layer.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; {{chapter_nbsp:appendix-a}} (<em>{{chtitle:appendix-a}}</em>), §III: <em>Systems of Evidence &mdash; From Established Fact to Reasoned Speculation</em> (the four tiers + the Popper passage are reproduced verbatim; Kahneman&rsquo;s line is from §III.B). The Archivist's read is the study layer.",
 ];
 
 require __DIR__ . '/../_codex.php';

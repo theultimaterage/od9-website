@@ -45,7 +45,7 @@ foreach ($P as $i => $p) { $canon[] = ["principle" => [$i + 1, $p[0], $p[1], $p[
 
 $lesson = [
   "title"     => "The OD9 Creed",
-  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 1",
+  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; {{chapter:ch1}}",
   "subtitle"  => "Nine principles for consciously steering human evolution toward a Type&nbsp;I civilization. This is who we are&mdash;and how we operate.",
   "sigil"     => "I",
   "cover"     => "atlas-vol1.jpg",
@@ -66,7 +66,7 @@ $lesson = [
     ["h3" => "Hold onto principle 4"],
     ["p" => "<b>Theseus Methodology</b> is the one to carry forward. It answers a question that stops most movements cold: <em>how do you change a whole civilization without collapsing it?</em> The next canon record&mdash;<b>The Thesean Method</b>&mdash;is entirely about that. The Creed names it; the next lesson shows you how it works."],
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; Chapter&nbsp;1 §II: <em>The OD9 Creed (Formal Declaration)</em>. The nine principles and preamble are reproduced verbatim; the &ldquo;what this means for you&rdquo; notes and the Archivist's read are the study layer.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; {{chapter_nbsp:ch1}} §II: <em>The OD9 Creed (Formal Declaration)</em>. The nine principles and preamble are reproduced verbatim; the &ldquo;what this means for you&rdquo; notes and the Archivist's read are the study layer.",
 ];
 
 require __DIR__ . '/../_codex.php';

@@ -7,7 +7,17 @@
   "lessons": 16,
   "manuscript_files": 518,
   "units": 52,
-  "bare_numbers": 29
+  "bare_numbers": 0
  },
- "units": {}
+ "units": {
+  "email-week-05-needs-rights-baselines-and-provisioning.md": {
+   "LINKABLE": 1
+  },
+  "email-week-23-adversarial-threats-capture-and-corruption-resista.md": {
+   "LINKABLE": 1
+  },
+  "email-week-33-meta-design-disagreement-iteration-and-constitutio.md": {
+   "LINKABLE": 3
+  }
+ }
 }

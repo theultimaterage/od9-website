@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 $lesson = [
   "title"     => "Scientific Institution Analysis",
-  "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 10",
+  "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; {{chapter:ch13}}",
   "subtitle"  => "The hardest audit in the volume, because it points at our own side: the method that built the modern world is being run through institutions that reward publishing over truth &mdash; and loving science means fixing its plumbing.",
   "sigil"     => "XIII",
   "cover"     => "atlas-vol2.jpg",
@@ -49,7 +49,7 @@ $lesson = [
     ["h3" => "How it connects"],
     ["p"  => "This chapter is the epistemics pillar of the synthesis: if the barriers corrupt what a society believes, scientific institutions are the <b>repair shop for belief itself</b> &mdash; which is why their capture matters more than their size suggests. <b>Commercial capture</b> (Ch 16&rsquo;s incentives reaching into the lab) and <b>political capture</b> (Ch 19&rsquo;s think-tank pipeline manufacturing &ldquo;expertise&rdquo;) both route through here. And the affirmation is concrete: the fixes exist, are cheap, and are already deployed by early adopters. A civilization serious about Type&nbsp;1 doesn&rsquo;t wait for culture to shift &mdash; it changes the reward structure and lets ordinary people descend a better gradient. OD9&rsquo;s verification-first economy is that same bet, made small."],
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;2 &middot; Chapter&nbsp;10 (<em>Scientific Institution Analysis</em>) &mdash; &sect;1 <em>Introduction: Scientific Institutions as Civilizational Foundation</em>, &sect;2 <em>Historical Development</em>, &sect;5 <em>Replication Crisis and Methodological Limitations</em>, &sect;6 <em>Career Incentive Misalignment</em>, and &sect;11 <em>Transformation Pathways</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;2 &middot; {{chapter_nbsp:ch13}} (<em>{{chtitle:ch13}}</em>) &mdash; &sect;1 <em>Introduction: Scientific Institutions as Civilizational Foundation</em>, &sect;2 <em>Historical Development</em>, &sect;5 <em>Replication Crisis and Methodological Limitations</em>, &sect;6 <em>Career Incentive Misalignment</em>, and &sect;11 <em>Transformation Pathways</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
 ];
 
 require __DIR__ . '/../_codex.php';

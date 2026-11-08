@@ -25,7 +25,7 @@ Cultures are made out of these. So are families. So is OD9 (a little). And so is
 
 ## What the Manifesto pushes on
 
-**Ch.45** and **Ch.46** of the Manifesto take a position that's unusually serious for a tech-and-coordination-focused movement: **the rituals, symbols, and narratives a culture maintains are not decoration — they're the substrate that holds the rest together.**
+**{{ch:ch45}}** and **{{ch:ch46}}** of the Manifesto take a position that's unusually serious for a tech-and-coordination-focused movement: **the rituals, symbols, and narratives a culture maintains are not decoration — they're the substrate that holds the rest together.**
 
 Even the most rationalist civilization is going to have load-bearing rituals. The question isn't whether to have them; it's *which*. Religious traditions had millennia to debug their rituals — birth, naming, marriage, death, the recurring rhythm of the year. Most secular movements don't have replacement rituals for any of those, which is part of why secular movements rarely sustain across generations the way religious ones do.
 

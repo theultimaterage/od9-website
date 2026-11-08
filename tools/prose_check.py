@@ -85,6 +85,19 @@ EMAIL_GLOB = os.path.join("email-templates", "*.html")
 WEEKLY_GLOB = os.path.join("email-templates", "lovelogic-weekly", "email-week-*.md")
 PLACEHOLDER = re.compile(r"\{\{\s*\w+\s*\}\}")
 PLACEHOLDER_READS_AS = "Reader"
+
+# Chapter macros ({{ch:ch4}} -> "Ch.3") are resolved from the registry before judging, as the
+# senders and the Codex renderer resolve them, so the engine reads what a subscriber reads.
+sys.path.insert(0, HERE)
+import chapter_macros as _cm  # noqa: E402
+_macro_registry = None
+
+
+def resolve_macros(src: str) -> str:
+    global _macro_registry
+    if _macro_registry is None:
+        _macro_registry = _cm.load_registry(os.path.join(ROOT, "data", "manifesto-map.json"))
+    return _cm.resolve(src, _macro_registry)[0]
 MIN_BLOCK_WORDS = 8                        # a block shorter than this is a label, not prose
 MIN_PAGE_WORDS = 60                        # a page with less copy is a handler, not a page
 EXIT_NO_ENGINE = 2
@@ -255,7 +268,7 @@ def lesson_markdown(src: str) -> tuple:
 
 def email_markdown(src: str) -> str:
     """A drip fragment's copy: the page extractor over the HTML, placeholders read as a name."""
-    return page_markdown(PLACEHOLDER.sub(PLACEHOLDER_READS_AS, src))
+    return page_markdown(PLACEHOLDER.sub(PLACEHOLDER_READS_AS, resolve_macros(src)))
 
 
 FRONT_MATTER = re.compile(r"\A\s*---\s*\n(.*?)\n---\s*\n", re.S)
@@ -272,7 +285,7 @@ def weekly_markdown(src: str) -> tuple:
         body = src[m.end():]
         s = SUBJECT_LINE.search(m.group(1))
         subject = s.group(1).strip() if s else ""
-    body = PLACEHOLDER.sub(PLACEHOLDER_READS_AS, body).strip()
+    body = PLACEHOLDER.sub(PLACEHOLDER_READS_AS, resolve_macros(body)).strip()
     return (("# " + subject + "\n\n") if subject else "") + body, subject
 
 

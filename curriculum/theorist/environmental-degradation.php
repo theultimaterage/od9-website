@@ -16,7 +16,7 @@ declare(strict_types=1);
 
 $lesson = [
   "title"     => "Environmental Degradation",
-  "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; Chapter 18",
+  "eyebrow"   => "Volume II &middot; Diagnostic Analysis &nbsp;&bull;&nbsp; {{chapter:ch21}}",
   "subtitle"  => "The stakes pillar of the diagnosis: the barriers aren&rsquo;t failing us in the abstract &mdash; they&rsquo;re failing us against a clock, on the one infrastructure no civilization gets to replace.",
   "sigil"     => "XXI",
   "cover"     => "atlas-vol2.jpg",
@@ -46,7 +46,7 @@ $lesson = [
     ["h3" => "How it connects"],
     ["p"  => "This is where the volume&rsquo;s stakes stop being abstract. The Great Filter question you met as an Observer &mdash; and will meet again in Bostrom&rsquo;s paper just after this lesson &mdash; asks why the galaxy is silent. Here is one concrete candidate mechanism: intelligent species whose coordination systems fail slower than their planets do. And the affirmation is the anti-despair move the manifesto keeps making: the fix is not &ldquo;grow now, clean up later&rdquo; (that curve never bends on its own) but regeneration <em>concurrent</em> with advancement &mdash; which is exactly why OD9 stakes everything on building coordination capacity now, not after the singularity arrives to save us. The clock is the reason the climb exists."],
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;2 &middot; Chapter&nbsp;18 (<em>Environmental Degradation</em>) &mdash; &sect;1 <em>Introduction: Environmental Systems as Civilizational Foundation</em>, &sect;2 <em>Climate Crisis Acceleration and Tipping Points</em>, and &sect;4 <em>Ecosystem Collapse and Biodiversity Loss</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;2 &middot; {{chapter_nbsp:ch21}} (<em>{{chtitle:ch21}}</em>) &mdash; &sect;1 <em>Introduction: Environmental Systems as Civilizational Foundation</em>, &sect;2 <em>Climate Crisis Acceleration and Tipping Points</em>, and &sect;4 <em>Ecosystem Collapse and Biodiversity Loss</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
 ];
 
 require __DIR__ . '/../_codex.php';

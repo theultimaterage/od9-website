@@ -30,7 +30,7 @@ This isn't a flaw. It's how human cognition actually works. The flaw is *pretend
 
 ## What the Manifesto says
 
-**Ch.14** of the Manifesto and **Ch.39** make a sharp claim: **the dominant information channels in a society shape what's "true" for most people in it, and they were never designed to optimize for truth — they were designed to optimize for engagement, profit, or political control.**
+**{{ch:ch14}}** of the Manifesto and **{{ch:ch39}}** make a sharp claim: **the dominant information channels in a society shape what's "true" for most people in it, and they were never designed to optimize for truth — they were designed to optimize for engagement, profit, or political control.**
 
 That's not paranoia. It's the architecture. Cable news optimizes for emotional retention. Social media optimizes for engagement. Most academic publishing optimizes for novelty and prestige. Search engines optimize for ad revenue. None of these are *opposed* to truth, but truth is at best a secondary outcome — and when secondary outcomes conflict with primary ones, the primary wins.
 

@@ -28,9 +28,9 @@ A few archetypes that come up:
 
 ## What the Manifesto pushes on
 
-**Ch.30** and **Ch.52** of the Manifesto take a position that movements rarely articulate publicly: **internal heretics, well-intentioned wrong-believers, and the founder's own blind spots are statistically a bigger threat to the long-run health of a project than external enemies.** External enemies sharpen you. Internal wrong-belief, *if held by people you trust*, gets normalized — and the project drifts toward the wrong-belief without anyone deciding to.
+**{{ch:v3-mind}}** and **{{ch:ch52}}** of the Manifesto take a position that movements rarely articulate publicly: **internal heretics, well-intentioned wrong-believers, and the founder's own blind spots are statistically a bigger threat to the long-run health of a project than external enemies.** External enemies sharpen you. Internal wrong-belief, *if held by people you trust*, gets normalized — and the project drifts toward the wrong-belief without anyone deciding to.
 
-The defense isn't ideological purity tests. (Those guarantee capture by whoever runs the test.) The defense is institutional habits that make wrong-belief easier to surface and update on, even when held by trusted members. **Ch.6**'s "responsible transformation" framework is the manifesto's main move on this. **Ch.52** is more specific about what that looks like during contested periods.
+The defense isn't ideological purity tests. (Those guarantee capture by whoever runs the test.) The defense is institutional habits that make wrong-belief easier to surface and update on, even when held by trusted members. **{{ch:ch7}}**'s "responsible transformation" framework is the manifesto's main move on this. **{{ch:ch52}}** is more specific about what that looks like during contested periods.
 
 ## This week's question
 

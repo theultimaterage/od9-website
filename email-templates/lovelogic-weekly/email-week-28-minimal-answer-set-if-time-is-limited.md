@@ -37,7 +37,7 @@ None of those are right for you. The point is to write yours.
 
 ## What the Manifesto pushes on
 
-[**Ch.4** of the Manifesto](https://offda9.com/curriculum/observer/the-system-in-crisis.php) takes a position about communication that's worth treating seriously: **a movement that can't compress itself into a sentence isn't a movement, it's a manifesto.** Manifestos die. Movements survive precisely because their members can carry them in their heads, articulate them on demand, defend them in 90 seconds.
+[**{{ch:ch5}}** of the Manifesto](https://offda9.com/curriculum/observer/the-system-in-crisis.php) takes a position about communication that's worth treating seriously: **a movement that can't compress itself into a sentence isn't a movement, it's a manifesto.** Manifestos die. Movements survive precisely because their members can carry them in their heads, articulate them on demand, defend them in 90 seconds.
 
 That doesn't mean dumb-down. It means do the cognitive work yourself, in advance, so you don't fumble in the moment. Every member who can pitch OD9 in 90 seconds is a node. Every member who can't is a bottleneck.
 

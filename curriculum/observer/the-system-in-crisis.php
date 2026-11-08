@@ -26,7 +26,7 @@ declare(strict_types=1);
 
 $lesson = [
   "title"     => "The System in Crisis",
-  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 4",
+  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; {{chapter:ch5}}",
   "subtitle"  => "The crises aren&rsquo;t separate emergencies &mdash; they&rsquo;re one coordination failure wearing many masks, and from the inside it looks exactly like a civilization meeting its Great Filter.",
   "sigil"     => "V",
   "cover"     => "atlas-vol1.jpg",
@@ -58,7 +58,7 @@ $lesson = [
     ["h3" => "How it connects"],
     ["p"  => "This lesson is the <em>why</em> underneath the others. The <b>Evidence Standard</b> is what lets you trust this diagnosis rather than dismiss it as alarmism &mdash; every claim here is sourced (Hanson, Meadows, Wiener, Grinspoon), not asserted. The <b>Great Awakening</b> is what you&rsquo;re waking up <em>to</em>. And the <b>Creed</b> and <b>Love as Infrastructure</b> are the answer in miniature: if the disease is coordination failure, the cure is built coordination capacity. The manifesto&rsquo;s prescription &mdash; transformation across many domains <em>simultaneously</em> &mdash; isn&rsquo;t a slogan. It&rsquo;s the climb you&rsquo;re on, one verified contribution at a time."],
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; Chapter&nbsp;4 (<em>The System in Crisis</em>) &mdash; &sect;1 <em>Introduction: Systemic Failure as Evolutionary Bottleneck</em>, &sect;2 <em>The Five Failure Domains</em>, and &sect;3 <em>Analyzing the Great Filter Potential</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; {{chapter_nbsp:ch5}} (<em>{{chtitle:ch5}}</em>) &mdash; &sect;1 <em>Introduction: Systemic Failure as Evolutionary Bottleneck</em>, &sect;2 <em>The Five Failure Domains</em>, and &sect;3 <em>Analyzing the Great Filter Potential</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
 ];
 
 require __DIR__ . '/../_codex.php';

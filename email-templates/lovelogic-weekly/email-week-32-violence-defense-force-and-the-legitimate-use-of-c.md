@@ -29,7 +29,7 @@ None of those have clean answers. All of them have answers that the surrounding 
 
 ## What the Manifesto pushes on
 
-**Ch.17, Ch.35, Ch.38, Ch.44** of the Manifesto take a position that's deliberately uncomfortable: **legitimate force exists. The work is making it as constrained, as accountable, and as last-resort as we can — without pretending it can be eliminated.**
+**{{ch:ch17}}, {{ch:v3-safety}}, {{ch:ch38}}, {{ch:ch44}}** of the Manifesto take a position that's deliberately uncomfortable: **legitimate force exists. The work is making it as constrained, as accountable, and as last-resort as we can — without pretending it can be eliminated.**
 
 A Type-I civilization that pretends force doesn't exist will be conquered or coerced by one that doesn't pretend. A Type-I civilization that uses force casually destroys the trust networks that make the rest of its capabilities possible. The design discipline is constraint: when force, by whom, accountable to whom, with what review, with what cost to the wielder when it's wielded wrongly.
 

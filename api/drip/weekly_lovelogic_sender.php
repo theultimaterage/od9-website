@@ -32,6 +32,9 @@ if (php_sapi_name() !== 'cli') {
     die("CLI only.\n");
 }
 
+// Chapter macros ({{ch:ID}}) resolve from data/manifesto-map.json at send time.
+require_once __DIR__ . '/../../includes/chapter_macros.php';
+
 // ---- Config ----
 const LAUNCH_DATE = '2026-06-01';   // First Monday send date (reset 2026-05-25)
 const TOTAL_WEEKS = 33;
@@ -127,6 +130,17 @@ echo "[broadcast] week=$week template=" . basename($templateFile) . "\n";
 $raw = file_get_contents($templateFile);
 [$meta, $body] = parseTemplate($raw);
 $subject = $meta['Subject'] ?? "OD9 Weekly: Week $week";
+// Chapter citations are macros ({{ch:ch4}} -> "Ch.3") resolved from the registry
+// at send time, so a renumber of the book is a registry sync, not an edit to 33
+// templates (2026-11-08). A macro that names no chapter must never reach a
+// subscriber: refuse the whole run rather than mail "{{ch:ch99}}".
+$_unknownIds = [];
+$body = od9_resolve_chapter_macros($body, $_unknownIds);
+if ($_unknownIds) {
+    fwrite(STDERR, "[broadcast] REFUSING: template cites unknown chapter id(s): "
+        . implode(', ', array_unique($_unknownIds)) . "\n");
+    exit(2);
+}
 // Render the markdown body into the shared branded shell. {{EMAIL}} in the
 // layout footer's unsubscribe link is resolved per-recipient by personalize().
 $html = od9_email_layout(mdToHtml($body), [

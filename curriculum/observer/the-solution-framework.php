@@ -16,7 +16,7 @@ declare(strict_types=1);
 
 $lesson = [
   "title"     => "The Solution Framework",
-  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 5",
+  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; {{chapter:ch7}}",
   "subtitle"  => "Diagnosis and caution aren&rsquo;t a plan. ASCEND is the plan &mdash; a coordination system you upgrade while it runs, built around meaning instead of metrics.",
   "sigil"     => "VII",
   "cover"     => "atlas-vol1.jpg",
@@ -54,7 +54,7 @@ $lesson = [
     ["h3" => "How it connects"],
     ["p"  => "Two chapters, one argument: Chapter&nbsp;4 named the disease (coordination failure), this chapter&rsquo;s opening section set the guardrails (capability isn&rsquo;t wisdom; upgrade, don&rsquo;t demolish), and the architecture is the answer that fits inside them. <b>Creative transformation</b> is the Thesean Method at civilizational scale &mdash; replacing the planks while the ship sails &mdash; precisely the responsible path those guardrails demand. What remains is turning the framework into a roadmap: that&rsquo;s the chapter&rsquo;s closing sections."],
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; Chapter&nbsp;5 (<em>The Solution Framework</em>) &mdash; &sect;1 <em>Introduction: Beyond Critique to Creation</em>, &sect;2 <em>Architectural Principles of the ASCEND System</em>, and &sect;3 <em>Achievement System: Capability Through Conscious Action</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; {{chapter_nbsp:ch7}} (<em>{{chtitle:ch7}}</em>) &mdash; &sect;1 <em>Introduction: Beyond Critique to Creation</em>, &sect;2 <em>Architectural Principles of the ASCEND System</em>, and &sect;3 <em>Achievement System: Capability Through Conscious Action</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
 ];
 
 require __DIR__ . '/../_codex.php';

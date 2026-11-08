@@ -29,7 +29,7 @@ The truth is some decisions absolutely should move to community vote. Some absol
 
 ## What the Manifesto actually argues
 
-[**Ch.5**](https://offda9.com/curriculum/observer/the-solution-framework.php) (*The Solution Framework*) and [**Ch.10**](https://offda9.com/curriculum/theorist/scientific-institutions.php) (*Scientific Institution Analysis*) of the Manifesto don't pretend governance is a solved problem. They lay out the actual tradeoffs:
+[**{{ch:ch7}}**](https://offda9.com/curriculum/observer/the-solution-framework.php) (*The Solution Framework*) and [**{{ch:ch13}}**](https://offda9.com/curriculum/theorist/scientific-institutions.php) (*Scientific Institution Analysis*) of the Manifesto don't pretend governance is a solved problem. They lay out the actual tradeoffs:
 
 - **Speed vs. legitimacy.** One person can decide in minutes. A community vote takes weeks. For a fire emergency, the community vote loses. For a 50-year zoning policy, the one-person decision is the disaster.
 - **Domain expertise vs. lived experience.** The cardiologist knows medicine. The patient knows their life. Most decisions need both — and most existing structures privilege only one.

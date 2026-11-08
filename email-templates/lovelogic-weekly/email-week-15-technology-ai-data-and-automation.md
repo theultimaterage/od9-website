@@ -24,7 +24,7 @@ There's no clean answer. But pretending there is — pretending we're not alread
 
 ## What the Manifesto pushes on
 
-**Ch.15** and **Ch.41** of the Manifesto make a position that rubs both AI optimists and AI doomers the wrong way: **technology that increases human agency is good; technology that primarily increases surveillance, dependency, or elite control is bad — even when it's marketed as neutral or beneficial.**
+**{{ch:ch15}}** and **{{ch:ch41}}** of the Manifesto make a position that rubs both AI optimists and AI doomers the wrong way: **technology that increases human agency is good; technology that primarily increases surveillance, dependency, or elite control is bad — even when it's marketed as neutral or beneficial.**
 
 Almost every actual deployed AI system as of 2026 increases dependency on the system's operator more than it increases agency for the end user. Recommendation algorithms decide what you see. Productivity AI decides what your work looks like. Therapy chatbots decide what counts as a healthy thought. None of these are *necessarily* bad — they could be designed otherwise. They're *currently* bad because the optimization target is the platform's interest, not the user's.
 

@@ -68,10 +68,16 @@ if hasattr(sys.stdout, "reconfigure"):
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
+sys.path.insert(0, HERE)
+import chapter_macros as cm  # noqa: E402  — {{ch:ID}} resolved before judging, as the senders do
+
+# A hand-written chapter number in a template or a lesson label. Since 2026-11-08 every
+# citation is a macro; a literal is the next stale number waiting to happen.
+LITERAL_NUMBER = re.compile(r"\b(?:Ch(?:apter|\.)(?:&nbsp;|\s)*\d{1,2}|Appendix(?:&nbsp;|\s)+[A-Z])\b")
 EXIT_NO_TRUTH = 2
 BOARD = "https://offda9.com/curriculum"
 CLASSES = ("NONEXISTENT", "RENUMBERED", "MISCITED", "DEAD", "LINKABLE", "UNSOURCED_QUOTE",
-           "LESSON_SOURCE")
+           "LESSON_SOURCE", "LITERAL", "UNKNOWN_ID")
 
 
 def manifesto_dir() -> str:
@@ -194,16 +200,35 @@ def lesson_source_findings(reg: Registry, curriculum: str) -> list[dict]:
             continue
         with open(php, encoding="utf-8", errors="replace") as fh:
             txt = fh.read()
-        m = re.search(r'"source"\s*=>\s*"((?:[^"\\]|\\.)*)"', txt)
-        if not m:
-            continue
-        sm = SOURCE_LINE.search(m.group(1))
-        if sm and sm.group(1) != str(node.get("num")):
-            out.append({"unit": "curriculum/" + rel, "kind": "lesson", "line": txt[:m.start()].count("\n") + 1,
-                        "code": "LESSON_SOURCE", "chapter": int(sm.group(1)),
-                        "note": f"the page says Chapter {sm.group(1)}; the registry gives "
-                                f"\u201c{node['title']}\u201d the number {node.get('num')}",
-                        "text": html.unescape(re.sub(r"<[^>]+>", "", m.group(1)))[:140]})
+        for field_name in ("eyebrow", "source"):
+            m = re.search(r'"%s"\s*=>\s*"((?:[^"\\]|\\.)*)"' % field_name, txt)
+            if not m:
+                continue
+            line_no = txt[:m.start()].count("\n") + 1
+            shown = html.unescape(re.sub(r"<[^>]+>", "", m.group(1)))[:140]
+            # Since 2026-11-08 the label is a macro naming the registry node that owns this
+            # lesson ({{chapter:ch4}}); the renderer puts the number in. A macro naming another
+            # node is a wrong landing; a literal number is the stale number waiting to happen.
+            ids = [i for k, i in cm.find(m.group(1)) if k in ("chapter", "chapter_nbsp", "ch")]
+            for other in sorted({i for i in ids if i != node["id"]}):
+                out.append({"unit": "curriculum/" + rel, "kind": "lesson", "line": line_no,
+                            "code": "LESSON_SOURCE", "chapter": None,
+                            "note": f"the {field_name} names node {other}; the registry's canon list gives this "
+                                    f"page to {node['id']} (\u201c{node['title']}\u201d, {cm.label(node, True)})",
+                            "text": shown})
+            sm = SOURCE_LINE.search(m.group(1))
+            if sm and sm.group(1) != str(node.get("num")):
+                out.append({"unit": "curriculum/" + rel, "kind": "lesson", "line": line_no,
+                            "code": "LESSON_SOURCE", "chapter": int(sm.group(1)),
+                            "note": f"the {field_name} says Chapter {sm.group(1)}; the registry gives "
+                                    f"\u201c{node['title']}\u201d the number {node.get('num')}",
+                            "text": shown})
+            for lit in LITERAL_NUMBER.finditer(m.group(1)):
+                out.append({"unit": "curriculum/" + rel, "kind": "lesson", "line": line_no,
+                            "code": "LITERAL", "chapter": None,
+                            "note": f"hand-written \u201c{lit.group(0)}\u201d in the {field_name}; write "
+                                    f"{{{{chapter:{node['id']}}}}} so the registry carries the number",
+                            "text": shown})
     return out
 
 
@@ -253,6 +278,10 @@ def html_blocks(src: str) -> list[tuple[int, str]]:
     nothing in mail HTML, so the block's ordinal is the address."""
     src = re.sub(r"<!--.*?-->", "", src, flags=re.S)
     src = re.sub(r"<(script|style)\b.*?</\1>", "", src, flags=re.S | re.I)
+    # keep each link's target beside its text, so a lesson linked in the fragment is seen
+    # as linked (until 2026-11-08 the href went with the tag and a linked Creed read as
+    # LINKABLE); the judge reads /curriculum/... wherever it sits in the line
+    src = re.sub(r'<a\b[^>]*href="([^"]+)"[^>]*>(.*?)</a>', r"\2 (\1)", src, flags=re.S | re.I)
     src = BLOCK_TAG.sub("\n\n", src)
     src = ANY_TAG.sub("", src)
     src = html.unescape(src).replace("\xa0", " ")
@@ -272,15 +301,48 @@ def md_blocks(src: str) -> list[tuple[int, str]]:
     return out
 
 
-def units_on_disk(repo: Repo) -> list[tuple[str, str, list[tuple[int, str]]]]:
-    """[(label, kind, blocks)] for every weekly and every fragment the senders can mail."""
+def macro_findings(label: str, kind: str, raw: str, reg_by_id: dict) -> tuple[str, list[dict]]:
+    """Resolve {{ch:ID}} macros the way the senders do and judge the template's own text:
+    LITERAL for a hand-written chapter number (the next stale number), UNKNOWN_ID for a macro
+    naming no node (the senders refuse to mail it). Returns (resolved text, findings)."""
+    out = []
+    where_key = "line" if kind == "weekly" else "block"
+    blocks = md_blocks(raw) if kind == "weekly" else html_blocks(raw)
+    for where, block in blocks:
+        for m in LITERAL_NUMBER.finditer(block):
+            out.append({"unit": label, "kind": kind, where_key: where, "code": "LITERAL", "chapter": None,
+                        "note": f"hand-written “{m.group(0)}”; write a macro ({{{{ch:ID}}}}) so the "
+                                f"registry carries the number", "text": block[:140]})
+    resolved, unknown = cm.resolve(raw, reg_by_id)
+    for uid in sorted(set(unknown)):
+        where = next((w for w, b in blocks if f":{uid}}}}}" in b), blocks[0][0] if blocks else 1)
+        out.append({"unit": label, "kind": kind, where_key: where, "code": "UNKNOWN_ID", "chapter": None,
+                    "note": f"macro names no chapter: {uid} is not a node id of the registry", "text": uid})
+    return resolved, out
+
+
+def units_on_disk(repo: Repo, reg_by_id: dict | None = None
+                  ) -> list[tuple[str, str, list[tuple[int, str]], list[dict]]]:
+    """[(label, kind, blocks, macro findings)] for every weekly and every fragment the senders
+    can mail, with chapter macros resolved first, as the senders resolve them."""
+    reg_by_id = reg_by_id if reg_by_id is not None else cm.load_registry(repo.registry)
+
+    def with_ids(raw: str, resolved: str, split) -> list:
+        # (where, resolved block, node ids whose macros produced numbers in it); the raw and
+        # the resolved text split into the same blocks, since a macro never adds a line
+        ids = {w: frozenset(i for _, i in cm.find(b)) for w, b in split(raw)}
+        return [(w, b, ids.get(w, frozenset())) for w, b in split(resolved)]
     out = []
     for p in sorted(glob.glob(repo.weekly_glob)):
         with open(p, encoding="utf-8", errors="replace") as fh:
-            out.append((os.path.basename(p), "weekly", md_blocks(fh.read())))
+            raw = fh.read()
+        resolved, pre = macro_findings(os.path.basename(p), "weekly", raw, reg_by_id)
+        out.append((os.path.basename(p), "weekly", with_ids(raw, resolved, md_blocks), pre))
     for p in sorted(glob.glob(repo.email_glob)):
         with open(p, encoding="utf-8", errors="replace") as fh:
-            out.append((os.path.basename(p), "email", html_blocks(fh.read())))
+            raw = fh.read()
+        resolved, pre = macro_findings(os.path.basename(p), "email", raw, reg_by_id)
+        out.append((os.path.basename(p), "email", with_ids(raw, resolved, html_blocks), pre))
     return out
 
 
@@ -308,14 +370,18 @@ def _cited_title(*groups: str | None) -> str:
     return ""
 
 
-def judge_line(line: str, reg: Registry, curriculum: str) -> tuple[list[dict], int]:
+def judge_line(line: str, reg: Registry, curriculum: str,
+               macro_ids: frozenset = frozenset()) -> tuple[list[dict], int]:
     """Findings for one line (a sentence or a list item), and how many bare numbers it carried
-    that nothing in the line confirmed (the stated limit: those are taken at face value)."""
+    that nothing in the line confirmed (the stated limit: those are taken at face value).
+    macro_ids: node ids whose macros produced numbers in this line's block; a number equal to
+    such a node's current number came from that macro and is confirmed by it."""
     out: list[dict] = []
     bare = 0
     is_action = bool(ACTION.match(line))
     linked = [m.group(1) for m in LESSON_URL.finditer(line)]
     linked_nodes = [x for x in (reg.node_for_lesson(rel) for rel in linked) if x is not None]
+    macro_nodes = [n for n in reg.nodes if n.get("id") in macro_ids] if macro_ids else []
     for rel in linked:
         if not os.path.exists(os.path.join(curriculum, *rel.split("/"))):
             out.append({"code": "DEAD", "chapter": None, "note": f"links {rel}, which is not in curriculum/"})
@@ -332,6 +398,13 @@ def judge_line(line: str, reg: Registry, curriculum: str) -> tuple[list[dict], i
         # so an old number is still caught when another linked chapter wears it now.
         evidence = reg.node_for_title(cited) if cited else None
         if evidence is None:
+            # the number came from a macro naming this node: confirmed by construction,
+            # ahead of the legacy rule (the resolved Ch.8 beside a link to the chapter that
+            # absorbed the OLD 8 is not a stale citation; it is the registry's own number)
+            from_macro = [x for x in macro_nodes if str(x.get("num")) == str(n)]
+            if len(from_macro) == 1:
+                evidence = from_macro[0]
+        if evidence is None:
             by_legacy = [x for x in linked_nodes if n in reg.legacy_of(x)]
             by_num = [x for x in linked_nodes if str(x.get("num")) == str(n)]
             distinct = {id(x): x for x in linked_nodes}
@@ -339,7 +412,9 @@ def judge_line(line: str, reg: Registry, curriculum: str) -> tuple[list[dict], i
                 evidence = by_legacy[0]
             elif len({id(x) for x in by_num}) == 1:
                 evidence = by_num[0]
-            elif len(distinct) == 1:
+            elif len(distinct) == 1 and len(REF.findall(line)) == 1:
+                # the line's only link is evidence only when the line cites one chapter:
+                # "**Ch.12** and [**Ch.19**](religious...)" says nothing about Ch.12
                 evidence = next(iter(distinct.values()))
 
         if current is None and absorbed_by is None:
@@ -382,12 +457,14 @@ def judge_line(line: str, reg: Registry, curriculum: str) -> tuple[list[dict], i
     return out, bare
 
 
-def judge_block(block: str, reg: Registry, curriculum: str) -> tuple[list[dict], int]:
-    """A block's lines, judged one by one (a markdown list is one block of several items)."""
+def judge_block(block: str, reg: Registry, curriculum: str,
+                macro_ids: frozenset = frozenset()) -> tuple[list[dict], int]:
+    """A block's lines, judged one by one (a markdown list is one block of several items).
+    macro_ids: the node ids whose macros produced numbers in this block (see units_on_disk)."""
     out: list[dict] = []
     bare = 0
     for line in block.splitlines():
-        found, b = judge_line(line, reg, curriculum)
+        found, b = judge_line(line, reg, curriculum, macro_ids)
         out += found
         bare += b
     return out, bare
@@ -414,9 +491,11 @@ def judge_unit(label: str, kind: str, blocks: list[tuple[int, str]], reg: Regist
                ms: Manuscript | None) -> tuple[list[dict], int]:
     out = []
     bare = 0
-    for i, (where, block) in enumerate(blocks):
+    for i, item in enumerate(blocks):
+        where, block = item[0], item[1]
+        macro_ids = item[2] if len(item) > 2 else frozenset()
         nxt = blocks[i + 1][1] if i + 1 < len(blocks) else ""
-        found, b = judge_block(block, reg, curriculum)
+        found, b = judge_block(block, reg, curriculum, macro_ids)
         bare += b
         if ms is not None:
             found += quote_findings(block, nxt, ms)
@@ -440,11 +519,11 @@ def all_findings(repo: Repo) -> tuple[list[dict], dict]:
                                 "quotes cannot be checked")
     ms = Manuscript(repo.manifesto)
     findings: list[dict] = []
-    units = units_on_disk(repo)
+    units = units_on_disk(repo, {n["id"]: n for n in reg.nodes if n.get("id")})
     bare = 0
-    for label, kind, blocks in units:
+    for label, kind, blocks, pre in units:
         found, b = judge_unit(label, kind, blocks, reg, repo.curriculum, ms)
-        findings += found
+        findings += pre + found
         bare += b
     findings += lesson_source_findings(reg, repo.curriculum)
     summary = {"chapters": len(reg.by_num), "absorbed_numbers": len(reg.by_legacy),
@@ -490,8 +569,13 @@ def report(repo: Repo) -> int:
     print(f"\n{len(findings)} finding(s) in {units_hit} unit(s) of {summary['units']} mail units; "
           f"registry: {summary['chapters']} chapters, {summary['absorbed_numbers']} absorbed numbers, "
           f"{summary['lessons']} Codex pages; manuscript: {summary['manuscript_files']} files.")
-    print(f"{summary['bare_numbers']} bare chapter number(s) carried no title and no lesson link and were "
-          f"taken at face value (the stated limit; a number alone cannot show which edition it meant).")
+    literals = sum(1 for f in findings if f["code"] == "LITERAL")
+    if literals:
+        print(f"{summary['bare_numbers']} bare chapter number(s) carried no title and no lesson link and were "
+              f"taken at face value (the stated limit; a number alone cannot show which edition it meant).")
+    else:
+        print(f"{summary['bare_numbers']} citation(s) carry no title and no lesson link in their sentence; every "
+              f"number in the mail is a macro, so each is the registry's current number for the chapter it names.")
     return 1 if findings else 0
 
 
@@ -545,6 +629,16 @@ def check(repo: Repo) -> int:
                 if f["unit"] == unit and f["code"] == code:
                     print("  " + _line(f))
         return 1
+    # The macros are rendered by PHP at send time and judged by Python here; the two must
+    # agree byte for byte or this gate judges a text no subscriber sees.
+    import chapter_macros_parity as parity
+    prc = parity.run()
+    if prc == 1:
+        print("REFUSED: the PHP and Python chapter-macro resolvers disagree (see above)")
+        return 1
+    if prc == 2:
+        print("UNCHECKED: php is not on PATH, so the PHP resolver could not be compared with this gate's")
+        return EXIT_NO_TRUTH
     print(f"PASS: {len(findings)} finding(s) over {summary['units']} mail units, none above baseline "
           f"({len(base)} baselined units).")
     return 0
@@ -598,6 +692,8 @@ FIX_WEEKLY_BAD = """---
 
 See **Ch.99** of the Manifesto for more.
 
+**{{ch:ch77}}** of the Manifesto is a macro naming a node the registry does not have.
+
 Read [a gone lesson](https://offda9.com/curriculum/observer/not-here.php) too.
 
 The Manifesto puts it like this: "A hundred talented people going different directions will always lose to fifty mediocre people moving as one."
@@ -616,11 +712,11 @@ FIX_WEEKLY_GOOD = """---
 **Subject:** Fixture
 ---
 
-[**Ch.4**](https://offda9.com/curriculum/observer/the-system-in-crisis.php) of the Manifesto (*The System In Crisis*) argues the point.
+[**{{ch:ch5}}**](https://offda9.com/curriculum/observer/the-system-in-crisis.php) of the Manifesto (*The System In Crisis*) argues the point.
 
-**Ch.3** of the Manifesto (*The Great Awakening*) argues another.
+**{{ch:ch4}}** of the Manifesto (*The Great Awakening*) argues another.
 
-[**Ch.4**](https://offda9.com/curriculum/observer/the-system-in-crisis.php) and [**Ch.19**](https://offda9.com/curriculum/theorist/religious-institutions.php) of the Manifesto take this seriously.
+[**{{ch:ch5}}**](https://offda9.com/curriculum/observer/the-system-in-crisis.php) and [**{{ch:ch22}}**](https://offda9.com/curriculum/theorist/religious-institutions.php) of the Manifesto take this seriously.
 
 The Manifesto says: "Coordination is not a vibe; it is infrastructure, channels and incentives and feedback loops."
 """
@@ -636,7 +732,8 @@ $lesson = [
 """
 FIX_LESSON_OK = """<?php
 $lesson = [
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; Chapter&nbsp;1 (<em>The OD9 Creed</em>)",
+  "eyebrow"   => "Volume I &middot; Foundation &nbsp;&bull;&nbsp; {{chapter:ch1}}",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; {{chapter_nbsp:ch1}} (<em>{{chtitle:ch1}}</em>)",
 ];
 """
 
@@ -651,7 +748,7 @@ def _fixture_repo(tmp: str) -> Repo:
     with open(os.path.join(tmp, "data", "manifesto-map.json"), "w", encoding="utf-8") as fh:
         json.dump(FIX_REGISTRY, fh)
     for rel, body in (("observer/the-creed.php", FIX_LESSON_OK),
-                      ("observer/the-system-in-crisis.php", FIX_LESSON_OK.replace("Chapter&nbsp;1 (<em>The OD9 Creed", "Chapter&nbsp;4 (<em>The System In Crisis")),
+                      ("observer/the-system-in-crisis.php", FIX_LESSON_OK.replace("ch1}}", "ch5}}")),
                       ("theorist/religious-institutions.php", FIX_LESSON_STALE)):
         with open(os.path.join(tmp, "curriculum", *rel.split("/")), "w", encoding="utf-8") as fh:
             fh.write(body)
@@ -717,6 +814,16 @@ def selftest() -> int:
         lesson = [f for f in findings if f["code"] == "LESSON_SOURCE"]
         ok(len(lesson) == 1 and lesson[0]["unit"].endswith("religious-institutions.php") and lesson[0]["chapter"] == 22,
            "LESSON_SOURCE: the page saying Chapter 22 for a chapter the registry numbers 19, and only that page")
+        lits = [f for f in findings if f["code"] == "LITERAL"]
+        ok(any(f["unit"] == "email-week-99-bad.md" for f in lits)
+           and [f["unit"] for f in lits if f["kind"] == "lesson"] == ["curriculum/theorist/religious-institutions.php"],
+           "LITERAL: hand-written numbers in the bad weekly and the stale lesson; none in the macro-written good "
+           "weekly or the two macro-labelled lessons")
+        ok([f["text"] for f in findings if f["code"] == "UNKNOWN_ID"] == ["ch77"]
+           and not any(f["code"] == "NONEXISTENT" and f["chapter"] is None for f in findings),
+           "UNKNOWN_ID: {{ch:ch77}} names no node; it is left unresolved and not judged as a number")
+        ok(any(f["code"] == "RENUMBERED" for f in bad) and not any(f["unit"] == "email-week-98-good.md" for f in findings),
+           "macros resolve before judging: {{ch:ch5}} reads as Ch.4 and the good weekly stays clean")
         ok(set(f["code"] for f in findings) == set(CLASSES), "every class fires on the fixture")
 
         # shrink-only round trip
@@ -760,7 +867,7 @@ def selftest() -> int:
     ok(_norm_quote("It\u2019s \u201cfine\u201d \u2014 really") == _norm_quote("It's \"fine\" - really"), "quote normalisation")
     ok(_cited_title("see below") == "" and _cited_title("The System in Crisis") == "The System in Crisis", "a parenthetical is a title only when it reads like one")
 
-    n = 30
+    n = 33
     if fails:
         print(f"SELFTEST FAIL ({len(fails)} of {n} checks):")
         for f in fails:

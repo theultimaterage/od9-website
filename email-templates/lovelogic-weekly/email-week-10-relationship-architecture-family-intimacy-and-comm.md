@@ -25,7 +25,7 @@ The point isn't to land on one answer. The point is to do the exercise without n
 
 ## What the Manifesto actually pushes on
 
-**Ch.12** and [**Ch.19**](https://offda9.com/curriculum/theorist/religious-institutions.php) of the Manifesto don't prescribe a "right" structure for family or community — they argue something subtler: **the structures we inherit are usually optimized for conditions that no longer exist**. The nuclear family solved problems specific to the 1950s industrial economy. Religious community structures solved problems specific to pre-secular medieval life. Both still get treated as eternal because changing them requires admitting we're not in the conditions they solved.
+**{{ch:ch12}}** and [**{{ch:ch22}}**](https://offda9.com/curriculum/theorist/religious-institutions.php) of the Manifesto don't prescribe a "right" structure for family or community — they argue something subtler: **the structures we inherit are usually optimized for conditions that no longer exist**. The nuclear family solved problems specific to the 1950s industrial economy. Religious community structures solved problems specific to pre-secular medieval life. Both still get treated as eternal because changing them requires admitting we're not in the conditions they solved.
 
 That doesn't mean blow them up. It means **understand what they actually do for us, what they fail at, and what the next iteration looks like** — instead of treating any deviation as decline.
 

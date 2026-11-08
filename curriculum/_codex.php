@@ -39,8 +39,20 @@
  */
 declare(strict_types=1);
 
+// Chapter macros: a lesson's eyebrow and Source line name the chapter by registry
+// id ({{chapter:ch4}} -> "Chapter 3", {{chtitle:ch4}} -> its title), resolved from
+// data/manifesto-map.json at render time, so a renumber of the book is a registry
+// sync, not an edit to sixteen lesson files (2026-11-08). An unknown id renders as
+// written, where tools/drip_refs_check.py names it.
+require_once __DIR__ . '/../includes/chapter_macros.php';
+
 if (!function_exists('codex_render')):
 function codex_render(array $L): void {
+    foreach (['eyebrow', 'source'] as $_k) {
+        if (!empty($L[$_k]) && od9_has_chapter_macro((string)$L[$_k])) {
+            $L[$_k] = od9_resolve_chapter_macros((string)$L[$_k]);
+        }
+    }
     $embed = !empty($_GET['embed']);
     // Who is hosting the embed. The board is the default host; the Atlas passes
     // host=atlas so the closing CTA can stop promising "return to your board" —

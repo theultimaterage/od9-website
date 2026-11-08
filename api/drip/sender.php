@@ -41,6 +41,9 @@ require_once $_mailLib;
 $_layoutLib = __DIR__ . '/../../includes/email_layout.php';
 if (!file_exists($_layoutLib)) $_layoutLib = __DIR__ . '/../../../includes/email_layout.php';
 require_once $_layoutLib;
+// Chapter macros ({{ch:ID}} -> "Ch.3") resolve from data/manifesto-map.json at send
+// time, so a renumber of the book is a registry sync, not an edit to the fragments.
+require_once dirname($_layoutLib) . '/chapter_macros.php';
 
 const FROM_EMAIL = 'noreply@offda9.com';
 const FROM_NAME  = 'The OD9 Movement';
@@ -110,6 +113,17 @@ foreach ($rows as $en) {
         // supplies the head/logo/footer. personalize() then resolves tokens in
         // both the fragment and the layout footer ({{username}}, {{EMAIL}}, ...).
         $fragment = file_get_contents($templatePath);
+        // A chapter macro naming no chapter must never reach a subscriber: this
+        // send fails and is logged like a missing template; the enrollment waits.
+        $unknownIds = [];
+        $fragment = od9_resolve_chapter_macros($fragment, $unknownIds);
+        if ($unknownIds) {
+            $why = "unknown chapter id(s) in {$step['template_name']}.html: " . implode(', ', array_unique($unknownIds));
+            logSendAttempt($pdo, $en, $step, 'failed', $why);
+            $failed++;
+            echo "  enrollment $enrId: FAIL - $why\n";
+            continue;
+        }
         $html = personalize(od9_email_layout($fragment, ['title' => $step['subject']]), $en);
 
         // Send via the unified Brevo-signed mailer.

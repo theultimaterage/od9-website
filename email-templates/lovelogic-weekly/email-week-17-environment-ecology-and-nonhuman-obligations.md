@@ -19,7 +19,7 @@ If you can't name what you owe, you can't honor it. And honoring nature in any w
 
 ## What the Manifesto pushes on
 
-**Ch.26** of the Manifesto and **Ch.40** take a position that even most environmentalist movements dance around: **non-human entities — ecosystems, species, future generations, watersheds — have standing that's independent of any present-human use case.**
+**{{ch:v3-energy}}** of the Manifesto and **{{ch:ch37}}** take a position that even most environmentalist movements dance around: **non-human entities — ecosystems, species, future generations, watersheds — have standing that's independent of any present-human use case.**
 
 That's not a sentimental claim. It's an architectural one. Once you grant non-human standing, you have to redesign almost every economic and political institution to give those entities legible voice — usually via human stewards, but with real teeth. New Zealand granted the Whanganui River legal personhood in 2017. The result wasn't symbolic; it was a fundamental change in how disputes about the river get adjudicated. Other jurisdictions have begun similar moves. They're early, awkward, and incomplete — but they're the direction.
 

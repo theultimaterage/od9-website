@@ -31,7 +31,7 @@ declare(strict_types=1);
 
 $lesson = [
   "title"     => "Responsible Transformation",
-  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; Chapter 5",
+  "eyebrow"   => "Volume I &middot; Foundation &amp; Vision &nbsp;&bull;&nbsp; {{chapter:ch7}}",
   "subtitle"  => "Godlike tools don&rsquo;t make a wise civilization &mdash; new power without new wisdom magnifies the crisis. This is the discipline of changing things without making them worse.",
   "sigil"     => "II",
   "cover"     => "atlas-vol1.jpg",
@@ -61,7 +61,7 @@ $lesson = [
     ["h3" => "Checkable, not aspirational"],
     ["p"  => "The section closes with commitments it insists are <em>&ldquo;checkable rather than aspirational&rdquo;</em>: pacing to integration capacity, enhancement coupled to ethical development, access designed for baseline universality, polycentric governance, reversibility where the technology permits and honest labelling where it doesn&rsquo;t. Then the line to hold the whole framework to &mdash; the strongest objections are <em>&ldquo;answered in the design, not in the marketing.&rdquo;</em> Read the rest of Chapter&nbsp;5 against that standard, and hold this one to it too."]
   ],
-  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; Chapter&nbsp;5 (<em>The Solution Framework</em>), &sect;II <em>Ethics and Safety Before Architecture</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
+  "source" => "<b>Source &mdash;</b> The OD9 Manifesto, Volume&nbsp;1 &middot; {{chapter_nbsp:ch7}} (<em>{{chtitle:ch7}}</em>), &sect;II <em>Ethics and Safety Before Architecture</em>. Featured passages are reproduced verbatim; the Archivist&rsquo;s read is the study layer.",
 ];
 
 require __DIR__ . '/../_codex.php';

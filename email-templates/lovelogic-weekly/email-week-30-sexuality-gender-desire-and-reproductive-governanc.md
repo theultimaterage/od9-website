@@ -41,7 +41,7 @@ Some of those will land for you. Some will offend you. That's the point of the e
 
 ## What the Manifesto pushes on
 
-**Ch.12** and **Ch.43** of the Manifesto take a position most movements wisely avoid: **questions about sex, reproduction, and family will be central to any successful Type-I civilization, AND the current discourse on them is not equipped to answer those questions well.** The manifesto doesn't propose answers — it tries to set up the design space honestly so future iterations can.
+**{{ch:ch12}}** and **{{ch:ch43}}** of the Manifesto take a position most movements wisely avoid: **questions about sex, reproduction, and family will be central to any successful Type-I civilization, AND the current discourse on them is not equipped to answer those questions well.** The manifesto doesn't propose answers — it tries to set up the design space honestly so future iterations can.
 
 This is one of the few areas where OD9's "we might be wrong" stance isn't a humility move, it's a survival move. The most likely failure mode for a movement engaging these questions is to lock in a position that's either (a) downstream of present-moment culture-war framings, or (b) a deliberate contrarian stance that ages badly. Both are reliable ways to end up looking like the doctors in the delivery rooms.
 

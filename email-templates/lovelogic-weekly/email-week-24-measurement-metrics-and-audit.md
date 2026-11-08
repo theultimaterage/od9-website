@@ -29,7 +29,7 @@ Once you see this pattern, it's everywhere. Almost every modern institution meas
 
 ## What the Manifesto pushes on
 
-**Ch.24** and **Ch.48** of the Manifesto take a position that's almost embarrassingly underrated in mainstream policy discourse: **the choice of metrics is the most consequential design choice any institution makes.** More than budget. More than hiring. More than mission statement. Because the metric WILL eventually become the target, and the target WILL eventually become what the institution actually does — regardless of stated intent.
+**{{ch:v3-commons}}** and **{{ch:ch48}}** of the Manifesto take a position that's almost embarrassingly underrated in mainstream policy discourse: **the choice of metrics is the most consequential design choice any institution makes.** More than budget. More than hiring. More than mission statement. Because the metric WILL eventually become the target, and the target WILL eventually become what the institution actually does — regardless of stated intent.
 
 A Type-I civilization that doesn't take metric-design seriously is a Type-I civilization that drifts toward whatever happened to be easy to measure. So the design discipline is: **measure things that, even when gamed, still produce the outcome you actually want.** Or measure many things in tension, so optimizing for one trades against another. Or change metrics on a known cadence so nobody can build a 10-year career around gaming a single number.
 

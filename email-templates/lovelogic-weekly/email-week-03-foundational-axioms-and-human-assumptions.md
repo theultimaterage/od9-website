@@ -19,9 +19,9 @@ Naming them is hard. Replacing them is harder. Skipping the work is how civiliza
 
 ## What the Manifesto admits
 
-[**Appendix A** of the Manifesto](https://offda9.com/curriculum/observer/the-evidence-standard.php) (*Methods and the Evidence Standard*) is unusually honest for a foundational text — it says straight up which of OD9's principles are axiomatic (we treat them as starting points) and which are provisional (we expect them to change as evidence accumulates).
+[**{{ch:appendix-a}}** of the Manifesto](https://offda9.com/curriculum/observer/the-evidence-standard.php) (*Methods and the Evidence Standard*) is unusually honest for a foundational text — it says straight up which of OD9's principles are axiomatic (we treat them as starting points) and which are provisional (we expect them to change as evidence accumulates).
 
-That distinction matters. Most belief systems treat *every* principle as eternal. OD9 doesn't. The reason is in [**Ch.5**](https://offda9.com/curriculum/observer/responsible-transformation.php) (*Responsible Transformation Frameworks*): if your framework can't update, it's already dead — it just hasn't noticed yet.
+That distinction matters. Most belief systems treat *every* principle as eternal. OD9 doesn't. The reason is in [**{{ch:ch7}}**](https://offda9.com/curriculum/observer/responsible-transformation.php) (*Responsible Transformation Frameworks*): if your framework can't update, it's already dead — it just hasn't noticed yet.
 
 So when we say "consciousness development is co-equal with technological development," that's axiomatic. When we say "tier-based progression is the right shape for membership," that's provisional. We could be wrong. The thing is to know which is which.
 

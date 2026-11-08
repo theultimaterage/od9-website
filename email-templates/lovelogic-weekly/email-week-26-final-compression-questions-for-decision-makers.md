@@ -33,7 +33,7 @@ None of those are right. None of them are wrong. The work is finding the one *yo
 
 ## What the Manifesto pushes on
 
-[**Ch.4**](https://offda9.com/curriculum/observer/the-system-in-crisis.php) (*The System in Crisis*) and **Ch.55** of the Manifesto take a position you don't see in many big-tent movements: **a project's identity is what it WON'T trade away under pressure.** Everything else is negotiable — strategy, tactics, branding, even most policies. But the one or two non-negotiables determine what the project is.
+[**{{ch:ch5}}**](https://offda9.com/curriculum/observer/the-system-in-crisis.php) (*The System in Crisis*) and **{{ch:ch55}}** of the Manifesto take a position you don't see in many big-tent movements: **a project's identity is what it WON'T trade away under pressure.** Everything else is negotiable — strategy, tactics, branding, even most policies. But the one or two non-negotiables determine what the project is.
 
 Most movements get this wrong by trying to make EVERYTHING non-negotiable, which means in practice nothing is — when the pressure comes, something has to give, and without a hierarchy it's whatever's most expedient.
 

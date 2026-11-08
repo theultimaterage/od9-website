@@ -27,7 +27,7 @@ Both of those are honest reactions. Designing around them is hard.
 
 ## What the Manifesto actually argues
 
-**Ch.18** and [**Ch.19**](https://offda9.com/curriculum/theorist/religious-institutions.php) of the Manifesto take a position most political conversations dodge: **most modern justice systems are optimized for punishment, when what people actually want — when you ask them about people they know — is some combination of repair, truth, and conditional reintegration.**
+**{{ch:ch18}}** and [**{{ch:ch22}}**](https://offda9.com/curriculum/theorist/religious-institutions.php) of the Manifesto take a position most political conversations dodge: **most modern justice systems are optimized for punishment, when what people actually want — when you ask them about people they know — is some combination of repair, truth, and conditional reintegration.**
 
 The mismatch is structural. Punishment is easy to administer at scale. Repair is hard. Truth-telling is hard. Conditional reintegration is hard. So the cheap option (punishment) wins — even though almost no individual would order it first if asked about someone they cared about.
 

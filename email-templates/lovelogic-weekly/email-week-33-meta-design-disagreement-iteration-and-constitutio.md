@@ -25,11 +25,11 @@ All three are honest answers.
 
 ## What the framework was for
 
-**Ch.1, Ch.2, Ch.6, Ch.38** of the Manifesto, plus the Preface, take a position about meta-design that's load-bearing for everything else: **a coordination framework that can't update itself in light of new evidence is a dead framework, no matter how impressive its first draft is.**
+**{{ch:ch1}}, {{ch:appendix-a}}, {{ch:ch7}}, {{ch:ch38}}** of the Manifesto, plus the Preface, take a position about meta-design that's load-bearing for everything else: **a coordination framework that can't update itself in light of new evidence is a dead framework, no matter how impressive its first draft is.**
 
 That's the whole point of the campaign you just read. It wasn't to convert you to a position. It was to give you 33 entry points into a way of asking questions, with the expectation that the *answers* will keep changing as you and the rest of the community learn.
 
-The answers we wrote together this year are not the final ones. The 30-something Sunday QOTDs we ran in #question-of-the-day are not the final question set. The manifesto itself, even — the 67 chapters of it — is explicitly described in **Ch.6** as a draft, intended to be revised by Type-I-aware successors.
+The answers we wrote together this year are not the final ones. The 30-something Sunday QOTDs we ran in #question-of-the-day are not the final question set. The manifesto itself, even — the 67 chapters of it — is explicitly described in **{{ch:ch7}}** as a draft, intended to be revised by Type-I-aware successors.
 
 This means the most important practice we can build, as a community, is **the practice of updating well.** Not flip-flopping. Not "rebranding." Genuinely updating: holding a previous belief, encountering new evidence or argument, naming the gap, and moving — explicitly — to a better-justified position.
 
