@@ -38,12 +38,15 @@ const TOTAL_WEEKS = 33;
 const FROM_EMAIL = 'noreply@offda9.com';
 const FROM_NAME  = 'The OD9 Movement';
 const REPLY_TO   = 'contact@offda9.com';
-// Prod docroot path; local XAMPP keeps the templates beside this script
-// (sync-local mirrors scripts/web/email-templates/ -> htdocs/od9/). The
-// fallback makes the sender locally testable (--test-email) instead of
-// prod-only.
+// Prod docroot path; anywhere else (local XAMPP, a checkout) the templates
+// live at the repo root, two levels above this script: this file is
+// api/drip/weekly_lovelogic_sender.php and the templates are
+// email-templates/lovelogic-weekly/. The fallback is what makes
+// --dry-run --test-email --preview work locally. Until 2026-11-08 it pointed
+// beside this script, a path from the retired sync-local mirror, so every
+// local preview said "No template found".
 $_tplDir = '/home/offda9/public_html/email-templates/lovelogic-weekly/';
-if (!is_dir($_tplDir)) $_tplDir = __DIR__ . '/email-templates/lovelogic-weekly/';
+if (!is_dir($_tplDir)) $_tplDir = dirname(__DIR__, 2) . '/email-templates/lovelogic-weekly/';
 define('TEMPLATE_DIR', $_tplDir);
 
 // Shared DB config (defines DB_HOST, DB_NAME, DB_USER, DB_PASS, DB_PORT constants).
