@@ -34,9 +34,12 @@ function od9_chapter_registry(?string $path = null): array
     if (isset($cache[$path])) {
         return $cache[$path];
     }
-    $raw = @file_get_contents($path);
-    if ($raw === false) {
+    if (!is_readable($path)) {
         throw new RuntimeException("chapter registry not readable: {$path}");
+    }
+    $raw = file_get_contents($path);
+    if ($raw === false) {
+        throw new RuntimeException("chapter registry could not be read: {$path}");
     }
     $data = json_decode($raw, true);
     $nodes = is_array($data) && isset($data['nodes']) ? $data['nodes'] : $data;
