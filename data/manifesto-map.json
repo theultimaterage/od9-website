@@ -25,7 +25,7 @@
     "at": "2026-06-23",
     "node": "appendix-a",
     "num": "A",
-    "title": "Appendix A — Methods & the Evidence Standard",
+    "title": "Appendix A — Methods and the Evidence Standard",
     "state": "canon",
     "what": "The Evidence Standard"
    },
@@ -113,7 +113,7 @@
     "at": "2026-07-02",
     "node": "ch22",
     "num": "19",
-    "title": "Religious Institutions & Pseudoscience",
+    "title": "Religious Institutions and Pseudoscience",
     "state": "canon",
     "what": "Religious Institutions and Pseudoscience"
    },
@@ -129,7 +129,7 @@
     "at": "2026-07-02",
     "node": "ch10",
     "num": "7",
-    "title": "Mental Health",
+    "title": "Mental Health and Collective Psyche",
     "state": "canon",
     "what": "Mental Health and Collective Psyche"
    },
@@ -137,7 +137,7 @@
     "at": "2026-10-11",
     "node": "ch22",
     "num": "19",
-    "title": "Religious Institutions & Pseudoscience",
+    "title": "Religious Institutions and Pseudoscience",
     "state": "forge",
     "what": "Sermon 001 — The 62% Engine (redo scheduled 2026-10-11 (attempted 2026-08-23))"
    }
@@ -2519,7 +2519,7 @@
   {
    "id": "appendix-a",
    "num": "A",
-   "title": "Appendix A — Methods & the Evidence Standard",
+   "title": "Appendix A — Methods and the Evidence Standard",
    "vol": 1,
    "legacy": [
     2
@@ -2611,7 +2611,7 @@
   {
    "id": "ch10",
    "num": "7",
-   "title": "Mental Health",
+   "title": "Mental Health and Collective Psyche",
    "vol": 2,
    "legacy": [
     10
@@ -3132,7 +3132,7 @@
   {
    "id": "ch22",
    "num": "19",
-   "title": "Religious Institutions & Pseudoscience",
+   "title": "Religious Institutions and Pseudoscience",
    "vol": 2,
    "legacy": [
     22
