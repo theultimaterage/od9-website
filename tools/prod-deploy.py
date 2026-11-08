@@ -231,6 +231,39 @@ else:
                      "read. python tools/prose_check.py --unit <label> spells out each refusal; "
                      "rewrite the copy, then --baseline records the smaller number.")
 
+# DRIP REFERENCES GATE (2026-11-08): what the mail says about the manifesto has to be true of
+# the manifesto. The weeklies cite chapters by number, and the numbers were the previous
+# edition's; one fragment quotes a sentence "— The OD9 Manifesto" that the manuscript does not
+# contain; the Codex pages the mail links carry their own stale "Source — Chapter N" lines. The
+# bot repo had an audit for the numbering class since August and nothing called it. The
+# founder: "Go ahead and wire the drip-citation audit into the od9 deploy gate."
+# tools/drip_refs_check.py reads the registry (data/manifesto-map.json: current numbers, the
+# numbers each chapter absorbed, the Codex pages per chapter) and the manuscript, and judges
+# every weekly, every fragment and every linked lesson page. The baseline
+# (tools/drip_refs_baseline.json) is SHRINK-ONLY like the prose gate's: day one held 40
+# findings over 35 units, nothing blocked, nothing can get worse, and when a rewritten chapter
+# is promoted and the registry moves, the units that cited what it absorbed light up by name.
+# Registry or manuscript missing: exit 2, UNCHECKED, not clean, and on. --skip-drip-refs-gate
+# bypasses; say why in the commit.
+if "--skip-drip-refs-gate" in sys.argv:
+    sys.argv.remove("--skip-drip-refs-gate")
+else:
+    import subprocess
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    _dg = os.path.join(_root, "tools", "drip_refs_check.py")
+    if os.path.exists(_dg):
+        print("=== Drip references gate (chapter numbers, quotes and lesson links in the mail vs the registry) ===",
+              flush=True)
+        _denv = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
+        _drc = subprocess.run([sys.executable, _dg, "--check"], env=_denv).returncode
+        if _drc == 2:
+            print("=== Drip references gate: the registry or the manuscript is not on this machine - "
+                  "UNCHECKED, not clean ===", flush=True)
+        elif _drc != 0:
+            sys.exit("ABORT: a drip email or a linked lesson page cites the manifesto worse than its "
+                     "baseline, or a new one is not clean. python tools/drip_refs_check.py --unit <label> "
+                     "spells out each finding; fix the copy, then --baseline records the smaller number.")
+
 # RAIL LABELS (2026-09-14): the board's progress rail is keyed to the curriculum
 # in two places that nothing was comparing — RAIL_LABELS by content_id, and
 # RAIL_CHAPTERS as position ranges over each tier's ordered required modules. The
