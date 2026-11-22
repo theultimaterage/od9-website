@@ -16,6 +16,10 @@ edge in front, so it answers what the origin would. Each rule is tested with a f
 really exists and a twin that must still be served: a refusal with nothing behind it
 proves nothing.
 
+Refused means 403, a rule answering. A 404 only says nothing was there, which is what a
+server with the rule deleted says too; so the dot-directory rule answers 403 on purpose,
+and a 404 where a refusal is owed is a finding here.
+
 Runs on Windows Python against local XAMPP (the deploy's local_base_url). Exit 0 clean,
 1 something is served or reachable that must not be, 2 it could not check.
 """
@@ -33,7 +37,17 @@ import urllib.request
 
 BASE = "http://localhost/od9"
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-REFUSED = (403, 404)
+# Refused means a rule answered: 403. A 404 is NOT that. It says nothing was there, which
+# is also what a server with the rule deleted says about a path that does not exist, and a
+# check that reads the two alike cannot tell a live rule from a missing one.
+REFUSED = 403
+# The path the fleet sweep asks the production origin for every day (origin_must_refuse in
+# the deploy config). Nothing of it exists anywhere, so only the dot-directory rule can make
+# it a 403. It starts with an ORDINARY name on purpose: Apache gives a missing path the name
+# of its first missing part, so /.nothing/x is refused by the dotfile rule (a name starting
+# with a dot) whether the dot-directory rule exists or not. That first probe was tried here
+# on 2026-11-22: with the rule taken out it still answered 403, and proved nothing.
+SWEEP_PROBE = "/sentinel-probe/.d/x"
 # The exact test private/.htaccess ships, and the same test turned round. Local Apache's
 # docroot starts with a drive letter, so the shipped one lets a request through here and
 # the reversed one refuses it: both answers of the one expression, seen on a real server.
@@ -69,8 +83,11 @@ def judge(answers: dict, must_refuse: tuple, must_serve: tuple) -> tuple[list, l
         code = answers.get(path, 0)
         if code == 0:
             unchecked.append(path)
-        elif code not in REFUSED:
-            findings.append(f"{path} answered {code}: it must be refused (403 or 404)")
+        elif code == 404:
+            findings.append(f"{path} answered 404: nothing REFUSES it. A rule of ours must answer 403 here; "
+                            "it is gone, or it never covered this path")
+        elif code != REFUSED:
+            findings.append(f"{path} answered {code}: it must be refused (403)")
     for path in must_serve:
         code = answers.get(path, 0)
         if code == 0:
@@ -131,8 +148,11 @@ def selftest() -> int:
         print(f"  selftest {'PASS' if passed else 'FAIL'}: {name}")
     served, _ = judge({"/.git/HEAD": 200, "/": 200}, ("/.git/HEAD",), ("/",))
     check("a dot-directory file that is served is a finding", len(served) == 1 and "/.git/HEAD" in served[0])
-    clean, none = judge({"/.git/HEAD": 404, "/x": 403, "/": 200}, ("/.git/HEAD", "/x"), ("/",))
-    check("403 and 404 are both refusals, and a served control is clean", clean == [] and none == [])
+    clean, none = judge({"/.git/HEAD": 403, "/x": 403, "/": 200}, ("/.git/HEAD", "/x"), ("/",))
+    check("a 403 is the refusal, and a served control is clean", clean == [] and none == [])
+    absent, _ = judge({SWEEP_PROBE: 404, "/": 200}, (SWEEP_PROBE,), ("/",))
+    check("a 404 is NOT a refusal: nothing there is what a missing rule says too",
+          len(absent) == 1 and "nothing REFUSES" in absent[0])
     wide, _ = judge({"/.well-known/agent.json": 404}, (), ("/.well-known/agent.json",))
     check("a rule so wide that it refuses .well-known is a finding", len(wide) == 1)
     _, blind = judge({}, ("/.git/HEAD",), ("/",))
@@ -185,7 +205,7 @@ def main() -> int:
             (scratch / name / "probe.txt").write_text("x", encoding="utf-8")
             (scratch / name / ".htaccess").write_text(rule, encoding="utf-8", newline="\n")
         must_refuse = (f"{web}/.hidden/probe.txt", "/.git/HEAD", "/.git/config", "/.svn/entries",
-                       "/.env", "/.user.ini", "/config/bootstrap.php", "/config/database.php",
+                       SWEEP_PROBE, "/.env", "/.user.ini", "/config/bootstrap.php", "/config/database.php",
                        f"{web}/reversed/probe.txt")
         must_serve = (f"{web}/seen/probe.txt", "/.well-known/agent.json", "/llms.txt",
                       f"{web}/shipped/probe.txt")
@@ -193,8 +213,14 @@ def main() -> int:
         ran = len(answers)
         findings_, unchecked = judge(answers, must_refuse, must_serve)
         findings += findings_
-        if (ROOT / ".git" / "HEAD").is_file() and answers.get("/.git/HEAD") == 404:
-            print("  ok: this checkout's own .git/HEAD is on disk and local Apache answers 404 for it")
+        if (ROOT / ".git" / "HEAD").is_file() and answers.get("/.git/HEAD") == REFUSED:
+            print("  ok: this checkout's own .git/HEAD is on disk and local Apache answers 403 for it")
+        # The sweep's daily question is only worth asking if the listed path is this one.
+        listed = json.loads(io.open(ROOT / "tools" / "prod-deploy-config.v2.json",
+                                    encoding="utf-8").read()).get("origin_must_refuse") or []
+        if SWEEP_PROBE not in listed:
+            findings.append(f"{SWEEP_PROBE} is not in origin_must_refuse in the deploy config: nothing would "
+                            "ask the production origin whether the dot-directory rule is live")
     finally:
         shutil.rmtree(scratch, ignore_errors=True)
     if (ROOT / "private" / "admin" / "generate-wrappers.php").exists():
@@ -205,7 +231,7 @@ def main() -> int:
         print("  FINDING:", line)
     for path in unchecked:
         print("  UNCHECKED:", path, "(no answer)")
-    if unchecked or ran < 13:
+    if unchecked or ran < 14:
         print(f"origin-refusals: could not check {len(unchecked)} of {ran} address(es). UNCHECKED, not clean.")
         return 2
     print(f"origin-refusals: {ran} addresses asked on local Apache, {len(findings)} finding(s)")

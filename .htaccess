@@ -128,16 +128,33 @@ RewriteRule ^epk/?$ https://od9.freshthaplatform.com/epk [R=302,L]
 # Cloudflare refuses /.git/ from most places, so every probe from the
 # workstation had read "protected".
 #
-# So: a path that goes THROUGH a segment starting with a dot is not found, at
-# any depth, except .well-known (ACME, agent.json, the UCP profile). A dotFILE is
-# still the rule above's (403). RedirectMatch and not a RewriteRule on purpose:
+# So: a path that goes THROUGH a segment starting with a dot is refused, at any
+# depth, except .well-known (ACME, agent.json, the UCP profile). A dotFILE is
+# still the rule above's. RedirectMatch and not a RewriteRule on purpose:
 # mod_alias rules merge down into every subdirectory, while a subdirectory with
 # rewrite rules of its own (this tree has eight) replaces its parent's.
 #   https://httpd.apache.org/docs/2.4/mod/mod_alias.html#redirectmatch (read 2026-11-22)
 #   https://httpd.apache.org/docs/2.4/mod/mod_rewrite.html#rewriteoptions (read 2026-11-22)
-# Proven on local Apache by tests/check_origin_refusals.py at every deploy, and
-# asked of the origin itself every day by the fleet sweep (prod-sentinel).
-RedirectMatch 404 "/\.(?!well-known/)[^/]+/"
+#
+# 403 and not 404, so that the rule's PRESENCE can be told from its absence. The
+# rule matches the shape of the address, not a file, so /sentinel-probe/.d/x,
+# which is nowhere on disk, answers 403 with this rule and 404 without it. That
+# is how the fleet sweep (prod-sentinel) asks the origin every day whether the
+# rule is still live (origin_must_refuse in tools/prod-deploy-config.v2.json),
+# with no file planted on the server. The probe starts with an ordinary name on
+# purpose: an address whose FIRST missing part starts with a dot (/.nothing/x)
+# is answered 403 by the dotfile rule above, with this rule or without it, and
+# would prove nothing (measured 2026-11-22 with this rule taken out). It tells a
+# visitor nothing either: every such address answers 403, whatever is behind it.
+#
+# Inside IfModule: a hardening rule must never be able to take the site down. No
+# other rule file on this server used a mod_alias directive before this one, and
+# a directive Apache does not know is a 500 for every page. If the module were
+# ever missing the rule would be absent instead, and the sweep says so that day.
+# Proven on local Apache by tests/check_origin_refusals.py at every deploy.
+<IfModule mod_alias.c>
+    RedirectMatch 403 "/\.(?!well-known/)[^/]+/"
+</IfModule>
 
 # Backup and editor droppings, matched by SHAPE not by name.
 #
