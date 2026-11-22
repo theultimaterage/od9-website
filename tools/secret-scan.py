@@ -153,6 +153,13 @@ UNIVERSAL = [
     ("openai/anthropic key",         re.compile(r"\bsk-[A-Za-z0-9_\-]{30,}")),
     ("bcrypt hash",                  re.compile(r"\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}")),
     ("bitwarden session",            re.compile(r"BW_SESSION\s*=\s*[\"']?[A-Za-z0-9+/=]{40,}")),
+    # Cloudflare's prefixed formats: a prefix, 40 characters and an 8-character checksum.
+    # cfk_ Global API Key, cfut_ user token, cfat_ account token, cfast_ Access service
+    # token secret. Added 2026-11-22: a cfut_ token able to edit DNS sat in a memory note
+    # as "**API token:** `...`" (prose, so no name rule saw it) and was committed nightly
+    # for three months because this list had no Cloudflare shape.
+    #   https://developers.cloudflare.com/fundamentals/api/get-started/token-formats/ (read 2026-11-22)
+    ("Cloudflare API credential",    re.compile(r"\bcf(?:k|ut|at|ast)_[A-Za-z0-9]{40}[0-9a-f]{8}\b")),
 ]
 
 PUBLIC = [
@@ -234,6 +241,11 @@ FIXTURES = [
     ("github token",     "a.sh",   "GH=" + _J(["gh", "p_"]) + "b" * 36, True),
     ("aws key",          "a.txt",  _J(["AK", "IA"]) + "IOSFODNN7EXAMPLE", True),
     ("pem key",          "a.txt",  "-----BEGIN " + _J(["OPENSSH PRIVATE", " KEY"]) + "-----", True),
+    # The shape that leaked on 2026-11-22: a Cloudflare token in PROSE, in a memory note.
+    ("cloudflare in prose", "memory/note.md", "**API token:** `" + _J(["cf", "ut_"]) + "A1b2C3d4E5" * 4 + "0a1b2c3d` (in the vault)", True),
+    ("cloudflare account token", "a.json", '{"t": "' + _J(["cf", "at_"]) + "Z9y8X7w6V5" * 4 + '1b2c3d4e"}', True),
+    ("cloudflare prefix in prose", "a.md", "New tokens start with `cfut_`, then 40 characters and a checksum.", False),
+    ("cloudflare short tail", "a.md", "cfut_tooShortToBeAToken123", False),
     # Name-based positives are assembled too — a plain literal here makes the scanner
     # flag its own fixtures and refuse every commit that touches this file.
     ("named password",   "a.py",   _J(["DB_PASS", "WORD"]) + ' = "' + _J(["hunter2", "islongenough"]) + '"', True),
