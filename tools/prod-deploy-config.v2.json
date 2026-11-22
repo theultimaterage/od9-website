@@ -262,6 +262,13 @@
         "cmd": "/mnt/c/Users/Rage/AppData/Local/Programs/Python/Python312/python.exe tests/check_origin_refusals.py --selftest && /mnt/c/Users/Rage/AppData/Local/Programs/Python/Python312/python.exe tests/check_origin_refusals.py",
         "_why": "Added 2026-11-22. A .git folder sat in the production docroot for eight months and the origin served it, because the dotfile rule matches a file's name and Cloudflare's edge hid the answer from every outside probe. Local Apache has the same .htaccess files and no edge, so it answers what the origin would. With the dot-directory rule removed this refuses the deploy with three findings; with config/.htaccess moved away, two.",
         "timeout": 120
+      },
+      {
+        "name": "the purge-token tool still refuses a token that can do more than purge (tools/set_purge_token.py --selftest: a fake Cloudflare and a throwaway config)",
+        "cmd": "/mnt/c/Users/Rage/AppData/Local/Programs/Python/Python312/python.exe tools/set_purge_token.py --selftest",
+        "_why": "Added 2026-11-22. The token this deploy purges with is read from the gitignored tools/prod-deploy-config.json. A token in that file should be able to purge and nothing else, so tools/set_purge_token.py places one only after Cloudflare has refused it DNS, zone settings, certificates and page rules. This runs its selftest (24 checks; ten deliberate breakages each caught) so the tool cannot rot unseen between rotations.",
+        "parallel": true,
+        "timeout": 120
       }
     ],
     "_commands_note": "Added 2026-10-02. od9 has no PHPUnit suite (see _phpunit_why_absent), so its first behavioural gate is three standalone scripts that each exit non-zero on a failure. They pin the contact form's fix: from 2026-06-16 to 2026-10-02 every notice went to Brevo, which accepted and dropped all 236 while the form reported success. test_mail_route.php also refuses a deploy that would keep the home-domain list only in config/mail.php, which this deploy excluded until 2026-10-11, so a fix there would never have reached production; the list stays in includes/mail.php, one definition. Ten deliberate breakages were each caught before this gate was added.",
