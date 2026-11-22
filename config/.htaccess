@@ -1,9 +1,10 @@
 # Nothing in config/ is a web address, here or on a server.
 #
 # Every file in this folder is read from disk by PHP. Until 2026-11-22 each could
-# also be REQUESTED, and config/bootstrap.php, which requires the shared platform
+# also be REQUESTED, and one of them, a bootstrap that required the shared platform
 # by a Windows path, answered such a request on the server with a PHP fault (one of
-# the 68 a scanner drew that night). Refusing HTTP changes nothing that works.
+# the 68 a scanner drew that night). That file was retired the same day with the
+# admin wrappers it served. Refusing HTTP changes nothing that works.
 # Proven on local Apache by tests/check_origin_refusals.py at every deploy.
 <IfModule mod_authz_core.c>
     Require all denied

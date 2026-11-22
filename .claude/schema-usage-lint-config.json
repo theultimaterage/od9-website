@@ -65,7 +65,6 @@
     "api/v1/pulse.php:think_tank_attendance",
     "api/v1/pulse.php:think_tank_sessions",
     "api/v1/pulse.php:users",
-    "check-admin.php:admins",
     "dashboard/board.php:cohort_members",
     "dashboard/board.php:cohorts",
     "dashboard/board.php:content_completion",

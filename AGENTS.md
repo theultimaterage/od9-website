@@ -12,6 +12,10 @@
 [2026-01-30] v1.0 - Initial creation with core patterns from admin conversion
 [2026-02-06] v1.1 - CRITICAL FIX: SITE_ROOT changed to SITE_PATH (Bootstrap.php requires SITE_PATH)
 [2026-02-06] v1.2 - Added page-template.php bridge for SITE_ROOT/SITE_PATH compatibility
+[2026-11-22] v1.3 - RETIRED: the local admin wrappers (private/admin), the /admin router and
+             config/bootstrap.php. OD9's admin is the shared platform's; its local door is
+             http://localhost/shared-platform/admin/login.php?site=od9. Every pattern below that
+             loads config/bootstrap.php or names private/admin describes what was removed.
 ```
 
 ---

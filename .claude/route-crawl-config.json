@@ -25,8 +25,6 @@
     "curriculum/_codex.php",
     "contact-handler.php",
     "founding_patron_launch_sender.php",
-    "check-admin.php",
-    "check_db.php",
     "_sof_board_harness.php",
     "download.php",
     "*-handler.php",
@@ -35,10 +33,10 @@
   "_excludes_why": [
     "SAFETY FIRST, not tidiness. A crawler requests every route it discovers, so anything that SENDS or MUTATES on GET must never be discoverable: api/drip/sender.php and weekly_lovelogic_sender.php mail real subscribers, contact-handler.php and founding_patron_launch_sender.php send, api/soundcloud/set_sotw.php and api/v1/me/settings.php write. Excluding api/ and the senders wholesale is the safe boundary \u2014 an endpoint is not a page, and its health belongs to its own smoke test.",
     "includes/ and dashboard/includes/ are partials loaded BY pages; requested directly they fatal on missing scope and would report a fault that does not exist for any visitor.",
-    "config/ holds credentials and *.example.php stubs. private/ is the admin area and is named for what it is.",
+    "config/ holds credentials and *.example.php stubs. private/ held the old local admin wrappers until they were retired on 2026-11-22; what is left there (mail partials, migrations) is never a page, and the server refuses the whole folder.",
     "curriculum/_codex.php is the shared renderer, not a lesson; the 16 lessons under curriculum/<tier>/ ARE crawled, because they are the pages the Atlas and the Forge link to.",
     "download.php streams a file rather than rendering a page.",
-    "admin/index.php is a ROUTER that forwards /admin/<path> into private/admin/<path>, so crawling it walks straight through the private/ exclusion into the admin dashboard. Excluding private/ while leaving its front door open would have been an exclusion in name only.",
+    "admin/ held a ROUTER (admin/index.php) that forwarded /admin/<path> into private/admin/<path>; it was retired with the wrappers on 2026-11-22. The two admin/ patterns stay: excluding private/ while a front door to it could come back would be an exclusion in name only.",
     "email-templates/ holds the shared email chrome (a layout partial included by the mailers), not a page. It was the crawl's only finding on the first run, reported as 'no response' rather than a 5xx because its directory name contains a space \u2014 a reminder that a route list built from the filesystem inherits the filesystem's oddities, and that 'no response' is not the same finding as '500'."
   ],
   "ssh": {

@@ -20,12 +20,25 @@ Refused means 403, a rule answering. A 404 only says nothing was there, which is
 server with the rule deleted says too; so the dot-directory rule answers 403 on purpose,
 and a 404 where a refusal is owed is a finding here.
 
+Since the cleanup of 2026-11-22 it also holds three things about the TREE, read from git, because
+a rule that refuses a folder is the second line and "the file is not there" is the first:
+  - the old local admin door stays gone. It was 65 wrapper pages under private/admin, a router
+    under admin/, config/bootstrap.php and two root debug scripts; on a server every one of them
+    could only fault. One of them coming back is a finding.
+  - under private/ only the refusal rule ships. Anything else tracked there must be left out by
+    the deploy's excludes.
+  - no tracked file is named by this repository's own ignore rules. private/logs/security.log sat
+    in this public repository for nine months that way: it was added before the rule, and an
+    ignore rule does nothing for a file that is already tracked. `git ls-files -ci` lists exactly
+    that shape; the one deliberate case is named below with its reason.
+
 Runs on Windows Python against local XAMPP (the deploy's local_base_url). Exit 0 clean,
 1 something is served or reachable that must not be, 2 it could not check.
 """
 import fnmatch
 import io
 import json
+import os
 import pathlib
 import re
 import shutil
@@ -54,9 +67,22 @@ SWEEP_PROBE = "/sentinel-probe/.d/x"
 SHIPPED_IF = '<If "%{DOCUMENT_ROOT} !~ /^[A-Za-z]:/">'
 REVERSED_IF = '<If "%{DOCUMENT_ROOT} =~ /^[A-Za-z]:/">'
 WINDOWS_REQUIRE = re.compile(r"""(?:require|include)(?:_once)?[ (]*['"][A-Za-z]:[/\\]""")
-# Where a literal Windows require is known and can do no harm on a server: private/ is
-# refused over HTTP there, and so is config/.
-DEAD_ON_SERVERS = ("private/", "config/bootstrap.php")
+# The old local admin door, retired 2026-11-22. None of it may come back.
+RETIRED_ADMIN_DIRS = ("private/admin/",)
+RETIRED_ADMIN_FILES = ("admin/index.php", "admin/.htaccess", "config/bootstrap.php", "check_db.php", "check-admin.php")
+# The one thing under private/ that a deploy sends: the rule that refuses the folder.
+PRIVATE_SHIPS = ("private/.htaccess",)
+# Tracked although an ignore rule names it, on purpose, each with its reason.
+TRACKED_ON_PURPOSE = {
+    "config/database.php": "tracked since the first commit; it reads its password from the environment (scanned "
+                           "clean 2026-11-22), is excluded from the deploy, and the fleet sweep compares it with "
+                           "production's own copy under a standing acknowledgement",
+}
+# The variables that tie a git command to ONE repository. A commit hook exports its own (for a
+# commit that names its paths, GIT_INDEX_FILE is that commit's index, absolute), and a git call
+# on another repository must not inherit them (claude-skills df0bf0e, 2026-11-22).
+GIT_LOCAL = {"GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX", "GIT_COMMON_DIR",
+             "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES"}
 
 
 class _NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -113,11 +139,43 @@ def excluded(path: str, patterns: list) -> bool:
 
 
 def windows_requires(files: dict, patterns: list) -> list:
-    """Deployable PHP that literally requires a Windows path, outside the places where that
-    is known and refused. `files` is {repo path: text}. Pure."""
+    """Deployable PHP that literally requires a Windows path. No folder is exempt since the old
+    admin door was retired. `files` is {repo path: text}. Pure."""
     return sorted(path for path, text in files.items()
-                  if path.endswith(".php") and WINDOWS_REQUIRE.search(text)
-                  and not path.startswith(DEAD_ON_SERVERS) and not excluded(path, patterns))
+                  if path.endswith(".php") and WINDOWS_REQUIRE.search(text) and not excluded(path, patterns))
+
+
+def retired_back(tracked: list) -> list:
+    """Tracked paths that belong to the retired admin door. Pure."""
+    return sorted(p for p in tracked if p.startswith(RETIRED_ADMIN_DIRS) or p in RETIRED_ADMIN_FILES)
+
+
+def private_surplus(tracked: list, patterns: list) -> list:
+    """Tracked files under private/ that a deploy would send, other than the refusal rule. Pure."""
+    return sorted(p for p in tracked
+                  if p.startswith("private/") and p not in PRIVATE_SHIPS and not excluded(p, patterns))
+
+
+def unexplained_ignored(listed: list) -> list:
+    """Of the tracked files an ignore rule names (git ls-files -ci --exclude-standard), the ones
+    nobody has explained. Pure."""
+    return sorted(p for p in listed if p and p not in TRACKED_ON_PURPOSE)
+
+
+def tree_findings(tracked: list, ignored_tracked: list, excludes: list, php_files: dict, admin_on_disk: bool) -> list:
+    """What the tree itself must not hold, as findings. Pure."""
+    out = [f"{p} is back: the old admin door was retired on 2026-11-22 and can only fault on a server"
+           for p in retired_back(tracked)]
+    if admin_on_disk:
+        out.append("private/admin/ exists on disk: rsync sends the working tree, tracked or not")
+    out += [f"{p} would be deployed: under private/ only the refusal rule ships (leave its folder out in the "
+            "deploy's excludes)" for p in private_surplus(tracked, excludes)]
+    out += [f"{p} is tracked although this repository's own ignore rules name it: a file added before its rule "
+            "keeps being published. Untrack it (git rm --cached), or explain it in TRACKED_ON_PURPOSE"
+            for p in unexplained_ignored(ignored_tracked)]
+    out += [f"{p} requires a Windows path and would be deployed: it cannot run on the server"
+            for p in windows_requires(php_files, excludes)]
+    return out
 
 
 def deploy_excludes() -> list:
@@ -125,13 +183,29 @@ def deploy_excludes() -> list:
     return list(cfg["mappings"][0].get("exclude", []))
 
 
-def tracked_php() -> dict:
-    out = subprocess.run(["git", "-C", str(ROOT), "ls-files", "*.php"], capture_output=True, text=True,
-                         encoding="utf-8", errors="replace", timeout=120)
+def git_env() -> dict:
+    """The environment for a git call on a repository this check names itself."""
+    names = set(GIT_LOCAL)
+    try:
+        said = subprocess.run(["git", "rev-parse", "--local-env-vars"], capture_output=True, text=True,
+                              timeout=15, stdin=subprocess.DEVNULL)
+        names |= {n.strip() for n in said.stdout.splitlines() if n.strip().startswith("GIT_")}
+    except Exception:  # noqa: BLE001 - the fixed list above still covers the ones that bite
+        pass
+    return {k: v for k, v in os.environ.items() if k not in names}
+
+
+def git_lines(repo: pathlib.Path, *args: str) -> list:
+    out = subprocess.run(["git", "-C", str(repo), *args], capture_output=True, text=True, encoding="utf-8",
+                         errors="replace", timeout=120, stdin=subprocess.DEVNULL, env=git_env())
     if out.returncode != 0:
-        raise RuntimeError("git could not list the tracked files")
+        raise RuntimeError(f"git {' '.join(args[:2])} failed: {out.stderr.strip()[:160]}")
+    return [ln for ln in out.stdout.splitlines() if ln.strip()]
+
+
+def tracked_php() -> dict:
     files = {}
-    for rel in out.stdout.splitlines():
+    for rel in git_lines(ROOT, "ls-files", "*.php"):
         try:
             files[rel] = io.open(ROOT / rel, encoding="utf-8", errors="replace").read()
         except OSError:
@@ -165,9 +239,58 @@ def selftest() -> int:
             "includes/env.php": "<?php $local = strpos(__DIR__, 'C:/xampp') === 0;",
             "tools/dev.php": "<?php include 'D:\\\\work\\\\x.php';",
             "notes.md": "require_once 'C:/xampp/x.php';"}
-    check("a deployable page that requires a Windows path is found; the known dead ones, a file the "
-          "deploy leaves out, a test for a path and a document are not",
-          windows_requires(tree, ["tools/", "*.py"]) == ["index.php"])
+    check("a deployable page that requires a Windows path is found wherever it sits (no folder is exempt "
+          "since the admin door was retired); a file the deploy leaves out, a test for a path and a document are not",
+          windows_requires(tree, ["tools/", "*.py"]) == ["config/bootstrap.php", "index.php", "private/admin/tiers/list.php"])
+    tracked = ["index.php", "private/.htaccess", "private/admin/login.php", "private/email-templates/welcome.php",
+               "private/migrations/004.sql", "admin/index.php", "config/bootstrap.php", "config/database.php",
+               "check_db.php", "administrator/x.php"]
+    check("every part of the retired admin door is named if it comes back, and nothing else is",
+          retired_back(tracked) == ["admin/index.php", "check_db.php", "config/bootstrap.php", "private/admin/login.php"])
+    check("under private/ only the refusal rule ships: a file the deploy would send is found, one the excludes "
+          "leave out is not",
+          private_surplus(tracked, ["migrations/"]) == ["private/admin/login.php", "private/email-templates/welcome.php"]
+          and private_surplus(tracked, ["migrations/", "private/email-templates/", "private/admin/"]) == [])
+    check("a tracked file that an ignore rule names is a finding unless it is explained here",
+          unexplained_ignored(["config/database.php", "private/logs/security.log", ""]) == ["private/logs/security.log"])
+    dirty = tree_findings(tracked, ["config/database.php", "private/logs/security.log"], ["migrations/", "tools/"],
+                          tree, True)
+    check("the tree's findings are all reported together: four retired paths, the folder on disk, two files "
+          "private/ would ship, one unexplained ignored file, three Windows requires",
+          len(dirty) == 11 and sum("is back" in f for f in dirty) == 4 and sum("exists on disk" in f for f in dirty) == 1
+          and sum("would be deployed: under private/" in f for f in dirty) == 2
+          and sum("ignore rules name it" in f for f in dirty) == 1 and sum("requires a Windows path" in f for f in dirty) == 3)
+    check("a tree with none of it reports nothing",
+          tree_findings(["index.php", "private/.htaccess", "private/migrations/004.sql", "config/database.php"],
+                        ["config/database.php"], ["migrations/"], {"index.php": "<?php echo 1;"}, False) == [])
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as td:
+        repo = pathlib.Path(td) / "r"
+        (repo / "logs").mkdir(parents=True)
+        (repo / "config").mkdir()
+        (repo / "logs" / "app.log").write_text("x", encoding="utf-8")
+        (repo / "config" / "database.php").write_text("<?php", encoding="utf-8")
+        (repo / "keep.txt").write_text("x", encoding="utf-8")
+        decoy = pathlib.Path(td) / "another-commits-index"
+        was = os.environ.get("GIT_INDEX_FILE")
+        os.environ["GIT_INDEX_FILE"] = str(decoy)      # what a commit hook exports for a path-named commit
+        try:
+            subprocess.run(["git", "init", "-q", str(repo)], capture_output=True, timeout=60,
+                           stdin=subprocess.DEVNULL, env=git_env())
+            git_lines(repo, "add", "logs/app.log", "config/database.php", "keep.txt")
+            before_rule = git_lines(repo, "ls-files", "-ci", "--exclude-standard")
+            (repo / ".gitignore").write_text("logs/" + chr(10) + "config/database.php" + chr(10), encoding="utf-8")
+            after_rule = git_lines(repo, "ls-files", "-ci", "--exclude-standard")
+        finally:
+            if was is None:
+                os.environ.pop("GIT_INDEX_FILE", None)
+            else:
+                os.environ["GIT_INDEX_FILE"] = was
+        check("on a real repository: nothing is listed before the ignore rule exists, and a file added before "
+              "its rule is listed after it (the security.log shape); the explained one is not a finding",
+              before_rule == [] and sorted(after_rule) == ["config/database.php", "logs/app.log"]
+              and unexplained_ignored(after_rule) == ["logs/app.log"])
+        check("this check's git calls do not write into another commit's index (a commit hook exports one)",
+              not decoy.exists())
     check("the exclude matcher reads a folder at any depth, a path and a name pattern",
           excluded("a/tools/x.php", ["tools/"]) and excluded("config/database.php", ["config/database.php"])
           and excluded("x/y.bak", ["*.bak"]) and not excluded("toolsmith/x.php", ["tools/"]))
@@ -204,8 +327,10 @@ def main() -> int:
             (scratch / name).mkdir()
             (scratch / name / "probe.txt").write_text("x", encoding="utf-8")
             (scratch / name / ".htaccess").write_text(rule, encoding="utf-8", newline="\n")
+        # /config/zz-no-such-file.php does not exist: a missing name inside a refused folder must
+        # still answer 403, or the sweep's daily watch on a removed file would stop meaning anything.
         must_refuse = (f"{web}/.hidden/probe.txt", "/.git/HEAD", "/.git/config", "/.svn/entries",
-                       SWEEP_PROBE, "/.env", "/.user.ini", "/config/bootstrap.php", "/config/database.php",
+                       SWEEP_PROBE, "/.env", "/.user.ini", "/config/zz-no-such-file.php", "/config/database.php",
                        f"{web}/reversed/probe.txt")
         must_serve = (f"{web}/seen/probe.txt", "/.well-known/agent.json", "/llms.txt",
                       f"{web}/shipped/probe.txt")
@@ -223,10 +348,13 @@ def main() -> int:
                             "ask the production origin whether the dot-directory rule is live")
     finally:
         shutil.rmtree(scratch, ignore_errors=True)
-    if (ROOT / "private" / "admin" / "generate-wrappers.php").exists():
-        findings.append("private/admin/generate-wrappers.php is back: it writes files and checks no login")
-    stray = windows_requires(tracked_php(), deploy_excludes())
-    findings += [f"{p} requires a Windows path and would be deployed: it cannot run on the server" for p in stray]
+    tracked = git_lines(ROOT, "ls-files")
+    excludes = deploy_excludes()
+    if len(tracked) < 100:
+        print(f"origin-refusals: git listed only {len(tracked)} tracked file(s) here. UNCHECKED, not clean.")
+        return 2
+    findings += tree_findings(tracked, git_lines(ROOT, "ls-files", "-ci", "--exclude-standard"), excludes,
+                              tracked_php(), (ROOT / "private" / "admin").exists())
     for line in findings:
         print("  FINDING:", line)
     for path in unchecked:
