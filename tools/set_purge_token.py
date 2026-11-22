@@ -7,8 +7,11 @@ token for that from the gitignored tools/prod-deploy-config.json (the tracked co
 is read by every deploy should be able to do one thing. One that can ONLY purge one zone's cache
 does little harm there; one that can also read or edit DNS, zone settings or certificates does
 not belong in it, whatever it was first made for. So a purge-only token is the only kind this
-tool will place, and --audit asks the same questions of the token already in the file, for a
-deploy gate to run.
+tool will place, and --audit asks the same questions of the token already in the file. --audit
+is one of this repository's pre-deploy commands: the deploy checks the token it is about to use.
+Until 2026-11-24 (UTC) it reports a token that can do more than purge as a WARNING; from that
+day it REFUSES the deploy. The two days exist because making the narrow token at Cloudflare is
+a step only the account's owner can take; nothing has to be remembered for the refusal to start.
 
 THE VALUE NEVER APPEARS on a command line, in output or in a log. It arrives in the environment,
 straight from the vault:
@@ -92,6 +95,7 @@ MUST_BE_REFUSED = (
     ("page rules", "/zones/{zone}/pagerules"),
 )
 CLEAR_REFUSAL = (400, 401, 403)                         # the token is not allowed; anything else is not an answer
+AUDIT_REFUSES_FROM = datetime.date(2026, 11, 24)        # UTC. Before it, a broad token in the file is a WARNING
 EX_OK, EX_REFUSED, EX_COULD_NOT, EX_CRASH = 0, 1, 2, 3
 NL = chr(10)
 
@@ -298,8 +302,10 @@ def place(token: str, config: pathlib.Path, tracked: pathlib.Path, log_path: pat
     return EX_OK
 
 
-def audit(config: pathlib.Path, tracked: pathlib.Path, log_path: pathlib.Path, transport) -> int:
+def audit(config: pathlib.Path, tracked: pathlib.Path, log_path: pathlib.Path, transport,
+          today: datetime.date | None = None) -> int:
     """The deploy gate: what can the token in the file do? Never purges."""
+    today = today or datetime.datetime.now(datetime.timezone.utc).date()
     try:
         _raw, cfg = load_config(config)
         probe = probe_url_from(tracked)
@@ -323,12 +329,14 @@ def audit(config: pathlib.Path, tracked: pathlib.Path, log_path: pathlib.Path, t
             "deploy's purge step will fail loudly until a purge-only token is placed with tools/set_purge_token.py.")
         return EX_OK
     if verdict == "broad":
-        say(f"purge-token audit: REFUSED. The token in {config.name} (sha256 {h(token)}) can read "
-            + ", ".join(can_read) + ". A deploy must not run with a token that can do more than purge: roll that "
-            "token at Cloudflare, make one with the Cache Purge permission for this zone only, and place it with "
-            "tools/set_purge_token.py (the command is at the top of that file).")
-        record(log_path, action="audit-refused", token=h(token), can_read=can_read)
-        return EX_REFUSED
+        refuses = today >= AUDIT_REFUSES_FROM
+        say(f"purge-token audit: {'REFUSED' if refuses else 'WARNING'}. The token in {config.name} (sha256 {h(token)}) "
+            "can read " + ", ".join(can_read) + ". A deploy must not run with a token that can do more than purge: "
+            "roll that token at Cloudflare, make one with the Cache Purge permission for this zone only, and place "
+            "it with tools/set_purge_token.py (the command is at the top of that file)."
+            + ("" if refuses else f" This becomes a refusal on {AUDIT_REFUSES_FROM.isoformat()} (UTC)."))
+        record(log_path, action="audit-refused" if refuses else "audit-warned", token=h(token), can_read=can_read)
+        return EX_REFUSED if refuses else EX_OK
     say(f"purge-token audit: ok. The token in the file is active and is refused DNS, zone settings, certificates "
         f"and page rules (sha256 {h(token)}).")
     return EX_OK
@@ -475,9 +483,17 @@ def selftest() -> int:
                 ("audit: a rate limit is 'could not ask'", {"read_status": 429}, EX_COULD_NOT, "COULD NOT ASK"),
         ):
             cf = cloudflare(**kwargs)
-            rc, said = run(audit, cfgp, tracked, logp, cf)
+            rc, said = run(audit, cfgp, tracked, logp, cf, AUDIT_REFUSES_FROM)
             expect(label + ", without purging anything and without printing the value",
                    rc == want and word in said and other not in said and not any(m == "POST" for m, _p in cf.calls))
+        day_before = AUDIT_REFUSES_FROM - datetime.timedelta(days=1)
+        rc, said = run(audit, cfgp, tracked, logp, cloudflare(can_read=("DNS",)), day_before)
+        expect("audit: the day before the refusal starts, the same broad token is a WARNING that names the date, "
+               "and the deploy goes on",
+               rc == EX_OK and "WARNING" in said and "REFUSED" not in said and AUDIT_REFUSES_FROM.isoformat() in said)
+        rc, said = run(audit, cfgp, tracked, logp, cloudflare(can_read=("DNS",)),
+                       AUDIT_REFUSES_FROM + datetime.timedelta(days=400))
+        expect("audit: the refusal does not lapse later", rc == EX_REFUSED and "REFUSED" in said)
         cfgp.write_text(original.replace(other, ""), encoding="utf-8")
         rc, said = run(audit, cfgp, tracked, logp, cloudflare())
         expect("audit: a file with no token passes and says the purge will not run", rc == EX_OK and "NOT PURGED" in said)

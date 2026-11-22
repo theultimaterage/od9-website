@@ -355,7 +355,14 @@
       {
         "name": "the purge-token tool still refuses a token that can do more than purge (tools/set_purge_token.py --selftest: a fake Cloudflare and a throwaway config)",
         "cmd": "/mnt/c/Users/Rage/AppData/Local/Programs/Python/Python312/python.exe tools/set_purge_token.py --selftest",
-        "_why": "Added 2026-11-22. The token this deploy purges with is read from the gitignored tools/prod-deploy-config.json. A token in that file should be able to purge and nothing else, so tools/set_purge_token.py places one only after Cloudflare has refused it DNS, zone settings, certificates and page rules. This runs its selftest (24 checks; ten deliberate breakages each caught) so the tool cannot rot unseen between rotations.",
+        "_why": "Added 2026-11-22. The token this deploy purges with is read from the gitignored tools/prod-deploy-config.json. A token in that file should be able to purge and nothing else, so tools/set_purge_token.py places one only after Cloudflare has refused it DNS, zone settings, certificates and page rules. This runs its selftest (26 checks; eleven deliberate breakages each caught) so the tool cannot rot unseen between rotations.",
+        "parallel": true,
+        "timeout": 120
+      },
+      {
+        "name": "the token this deploy purges with can only purge (tools/set_purge_token.py --audit asks Cloudflare, read-only; a warning until 2026-11-24 UTC, a refusal from that day)",
+        "cmd": "/mnt/c/Users/Rage/AppData/Local/Programs/Python/Python312/python.exe tools/set_purge_token.py --audit",
+        "_why": "Added 2026-11-22. The purge step reads its token from a gitignored file that was filled by hand. This asks Cloudflare what the token in that file can do and refuses a deploy that would run with one able to read DNS, zone settings, certificates or page rules. It never purges. A token Cloudflare no longer calls active passes with a note (it can do nothing, and the purge step says so itself). No clear answer from Cloudflare is exit 2: a gate that could not look is not a pass. The refusal starts on 2026-11-24 because making the narrow token is a step only the account's owner can take; until then the same finding is printed as a warning.",
         "parallel": true,
         "timeout": 120
       }
