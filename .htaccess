@@ -120,6 +120,25 @@ RewriteRule ^epk/?$ https://od9.freshthaplatform.com/epk [R=302,L]
     </IfModule>
 </FilesMatch>
 
+# Dot-DIRECTORIES - the rule above cannot see inside one. FilesMatch matches a
+# file's NAME, and the name of /.git/HEAD is HEAD. From 2026-03-16 this docroot
+# held a .git folder (left by a `git reset` on the server) and the origin served
+# it. On 2026-11-22 a scanner calling itself gitdump/1.0 read HEAD, config and
+# the index, then asked for 120 of the paths the index lists, in two seconds.
+# Cloudflare refuses /.git/ from most places, so every probe from the
+# workstation had read "protected".
+#
+# So: a path that goes THROUGH a segment starting with a dot is not found, at
+# any depth, except .well-known (ACME, agent.json, the UCP profile). A dotFILE is
+# still the rule above's (403). RedirectMatch and not a RewriteRule on purpose:
+# mod_alias rules merge down into every subdirectory, while a subdirectory with
+# rewrite rules of its own (this tree has eight) replaces its parent's.
+#   https://httpd.apache.org/docs/2.4/mod/mod_alias.html#redirectmatch (read 2026-11-22)
+#   https://httpd.apache.org/docs/2.4/mod/mod_rewrite.html#rewriteoptions (read 2026-11-22)
+# Proven on local Apache by tests/check_origin_refusals.py at every deploy, and
+# asked of the origin itself every day by the fleet sweep (prod-sentinel).
+RedirectMatch 404 "/\.(?!well-known/)[^/]+/"
+
 # Backup and editor droppings, matched by SHAPE not by name.
 #
 # On 2026-08-31 this docroot held 23 of them and had no rule at all. Four were

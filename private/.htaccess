@@ -1,0 +1,27 @@
+# Nothing under private/ is a web address on a server.
+#
+# This tree is the OD9 tenant's LOCAL admin scaffolding: wrapper pages that
+# require the shared platform by a Windows path (C:/xampp/...), a bootstrap that
+# does the same, mail partials, migrations and a log. On the server none of the
+# pages can run, and until 2026-11-22 every one of them could still be REQUESTED.
+# That night a scanner asked for 70 of them in two seconds: 68 answered with a PHP
+# fault (which paged as four new fault shapes), and one, generate-wrappers.php
+# (deleted the same day), checked no login and wrote 36 files into this tree. It
+# had done the same on 2026-09-24. Cloudflare refuses /private/ from most places;
+# the origin did not, and private/logs/security.log was served to anyone it let
+# through.
+#
+# Mail partials and migrations are read from disk by PHP and by cron, never over
+# HTTP, so refusing HTTP changes nothing that works.
+#
+# The test is the DOCUMENT ROOT, which the server sets and a visitor cannot: a
+# docroot that starts with a drive letter is the local XAMPP checkout, where the
+# admin pages do run and are worked on. Anything else is a server, and is refused.
+#   https://httpd.apache.org/docs/2.4/expr.html (read 2026-11-22: DOCUMENT_ROOT, !~)
+#   https://httpd.apache.org/docs/2.4/sections.html (read 2026-11-22: <If> merges last)
+# That page does not say an authorization rule works inside <If>, so it is PROVEN,
+# not assumed: tests/check_origin_refusals.py plants the same rule with the test
+# reversed in a scratch folder on local Apache and requires a 403 from it.
+<If "%{DOCUMENT_ROOT} !~ /^[A-Za-z]:/">
+    Require all denied
+</If>
