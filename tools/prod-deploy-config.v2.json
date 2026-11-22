@@ -18,11 +18,10 @@
     }
   },
   "origin_must_refuse": [
-    "/private/admin/login.php",
     "/private/logs/security.log",
-    "/config/bootstrap.php"
+    "/config/analytics.example.php"
   ],
-  "_origin_must_refuse_note": "Added 2026-11-22. Read by the fleet sweep (prod-sentinel, check `exposure`), not by the deploy engine: every day it asks the ORIGIN, behind Cloudflare, for each path here beside /.git and /.env. 403 or 404 is fine; 200 is critical; a redirect or a fault is a warning that says the request reached the page. One real file per rule this site added that day: a page in private/ (the admin login, which answered a scanner 302), the log in private/ (served to anyone who got past the edge) and the bootstrap in config/ (a PHP fault). A public smoke test cannot hold these: from here the edge answers 403 for all three whatever the origin does, which is how they went unseen.",
+  "_origin_must_refuse_note": "Added 2026-11-22. Read by the fleet sweep (prod-sentinel, check `exposure`), not by the deploy engine: every day it asks the ORIGIN, behind Cloudflare, for each path here beside /.git and /.env. 403 or 404 is fine; 200 is critical; a redirect or a fault is a warning that says the request reached the page. One real file per rule this site added that day, and each chosen because asking for it does nothing: the log in private/ is a static file, and config/analytics.example.php holds comments only. NEVER list a page that faults or acts when requested (config/bootstrap.php, an admin wrapper): the sweep's own daily question would then write a PHP fault into the server's error log, and the error-log watcher pages on new fault shapes (it did, at 02:26 on 2026-11-22, for a scanner's 68). A public smoke test cannot hold these: from here the edge answers 403 for both whatever the origin does, which is how they went unseen.",
   "_topology_note": "Connects AS the owning account. The retired tools/deploy.py SCP'd each file to /tmp and sudo-installed it as ultimaterage because 'the SSH user cannot write offda9's web root directly' — that is obsolete: /home/offda9/.ssh already holds an automation key, both ~/.ssh/id_rsa_automation and ~/.ssh/freshthaband_key authenticate directly as offda9@, the account owns its writable docroot, and rsync is present. So od9 needs NO engine changes; plain rsync-as-owner works exactly like the platform repos.",
   "remove_remote": [
     "public_html/dashboard/includes/env.php",
