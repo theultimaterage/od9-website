@@ -90,11 +90,12 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
         return None
 
 
-def status(path: str, base: str = BASE) -> int:
-    """The status the server gives for one path, redirects not followed. 0 = no answer."""
+def status(path: str, base: str = BASE, headers: dict | None = None) -> int:
+    """The status the server gives for one path, redirects not followed. 0 = no answer.
+    `headers` lets a caller name the site (Host), as tests/check_cloudflare_only.py does."""
     opener = urllib.request.build_opener(_NoRedirect)
     try:
-        with opener.open(base + path, timeout=20) as r:
+        with opener.open(urllib.request.Request(base + path, headers=headers or {}), timeout=20) as r:
             return r.status
     except urllib.error.HTTPError as e:
         return e.code

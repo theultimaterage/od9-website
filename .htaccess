@@ -14,6 +14,83 @@ RewriteEngine On
 # Directories with a real index.php/index.html are unaffected; they keep serving it.
 Options -Indexes
 
+# Cloudflare-only origin (2026-11-23). On the server, this site answers only
+# requests that came through Cloudflare, or from the server itself.
+#
+# WHY. The server's address is public: mail.offda9.com is a DNS-only record on
+# it (mail cannot be proxied), and that name lands in this same docroot. On
+# 2026-11-22 a scanner went straight to the address, read /.git and ran a
+# script; none of its 135 requests is in Cloudflare's records. Every rule kept
+# at Cloudflare was advisory for anyone who knows the address. This makes them
+# binding.
+#
+# WHAT IT READS: %{CONN_REMOTE_ADDR}, the address at the other end of the TCP
+# connection. Never REMOTE_ADDR or -R: the server loads mod_remoteip (cPanel's
+# knownproxies setup), which rewrites REMOTE_ADDR to the visitor named in
+# CF-Connecting-IP. A rule on REMOTE_ADDR would refuse every real visitor, and
+# would believe a forged header wherever the restorer trusts one. "The
+# underlying client IP of the connection is available in the %{c}a format
+# string and via the CONN_REMOTE_ADDR variable in expressions":
+#   https://httpd.apache.org/docs/2.4/mod/mod_remoteip.html (read 2026-11-23)
+#   https://httpd.apache.org/docs/2.4/expr.html (read 2026-11-23)
+#
+# WHO IS LET IN: Cloudflare's published ranges (api.cloudflare.com/client/v4/ips,
+# read 2026-11-23, unchanged since 2023-09-28, the same list cPanel's
+# knownproxies data holds on the server) and 72.167.54.213, the server's own
+# address. The fleet sweep's origin probe and cPanel's AutoSSL check
+# (Cpanel-HTTP-Client, every three hours) connect from it.
+#
+# WHAT STAYS OPEN ON PURPOSE:
+#  - /.well-known/acme-challenge/ on every name, for everyone: Let's Encrypt's
+#    HTTP-01 check comes on port 80 from addresses it does not publish, and
+#    mail.offda9.com's certificate depends on it. Matched on the FILE path, not
+#    the URL, so a page plus path info (/x.php/.well-known/acme-challenge/y) is
+#    still refused.
+#  - the rest of /.well-known/: .well-known/.htaccess grants it with
+#    "Satisfy Any", which lets a request past every Require. Public metadata.
+#  - /patreon-webhook and /stream-start: ProxyPass lines root placed in the
+#    vhost send them to the bot before any .htaccess is read.
+#
+# WHERE: on a server only (a docroot that does not start with a drive letter,
+# the same test as private/.htaccess), so the local checkout keeps working. A
+# request that names offda9.com turns it on locally too: that is how the deploy
+# gate asks local Apache for both answers of THIS file. On the server that
+# clause adds nothing, and a client can only use it to refuse itself.
+#
+# An <If> on purpose: <If> sections merge after every folder's own rules ("the
+# enclosed directives in a parent directory will be merged after non-enclosed
+# directives in a subdirectory", httpd.apache.org/docs/2.4/sections.html), so a
+# subfolder's "Require all granted" cannot reopen what this refuses.
+# Proven by tests/check_cloudflare_only.py at every deploy, which also refuses
+# a deploy when this list and Cloudflare's own differ.
+<If "(%{DOCUMENT_ROOT} !~ m#^[A-Za-z]:# || req_novary('Host') =~ m#(^|\.)offda9\.com\.?(:[0-9]+)?$#i) \
+    && %{REQUEST_FILENAME} !~ m#/\.well-known/acme-challenge(/[^/]*)?$# \
+    && !(   %{CONN_REMOTE_ADDR} -ipmatch '173.245.48.0/20' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '103.21.244.0/22' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '103.22.200.0/22' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '103.31.4.0/22' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '141.101.64.0/18' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '108.162.192.0/18' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '190.93.240.0/20' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '188.114.96.0/20' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '197.234.240.0/22' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '198.41.128.0/17' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '162.158.0.0/15' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '104.16.0.0/13' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '104.24.0.0/14' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '172.64.0.0/13' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '131.0.72.0/22' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '2400:cb00::/32' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '2606:4700::/32' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '2803:f800::/32' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '2405:b500::/32' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '2405:8100::/32' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '2a06:98c0::/29' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '2c0f:f248::/32' \
+         || %{CONN_REMOTE_ADDR} -ipmatch '72.167.54.213' )">
+    Require all denied
+</If>
+
 # Transparent WebP: if the browser advertises image/webp AND a same-named
 # .webp twin exists on disk, serve it in place of the .jpg/.png. The HTML
 # keeps requesting the original URL, so there are zero markup changes and
