@@ -1,0 +1,24 @@
+{
+  "_what": "This site's facts for the fleet's one Cloudflare-only gate (~/.claude/skills/prod-deploy/cloudflare_only.py). The rule in .htaccess must equal the text that gate generates from this file plus Cloudflare's current list. One docroot serves offda9.com, www. and the DNS-only mail. name.",
+  "site": "offda9.com",
+  "docroot": "",
+  "local_base": "http://127.0.0.1/od9",
+  "host_clause": "req_novary('Host') =~ m#(^|\\.)offda9\\.com\\.?(:[0-9]+)?$#i",
+  "host_literal": "offda9\\.com",
+  "local_names": ["offda9.com", "www.offda9.com", "mail.offda9.com"],
+  "served_path": "/robots.txt",
+  "_also_refused": "ncz-media/ grants files of one shape with its own rule; the Cloudflare-only <If> must still refuse it.",
+  "also_refused": ["/ncz-media/00000000000000000000000000000000.mp4"],
+  "deploy_config": "tools/prod-deploy-config.v2.json",
+  "_scratch_parent": "tools/ never deploys.",
+  "scratch_parent": "tools",
+  "tree": [
+    {"repo": "."}
+  ],
+  "satisfy_any_homes": [".well-known/.htaccess"],
+  "min_htaccess": 5,
+  "live": {
+    "names": ["offda9.com", "www.offda9.com"],
+    "path": "/robots.txt"
+  }
+}
