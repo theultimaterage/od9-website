@@ -18,7 +18,8 @@
   "satisfy_any_homes": [".well-known/.htaccess"],
   "min_htaccess": 5,
   "live": {
-    "names": ["offda9.com", "www.offda9.com"],
+    "_names": "Asked on the server itself (see the gate's --live). mail. is DNS-only, so it has no Cloudflare side.",
+    "names": ["offda9.com", "www.offda9.com", {"name": "mail.offda9.com", "edge": false}],
     "path": "/robots.txt"
   }
 }
