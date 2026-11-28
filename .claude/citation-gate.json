@@ -106,6 +106,16 @@
       "name": "Schwartz",
       "year": 2027,
       "why": "future-dated 'Schwartz & Tetlock (2027)' (Vol 2 worklist); also caught by the impossible-date rule"
+    },
+    {
+      "name": "Mannheim",
+      "year": 2023,
+      "why": "'Mannheim, K., & Mead, M. (2023). Intergenerational transfer design...' — an invented journal and a ghost co-authorship: 'no real work exists' (VOL2-FABSTATS-PURGE-WORKLIST.md lines 273 to 276 and 288, the manifesto's commit cc520d8 of 2026-11-24, which also removed it from the corpus). Karl Mannheim died in 1947; his real works are not condemned here."
+    },
+    {
+      "name": "Mead",
+      "year": 2023,
+      "why": "the same invented 2023 co-authorship as Mannheim (2023) above: 'no real work exists' (Vol 2 worklist, cc520d8). Margaret Mead died in 1978; her real works and the separately removed apocryphal 'small group' quote are not this entry."
     }
   ],
   "cleared": [
