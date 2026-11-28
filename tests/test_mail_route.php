@@ -56,7 +56,8 @@ ok($ships('includes/mail.php'), 'includes/mail.php is deployed');
 ok(!$ships('config/mail.php') || strpos((string) file_get_contents('config/mail.php'), "define('MAIL_LOCAL_DOMAINS'") === false,
    'the list is not kept only in config/mail.php');
 ok(strpos((string) file_get_contents('includes/mail.php'), "define('MAIL_LOCAL_DOMAINS'") !== false, 'includes/mail.php carries the list');
-ok($ships('includes/FormGuard.php') && $ships('contact-handler.php') && $ships('contact.php'), 'the guard, the handler and the page are deployed');
+ok($ships('includes/od9_form_guard.php') && $ships('includes/form-checks/FormGuard.php') && $ships('includes/form-checks/HumanCheck.php')
+   && $ships('contact-handler.php') && $ships('contact.php'), 'the guard (its copies and this site\'s half), the handler and the page are deployed');
 
 $src = (string) file_get_contents('includes/mail.php');
 $fn = strpos($src, 'function od9_send_mail(');

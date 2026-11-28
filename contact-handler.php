@@ -2,8 +2,10 @@
 /**
  * OD9 Contact Form Handler.
  *
- * Receives the contact.php POST, passes it through FormGuard (includes/FormGuard.php),
- * validates and sanitizes it, and emails it to contact@offda9.com through
+ * Receives the contact.php POST, passes it through the shared form guard (FormGuard, the
+ * engine's, through includes/od9_form_guard.php since 2026-11-28; the human check runs
+ * while its keys are set), validates and sanitizes it, counts it against the hourly limit
+ * (od9_form_limit), and emails it to contact@offda9.com through
  * od9_send_mail(). contact@ is a mailbox on this server, so od9_mail_route()
  * delivers it with PHP mail() and the server's own sendmail. It never goes through
  * Brevo, which accepted and dropped every notice from 2026-06-16 to 2026-10-02
@@ -12,7 +14,10 @@
  * Every outcome is one line in logs/contact-form.jsonl (no name, no address, no
  * message). The daily form canary on the bot (crons/contact_form_canary.py) posts
  * through this handler like a browser and checks that the message reached the
- * mailbox with a clean From and Reply-To.
+ * mailbox with a clean From and Reply-To. It signs its post (od9_form_caller(), caller
+ * contact-canary), which skips Cloudflare's question and nothing else: a script-driven
+ * request gets no token from Cloudflare, and without the pass the canary would fail every
+ * day once the human check is on.
  *
  * The old fallback that called mail() with hand-built headers is gone: it was the
  * same transport as the 'local' route, and its trailing CRLF folded the visitor's
@@ -27,7 +32,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
     exit;
 }
 
-require_once __DIR__ . '/includes/FormGuard.php';
+require_once __DIR__ . '/includes/od9_form_guard.php';
 
 /** One line per outcome in logs/contact-form.jsonl. Never throws; a failed write is logged with its cause. */
 function od9_contact_log(string $outcome, array $extra = []): void
@@ -41,12 +46,13 @@ function od9_contact_log(string $outcome, array $extra = []): void
     }
 }
 
-FormGuard::bootSession();
+od9_form_guard_session();
 try {
-    FormGuard::admit('contact', $_SESSION, $_POST, $_SERVER);
+    FormGuard::admit('contact', $_SESSION, $_POST, $_SERVER, null,
+        od9_form_caller([OD9_FORM_CALLER_CONTACT], (string) file_get_contents('php://input'), $_SERVER));
 } catch (FormGuardRefused $e) { // silent-failure:ignore — logged by FormGuard::record() before the throw; its text is shown to the visitor
     od9_contact_log('refused', ['reason' => $e->reason]);
-    header('Location: contact.php?error=guard');
+    header('Location: contact.php?error=' . ($e->reason === 'no_human' ? 'human' : 'guard'));
     exit;
 }
 
@@ -72,7 +78,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 // Counted only for a message that is about to be sent, so a visitor fixing a typo is
 // not charged for it.
 try {
-    FormGuard::limit('contact', $_SERVER);
+    od9_form_limit('contact', $_SERVER);
 } catch (FormGuardRefused $e) { // silent-failure:ignore — logged by FormGuard::record() before the throw; its text is shown to the visitor
     od9_contact_log('refused', ['reason' => $e->reason]);
     header('Location: contact.php?error=rate');

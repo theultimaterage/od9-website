@@ -3,9 +3,24 @@
  * OD9 Email Subscribe Handler — Double Opt-In Edition
  *
  * Handles signups from:
- *  - Homepage popup form (#popupSignupForm)
- *  - Homepage inline CTA form (#inlineSignupForm)
- *  - Future /wake-up landing pages
+ *  - the popup every page carries (includes/email-popup.php, #popupSignupForm)
+ *  - join.php (#joinPageForm) and wake-up.php (#wakeUpForm)
+ *  - the Discord bot's /link_email and /subscribe_email (cogs/email_link.py in the bot)
+ *
+ * In front of every one of them, in this order (2026-11-28, piece 4 of the form checks;
+ * includes/od9_form_guard.php says why each exists):
+ *  1. the form guard, FormGuard::admit(): the trap, a page rendered in this session, a
+ *     person's wait, the page's script proof and, while its keys are set, Cloudflare's
+ *     human check. The bot carries a signed pass (od9_form_caller()), which skips
+ *     Cloudflare's question and nothing else: it loads join.php and waits like a browser.
+ *  2. what was typed is validated;
+ *  3. the brake, SignupBrake::admit(): no new signup while the day's go unconfirmed;
+ *  4. the hourly limit per visitor, od9_form_limit();
+ * and only then the write and the mail. A refusal is told as one, in JSON:
+ *  403 {"success":false,"error":<the guard's sentence>,"refused":<reason>}, 503 when the
+ *  brake is on, 429 over the limit. tests/test_public_forms_use_the_guard.php holds the order.
+ * Until 2026-11-28 only an hourly limit, counted per connection in temporary files, stood
+ * in front of this handler, and every signup mails the address typed in.
  *
  * Flow:
  *  1. Validate POST input (email + optional name).
@@ -44,40 +59,52 @@ require_once $_layoutLib;
 
 header('Content-Type: application/json; charset=utf-8');
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     http_response_code(405);
     echo json_encode(['success' => false, 'error' => 'Method not allowed']);
     exit;
 }
 
-// ---- Rate limit: 5 signups / IP / hour ----
-$ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-$rateLimitFile = sys_get_temp_dir() . '/od9_subscribe_' . md5($ip) . '.json';
-$now = time();
-$rateData = file_exists($rateLimitFile)
-    ? array_filter(json_decode(file_get_contents($rateLimitFile), true) ?? [], fn($ts) => ($now - $ts) < 3600)
-    : [];
-if (count($rateData) >= 5) {
-    http_response_code(429);
-    echo json_encode(['success' => false, 'error' => 'Too many requests. Please try again later.']);
+require_once __DIR__ . '/includes/od9_form_guard.php';   // includes/ is beside this file on the server and here
+od9_form_guard_session();
+
+/** A refusal, told as one: the guard's own sentence and its reason, then stop. */
+function od9_subscribe_refuse(int $status, FormGuardRefused $e): void
+{
+    http_response_code($status);
+    echo json_encode(['success' => false, 'error' => $e->getMessage(), 'refused' => $e->reason]);
     exit;
 }
 
-// ---- Parse input (JSON or form) ----
+// ---- Parse input (JSON or form). The raw body is what a signed caller signed. ----
+$rawBody = (string) file_get_contents('php://input');
 $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
 $input = (stripos($contentType, 'application/json') !== false)
-    ? (json_decode(file_get_contents('php://input'), true) ?? [])
+    ? (json_decode($rawBody, true) ?? [])
     : $_POST;
+if (!is_array($input)) $input = [];
 
-$name = trim($input['name'] ?? '');
-$email = strtolower(trim($input['email'] ?? ''));
-$source = trim($input['source'] ?? 'website');
-$referrer = trim($input['referrer'] ?? ($_SERVER['HTTP_REFERER'] ?? ''));
-$context = trim($input['context'] ?? '');
+// ---- 1. The form guard (the bot's signed pass skips only Cloudflare's question) ----
+try {
+    FormGuard::admit('od9-subscribe', $_SESSION, $input, $_SERVER, null,
+        od9_form_caller([OD9_FORM_CALLER_BOT], $rawBody, $_SERVER));
+} catch (FormGuardRefused $e) { // silent-failure:ignore — FormGuard::admit() logged it before the throw; its sentence goes back to the visitor
+    od9_subscribe_refuse(403, $e);
+}
+
+$ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';   // the visitor: mod_remoteip restores it from Cloudflare's header
+$text = static fn($v): string => is_string($v) ? trim($v) : '';   // an array or a number sent in a field is no text
+
+// ---- 2. What was typed ----
+$name = $text($input['name'] ?? '');
+$email = strtolower($text($input['email'] ?? ''));
+$source = $text($input['source'] ?? 'website');
+$referrer = $text($input['referrer'] ?? ($_SERVER['HTTP_REFERER'] ?? ''));
+$context = $text($input['context'] ?? '');
 // Optional: Discord user ID for the /link_email command path. Stored on
 // email_signups.discord_user_id so event_processor.php can resolve email
 // from a Discord user ID without needing a Patreon link.
-$discordUserId = trim($input['discord_user_id'] ?? '');
+$discordUserId = $text($input['discord_user_id'] ?? '');
 if ($discordUserId !== '' && !preg_match('/^\d{15,25}$/', $discordUserId)) {
     $discordUserId = '';  // ignore malformed values
 }
@@ -101,6 +128,20 @@ if (!in_array($source, $allowedSources, true)) $source = 'website';
 
 try {
     $pdo = getDatabaseConnection();
+
+    // ---- 3. The brake: before the per-visitor limit, so a visitor turned away by it is told the truth ----
+    try {
+        SignupBrake::admit('od9-subscribe', $pdo, $_SERVER);
+    } catch (FormGuardRefused $e) { // silent-failure:ignore — SignupBrake::admit() logged it before the throw; its sentence goes back to the visitor
+        od9_subscribe_refuse(503, $e);
+    }
+
+    // ---- 4. The hourly limit per visitor, counted for a signup about to be stored ----
+    try {
+        od9_form_limit('od9-subscribe', $_SERVER);
+    } catch (FormGuardRefused $e) { // silent-failure:ignore — od9_form_limit() logged it before the throw; its sentence goes back to the visitor
+        od9_subscribe_refuse(429, $e);
+    }
 
     $check = $pdo->prepare("SELECT id, is_verified, email_opt_in, status FROM email_signups WHERE email = ?");
     $check->execute([$email]);
@@ -172,10 +213,6 @@ try {
     require_once __DIR__ . '/includes/sp_audience_sync.php';
     od9_sp_audience_sync($email, $firstName, $lastName, 'pending',
         !empty($context) ? ['context' => $context] : null);
-
-    // ---- Record rate limit hit ----
-    $rateData[] = $now;
-    file_put_contents($rateLimitFile, json_encode($rateData));
 
     echo json_encode([
         'success' => true,

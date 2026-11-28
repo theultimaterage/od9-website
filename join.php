@@ -1,4 +1,11 @@
 <?php
+// The signup below passes the shared form guard (includes/od9_form_guard.php): the session
+// starts and the render time is stamped BEFORE any output, as on contact.php. The Discord
+// bot loads this page for its stamp too (cogs/email_link.py), so keep the guard's fields
+// on the form.
+require_once __DIR__ . '/includes/od9_form_guard.php';
+od9_form_guard_session();
+FormGuard::open($_SESSION);
 $page_title = 'Join OD9 | Community + Newsletter';
 $page_description = 'Join the OD9 movement through Discord, the ASCEND path, and the future NCZ newsletter.';
 $page_slug = 'join.php';
@@ -29,7 +36,7 @@ body{background:var(--d);background-image:linear-gradient(45deg,#111 25%,transpa
 </section>
 <section class="card"><h2>GET THE 85 SECONDS BRIEFING</h2>
 <p>Enter your info below. When the newsletter goes live, you'll be first in line.</p>
-<form id="joinPageForm"><div><label>Name</label><input type="text" name="name" placeholder="Your name" required></div><div><label>Email</label><input type="email" name="email" placeholder="you@example.com" required></div><div><label>What brought you here?</label><textarea name="context" rows="3" placeholder="NCZ, Think Tank, the Manifesto, music, all of it..."></textarea></div><input type="hidden" name="source" value="join-page"><button type="submit" class="btn"><i class="fas fa-bolt" style="margin-right:0.5rem"></i> Get on the List</button><p id="joinFormMsg" style="display:none;margin-top:0.75rem;font-size:0.95rem"></p></form>
+<form id="joinPageForm"><div><label>Name</label><input type="text" name="name" placeholder="Your name" required></div><div><label>Email</label><input type="email" name="email" placeholder="you@example.com" required></div><div><label>What brought you here?</label><textarea name="context" rows="3" placeholder="NCZ, Think Tank, the Manifesto, music, all of it..."></textarea></div><input type="hidden" name="source" value="join-page"><?= od9_form_guard_fields() ?><button type="submit" class="btn"><i class="fas fa-bolt" style="margin-right:0.5rem"></i> Get on the List</button><p id="joinFormMsg" style="display:none;margin-top:0.75rem;font-size:0.95rem"></p></form>
 <p class="small">Your info stays private. No spam. Unsubscribe anytime.</p></section>
 </div>
 <script>
@@ -46,12 +53,16 @@ body{background:var(--d);background-image:linear-gradient(45deg,#111 25%,transpa
         btn.disabled = true;
         msg.style.display = 'none';
 
+        // form.reset() after a signup empties the guard's proof: put it back from the page.
+        var proof = form.querySelector('input[name="fg_proof"]');
+        if (proof && !proof.value) { proof.value = proof.getAttribute('data-fg') || ''; }
         var formData = new FormData(form);
         var data = {};
         formData.forEach(function(val, key) { data[key] = val; });
 
         fetch('subscribe.php', {
             method: 'POST',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         })
@@ -65,12 +76,14 @@ body{background:var(--d);background-image:linear-gradient(45deg,#111 25%,transpa
             } else {
                 msg.style.color = '#ff4444';
                 msg.textContent = res.error || 'Something went wrong. Try again.';
+                if (window.fgHuman) { window.fgHuman.reset(form); }   // a token answers one question only
             }
         })
         .catch(function() {
             msg.style.display = 'block';
             msg.style.color = '#ff4444';
             msg.textContent = 'Network error. Please try again.';
+            if (window.fgHuman) { window.fgHuman.reset(form); }
         })
         .finally(function() {
             btn.innerHTML = origText;
@@ -79,6 +92,7 @@ body{background:var(--d);background-image:linear-gradient(45deg,#111 25%,transpa
     });
 })();
 </script>
+<?= od9_form_guard_script() ?>
 <?php include('includes/footer.php'); ?>
 </body>
 </html>

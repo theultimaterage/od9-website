@@ -217,8 +217,11 @@
     "public_html/private/email-templates/welcome.php",
     "public_html/private/logs/security.log",
     "public_html/private/migrations/003_add_members_tiers_resources.sql",
-    "public_html/private/migrations/004_seed_resources.sql"
+    "public_html/private/migrations/004_seed_resources.sql",
+    "public_html/includes/FormGuard.php",
+    "public_html/includes/email-signup.php"
   ],
+  "_remove_remote_note_2026_11_28_form_checks": "The last 2 (piece 4 of the form checks). includes/FormGuard.php was this site's own port of the band's guard (2026-10-02), retired for the engine's copies under includes/form-checks/ loaded through includes/od9_form_guard.php; a copy left on the server would be a second class FormGuard one require away, which tests/check_form_checks.py refuses in the repo and this removes from the server in the same deploy. includes/email-signup.php was an older signup popup that nothing has included since includes/email-popup.php took over (git grep, 2026-11-28): an orphan with an unguarded form posting to subscribe.php. Both are in git history.",
   "_remove_remote_note_2026_11_22_cleanup": "The last 84 (2026-11-22, the old admin door retired). od9's admin is the shared platform's; what stayed here was a second, local-only door onto it: 65 wrapper pages under private/admin that load the platform from a workstation path, a two-file router under admin/ whose path arithmetic pointed one folder too high, and config/bootstrap.php, which the wrappers loaded. None could run on the server (requested there they faulted), and nothing deployable outside private/ loaded from it. Also removed from the server and no longer shipped: 13 mail templates under private/email-templates (the live senders read the top-level email-templates/), two SQL migrations and one log file that a `git reset` on the server left there on 2026-03-16. Before this list was written each of the 84 server files was hashed and compared with the blob git holds: 84 identical, so the removal loses nothing. Generated from `git ls-files`, not typed. private/.htaccess stays and keeps refusing the folder, so a file that comes back (a rollback restores removed files until the next deploy) is still not served.",
   "_remove_remote_note_2026_11_22": "The last 40. (1) private/admin/generate-wrappers.php said 'run once, then delete this file' and was neither deleted nor guarded: requested over HTTP it checks no login and writes 36 wrapper pages to a Windows path, which on the server is a relative one. Outside traffic ran it on 2026-09-24 (the 36 files were taken for a failed upload and cleaned up; the generator stayed) and again on 2026-11-22 at 07:50:59 UTC, when a scanner that had read this docroot's .git index asked for it. Deleted from the repo in this change; the 36 entries under private/admin/C:/ are what it wrote, by name, from its own list. The folders it made are left empty. (2) AGENTS.md and ADMIN_DESIGN_STANDARDIZATION.md are excluded from the deploy and were still in the docroot, served, from the `git reset` done on the server on 2026-03-16; the scanner was given both. (3) od9_schema.sql is a January schema dump at the docroot. The .sql rule refuses it, so it was never served, and it is now excluded from the deploy as well: a dump has no business one rule away from a visitor. NOT removable here: the .git folder that reset left behind (remove_remote takes files, and its pack's name is not known from this side). The dot-directory rule in .htaccess refuses it at the origin from this deploy on; ~/.claude/prod-sentinel/od9-webroot-containment.sh moves it out of the docroot.",
   "_remove_remote_note_2026_10_07": "includes/nav-html.php and includes/nav-styles.php were an older nav (a fixed eight-link list) and its styles. No page has loaded either since includes/nav.php took over; they were retired with the sectioned nav, removed from the repo and from prod in the same deploy.",
@@ -336,8 +339,8 @@
     "release_warden": true,
     "commands": [
       {
-        "name": "site provers: contact form guard, mail route, wiring; nav sections; security headers on local Apache; login diagnostics out of the error log (tests/test_form_guard.php, test_mail_route.php, test_contact_wiring.php, test_nav_sections.php, test_security_headers.php, test_oauth_log.php)",
-        "cmd": "/mnt/c/tools/php84/php.exe tests/test_form_guard.php && /mnt/c/tools/php84/php.exe tests/test_mail_route.php && /mnt/c/tools/php84/php.exe tests/test_contact_wiring.php && /mnt/c/tools/php84/php.exe tests/test_nav_sections.php && /mnt/c/tools/php84/php.exe tests/test_security_headers.php && /mnt/c/tools/php84/php.exe tests/test_oauth_log.php && WSLENV=OD9_BOT_DIR OD9_BOT_DIR=C:/Users/Rage/IdeaProjects/OD9-Discord-Bot /mnt/c/tools/php84/php.exe tests/test_remember_auth.php",
+        "name": "site provers: the shared form guard's site half and every door in order, the forms on local Apache, mail route, contact wiring; nav sections; security headers on local Apache; login diagnostics out of the error log (tests/test_form_guard.php, test_public_forms_use_the_guard.php, test_forms_http.php, test_mail_route.php, test_contact_wiring.php, test_nav_sections.php, test_security_headers.php, test_oauth_log.php)",
+        "cmd": "/mnt/c/tools/php84/php.exe tests/test_form_guard.php && /mnt/c/tools/php84/php.exe tests/test_public_forms_use_the_guard.php && /mnt/c/tools/php84/php.exe tests/test_forms_http.php && /mnt/c/tools/php84/php.exe tests/test_mail_route.php && /mnt/c/tools/php84/php.exe tests/test_contact_wiring.php && /mnt/c/tools/php84/php.exe tests/test_nav_sections.php && /mnt/c/tools/php84/php.exe tests/test_security_headers.php && /mnt/c/tools/php84/php.exe tests/test_oauth_log.php && WSLENV=OD9_BOT_DIR OD9_BOT_DIR=C:/Users/Rage/IdeaProjects/OD9-Discord-Bot /mnt/c/tools/php84/php.exe tests/test_remember_auth.php",
         "_why_remember": "Added 2026-10-08: the dashboard's remember-me lifecycle (issue, consume+rotate, theft purge, membership re-check via the bot's read seam, logout) runs against local MySQL and the bot checkout's SQLite. It had crashed on stale include paths since August with no gate running it; a seam the test cannot reach is a loud failure, never a pass.",
         "timeout": 180
       },
@@ -357,6 +360,12 @@
         "cmd": "/mnt/c/Users/Rage/AppData/Local/Programs/Python/Python312/python.exe tests/check_cloudflare_only.py --selftest && /mnt/c/Users/Rage/AppData/Local/Programs/Python/Python312/python.exe tests/check_cloudflare_only.py",
         "_why": "Added 2026-11-23 with the Cloudflare-only rule. The server's address is public (mail.offda9.com is DNS-only and lands in this docroot), and on 2026-11-22 a scanner used it to skip Cloudflare entirely. The rule reads %{CONN_REMOTE_ADDR}, the TCP peer: the server loads mod_remoteip, which rewrites REMOTE_ADDR to the visitor, so a rule on REMOTE_ADDR would refuse every real visitor (measured on a scratch Apache with mod_remoteip). Ten deliberate breaks were each refused with exit 1: the rule removed (9 findings), REMOTE_ADDR, one Cloudflare range dropped, the ACME exception removed, the server-only clause removed or reversed, 0.0.0.0/0 let in, the server's own address dropped, a granting body, and 'Satisfy Any' added to a subfolder. Cloudflare's list is read live, so a range Cloudflare adds refuses the next deploy until the rule carries it; no answer from Cloudflare is exit 2, never a pass. What this cannot see: the server itself. After a deploy the origin is asked from the box (prod-sentinel's ssh), because Imunify360 drops this workstation's direct requests.",
         "timeout": 180
+      },
+      {
+        "name": "the form checks this site carries are the engine's own files (tests/check_form_checks.py: the four copies under includes/form-checks/ equal shared-platform's core/ at the commit each names, that commit is current with the engine's main, all four come from one commit, and no other shipping file declares their classes; selftest first)",
+        "cmd": "/mnt/c/Users/Rage/AppData/Local/Programs/Python/Python312/python.exe tests/check_form_checks.py --selftest && /mnt/c/Users/Rage/AppData/Local/Programs/Python/Python312/python.exe tests/check_form_checks.py",
+        "_why": "Added 2026-11-28 with piece 4 of the form checks (spec https://claude.ai/artifact/4UWXZQzkUhCvdCZ9Y9b4nR). The guard in front of this site's forms is kept once, in the engine; this account cannot read the engine's files on the server, so it ships generated copies, and three separately written copies of one guard is what the band site's own file says cost it (each had a hole the others did not). The gate is the fleet's one implementation (~/.claude/skills/prod-deploy/form_checks.py, 30 self-checks, each judgment broken on purpose). It refused this site's own includes/FormGuard.php as a second copy until that file was retired in the same change. A copy that is stale because the engine changed refuses the deploy until the launcher's --write makes new copies, which are then tested and committed. No engine checkout is exit 2, never a pass.",
+        "timeout": 120
       },
       {
         "name": "the purge-token tool still refuses a token that can do more than purge (tools/set_purge_token.py --selftest: a fake Cloudflare and a throwaway config)",
@@ -426,6 +435,52 @@
       "must_not_contain": [
         "Fatal error",
         "Parse error"
+      ]
+    },
+    {
+      "_why": "Added 2026-11-28 with piece 4 of the form checks. join.php renders its signup with the shared guard: the session's proof must be in the page, or every signup a person sends from it is refused as a program's, and the Discord bot's /link_email reads its stamp from this page. The popup every page carries is pinned by the trap's name.",
+      "url": "https://offda9.com/join.php",
+      "expect_status": [
+        200
+      ],
+      "must_not_contain": [
+        "Fatal error",
+        "Parse error",
+        "Warning:"
+      ],
+      "must_contain": [
+        "id=\"joinPageForm\"",
+        "id=\"popupSignupForm\"",
+        "name=\"fg_ref\"",
+        "name=\"fg_proof\"",
+        "data-fg=\""
+      ]
+    },
+    {
+      "_why": "Added 2026-11-28 with piece 4 of the form checks. The popup on pages that start no session asks here for the guard's stamp when it opens; a broken stamp refuses every signup from the popup as a post with no page.",
+      "url": "https://offda9.com/form-stamp.php",
+      "expect_status": [
+        200
+      ],
+      "must_contain": [
+        "\"proof\":\"",
+        "\"min_seconds\":"
+      ],
+      "must_not_contain": [
+        "Fatal error",
+        "Warning:"
+      ]
+    },
+    {
+      "_why": "Added 2026-11-28 with piece 4 of the form checks. The health answer the OD9 bot's hourly crons/signup_volume.py reads (status, counts, paused, human_check, passes_24h). Pinned on its fields, not on status OK: a real signup flood makes it FAIL on purpose, and that must not roll a deploy back. 500 means it could not count, which is a failed smoke.",
+      "url": "https://offda9.com/api/health/signup-volume.php",
+      "expect_status": [
+        200
+      ],
+      "must_contain": [
+        "\"human_check\":",
+        "\"passes_24h\":",
+        "\"paused\":"
       ]
     },
     {

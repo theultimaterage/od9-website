@@ -1,4 +1,9 @@
 <?php
+// The signup below passes the shared form guard (includes/od9_form_guard.php): the session
+// starts and the render time is stamped BEFORE any output, as on contact.php.
+require_once __DIR__ . '/includes/od9_form_guard.php';
+od9_form_guard_session();
+FormGuard::open($_SESSION);
 $page_title = '85 Seconds to Midnight | OD9';
 $page_description = 'Download the 85 Seconds to Midnight briefing. Data, frameworks, and a clear path forward for why the systems around us are failing.';
 $page_slug = 'wake-up.php';
@@ -114,6 +119,7 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
             <div class="email-row">
                 <input type="email" name="email" placeholder="Your Email" required>
             </div>
+            <?= od9_form_guard_fields() ?>
             <button type="submit" class="submit-btn"><i class="fas fa-bolt" style="margin-right:0.5rem"></i> Send Me the Briefing</button>
             <p class="form-msg" id="wakeUpMsg"></p>
         </form>
@@ -163,12 +169,15 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
         btn.disabled = true;
         msg.style.display = 'none';
 
+        var proof = form.querySelector('input[name="fg_proof"]');
+        if (proof && !proof.value) { proof.value = proof.getAttribute('data-fg') || ''; }
         var formData = new FormData(form);
         var data = {};
         formData.forEach(function(val, key) { data[key] = val; });
 
         fetch('subscribe.php', {
             method: 'POST',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         })
@@ -189,6 +198,7 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
                 msg.textContent = res.error || 'Something went wrong. Try again.';
                 btn.innerHTML = origText;
                 btn.disabled = false;
+                if (window.fgHuman) { window.fgHuman.reset(form); }   // a token answers one question only
             }
         })
         .catch(function() {
@@ -197,10 +207,12 @@ body{background:var(--d);color:var(--c);font-family:'Exo 2',sans-serif;min-heigh
             msg.textContent = 'Network error. Please try again.';
             btn.innerHTML = origText;
             btn.disabled = false;
+            if (window.fgHuman) { window.fgHuman.reset(form); }
         });
     });
 })();
 </script>
+<?= od9_form_guard_script() ?>
 <?php include('includes/footer.php'); ?>
 </body>
 </html>

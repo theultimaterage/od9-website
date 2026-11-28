@@ -22,7 +22,7 @@
  * session_start() is the whole mechanism, under any handler. Locally (XAMPP, no /home/)
  * the system temp dir is used. Same shape as shared-platform core/SessionStore.php.
  *
- * Call od9_session_store('<app>') before session_start(): includes/FormGuard.php
+ * Call od9_session_store('<app>') before session_start(): includes/od9_form_guard.php
  * (public forms, "site"), dashboard/includes/auth.php and api/v1/bootstrap.php
  * ("dashboard"), includes/patron_gate.php ("dashboard"). Guarded so repeated includes
  * are safe. Prover: tests/test_session_store.php.

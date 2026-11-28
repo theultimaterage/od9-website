@@ -29,10 +29,12 @@ ok(preg_match($rawMail, 'od9_send_mail($to, $s, $h);') === 0, 'detector: does no
 $handler = (string) file_get_contents('contact-handler.php');
 $code = preg_replace('~/\*.*?\*/|//[^\n]*~s', '', $handler);   // judge the code, not its comments
 $admit = strpos($code, 'FormGuard::admit(');
-$limit = strpos($code, 'FormGuard::limit(');
+$limit = strpos($code, 'od9_form_limit(');
 $send = strpos($code, 'od9_send_mail(');
 ok($admit !== false && $send !== false && $admit < $send, 'the handler passes the guard before it sends');
-ok($limit !== false && $send !== false && $limit < $send, 'the handler counts the hourly limit before it sends');
+ok($limit !== false && $send !== false && $admit !== false && $admit < $limit && $limit < $send, 'the handler counts the hourly limit after the guard and before it sends');
+ok(strpos($code, "require_once __DIR__ . '/includes/od9_form_guard.php'") !== false, 'the handler loads the shared guard through this site\'s half');
+ok(preg_match('/od9_form_caller\(\s*\[\s*OD9_FORM_CALLER_CONTACT\s*\]/', $code) === 1, 'the only pass the contact form takes is the canary\'s');
 ok(preg_match($rawMail, (string) $code) === 0, 'the handler never calls mail() itself');
 ok(strpos($code, 'od9_mail_route(') !== false, 'the handler logs the route the message took');
 ok(strpos($code, 'contact-form.jsonl') !== false, 'every outcome is written to logs/contact-form.jsonl');
@@ -46,10 +48,10 @@ $open = strpos($page, 'FormGuard::open(');
 $doctype = stripos($page, '<!DOCTYPE');
 ok($open !== false && $doctype !== false && $open < $doctype, 'the page stamps the guard before any output');
 $form = strpos($page, '<form class="contact-form"');
-$fields = strpos($page, 'FormGuard::fields(');
+$fields = strpos($page, 'od9_form_guard_fields(');
 $end = strpos($page, '</form>');
 ok($form !== false && $fields !== false && $end !== false && $form < $fields && $fields < $end, 'the guard fields are inside the form');
-ok(strpos($page, 'FormGuard::script()') !== false, 'the page prints the guard script');
+ok(strpos($page, 'od9_form_guard_script()') !== false, 'the page prints the guard script');
 ok(strpos($page, "isset(\$_GET['success'])") !== false, 'the page shows a sent message');
 foreach ($codes as $c) {
     ok(preg_match("/'" . preg_quote($c, '/') . "'\s*=>/", $page) === 1, "the page shows error={$c}");

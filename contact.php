@@ -1,8 +1,9 @@
 <?php
 // The form guard needs the session BEFORE any output (it sets a cookie), and it
 // stamps the render time here so the handler can tell a person from a program.
-require_once __DIR__ . '/includes/FormGuard.php';
-FormGuard::bootSession();
+// The guard is the engine's (includes/form-checks/, through includes/od9_form_guard.php).
+require_once __DIR__ . '/includes/od9_form_guard.php';
+od9_form_guard_session();
 FormGuard::open($_SESSION);
 
 // What contact-handler.php redirected back with. Until 2026-10-02 the page showed
@@ -16,7 +17,8 @@ if (isset($_GET['success'])) {
         'email' => "That email address doesn't look right. Please check it and send it again.",
         'send'  => "Your message didn't go through. Please try again, or write to contact@offda9.com.",
         'guard' => FormGuard::REFUSED,
-        'rate'  => FormGuard::LIMITED,
+        'human' => FormGuard::NO_HUMAN,
+        'rate'  => OD9_FORM_LIMITED,
     ];
     $od9_error = is_string($_GET['error'] ?? null) ? $_GET['error'] : '';
     if (isset($od9_contact_notices[$od9_error])) {
@@ -124,7 +126,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:#fff;margin:2rem 0 1
 <p class="form-notice form-notice-<?php echo $od9_contact_notice[0]; ?>" role="status"><?php echo htmlspecialchars($od9_contact_notice[1], ENT_QUOTES, 'UTF-8'); ?></p>
 <?php endif; ?>
 <form class="contact-form" action="contact-handler.php" method="POST">
-<?php echo FormGuard::fields($_SESSION); ?>
+<?php echo od9_form_guard_fields(); ?>
 <div class="form-group">
 <label for="name">Name</label>
 <input type="text" id="name" name="name" required placeholder="Your name">
@@ -208,7 +210,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:#fff;margin:2rem 0 1
 
 </div>
 <?php include('includes/footer.php'); ?>
-<?php echo FormGuard::script(); ?>
+<?php echo od9_form_guard_script(); ?>
 </body>
 </html>
 

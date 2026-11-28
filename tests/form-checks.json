@@ -1,0 +1,15 @@
+{
+  "_what": "This site's facts for the fleet's one form-checks gate (~/.claude/skills/prod-deploy/form_checks.py, run through tests/check_form_checks.py). offda9.com is another account on the server and cannot read the engine's files, so it carries GENERATED copies of the engine's form checks under includes/form-checks/. Each copy's first line names the engine commit it was made from; the gate refuses a deploy when a copy differs from the engine's file at that commit, when the engine's file has changed since, when the copies come from two commits, or when another shipping file declares one of their classes. Nobody edits a copy: change the engine's file, commit it, then run `python tests/check_form_checks.py --write`. The site's own half (where the logs go, the session, Cloudflare's transport, the signed passes, the hourly limit) is includes/od9_form_guard.php, which this gate does not judge.",
+  "site": "offda9.com",
+  "engine": {
+    "name": "shared-platform",
+    "path": "C:/xampp/htdocs/freshthaband/public_html/shared-platform",
+    "ref": "main"
+  },
+  "copies": {
+    "includes/form-checks/FormGuard.php": "core/FormGuard.php",
+    "includes/form-checks/HumanCheck.php": "core/HumanCheck.php",
+    "includes/form-checks/SignupBrake.php": "core/SignupBrake.php",
+    "includes/form-checks/SignupVolume.php": "core/SignupVolume.php"
+  }
+}
