@@ -126,7 +126,6 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:#fff;margin:2rem 0 1
 <p class="form-notice form-notice-<?php echo $od9_contact_notice[0]; ?>" role="status"><?php echo htmlspecialchars($od9_contact_notice[1], ENT_QUOTES, 'UTF-8'); ?></p>
 <?php endif; ?>
 <form class="contact-form" action="contact-handler.php" method="POST">
-<?php echo od9_form_guard_fields(); ?>
 <div class="form-group">
 <label for="name">Name</label>
 <input type="text" id="name" name="name" required placeholder="Your name">
@@ -151,6 +150,7 @@ h2{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:#fff;margin:2rem 0 1
 <label for="message">Message</label>
 <textarea id="message" name="message" required placeholder="What's on your mind?"></textarea>
 </div>
+<?php echo od9_form_guard_fields(); ?>
 <button type="submit" class="btn"><i class="fas fa-paper-plane" style="margin-right:0.5rem"></i> Send Message</button>
 <p class="form-note">We typically respond within 24-48 hours.</p>
 </form>

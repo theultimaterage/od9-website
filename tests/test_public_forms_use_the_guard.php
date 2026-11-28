@@ -224,6 +224,13 @@ foreach (FORM_PAGES as $page => $f) {
     $end = $open === false ? false : strpos($code, '</form>', $open);
     $fields = $open === false ? false : strpos($code, 'od9_form_guard_fields()', $open);
     ok($open !== false && $fields !== false && $end !== false && $fields < $end, "{$page}: the guard's fields are inside its form");
+    // The widget is the one part of the guard a visitor sees, and the refusal a visitor reads (FormGuard::NO_HUMAN)
+    // says to wait for "the check above the button": the fields go after every field a visitor fills and before
+    // the button (2026-11-28, piece 5: contact.php printed them first, so the widget sat above the Name field).
+    $button = $open === false ? false : strpos($code, 'type="submit"', $open);
+    $between = ($fields !== false && $button !== false && $fields < $button) ? substr($code, $fields, $button - $fields) : null;
+    ok($between !== null && preg_match('/<(textarea|select)\b|<input\b(?![^>]*type="hidden")/i', $between) !== 1,
+       "{$page}: the guard's fields stand just above its button, after every field a visitor fills");
     ok(strpos($code, 'od9_form_guard_script()') !== false, "{$page}: prints the guard's script");
     ok(strpos($code, $f['door']) !== false, "{$page}: posts to {$f['door']}");
     if ($f['proof'] === 'session') {
